@@ -12,7 +12,10 @@ void main() {
   });
 
   group('isValidSaudiPhone', () {
-    test('accepts +9665XXXXXXXX', () => expect(isValidSaudiPhone('+966512345678'), isTrue));
+    test(
+      'accepts +9665XXXXXXXX',
+      () => expect(isValidSaudiPhone('+966512345678'), isTrue),
+    );
     test('rejects other numbers', () {
       expect(isValidSaudiPhone('+971512345678'), isFalse);
       expect(isValidSaudiPhone('+96611234567'), isFalse);

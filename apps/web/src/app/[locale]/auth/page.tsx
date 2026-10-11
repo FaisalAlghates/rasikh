@@ -136,7 +136,7 @@ export default function AuthPage() {
               void (codeSent ? verifyCode() : sendCode());
             }}
           >
-            <div dir="ltr" className="flex items-end gap-2">
+            <div className="flex items-end gap-2">
               <span className="hairline tabular flex min-h-11 items-center rounded-md px-3 text-text-muted">
                 +966
               </span>
@@ -150,14 +150,16 @@ export default function AuthPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   disabled={codeSent}
+                  dir="ltr"
                   className="tabular"
                 />
               </div>
             </div>
             {codeSent && (
-              <div dir="ltr">
+              <div>
                 <Field
                   id="code"
+                  dir="ltr"
                   label={t('codeLabel')}
                   inputMode="numeric"
                   autoComplete="one-time-code"

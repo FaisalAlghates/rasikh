@@ -9,7 +9,9 @@ abstract final class FontConfig {
 }
 
 ThemeData buildTheme(Brightness brightness, {required bool arabic}) {
-  final t = brightness == Brightness.dark ? RasikhTokens.dark : RasikhTokens.light;
+  final t = brightness == Brightness.dark
+      ? RasikhTokens.dark
+      : RasikhTokens.light;
   final scheme = ColorScheme(
     brightness: brightness,
     primary: t.brand,
@@ -23,7 +25,9 @@ ThemeData buildTheme(Brightness brightness, {required bool arabic}) {
   );
   final body = !FontConfig.webFonts
       ? ThemeData(brightness: brightness).textTheme
-      : (arabic ? GoogleFonts.ibmPlexSansArabicTextTheme() : GoogleFonts.ibmPlexSansTextTheme());
+      : (arabic
+            ? GoogleFonts.ibmPlexSansArabicTextTheme()
+            : GoogleFonts.ibmPlexSansTextTheme());
   final text = body.apply(bodyColor: t.text, displayColor: t.text);
 
   final border = BorderSide(color: t.border.withValues(alpha: 0.3));
@@ -33,8 +37,14 @@ ThemeData buildTheme(Brightness brightness, {required bool arabic}) {
     colorScheme: scheme,
     scaffoldBackgroundColor: t.bg,
     textTheme: text.copyWith(
-      bodyLarge: text.bodyLarge?.copyWith(fontSize: 17, height: arabic ? 1.7 : 1.5),
-      bodyMedium: text.bodyMedium?.copyWith(fontSize: 15, height: arabic ? 1.7 : 1.5),
+      bodyLarge: text.bodyLarge?.copyWith(
+        fontSize: 17,
+        height: arabic ? 1.7 : 1.5,
+      ),
+      bodyMedium: text.bodyMedium?.copyWith(
+        fontSize: 15,
+        height: arabic ? 1.7 : 1.5,
+      ),
       bodySmall: text.bodySmall?.copyWith(fontSize: 13, color: t.textMuted),
     ),
     extensions: [t],
@@ -51,13 +61,17 @@ ThemeData buildTheme(Brightness brightness, {required bool arabic}) {
         borderSide: border,
       ),
       labelStyle: TextStyle(color: t.textMuted),
+      helperStyle: TextStyle(color: t.textMuted, fontSize: 13),
+      errorStyle: TextStyle(color: t.danger, fontSize: 13),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         backgroundColor: t.brand,
         foregroundColor: t.onBrand,
         minimumSize: const Size.fromHeight(48),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(RasikhTokens.radiusMd)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(RasikhTokens.radiusMd),
+        ),
         textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
       ),
     ),

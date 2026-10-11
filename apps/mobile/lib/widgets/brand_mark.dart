@@ -26,7 +26,14 @@ class _MarkPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final s = size.width / 32;
     final paint = Paint()..color = color;
-    Path tri(double ax, double ay, double bx, double by, double cx, double cy) => Path()
+    Path tri(
+      double ax,
+      double ay,
+      double bx,
+      double by,
+      double cx,
+      double cy,
+    ) => Path()
       ..moveTo(ax * s, ay * s)
       ..lineTo(bx * s, by * s)
       ..lineTo(cx * s, cy * s)
@@ -50,7 +57,11 @@ class ShurfaDivider extends StatelessWidget {
       child: SizedBox(
         height: 10,
         width: double.infinity,
-        child: CustomPaint(painter: _ShurfaPainter(Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6))),
+        child: CustomPaint(
+          painter: _ShurfaPainter(
+            Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6),
+          ),
+        ),
       ),
     );
   }

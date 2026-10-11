@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/auth_screen.dart';
-import '../features/home/home_screen.dart';
+import '../features/gallery/gallery_screen.dart';
+import '../features/intro/intro_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
-import '../features/workspace/workspace_screen.dart';
+import '../features/shell/app_shell.dart';
 import 'providers.dart';
 
 abstract final class Routes {
@@ -13,6 +14,7 @@ abstract final class Routes {
   static const auth = '/auth';
   static const onboarding = '/onboarding';
   static const workspace = '/workspace';
+  static const gallery = '/gallery';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -29,17 +31,26 @@ final routerProvider = Provider<GoRouter>((ref) {
       final user = session.value;
       final loc = state.matchedLocation;
 
+      // The gallery is a design tool, reachable from the profile tab in debug builds.
+      if (loc == Routes.gallery) return kDebugMode ? null : Routes.home;
+
       if (user == null) {
         return (loc == Routes.home || loc == Routes.auth) ? null : Routes.auth;
       }
-      if (!user.hasOrg) return loc == Routes.onboarding ? null : Routes.onboarding;
+      if (!user.hasOrg) {
+        return loc == Routes.onboarding ? null : Routes.onboarding;
+      }
       return loc == Routes.workspace ? null : Routes.workspace;
     },
     routes: [
-      GoRoute(path: Routes.home, builder: (_, _) => const HomeScreen()),
+      GoRoute(path: Routes.home, builder: (_, _) => const IntroScreen()),
       GoRoute(path: Routes.auth, builder: (_, _) => const AuthScreen()),
-      GoRoute(path: Routes.onboarding, builder: (_, _) => const OnboardingScreen()),
-      GoRoute(path: Routes.workspace, builder: (_, _) => const WorkspaceScreen()),
+      GoRoute(
+        path: Routes.onboarding,
+        builder: (_, _) => const OnboardingScreen(),
+      ),
+      GoRoute(path: Routes.workspace, builder: (_, _) => const AppShell()),
+      GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
     ],
   );
 });

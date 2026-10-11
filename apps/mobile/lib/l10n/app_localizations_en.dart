@@ -175,4 +175,219 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workspaceNoOrg => 'You have not created a workspace yet.';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get intro1Title => 'Everything on record';
+
+  @override
+  String get intro1Body =>
+      'From move-in day to move-out day: your lease, payments and the unit\'s condition in one record.';
+
+  @override
+  String get intro2Title => 'Photos and sign-off';
+
+  @override
+  String get intro2Body =>
+      'Document the unit room by room, each photo stamped with time and place, signed by both parties.';
+
+  @override
+  String get intro3Title => 'Complements Ejar';
+
+  @override
+  String get intro3Body =>
+      'It does not replace Ejar contracts, deposits or the official handover form. It documents what surrounds them.';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navMap => 'Map';
+
+  @override
+  String get navRecord => 'Record';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
+  String get navLabel => 'Main navigation';
+
+  @override
+  String get mapSoonTitle => 'Map coming soon';
+
+  @override
+  String get mapSoonBody => 'Your properties will appear here on a 3D map.';
+
+  @override
+  String get recordSample => 'Illustrative example';
+
+  @override
+  String get recordEmptyTitle => 'Property record';
+
+  @override
+  String get recordEv1 => 'Unit handover';
+
+  @override
+  String get recordEv1Detail =>
+      'Room-by-room inspection, signed by owner and tenant.';
+
+  @override
+  String get recordEv2 => 'Air-conditioning repair';
+
+  @override
+  String get recordEv2Detail => 'Ticket closed with before and after photos.';
+
+  @override
+  String get recordEv3 => 'Lease renewal notice';
+
+  @override
+  String get recordEv3Detail =>
+      'Reminder to both parties sixty days before the lease ends.';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeToggle => 'Toggle theme';
+
+  @override
+  String get galleryTitle => 'Component gallery';
+
+  @override
+  String get gButtons => 'Buttons';
+
+  @override
+  String get gPrimary => 'Primary';
+
+  @override
+  String get gQuiet => 'Quiet';
+
+  @override
+  String get gGhost => 'Ghost';
+
+  @override
+  String get gLoading => 'Saving';
+
+  @override
+  String get gFields => 'Fields';
+
+  @override
+  String get gFieldLabel => 'Unit name';
+
+  @override
+  String get gFieldHint => 'e.g. Flat 3';
+
+  @override
+  String get gFieldError => 'This field is required';
+
+  @override
+  String get gSelectLabel => 'Unit type';
+
+  @override
+  String get gSelectPlaceholder => 'Choose a type';
+
+  @override
+  String get gStudio => 'Studio';
+
+  @override
+  String get gApartment => 'Apartment';
+
+  @override
+  String get gVilla => 'Villa';
+
+  @override
+  String get gOverlays => 'Overlays';
+
+  @override
+  String get gOpenDialog => 'Open dialog';
+
+  @override
+  String get gDialogTitle => 'Confirm action';
+
+  @override
+  String get gDialogBody => 'No record changes until you press confirm.';
+
+  @override
+  String get gConfirm => 'Confirm';
+
+  @override
+  String get gOpenSheet => 'Open sheet';
+
+  @override
+  String get gSheetTitle => 'Filter properties';
+
+  @override
+  String get gShowToast => 'Show a toast';
+
+  @override
+  String get gToastMsg => 'Changes saved';
+
+  @override
+  String get gTabs => 'Tabs';
+
+  @override
+  String get gTabsLabel => 'View';
+
+  @override
+  String get gTabA => 'Units';
+
+  @override
+  String get gTabB => 'Leases';
+
+  @override
+  String get gCards => 'Cards';
+
+  @override
+  String get gStatRent => 'Rent this month';
+
+  @override
+  String get gStatNote => 'Sample values';
+
+  @override
+  String get gPropTitle => 'Flat 3, Al Nakheel Building';
+
+  @override
+  String get gPropPlace => 'Riyadh, Al Malqa';
+
+  @override
+  String get gPropMeta => 'Annual rent: SAR 42,000';
+
+  @override
+  String get gStatusOk => 'Paid';
+
+  @override
+  String get gStatusLate => 'Late';
+
+  @override
+  String get gEmpty => 'Empty and loading states';
+
+  @override
+  String get gEmptyTitle => 'No units yet';
+
+  @override
+  String get gEmptyBody => 'Add your first unit to start the record.';
+
+  @override
+  String get gAddUnit => 'Add unit';
+
+  @override
+  String get gGlass => 'Glass: only for controls floating over a map';
+
+  @override
+  String get gGlassSample => 'Search a district or property';
+
+  @override
+  String get gArch => 'Najdi arch · Shurfa';
 }

@@ -415,6 +415,426 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لم تنشئ مساحة عمل بعد.'**
   String get workspaceNoOrg;
+
+  /// No description provided for @next.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي'**
+  String get next;
+
+  /// No description provided for @skip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تخطّي'**
+  String get skip;
+
+  /// No description provided for @intro1Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل شيء موثّق'**
+  String get intro1Title;
+
+  /// No description provided for @intro1Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'من يوم الاستلام إلى يوم التسليم: عقدك ودفعاتك وحالة الوحدة في سجل واحد.'**
+  String get intro1Body;
+
+  /// No description provided for @intro2Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص بالصور والتوقيع'**
+  String get intro2Title;
+
+  /// No description provided for @intro2Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'وثّق الوحدة غرفة بغرفة، بوقت وموقع كل صورة، وبتوقيع الطرفين.'**
+  String get intro2Body;
+
+  /// No description provided for @intro3Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'يكمّل إيجار'**
+  String get intro3Title;
+
+  /// No description provided for @intro3Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يحلّ محلّ عقود إيجار ولا وديعته ولا نموذج التسليم الرسمي، بل يوثّق ما حولها.'**
+  String get intro3Body;
+
+  /// No description provided for @navHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرئيسية'**
+  String get navHome;
+
+  /// No description provided for @navMap.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخريطة'**
+  String get navMap;
+
+  /// No description provided for @navRecord.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجل'**
+  String get navRecord;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابي'**
+  String get navProfile;
+
+  /// No description provided for @navLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنقل الرئيسي'**
+  String get navLabel;
+
+  /// No description provided for @mapSoonTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخريطة قريباً'**
+  String get mapSoonTitle;
+
+  /// No description provided for @mapSoonBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستظهر عقاراتك هنا على خريطة ثلاثية الأبعاد.'**
+  String get mapSoonBody;
+
+  /// No description provided for @recordSample.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال توضيحي'**
+  String get recordSample;
+
+  /// No description provided for @recordEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل العقار'**
+  String get recordEmptyTitle;
+
+  /// No description provided for @recordEv1.
+  ///
+  /// In ar, this message translates to:
+  /// **'استلام الوحدة'**
+  String get recordEv1;
+
+  /// No description provided for @recordEv1Detail.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص غرفة بغرفة، بتوقيع المالك والمستأجر.'**
+  String get recordEv1Detail;
+
+  /// No description provided for @recordEv2.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة التكييف'**
+  String get recordEv2;
+
+  /// No description provided for @recordEv2Detail.
+  ///
+  /// In ar, this message translates to:
+  /// **'تذكرة مغلقة بصور قبل وبعد.'**
+  String get recordEv2Detail;
+
+  /// No description provided for @recordEv3.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه تجديد العقد'**
+  String get recordEv3;
+
+  /// No description provided for @recordEv3Detail.
+  ///
+  /// In ar, this message translates to:
+  /// **'تذكير للطرفين قبل انتهاء العقد بستين يوماً.'**
+  String get recordEv3Detail;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابي'**
+  String get profileTitle;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In ar, this message translates to:
+  /// **'داكن'**
+  String get themeDark;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In ar, this message translates to:
+  /// **'فاتح'**
+  String get themeLight;
+
+  /// No description provided for @themeToggle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تبديل المظهر'**
+  String get themeToggle;
+
+  /// No description provided for @galleryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'معرض المكوّنات'**
+  String get galleryTitle;
+
+  /// No description provided for @gButtons.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأزرار'**
+  String get gButtons;
+
+  /// No description provided for @gPrimary.
+  ///
+  /// In ar, this message translates to:
+  /// **'أساسي'**
+  String get gPrimary;
+
+  /// No description provided for @gQuiet.
+  ///
+  /// In ar, this message translates to:
+  /// **'هادئ'**
+  String get gQuiet;
+
+  /// No description provided for @gGhost.
+  ///
+  /// In ar, this message translates to:
+  /// **'نصي'**
+  String get gGhost;
+
+  /// No description provided for @gLoading.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ الحفظ'**
+  String get gLoading;
+
+  /// No description provided for @gFields.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحقول'**
+  String get gFields;
+
+  /// No description provided for @gFieldLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم الوحدة'**
+  String get gFieldLabel;
+
+  /// No description provided for @gFieldHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: شقة 3'**
+  String get gFieldHint;
+
+  /// No description provided for @gFieldError.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الحقل مطلوب'**
+  String get gFieldError;
+
+  /// No description provided for @gSelectLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الوحدة'**
+  String get gSelectLabel;
+
+  /// No description provided for @gSelectPlaceholder.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر النوع'**
+  String get gSelectPlaceholder;
+
+  /// No description provided for @gStudio.
+  ///
+  /// In ar, this message translates to:
+  /// **'استوديو'**
+  String get gStudio;
+
+  /// No description provided for @gApartment.
+  ///
+  /// In ar, this message translates to:
+  /// **'شقة'**
+  String get gApartment;
+
+  /// No description provided for @gVilla.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيلا'**
+  String get gVilla;
+
+  /// No description provided for @gOverlays.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوافذ'**
+  String get gOverlays;
+
+  /// No description provided for @gOpenDialog.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح نافذة'**
+  String get gOpenDialog;
+
+  /// No description provided for @gDialogTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الإجراء'**
+  String get gDialogTitle;
+
+  /// No description provided for @gDialogBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن يتغير أي سجل قبل ضغطك على تأكيد.'**
+  String get gDialogBody;
+
+  /// No description provided for @gConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get gConfirm;
+
+  /// No description provided for @gOpenSheet.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح لوحة'**
+  String get gOpenSheet;
+
+  /// No description provided for @gSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفية العقارات'**
+  String get gSheetTitle;
+
+  /// No description provided for @gShowToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أظهر إشعاراً'**
+  String get gShowToast;
+
+  /// No description provided for @gToastMsg.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ التغييرات'**
+  String get gToastMsg;
+
+  /// No description provided for @gTabs.
+  ///
+  /// In ar, this message translates to:
+  /// **'التبويبات'**
+  String get gTabs;
+
+  /// No description provided for @gTabsLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض'**
+  String get gTabsLabel;
+
+  /// No description provided for @gTabA.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوحدات'**
+  String get gTabA;
+
+  /// No description provided for @gTabB.
+  ///
+  /// In ar, this message translates to:
+  /// **'العقود'**
+  String get gTabB;
+
+  /// No description provided for @gCards.
+  ///
+  /// In ar, this message translates to:
+  /// **'البطاقات'**
+  String get gCards;
+
+  /// No description provided for @gStatRent.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيجارات هذا الشهر'**
+  String get gStatRent;
+
+  /// No description provided for @gStatNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال بقيم تجريبية'**
+  String get gStatNote;
+
+  /// No description provided for @gPropTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'شقة 3، عمارة النخيل'**
+  String get gPropTitle;
+
+  /// No description provided for @gPropPlace.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرياض، حي الملقا'**
+  String get gPropPlace;
+
+  /// No description provided for @gPropMeta.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإيجار السنوي: 42,000 ر.س'**
+  String get gPropMeta;
+
+  /// No description provided for @gStatusOk.
+  ///
+  /// In ar, this message translates to:
+  /// **'مدفوع'**
+  String get gStatusOk;
+
+  /// No description provided for @gStatusLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأخر'**
+  String get gStatusLate;
+
+  /// No description provided for @gEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالات الفراغ والتحميل'**
+  String get gEmpty;
+
+  /// No description provided for @gEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد وحدات بعد'**
+  String get gEmptyTitle;
+
+  /// No description provided for @gEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف أول وحدة لتبدأ السجل.'**
+  String get gEmptyBody;
+
+  /// No description provided for @gAddUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف وحدة'**
+  String get gAddUnit;
+
+  /// No description provided for @gGlass.
+  ///
+  /// In ar, this message translates to:
+  /// **'الزجاج: للعناصر العائمة فوق الخريطة فقط'**
+  String get gGlass;
+
+  /// No description provided for @gGlassSample.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث عن حي أو عقار'**
+  String get gGlassSample;
+
+  /// No description provided for @gArch.
+  ///
+  /// In ar, this message translates to:
+  /// **'قوس نجدي · الشرفات'**
+  String get gArch;
 }
 
 class _AppLocalizationsDelegate

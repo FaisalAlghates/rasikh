@@ -28,7 +28,7 @@ class RasikhApp extends ConsumerWidget {
       ],
       theme: buildTheme(Brightness.light, arabic: arabic),
       darkTheme: buildTheme(Brightness.dark, arabic: arabic),
-      themeMode: ThemeMode.dark, // dark by default (Najd Dusk); user override comes in Phase 2
+      themeMode: ref.watch(themeModeProvider),
       routerConfig: ref.watch(routerProvider),
     );
   }

@@ -4,6 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   timeout: 60_000,
+  expect: { timeout: 10_000 }, // dev-server pages compile on first hit
   fullyParallel: false,
   workers: 1,
   reporter: [['list']],

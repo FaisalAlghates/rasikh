@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 /// The signed-in user plus the organizations/roles from the server-set custom claims.
 class SessionUser {
@@ -55,8 +56,9 @@ abstract class AuthRepository {
 
 class FirebaseAuthRepository implements AuthRepository {
   FirebaseAuthRepository({FirebaseAuth? auth, FirebaseFunctions? functions})
-      : _auth = auth ?? FirebaseAuth.instance,
-        _functions = functions ?? FirebaseFunctions.instanceFor(region: 'me-central2');
+    : _auth = auth ?? FirebaseAuth.instance,
+      _functions =
+          functions ?? FirebaseFunctions.instanceFor(region: 'me-central2');
 
   final FirebaseAuth _auth;
   final FirebaseFunctions _functions;
@@ -81,18 +83,21 @@ class FirebaseAuthRepository implements AuthRepository {
     }
   }
 
-  AuthException _map(FirebaseAuthException e) => AuthException(switch (e.code) {
-        'invalid-verification-code' => AuthFailure.invalidCode,
-        'invalid-credential' ||
-        'wrong-password' ||
-        'user-not-found' =>
-          AuthFailure.invalidCredentials,
-        'email-already-in-use' => AuthFailure.emailInUse,
-        'weak-password' => AuthFailure.weakPassword,
-        'too-many-requests' => AuthFailure.tooManyRequests,
-        'invalid-phone-number' => AuthFailure.invalidPhone,
-        _ => AuthFailure.generic,
-      });
+  AuthException _map(FirebaseAuthException e) {
+    // Codes only (never phone numbers or tokens), to make auth failures diagnosable in debug builds.
+    if (kDebugMode) debugPrint('auth error: ${e.code}');
+    return AuthException(switch (e.code) {
+      'invalid-verification-code' => AuthFailure.invalidCode,
+      'invalid-credential' ||
+      'wrong-password' ||
+      'user-not-found' => AuthFailure.invalidCredentials,
+      'email-already-in-use' => AuthFailure.emailInUse,
+      'weak-password' => AuthFailure.weakPassword,
+      'too-many-requests' => AuthFailure.tooManyRequests,
+      'invalid-phone-number' => AuthFailure.invalidPhone,
+      _ => AuthFailure.generic,
+    });
+  }
 
   @override
   Future<void> signInWithEmail(String email, String password) async {
@@ -106,7 +111,10 @@ class FirebaseAuthRepository implements AuthRepository {
   @override
   Future<void> createWithEmail(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
     } on FirebaseAuthException catch (e) {
       throw _map(e);
     }
@@ -156,10 +164,14 @@ class FirebaseAuthRepository implements AuthRepository {
         'consentPdpl': true,
         'locale': locale,
       });
-      await _auth.currentUser?.getIdToken(true); // pick up the new custom claims
+      await _auth.currentUser?.getIdToken(
+        true,
+      ); // pick up the new custom claims
     } on FirebaseFunctionsException catch (e) {
       throw OrgException(
-        e.code == 'resource-exhausted' ? OrgFailure.tooManyOrgs : OrgFailure.generic,
+        e.code == 'resource-exhausted'
+            ? OrgFailure.tooManyOrgs
+            : OrgFailure.generic,
       );
     }
   }

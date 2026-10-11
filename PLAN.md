@@ -26,16 +26,18 @@ Arabic RTL correct on both; CI green.
 
 Deliverables
 
-- [ ] Web components (React + Radix + tokens) and matching Flutter widgets: Button, IconButton, Input, Select, Sheet, Dialog,
+- [x] Web components (React + Radix + tokens) and matching Flutter widgets: Button, IconButton, Input, Select, Sheet, Dialog,
       Tabs, Card, PropertyCard, StatTile, Timeline, EmptyState, Toast, Skeleton, GlassPanel (solid fallback), ArchImage,
       ShurfaDivider, ShurfaLoader
-- [ ] /design-lab (web) and Gallery (app): dark + light, ar + en
-- [ ] Landing page: hero w/ static dusk image + one Arabic headline, role fork, 3-step how-it-works, Health Record story,
+- [x] /design-lab (web) and Gallery (app): dark + light, ar + en
+- [x] Landing page: hero w/ static dusk image + one Arabic headline, role fork, 3-step how-it-works, Health Record story,
       insights teaser, trust section, footer CTA (Arabic copy, no fake numbers/testimonials)
-- [ ] App: 3-screen onboarding + home shell with glass bottom dock
-- [ ] Self-critique loop: screenshots, 10 biggest gaps, fixes, before/after
+- [x] App: 3-screen onboarding + home shell with glass bottom dock
+- [x] Self-critique loop: screenshots, 10 biggest gaps, fixes, before/after
 
 Acceptance: Lighthouse mobile ≥ 90 on landing; AA contrast; reduced motion respected.
+
+**Status (2026-10-11): done and verified locally.** See [docs/PHASE2-REPORT.md](docs/PHASE2-REPORT.md). Known gaps: Arabic LCP 3.0 s (target 2.5 s); no iOS/Android screenshots (no Android SDK / no macOS).
 
 ## Phase 3 — 3D map experience
 

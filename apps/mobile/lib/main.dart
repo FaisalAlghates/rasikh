@@ -24,9 +24,16 @@ Future<void> main() async {
       ),
     );
     // Android emulators reach the host machine at 10.0.2.2.
-    final host = (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) ? '10.0.2.2' : '127.0.0.1';
+    final host = (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+        ? '10.0.2.2'
+        : '127.0.0.1';
     await FirebaseAuth.instance.useAuthEmulator(host, 9099);
-    FirebaseFunctions.instanceFor(region: 'me-central2').useFunctionsEmulator(host, 5001);
+    // The emulator issues codes without a reCAPTCHA / Play Integrity round trip.
+    await FirebaseAuth.instance.setSettings(
+      appVerificationDisabledForTesting: true,
+    );
+    FirebaseFunctions.instanceFor(region: 'me-central2')
+        .useFunctionsEmulator(host, 5001);
   } else {
     await Firebase.initializeApp();
   }

@@ -170,4 +170,217 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get workspaceNoOrg => 'لم تنشئ مساحة عمل بعد.';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get skip => 'تخطّي';
+
+  @override
+  String get intro1Title => 'كل شيء موثّق';
+
+  @override
+  String get intro1Body =>
+      'من يوم الاستلام إلى يوم التسليم: عقدك ودفعاتك وحالة الوحدة في سجل واحد.';
+
+  @override
+  String get intro2Title => 'فحص بالصور والتوقيع';
+
+  @override
+  String get intro2Body =>
+      'وثّق الوحدة غرفة بغرفة، بوقت وموقع كل صورة، وبتوقيع الطرفين.';
+
+  @override
+  String get intro3Title => 'يكمّل إيجار';
+
+  @override
+  String get intro3Body =>
+      'لا يحلّ محلّ عقود إيجار ولا وديعته ولا نموذج التسليم الرسمي، بل يوثّق ما حولها.';
+
+  @override
+  String get navHome => 'الرئيسية';
+
+  @override
+  String get navMap => 'الخريطة';
+
+  @override
+  String get navRecord => 'السجل';
+
+  @override
+  String get navProfile => 'حسابي';
+
+  @override
+  String get navLabel => 'التنقل الرئيسي';
+
+  @override
+  String get mapSoonTitle => 'الخريطة قريباً';
+
+  @override
+  String get mapSoonBody => 'ستظهر عقاراتك هنا على خريطة ثلاثية الأبعاد.';
+
+  @override
+  String get recordSample => 'مثال توضيحي';
+
+  @override
+  String get recordEmptyTitle => 'سجل العقار';
+
+  @override
+  String get recordEv1 => 'استلام الوحدة';
+
+  @override
+  String get recordEv1Detail => 'فحص غرفة بغرفة، بتوقيع المالك والمستأجر.';
+
+  @override
+  String get recordEv2 => 'صيانة التكييف';
+
+  @override
+  String get recordEv2Detail => 'تذكرة مغلقة بصور قبل وبعد.';
+
+  @override
+  String get recordEv3 => 'تنبيه تجديد العقد';
+
+  @override
+  String get recordEv3Detail => 'تذكير للطرفين قبل انتهاء العقد بستين يوماً.';
+
+  @override
+  String get profileTitle => 'حسابي';
+
+  @override
+  String get themeDark => 'داكن';
+
+  @override
+  String get themeLight => 'فاتح';
+
+  @override
+  String get themeToggle => 'تبديل المظهر';
+
+  @override
+  String get galleryTitle => 'معرض المكوّنات';
+
+  @override
+  String get gButtons => 'الأزرار';
+
+  @override
+  String get gPrimary => 'أساسي';
+
+  @override
+  String get gQuiet => 'هادئ';
+
+  @override
+  String get gGhost => 'نصي';
+
+  @override
+  String get gLoading => 'جارٍ الحفظ';
+
+  @override
+  String get gFields => 'الحقول';
+
+  @override
+  String get gFieldLabel => 'اسم الوحدة';
+
+  @override
+  String get gFieldHint => 'مثال: شقة 3';
+
+  @override
+  String get gFieldError => 'هذا الحقل مطلوب';
+
+  @override
+  String get gSelectLabel => 'نوع الوحدة';
+
+  @override
+  String get gSelectPlaceholder => 'اختر النوع';
+
+  @override
+  String get gStudio => 'استوديو';
+
+  @override
+  String get gApartment => 'شقة';
+
+  @override
+  String get gVilla => 'فيلا';
+
+  @override
+  String get gOverlays => 'النوافذ';
+
+  @override
+  String get gOpenDialog => 'افتح نافذة';
+
+  @override
+  String get gDialogTitle => 'تأكيد الإجراء';
+
+  @override
+  String get gDialogBody => 'لن يتغير أي سجل قبل ضغطك على تأكيد.';
+
+  @override
+  String get gConfirm => 'تأكيد';
+
+  @override
+  String get gOpenSheet => 'افتح لوحة';
+
+  @override
+  String get gSheetTitle => 'تصفية العقارات';
+
+  @override
+  String get gShowToast => 'أظهر إشعاراً';
+
+  @override
+  String get gToastMsg => 'تم حفظ التغييرات';
+
+  @override
+  String get gTabs => 'التبويبات';
+
+  @override
+  String get gTabsLabel => 'عرض';
+
+  @override
+  String get gTabA => 'الوحدات';
+
+  @override
+  String get gTabB => 'العقود';
+
+  @override
+  String get gCards => 'البطاقات';
+
+  @override
+  String get gStatRent => 'إيجارات هذا الشهر';
+
+  @override
+  String get gStatNote => 'مثال بقيم تجريبية';
+
+  @override
+  String get gPropTitle => 'شقة 3، عمارة النخيل';
+
+  @override
+  String get gPropPlace => 'الرياض، حي الملقا';
+
+  @override
+  String get gPropMeta => 'الإيجار السنوي: 42,000 ر.س';
+
+  @override
+  String get gStatusOk => 'مدفوع';
+
+  @override
+  String get gStatusLate => 'متأخر';
+
+  @override
+  String get gEmpty => 'حالات الفراغ والتحميل';
+
+  @override
+  String get gEmptyTitle => 'لا توجد وحدات بعد';
+
+  @override
+  String get gEmptyBody => 'أضف أول وحدة لتبدأ السجل.';
+
+  @override
+  String get gAddUnit => 'أضف وحدة';
+
+  @override
+  String get gGlass => 'الزجاج: للعناصر العائمة فوق الخريطة فقط';
+
+  @override
+  String get gGlassSample => 'ابحث عن حي أو عقار';
+
+  @override
+  String get gArch => 'قوس نجدي · الشرفات';
 }

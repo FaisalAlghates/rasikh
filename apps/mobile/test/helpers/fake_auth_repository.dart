@@ -67,7 +67,12 @@ class FakeAuthRepository implements AuthRepository {
     required List<String> roles,
     required String locale,
   }) async {
-    lastOrgRequest = {'name': name, 'displayName': displayName, 'roles': roles, 'locale': locale};
+    lastOrgRequest = {
+      'name': name,
+      'displayName': displayName,
+      'roles': roles,
+      'locale': locale,
+    };
     _emit(SessionUser(uid: 'u1', orgs: {'org1': roles}));
   }
 
