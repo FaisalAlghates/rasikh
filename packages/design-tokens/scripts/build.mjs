@@ -67,12 +67,16 @@ ${staticVars}
 ${themeVars('light')}
   color-scheme: light;
 }
-:root[data-theme='dark'] {
+[data-theme='light'] {
+${themeVars('light')}
+  color-scheme: light;
+}
+[data-theme='dark'] {
 ${themeVars('dark')}
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
+  :root:not([data-theme]) {
 ${themeVars('dark').replace(/^/gm, '  ')}
     color-scheme: dark;
   }

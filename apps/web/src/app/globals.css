@@ -26,10 +26,14 @@ body {
 }
 html[lang='ar'] .display-font {
   font-family: var(--font-reem-kufi), var(--font-fraunces), serif;
+  line-height: 1.3;
 }
-.hairline {
-  border: 1px solid
-    color-mix(in srgb, var(--rk-border) calc(var(--rk-border-alpha) * 100%), transparent);
+/* In the components layer so utilities (e.g. border-danger) can override it. */
+@layer components {
+  .hairline {
+    border: 1px solid
+      color-mix(in srgb, var(--rk-border) calc(var(--rk-border-alpha) * 100%), transparent);
+  }
 }
 .tabular {
   font-variant-numeric: tabular-nums;
@@ -38,6 +42,93 @@ html[lang='ar'] .display-font {
   outline: 2px solid var(--rk-brand-text);
   outline-offset: 2px;
 }
+[data-theme] {
+  background: var(--rk-bg);
+  color: var(--rk-text);
+}
+
+/* Glass: only for controls floating over a map or image. One layer per screen. */
+.glass {
+  background: color-mix(in srgb, var(--rk-surface) 62%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--rk-text) 14%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--rk-text) 16%, transparent);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--rk-surface);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--rk-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Najdi doorway arch mask. */
+.arch {
+  border-start-start-radius: 999px;
+  border-start-end-radius: 999px;
+  overflow: hidden;
+}
+
+/* Skeleton shimmer. */
+.skeleton {
+  background: color-mix(in srgb, var(--rk-border) 22%, transparent);
+  border-radius: var(--rk-radius-md);
+  animation: skeleton-pulse 1.6s var(--rk-ease) infinite;
+}
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Shurfa loader: crenellation triangles rising in sequence. */
+.shurfa-loader {
+  display: inline-flex;
+  gap: 4px;
+  align-items: flex-end;
+  color: var(--rk-brand-text);
+}
+.shurfa-loader i {
+  width: 0;
+  height: 0;
+  border-inline: 6px solid transparent;
+  border-bottom: 10px solid currentColor;
+  opacity: 0.25;
+  animation: shurfa-rise 1.2s var(--rk-ease) infinite;
+}
+.shurfa-loader i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.shurfa-loader i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.shurfa-loader i:nth-child(4) {
+  animation-delay: 0.45s;
+}
+@keyframes shurfa-rise {
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* Entrance: slow and soft. */
+.rise-in {
+  animation: rise-in var(--rk-dur-slow) var(--rk-ease) both;
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

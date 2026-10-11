@@ -1,28 +1,34 @@
 import type { Metadata } from 'next';
 import { Fraunces, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Reem_Kufi } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ClientMessages } from '@/components/ClientMessages';
+import { themeInitScript } from '@/lib/theme-script';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
 
-const reem = Reem_Kufi({
-  subsets: ['arabic', 'latin'],
-  variable: '--font-reem-kufi',
-  display: 'swap',
-});
+// Only the Arabic display face (the headline, i.e. the LCP text) is preloaded; body faces load on demand.
+const reem = Reem_Kufi({ subsets: ['arabic'], variable: '--font-reem-kufi', display: 'swap' });
 const plexArabic = IBM_Plex_Sans_Arabic({
-  subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '600'],
+  subsets: ['arabic'],
+  weight: ['400', '600'],
   variable: '--font-plex-arabic',
   display: 'swap',
+  preload: false,
 });
-const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces', display: 'swap' });
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  display: 'swap',
+  preload: false,
+});
 const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '600'],
   variable: '--font-plex-sans',
   display: 'swap',
+  preload: false,
 });
 
 export function generateStaticParams() {
@@ -57,8 +63,11 @@ export default async function LocaleLayout({
       className={`${reem.variable} ${plexArabic.variable} ${fraunces.variable} ${plexSans.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <ClientMessages namespaces={['common']}>{children}</ClientMessages>
       </body>
     </html>
   );

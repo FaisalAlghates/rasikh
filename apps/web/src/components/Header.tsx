@@ -3,8 +3,9 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { BrandMark } from './BrandMark';
+import { ThemeToggle } from './ThemeToggle';
 
-export function Header() {
+export function Header({ showTheme = true }: { showTheme?: boolean }) {
   const t = useTranslations('common');
   const locale = useLocale();
   const pathname = usePathname();
@@ -16,13 +17,17 @@ export function Header() {
         <BrandMark size={28} />
         <span className="display-font text-h3 text-text">{t('appName')}</span>
       </Link>
-      <Link
-        href={pathname}
-        locale={other}
-        className="hairline rounded-md px-3 py-1.5 text-small text-text-muted transition-colors duration-200 hover:text-text"
-      >
-        {t('switchLanguage')}
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link
+          href={pathname}
+          locale={other}
+          lang={other}
+          className="hairline inline-flex min-h-11 items-center rounded-md px-3 text-small text-text-muted transition-colors duration-200 hover:text-text"
+        >
+          {t('switchLanguage')}
+        </Link>
+        {showTheme && <ThemeToggle />}
+      </div>
     </header>
   );
 }

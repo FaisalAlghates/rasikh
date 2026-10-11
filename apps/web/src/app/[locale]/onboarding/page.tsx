@@ -6,7 +6,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { SELF_SERVICE_ROLES, type SelfServiceRole } from '@rasikh/shared';
 import { Header } from '@/components/Header';
-import { Button, Field } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Field } from '@/components/ui/Input';
 import { useRouter } from '@/i18n/navigation';
 import { firebaseFunctions } from '@/lib/firebase';
 import { readClaims, useUser } from '@/lib/use-user';
@@ -67,7 +68,7 @@ export default function OnboardingPage() {
       <Header />
       <main className="mx-auto flex max-w-xl flex-col gap-8 px-6 pb-24 pt-10">
         <div>
-          <h1 className="display-font text-h2">{t('title')}</h1>
+          <h1 className="text-h2 font-semibold">{t('title')}</h1>
           <p className="mt-2 text-text-muted">{t('subtitle')}</p>
         </div>
 

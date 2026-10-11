@@ -4,7 +4,7 @@ import { signOut } from 'firebase/auth';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
-import { Button } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
 import { useRouter } from '@/i18n/navigation';
 import { firebaseAuth } from '@/lib/firebase';
 import { readClaims, useUser, type OrgClaims } from '@/lib/use-user';
@@ -26,7 +26,7 @@ export default function WorkspacePage() {
     <>
       <Header />
       <main className="mx-auto flex max-w-3xl flex-col gap-6 px-6 pb-24 pt-10">
-        <h1 className="display-font text-h2">{t('workspace.title')}</h1>
+        <h1 className="text-h2 font-semibold">{t('workspace.title')}</h1>
         {claims === undefined ? (
           <p className="text-text-muted">{t('common.loading')}</p>
         ) : orgs.length === 0 ? (

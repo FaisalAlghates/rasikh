@@ -12,7 +12,8 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { SaudiPhoneSchema } from '@rasikh/shared';
 import { Header } from '@/components/Header';
-import { Button, Field } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Field } from '@/components/ui/Input';
 import { useRouter } from '@/i18n/navigation';
 import { firebaseAuth } from '@/lib/firebase';
 
@@ -104,7 +105,7 @@ export default function AuthPage() {
       <Header />
       <main className="mx-auto flex max-w-md flex-col gap-6 px-6 pb-24 pt-10">
         <div>
-          <h1 className="display-font text-h2">{t('title')}</h1>
+          <h1 className="text-h2 font-semibold">{t('title')}</h1>
           <p className="mt-2 text-text-muted">{t('subtitle')}</p>
         </div>
 

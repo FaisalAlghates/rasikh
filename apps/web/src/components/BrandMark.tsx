@@ -15,24 +15,3 @@ export function BrandMark({ size = 32, className }: { size?: number; className?:
     </svg>
   );
 }
-
-/** Thin shurfa (crenellation) divider. */
-export function ShurfaDivider({ className }: { className?: string }) {
-  return (
-    <svg
-      role="presentation"
-      aria-hidden="true"
-      className={className}
-      width="100%"
-      height="10"
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <pattern id="shurfa" width="16" height="10" patternUnits="userSpaceOnUse">
-          <path d="M0 10 8 0 16 10z" fill="currentColor" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="10" fill="url(#shurfa)" />
-    </svg>
-  );
-}
