@@ -31,8 +31,27 @@ jobs:
       - run: pnpm build
       - name: Unit + security-rules tests (Firebase emulators)
         run: pnpm test
+      - name: Web e2e (Playwright + emulators)
+        run: |
+          pnpm --filter @rasikh/web exec playwright install --with-deps chromium
+          firebase emulators:exec --only auth,functions,firestore,storage --project demo-rasikh "pnpm --filter @rasikh/web e2e"
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: emulator-logs
           path: '**/*-debug.log'
+
+  flutter:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test

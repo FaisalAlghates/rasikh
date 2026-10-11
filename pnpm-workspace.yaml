@@ -11,3 +11,4 @@ allowBuilds:
   protobufjs: true
   '@firebase/util': true
   '@swc/core': true
+  playwright: true

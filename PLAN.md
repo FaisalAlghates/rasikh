@@ -7,18 +7,20 @@ screenshots (web desktop + 390px, app iOS + Android), and a known-gaps list.
 
 Deliverables
 
-- [ ] pnpm + Turborepo monorepo, TS strict configs, ESLint, Prettier
-- [ ] Firebase config: firebase.json, .firebaserc (dev + prod), Emulator Suite (auth, firestore, storage, functions); default region me-central2
-- [ ] Written list of console steps the user must do (projects, Firestore/Storage location me-central2, Blaze) — then wait for confirmation before any deploy
-- [ ] Auth: phone OTP (+966) + email on web and app; role onboarding; callable Function creating org + custom claims
-- [ ] Firestore + Storage rules skeleton (deny by default, org + role) with emulator tests
-- [ ] packages/design-tokens: JSON → CSS vars + Tailwind theme + Flutter ThemeExtension; 4 fonts loaded
-- [ ] App shells: Next.js + next-intl (ar default, RTL); Flutter + ARB (ar default, RTL)
-- [ ] GitHub Actions CI: lint, typecheck, test, build
-- [ ] Record App Hosting region decision in CLAUDE.md
+- [x] pnpm + Turborepo monorepo, TS strict configs, ESLint, Prettier
+- [x] Firebase config: firebase.json, .firebaserc (dev alias = rasikh-eca19; prod alias pending), Emulator Suite, default region me-central2
+- [x] Written list of console steps: docs/FIREBASE-SETUP.md (nothing deployed; waiting for the user)
+- [x] Auth: phone OTP (+966) + email on web and app; role onboarding; callable Function creating org + custom claims (verified on emulators)
+- [x] Firestore + Storage rules skeleton (deny by default, org + role) with emulator tests (14 tests)
+- [x] packages/design-tokens: JSON → CSS vars + Tailwind theme + Flutter ThemeExtension; AA contrast enforced at build; 4 fonts loaded (web: next/font; app: google_fonts runtime fetch, to be bundled)
+- [x] App shells: Next.js + next-intl (ar default, RTL); Flutter + ARB (ar default, RTL)
+- [~] GitHub Actions CI written (lint, typecheck, build, tests, Playwright e2e, Flutter); not yet run: no GitHub remote
+- [~] App Hosting region: recorded as UNVERIFIED in CLAUDE.md; decide at first deploy
 
 Acceptance: emulators start with one command; sign-in works on web + app against emulators; rules tests pass;
 Arabic RTL correct on both; CI green.
+
+**Status (2026-10-11): code complete, verified locally.** Known gaps: Android/iOS builds not run (no Android SDK; iOS needs macOS); JSON Schema → Dart model generation not wired (only JSON Schema emitted; Flutter uses a hand-written validator mirror); CI not run on GitHub; nothing deployed.
 
 ## Phase 2 — Design system + signature screens
 

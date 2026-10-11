@@ -18,3 +18,5 @@ firebase/functions/lib
 firebase-debug.log
 next-env.d.ts
 tsconfig.tsbuildinfo
+test-results
+playwright-report

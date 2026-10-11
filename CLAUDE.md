@@ -55,7 +55,10 @@ Verify latest stable versions in official docs before installing; never guess AP
 
 **Recorded decisions** (update here):
 
-- App Hosting region: _TBD in Phase 1 (verify current supported list; Dammam was not supported at brief time)._
+- App Hosting region: _UNVERIFIED._ The official locations page could not be fetched; the region list is shown by `firebase apphosting:backends:create`. Decide at first deploy, then record here. Web server stays stateless, no personal data logged.
+- Local dev: Firebase emulators run against demo project `demo-rasikh`. Real dev project: `rasikh-eca19` (Spark; needs Blaze before Functions deploy).
+- Windows dev quirks: Java emulators need an ASCII project path (use the `C:\dev\rasikh` junction); `@swc/core` needs `SWC_NATIVE_BINDING_CACHE` pointing to a user-only directory.
+- Stack versions verified 2026-10-11: Next 16.4 (uses `proxy.ts`, not `middleware.ts`), React 19.3, Tailwind 4.3, next-intl 4.14, zod 4.6, firebase JS 13, firebase-functions 7.4, Flutter 3.47.7 / Dart 3.13.5.
 
 ## 3. Design system — "Najd Dusk" (quiet luxury)
 
@@ -133,3 +136,4 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 - Never put keys in code or prompts; ask for them and store in .env (gitignored) or Secret Manager.
 - Do not deploy anything without explicit confirmation.
 - Compliance copy: never market Rasikh as replacing Ejar or Mullak; have a lawyer review privacy policy and terms (PDPL).
+

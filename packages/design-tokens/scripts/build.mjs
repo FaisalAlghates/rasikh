@@ -1,6 +1,6 @@
 // Generates CSS variables, a Tailwind v4 @theme block and a Flutter ThemeExtension from tokens.json.
 // Fails the build if any WCAG contrast pair is below its required ratio.
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -167,6 +167,12 @@ ${roleNames.map((k) => `      ${camel(k)}: Color.lerp(${camel(k)}, other.${camel
 }
 `;
 writeFileSync(join(out, 'rasikh_tokens.g.dart'), dart);
+// Keep the Flutter app in sync with the tokens.
+const mobileTheme = join(root, '..', '..', 'apps', 'mobile', 'lib', 'theme');
+if (existsSync(join(root, '..', '..', 'apps', 'mobile', 'lib'))) {
+  mkdirSync(mobileTheme, { recursive: true });
+  writeFileSync(join(mobileTheme, 'rasikh_tokens.g.dart'), dart);
+}
 
 writeFileSync(join(out, 'contrast-report.txt'), report.join('\n') + '\n');
 console.log('\nTokens built.');
