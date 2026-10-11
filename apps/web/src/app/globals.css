@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+@import '@rasikh/design-tokens/tokens.css';
+@import '@rasikh/design-tokens/tailwind-theme.css';
+
+html {
+  background: var(--rk-bg);
+  color: var(--rk-text);
+  font-family: var(--font-plex-sans), var(--font-plex-arabic), system-ui, sans-serif;
+  font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+html[lang='ar'] {
+  font-family: var(--font-plex-arabic), var(--font-plex-sans), system-ui, sans-serif;
+  line-height: var(--rk-lh-arabic);
+}
+html[lang='en'] {
+  line-height: var(--rk-lh-latin);
+}
+body {
+  min-height: 100dvh;
+  background: var(--rk-bg);
+}
+.display-font {
+  font-family: var(--font-fraunces), var(--font-reem-kufi), serif;
+  line-height: var(--rk-lh-display);
+}
+html[lang='ar'] .display-font {
+  font-family: var(--font-reem-kufi), var(--font-fraunces), serif;
+}
+.hairline {
+  border: 1px solid
+    color-mix(in srgb, var(--rk-border) calc(var(--rk-border-alpha) * 100%), transparent);
+}
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+:focus-visible {
+  outline: 2px solid var(--rk-brand-text);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

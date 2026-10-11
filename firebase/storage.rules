@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// Files live under orgs/{orgId}/... Members may upload images/PDFs up to 25 MB.
+// Overwrites and deletes are denied: uploaded evidence is write-once.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isMember(orgId) {
+      return request.auth != null && request.auth.token.get('orgs', {}).keys().hasAny([orgId]);
+    }
+    function hasAnyRole(orgId, allowed) {
+      return isMember(orgId) && request.auth.token.orgs[orgId].hasAny(allowed);
+    }
+
+    match /orgs/{orgId}/{allPaths=**} {
+      allow read: if isMember(orgId);
+      allow create: if resource == null
+        && hasAnyRole(orgId, ['owner', 'tenant', 'manager', 'broker', 'vendor', 'admin'])
+        && request.resource.size < 25 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*')
+            || request.resource.contentType.matches('video/.*')
+            || request.resource.contentType == 'application/pdf');
+      allow update, delete: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

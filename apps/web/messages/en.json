@@ -1,0 +1,80 @@
+{
+  "common": {
+    "appName": "Rasikh",
+    "tagline": "Your property, on solid ground.",
+    "loading": "Loading",
+    "continue": "Continue",
+    "back": "Back",
+    "signOut": "Sign out",
+    "switchLanguage": "العربية",
+    "themeLight": "Light",
+    "themeDark": "Dark"
+  },
+  "home": {
+    "headline": "From move-in day to move-out day, everything on record.",
+    "subhead": "One record for your property: leases, payments, inspections, maintenance. It complements Ejar; it does not replace it.",
+    "start": "Get started",
+    "welcomeBack": "Welcome back",
+    "openWorkspace": "Open workspace"
+  },
+  "auth": {
+    "title": "Sign in to Rasikh",
+    "subtitle": "With your phone number or email.",
+    "tabPhone": "Phone",
+    "tabEmail": "Email",
+    "phoneLabel": "Mobile number",
+    "phoneHint": "Saudi number starting with 5, e.g. 5XXXXXXXX",
+    "sendCode": "Send code",
+    "codeLabel": "Verification code",
+    "verify": "Verify",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "toCreate": "No account? Create one",
+    "toSignIn": "Have an account? Sign in",
+    "errors": {
+      "invalidPhone": "Enter a valid Saudi mobile number.",
+      "invalidCode": "The code is incorrect.",
+      "invalidCredentials": "Email or password is incorrect.",
+      "emailInUse": "This email is already registered.",
+      "weakPassword": "Password is too short. Use at least 8 characters.",
+      "tooMany": "Too many attempts. Try again later.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "onboarding": {
+    "title": "Tell us your role",
+    "subtitle": "Pick one or more. You can change this later.",
+    "roles": {
+      "owner": "Owner",
+      "tenant": "Tenant",
+      "manager": "Building manager",
+      "broker": "Broker",
+      "vendor": "Technician / vendor"
+    },
+    "roleHints": {
+      "owner": "Managing 1 to 50 units",
+      "tenant": "An active lease",
+      "manager": "A building or owners association",
+      "broker": "Licensed by REGA",
+      "vendor": "Maintenance and inspection"
+    },
+    "displayName": "Your name",
+    "orgName": "Your portfolio or company name",
+    "orgNameHint": "e.g. Northern Properties",
+    "consent": "I agree to the processing of my personal data to operate my account, under the Personal Data Protection Law.",
+    "submit": "Create workspace",
+    "errors": {
+      "pickRole": "Pick at least one role.",
+      "needConsent": "Consent is required to continue.",
+      "tooMany": "You have reached the maximum number of workspaces.",
+      "generic": "Could not create the workspace. Please try again."
+    }
+  },
+  "workspace": {
+    "title": "Workspace",
+    "ready": "Your workspace is ready. Your portfolio and map will appear here in later phases.",
+    "noOrg": "You have not created a workspace yet."
+  }
+}

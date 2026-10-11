@@ -1,0 +1,13 @@
+packages:
+  - 'apps/web'
+  - 'firebase/functions'
+  - 'packages/*'
+minimumReleaseAgeExclude:
+  - zod@4.6.6
+allowBuilds:
+  esbuild: true
+  sharp: true
+  '@parcel/watcher': true
+  protobufjs: true
+  '@firebase/util': true
+  '@swc/core': true

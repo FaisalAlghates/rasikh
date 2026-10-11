@@ -1,0 +1,135 @@
+# CLAUDE.md — Rasikh · راسخ (project memory)
+
+Read this before every task. It is the source of truth; PLAN.md tracks progress.
+
+## 1. Product
+
+Rasikh is an Arabic-first website + mobile app for running rental property in Saudi Arabia.
+It COMPLEMENTS the government Ejar platform: it never replaces Ejar contracts, Ejar deposit holding,
+or Ejar's official handover form. Core promise: "documentation that prevents disputes, from move-in
+day to move-out day, in one property record."
+
+- Brand: Rasikh / راسخ = "firmly rooted". Tagline ar: "عقارك على أرض ثابتة"; en: "Your property, on solid ground."
+- Mark: three stacked Najdi shurfa triangles forming a solid base + wordmark (Reem Kufi / Fraunces).
+- Roles (one account may hold several): Owner (1–50 units), Tenant, Building/owners-association manager,
+  Licensed broker (stores and shows REGA FAL license no.), Inspector/Vendor, Admin.
+
+### Modules
+
+1. Portfolio & 3D map — properties, buildings, units.
+2. Leases & payment ledger — lease records referencing the Ejar contract number, schedule, reminders,
+   receipt uploads. We RECORD payments; we never process, lend, or finance rent.
+3. Guided inspections — move-in/move-out, room-by-room, photos/video with capture timestamp + SHA-256 + GPS,
+   two-party sign-off, comparison PDF ready to attach in Ejar.
+4. Property Health Record (سجل العقار) — timeline of every event; transferable to a new owner with consent.
+5. Maintenance — tickets, photos, category, urgency, suggested responsibility (consumable → tenant,
+   basic/structural → owner, per Ejar guidance), vendor assignment, SLA timer.
+6. Buildings & owners associations — shared expenses (each with receipt), balances visible to all owners,
+   vendor quote comparison, votes. Copy: we complement the official Mullak platform; never claim official registration.
+7. Broker CRM — leads, viewings, immutable timestamped activity log, ad-compliance checker (REGA mandatory ad data).
+8. Insights — neighborhood rent/sale indicators from official open data (always "indicative"); Riyadh rent-freeze
+   helper (no annual increase on Riyadh contracts for 5 years from 2025-09-25; renewal notice 60 days before expiry).
+9. AI assistant restricted to real-estate tasks inside the product (see §7).
+
+### Out of scope at launch (feature-flagged OFF; must not ship enabled)
+
+Public listings marketplace or public booking (needs REGA platform / tourism license), lending/BNPL/rent
+financing, legal opinions, official valuations.
+
+## 2. Tech stack
+
+Verify latest stable versions in official docs before installing; never guess APIs.
+
+- Monorepo: pnpm workspaces + Turborepo.
+- apps/web: Next.js (App Router, TS strict), Tailwind, Radix primitives styled with our tokens, GSAP or Framer Motion,
+  Mapbox GL JS v3, Google Maps JS Map3DElement (optional), next-intl (ar default, en). Firebase App Hosting.
+- apps/mobile: Flutter (latest stable), Riverpod, go_router, FlutterFire (Auth, Firestore, Storage, Functions,
+  Messaging, Crashlytics, App Check), mapbox_maps_flutter (Standard), ARB localization (ar default).
+- firebase/: Cloud Functions 2nd gen (TS) in me-central2; Genkit for every AI flow; Firestore + Storage in me-central2;
+  rules, indexes, Emulator Suite config.
+- packages/shared: domain types + zod schemas + enums; JSON Schema → Dart models (freezed/json_serializable).
+- packages/design-tokens: one tokens JSON → CSS variables/Tailwind theme AND Flutter ThemeExtension.
+- Use official Firebase agent skills if available.
+- Data residency: all user data in me-central2. If App Hosting lacks me-central2, use the nearest supported region,
+  keep the web server stateless, never log personal data there, and record the choice below.
+
+**Recorded decisions** (update here):
+
+- App Hosting region: _TBD in Phase 1 (verify current supported list; Dammam was not supported at brief time)._
+
+## 3. Design system — "Najd Dusk" (quiet luxury)
+
+Principles: restraint over density; one oversized image or map per screen; editorial typography; ONE brand color;
+motion guides, never decorates; mobile first; speed is part of design.
+Avoid: shiny gold, heavy gradients, stock-photo families, more than one glass layer per screen, generic admin templates.
+
+Colors: night #0E0D0B · charcoal #1A1815 · sand #F4EEE4 · stone #8C8478 · najdi-clay #B5532C (brand) ·
+clay-light #D9825A (clay on dark) · success #4F7A5A · warning #C08A2E · danger #A63D32.
+Check WCAG 2.2 AA for every text/background pair; adjust lightness if needed; record final values in the tokens file.
+(Note: stone on sand and clay on night/sand need explicit checks — likely fail for small text.)
+
+Type: Arabic display Reem Kufi (large only); Arabic UI/body IBM Plex Sans Arabic; Latin display Fraunces;
+Latin body IBM Plex Sans. Scale px: 72/56/40/28/20/17/15/13. Arabic line-height 1.6–1.8. Tabular numerals in tables.
+Latin digits by default, setting for Arabic-Indic digits.
+
+Spacing 4-pt grid. Radius 4/8/16/28. Hairline borders (1px stone @ 20–30%). Almost no shadows.
+Motion: cubic-bezier(0.16,1,0.3,1); 200/400/700 ms; map camera ~2.5 s; honor reduced motion.
+
+Glass (Liquid Glass-inspired): ONLY for controls floating over the map (search bar, filter sheet, property peek card,
+mobile bottom dock): backdrop blur + subtle tint + 1px inner highlight; adapts light/dark; solid fallback when blur is
+unsupported or reduce-transparency is on. One glass layer per screen.
+
+Signature elements: (a) Najdi arch mask on hero property images; (b) shurfa crenellation as thin dividers + loading
+indicator; (c) Property Health Record vertical timeline with clay nodes; (d) landing hero = full-bleed 3D Riyadh at dusk,
+slow orbit, one headline, scroll moves the camera; (e) brand mark.
+
+Modes: dark default on map screens; light "sand" editorial on content pages; user override.
+RTL first: logical CSS properties only, mirrored directional icons, Hijri + Gregorian dates, SAR formatting.
+
+## 4. Maps
+
+- Mapbox Standard (web + app). lightPreset follows Riyadh local time (dawn/day/dusk/night); marketing pages fixed to dusk.
+  Hide most POI labels. Neighborhood indicators in the "middle" slot (under 3D buildings). User properties = clay
+  extrusions/markers with soft glow. Select property → flyTo, pitch ~60°.
+- Web only, optional, feature-flagged: Google Photorealistic 3D (Map3DElement) flyover on property page. Check coverage
+  first; fall back to Mapbox. No Flutter dependency on Google 3D Maps (mobile SDKs experimental, native only).
+- Performance: 60 fps target on mid-range phones, clustering, lazy-loaded map bundles, 2D fallback without WebGL.
+- Restrict every key/token by domain or bundle ID. Never commit secrets (.env + Secret Manager).
+
+## 5. Data & security
+
+- Auth: Firebase Auth phone OTP (+966) and email. Roles in custom claims, set only by Functions.
+- Multi-tenant by organization: orgs/{orgId}/...
+- Firestore rules deny by default; every read/write checks org membership + role; emulator unit tests.
+- Inspection media write-once after sign-off; SHA-256 + capture metadata in Firestore.
+- Audit log for sensitive actions. App Check on web and mobile.
+- Saudi PDPL: explicit consent screens, purpose-limited data, export/delete my data, Arabic privacy policy page.
+
+## 6. Quality bar
+
+- Landing Lighthouse ≥ 90 mobile, LCP < 2.5 s, AVIF images. WCAG 2.2 AA, Arabic screen-reader labels.
+- Tests: unit (shared + functions), security-rules, Playwright e2e (web), Flutter widget + integration.
+- GitHub Actions CI on every PR: lint, typecheck, test, build.
+- Every phase ends with: run all tests, screenshots of new screens (web desktop + mobile width, app iOS + Android),
+  and a list of known gaps.
+
+## 7. AI rules
+
+- AI runs only server-side in Genkit flows inside Cloud Functions (me-central2). No model keys in clients.
+- Scope: real-estate tasks inside this product only. A classifier step first rejects anything else with a polite Arabic message.
+- Provider configurable behind one interface (Gemini via Vertex AI default; Claude optional).
+- Never give legal rulings, official valuations or financial advice; short disclaimer + suggest a licensed professional.
+- Use only data the requesting user may see (fetch with their permissions).
+- Log metadata, not raw personal data; per-user rate limits; monthly cost cap; a human confirms before any AI suggestion
+  changes a record; AI output is visually marked.
+
+## 8. Working rules
+
+- Plan first, small reviewable steps, commit after each step.
+- Check current official docs before using any SDK; if this brief is outdated, say so and propose a fix.
+- Ask before adding any paid service or changing the stack.
+- No hard-coded UI strings; use translation files.
+- Keep CHANGELOG.md; tick PLAN.md checkboxes as phases complete.
+- Never put keys in code or prompts; ask for them and store in .env (gitignored) or Secret Manager.
+- Do not deploy anything without explicit confirmation.
+- Compliance copy: never market Rasikh as replacing Ejar or Mullak; have a lawyer review privacy policy and terms (PDPL).

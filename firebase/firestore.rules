@@ -1,0 +1,60 @@
+rules_version = '2';
+
+// Rasikh Firestore rules — deny by default.
+// Membership and roles live in custom claims set only by Cloud Functions:
+//   request.auth.token.orgs = { "<orgId>": ["owner", "tenant", ...] }
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isMember(orgId) {
+      return signedIn() && request.auth.token.get('orgs', {}).keys().hasAny([orgId]);
+    }
+    function rolesIn(orgId) {
+      return request.auth.token.orgs[orgId];
+    }
+    function hasAnyRole(orgId, allowed) {
+      return isMember(orgId) && rolesIn(orgId).hasAny(allowed);
+    }
+
+    // Personal profile: owner only, and only whitelisted fields (no roles here).
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['displayName', 'locale', 'digits', 'theme'])
+        && (!('displayName' in request.resource.data) || request.resource.data.displayName is string && request.resource.data.displayName.size() <= 80);
+      allow delete: if false;
+    }
+
+    // Organization root and member list: readable by members, written only by Functions.
+    match /orgs/{orgId} {
+      allow read: if isMember(orgId);
+      allow write: if false;
+
+      match /members/{uid} {
+        allow read: if isMember(orgId);
+        allow write: if false;
+      }
+
+      // Audit log: admins and owners may read; only Functions write.
+      match /audit/{id} {
+        allow read: if hasAnyRole(orgId, ['owner', 'admin']);
+        allow write: if false;
+      }
+
+      // Example collection used to prove the pattern; later phases add their own blocks.
+      match /properties/{propertyId} {
+        allow read: if hasAnyRole(orgId, ['owner', 'manager', 'admin', 'broker']);
+        allow create, update: if hasAnyRole(orgId, ['owner', 'manager', 'admin']);
+        allow delete: if hasAnyRole(orgId, ['owner', 'admin']);
+      }
+    }
+
+    // Everything else is denied.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
