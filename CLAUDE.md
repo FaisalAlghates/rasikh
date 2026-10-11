@@ -136,4 +136,3 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 - Never put keys in code or prompts; ask for them and store in .env (gitignored) or Secret Manager.
 - Do not deploy anything without explicit confirmation.
 - Compliance copy: never market Rasikh as replacing Ejar or Mullak; have a lawyer review privacy policy and terms (PDPL).
-
