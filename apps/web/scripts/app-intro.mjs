@@ -9,7 +9,10 @@ const out = join(import.meta.dirname, '..', '..', '..', 'docs', 'screenshots', '
 mkdirSync(out, { recursive: true });
 
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+const ctx = await browser.newContext({
+  viewport: { width: 390, height: 844 },
+  deviceScaleFactor: 2,
+});
 const page = await ctx.newPage();
 const hide = () =>
   page.evaluate(() =>

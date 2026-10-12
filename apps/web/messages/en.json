@@ -175,6 +175,40 @@
     "theme": "Theme",
     "dir": "Direction"
   },
+  "portfolio": {
+    "title": "My portfolio",
+    "sampleBadge": "Sample data",
+    "sampleNote": "The properties and indicators shown are illustrative samples and will be replaced by your data in the next phase.",
+    "search": "Search a property or district",
+    "filters": "Filter",
+    "all": "All",
+    "statusOk": "Paid",
+    "statusWarn": "Due soon",
+    "statusLate": "Late",
+    "units": "{count} units",
+    "rent": "Annual rent",
+    "sar": "SAR",
+    "noResults": "No property matches this search.",
+    "mapLabel": "Map of your properties",
+    "listLabel": "Property list",
+    "close": "Close card",
+    "name": {
+      "p1": "Al Yasmin Building",
+      "p2": "Al Waha Complex",
+      "p3": "Al Nakheel Tower",
+      "p4": "Al Rabie Villa",
+      "p5": "Al Safa Building",
+      "p6": "Al Ghadeer Complex"
+    },
+    "place": {
+      "p1": "Riyadh, Al Yasmin",
+      "p2": "Riyadh, Al Narjis",
+      "p3": "Riyadh, Al Olaya",
+      "p4": "Riyadh, Al Rawdah",
+      "p5": "Riyadh, Al Suwaidi",
+      "p6": "Riyadh, Al Malqa"
+    }
+  },
   "workspace": {
     "title": "Workspace",
     "ready": "Your workspace is ready. Your portfolio and map will appear here in later phases.",

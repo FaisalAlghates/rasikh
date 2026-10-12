@@ -52,6 +52,9 @@ Deliverables
 
 Acceptance: 60 fps on mid-range Android, no jank, keys restricted by domain/bundle ID, screenshots + recording description.
 
+
+**Status (2026-10-12): web slice built, map itself unverified.** Done: lazy Mapbox Standard MapView (Riyadh-clock lightPreset, POI labels hidden, clustering, slot middle indicator layer, clay glow markers, flyTo pitch 60), portfolio page (map↔list sync, one glass search bar, progressive filters, peek card, SAMPLE data labelled), flat no-token/no-WebGL fallback, 3 unit + 5 e2e tests. NOT done: running against a real token (none supplied), Google Photorealistic 3D flyover, Flutter mapbox_maps_flutter map, 60 fps device check.
+
 ## Phase 4 — Owner rental operations
 
 - [ ] Data model + zod + Dart: buildings, properties, units, leases (ejarContractNo…), schedule, payment records, expenses, documents
