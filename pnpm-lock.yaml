@@ -284,6 +284,9 @@ importers:
       firebase-functions:
         specifier: ^7.4.0
         version: 7.4.0(firebase-admin@14.5.0(@firebase/app-compat@0.5.19)(@firebase/app@0.16.3)(supports-color@7.2.0))(supports-color@7.2.0)
+      zod:
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@firebase/rules-unit-testing':
         specifier: ^6.0.0

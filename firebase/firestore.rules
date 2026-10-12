@@ -15,6 +15,9 @@ service cloud.firestore {
     function rolesIn(orgId) {
       return request.auth.token.orgs[orgId];
     }
+    function isStaff(orgId) {
+      return hasAnyRole(orgId, ['owner', 'manager', 'admin']);
+    }
     function hasAnyRole(orgId, allowed) {
       return isMember(orgId) && rolesIn(orgId).hasAny(allowed);
     }
@@ -49,6 +52,46 @@ service cloud.firestore {
         allow read: if hasAnyRole(orgId, ['owner', 'manager', 'admin', 'broker']);
         allow create, update: if hasAnyRole(orgId, ['owner', 'manager', 'admin']);
         allow delete: if hasAnyRole(orgId, ['owner', 'admin']);
+      }
+
+      // ---- Phase 4: owner operations -------------------------------------------------------
+      match /units/{unitId} {
+        allow read: if hasAnyRole(orgId, ['owner', 'manager', 'admin', 'broker']);
+        allow create, update, delete: if isStaff(orgId);
+      }
+
+      // Tenants read only their own lease and payments (matched on tenantUid).
+      match /leases/{leaseId} {
+        allow read: if isStaff(orgId)
+          || (isMember(orgId) && resource.data.get('tenantUid', '') == request.auth.uid);
+        allow create, update, delete: if isStaff(orgId);
+      }
+
+      match /payments/{paymentId} {
+        allow read: if isStaff(orgId)
+          || (isMember(orgId) && resource.data.get('tenantUid', '') == request.auth.uid);
+        allow create, delete: if isStaff(orgId);
+        // Staff mark payments paid; a tenant may only attach a receipt to their own payment.
+        allow update: if isStaff(orgId)
+          || (isMember(orgId) && resource.data.get('tenantUid', '') == request.auth.uid
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['receiptPath']));
+      }
+
+      match /expenses/{expenseId} {
+        allow read, write: if isStaff(orgId);
+      }
+
+      match /documents/{docId} {
+        allow read: if hasAnyRole(orgId, ['owner', 'manager', 'admin', 'broker']);
+        allow create, update, delete: if isStaff(orgId);
+      }
+
+      // In-app reminders are written by Functions; a user reads their own and may mark them read.
+      match /notifications/{nid} {
+        allow read: if isMember(orgId) && resource.data.uid == request.auth.uid;
+        allow update: if isMember(orgId) && resource.data.uid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readAt']);
+        allow create, delete: if false;
       }
     }
 
