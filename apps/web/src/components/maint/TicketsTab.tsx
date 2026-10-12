@@ -12,6 +12,8 @@ import { httpsCallable } from 'firebase/functions';
 import { ref, uploadBytes } from 'firebase/storage';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { AiAnswer } from '@/components/ai/AiAnswer';
+import { useAssist } from '@/components/ai/useAssist';
 import { Button } from '@/components/ui/Button';
 import { Card, StatusDot } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -59,6 +61,8 @@ export function TicketsTab({
   leases: Row<LeaseDoc>[];
 }) {
   const t = useTranslations('maint');
+  const ai = useTranslations('ai');
+  const triage = useAssist(orgId);
   const [selected, setSelected] = useState<string>();
   const [form, setForm] = useState({
     leaseId: leases[0]?.id ?? '',
@@ -184,6 +188,44 @@ export function TicketsTab({
                 className="mt-1 block text-small"
                 onChange={(e) => setFile(e.target.files?.[0])}
               />
+            </div>
+            <div className="flex flex-col gap-2 sm:col-span-2">
+              <div>
+                <Button
+                  type="button"
+                  variant="quiet"
+                  loading={triage.busy}
+                  onClick={() =>
+                    form.title.trim().length >= 2 &&
+                    void triage.run('triageTicket', {
+                      title: form.title.trim(),
+                      description: form.description,
+                    })
+                  }
+                >
+                  {ai('suggestTriage')}
+                </Button>
+              </div>
+              <AiAnswer result={triage.result} error={triage.error}>
+                {triage.result?.ok && triage.result.suggestion && (
+                  <Button
+                    type="button"
+                    variant="quiet"
+                    data-testid="apply-triage"
+                    onClick={() => {
+                      const s = triage.result?.ok ? triage.result.suggestion : undefined;
+                      if (s)
+                        setForm((f) => ({
+                          ...f,
+                          category: String(s.category ?? f.category),
+                          urgency: String(s.urgency ?? f.urgency),
+                        }));
+                    }}
+                  >
+                    {ai('applySuggestion')}
+                  </Button>
+                )}
+              </AiAnswer>
             </div>
             {error && (
               <p role="alert" className="text-small text-danger sm:col-span-2">

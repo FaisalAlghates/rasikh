@@ -86,7 +86,7 @@ export function BrokerView({ orgId, uid }: { orgId: string; uid: string }) {
       ) : (
         <Leads orgId={orgId} uid={uid} onOpen={setOpenLead} />
       )}
-      <AdChecker />
+      <AdChecker orgId={orgId} />
     </div>
   );
 }

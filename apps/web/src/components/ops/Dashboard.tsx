@@ -7,6 +7,7 @@ import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { InspectionsTab } from '@/components/inspect/InspectionsTab';
+import { AssistantPanel } from '@/components/ai/AssistantPanel';
 import { BrokerView } from '@/components/broker/BrokerView';
 import { BuildingsTab } from '@/components/building/BuildingsTab';
 import { MyBuildings } from '@/components/building/MyBuildings';
@@ -40,6 +41,7 @@ export function Dashboard() {
   const m = useTranslations('maint');
   const b = useTranslations('bldg');
   const br = useTranslations('broker');
+  const ai = useTranslations('ai');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -208,6 +210,12 @@ export function Dashboard() {
             <TicketsTab orgId={orgId} staff={false} tickets={tickets.rows} leases={leases.rows} />
           </section>
         )}
+        {lease && (
+          <section className="flex flex-col gap-3" aria-label={ai('tab')}>
+            <h2 className="text-h3 font-semibold">{ai('tab')}</h2>
+            <AssistantPanel orgId={orgId} leases={leases.rows} />
+          </section>
+        )}
         {vendorOnly && (
           <section className="flex flex-col gap-3" aria-label={m('tab')}>
             <h2 className="text-h3 font-semibold">{m('assignedToMe')}</h2>
@@ -312,6 +320,11 @@ export function Dashboard() {
             value: 'buildings',
             label: b('tab'),
             content: <BuildingsTab orgId={orgId} />,
+          },
+          {
+            value: 'assistant',
+            label: ai('tab'),
+            content: <AssistantPanel orgId={orgId} leases={leases.rows} />,
           },
           ...(isBroker
             ? [
