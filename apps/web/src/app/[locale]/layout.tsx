@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ClientMessages } from '@/components/ClientMessages';
 import { SceneBackdrop } from '@/components/immersive/SceneBackdrop';
 import { ScrollEffects } from '@/components/immersive/ScrollEffects';
+import { LOCALES, SITE_URL, localeUrl } from '@/lib/site';
 import { themeInitScript } from '@/lib/theme-script';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
@@ -44,7 +45,25 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'common' });
-  return { title: `${t('appName')} · ${t('tagline')}`, description: t('tagline') };
+  const title = `${t('appName')} · ${t('tagline')}`;
+  return {
+    metadataBase: new URL(SITE_URL),
+    title,
+    description: t('tagline'),
+    alternates: {
+      canonical: localeUrl(locale, ''),
+      languages: Object.fromEntries(LOCALES.map((l) => [l, localeUrl(l, '')])),
+    },
+    openGraph: {
+      type: 'website',
+      siteName: t('appName'),
+      title,
+      description: t('tagline'),
+      url: localeUrl(locale, ''),
+      locale: locale === 'ar' ? 'ar_SA' : 'en_US',
+    },
+    twitter: { card: 'summary', title, description: t('tagline') },
+  };
 }
 
 export default async function LocaleLayout({
