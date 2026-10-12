@@ -40,7 +40,10 @@ export function useAssist(orgId: string) {
     setError(undefined);
     setResult(undefined);
     try {
-      const r = await httpsCallable<unknown, AiResult>(firebaseFunctions(), 'aiAssist')({
+      const r = await httpsCallable<unknown, AiResult>(
+        firebaseFunctions(),
+        'aiAssist',
+      )({
         orgId,
         feature,
         input,

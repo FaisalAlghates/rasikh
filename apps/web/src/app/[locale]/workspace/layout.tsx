@@ -4,7 +4,18 @@ import { ClientMessages } from '@/components/ClientMessages';
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <ClientMessages
-      namespaces={['common', 'workspace', 'onboarding', 'ops', 'inspect', 'maint', 'bldg', 'broker', 'ai', 'account']}
+      namespaces={[
+        'common',
+        'workspace',
+        'onboarding',
+        'ops',
+        'inspect',
+        'maint',
+        'bldg',
+        'broker',
+        'ai',
+        'account',
+      ]}
     >
       {children}
     </ClientMessages>

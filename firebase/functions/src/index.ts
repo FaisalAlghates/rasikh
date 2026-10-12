@@ -6,7 +6,10 @@ import { getStorage } from 'firebase-admin/storage';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onCall, type CallableRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import { deleteMyAccount as deleteMyAccountImpl, exportMyData as exportMyDataImpl } from './account.js';
+import {
+  deleteMyAccount as deleteMyAccountImpl,
+  exportMyData as exportMyDataImpl,
+} from './account.js';
 import { aiAssist as aiAssistImpl } from './ai/assist.js';
 import { importIndicativePrices as importIndicativePricesImpl } from './ai/prices.js';
 import { providerFromEnv } from './ai/provider.js';
@@ -85,10 +88,18 @@ export const aiAssist = onCall({ enforceAppCheck }, (req: CallableRequest<unknow
   aiAssistImpl({ db: getFirestore(), runtime: aiRuntime() }, req.auth?.uid, req.data),
 );
 
-export const importIndicativePrices = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) => {
-  const data = (req.data ?? {}) as { orgId?: unknown; payload?: unknown };
-  return importIndicativePricesImpl({ db: getFirestore() }, req.auth?.uid, data.orgId, data.payload);
-});
+export const importIndicativePrices = onCall(
+  { enforceAppCheck },
+  (req: CallableRequest<unknown>) => {
+    const data = (req.data ?? {}) as { orgId?: unknown; payload?: unknown };
+    return importIndicativePricesImpl(
+      { db: getFirestore() },
+      req.auth?.uid,
+      data.orgId,
+      data.payload,
+    );
+  },
+);
 
 /** 07:00 Riyadh time every day. */
 export const dailyReminders = onSchedule(

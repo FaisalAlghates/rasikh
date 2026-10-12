@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  signOut,
-  type User,
-} from 'firebase/auth';
+import { EmailAuthProvider, reauthenticateWithCredential, signOut, type User } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -61,7 +56,10 @@ export function PrivacyPanel({ user }: { user: User }) {
       router.replace('/');
     } catch (e) {
       const m = (e as { message?: string }).message ?? '';
-      setMsg({ ok: false, text: m.includes('transfer_ownership_first') ? t('transfer') : t('failed') });
+      setMsg({
+        ok: false,
+        text: m.includes('transfer_ownership_first') ? t('transfer') : t('failed'),
+      });
       setBusy(undefined);
     }
   };

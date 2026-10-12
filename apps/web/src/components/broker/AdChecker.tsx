@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  AD_CAPACITIES,
-  AD_PURPOSES,
-  adIsReady,
-  checkAd,
-  type AdDraft,
-} from '@rasikh/shared';
+import { AD_CAPACITIES, AD_PURPOSES, adIsReady, checkAd, type AdDraft } from '@rasikh/shared';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { AiAnswer } from '@/components/ai/AiAnswer';
@@ -89,15 +83,26 @@ export function AdChecker({ orgId }: { orgId: string }) {
           label={t('adPurpose')}
           value={f.purpose}
           onChange={set('purpose')}
-          options={[{ value: '', label: '—' }, ...AD_PURPOSES.map((v) => ({ value: v, label: t(`adPurpose_${v}`) }))]}
+          options={[
+            { value: '', label: '—' },
+            ...AD_PURPOSES.map((v) => ({ value: v, label: t(`adPurpose_${v}`) })),
+          ]}
         />
-        <Field id="ad-adv" label={t('adAdvertiser')} value={f.advertiserName} onChange={set('advertiserName')} />
+        <Field
+          id="ad-adv"
+          label={t('adAdvertiser')}
+          value={f.advertiserName}
+          onChange={set('advertiserName')}
+        />
         <NativeSelect
           id="ad-cap"
           label={t('adCapacity')}
           value={f.capacity}
           onChange={set('capacity')}
-          options={[{ value: '', label: '—' }, ...AD_CAPACITIES.map((v) => ({ value: v, label: t(`adCapacity_${v}`) }))]}
+          options={[
+            { value: '', label: '—' },
+            ...AD_CAPACITIES.map((v) => ({ value: v, label: t(`adCapacity_${v}`) })),
+          ]}
         />
         <Field
           id="ad-lic"
@@ -115,10 +120,33 @@ export function AdChecker({ orgId }: { orgId: string }) {
         />
         <Field id="ad-city" label={t('adCity')} value={f.city} onChange={set('city')} />
         <Field id="ad-dist" label={t('adDistrict')} value={f.district} onChange={set('district')} />
-        <Field id="ad-type" label={t('adType')} value={f.propertyType} onChange={set('propertyType')} />
-        <Field id="ad-area" label={t('adArea')} inputMode="decimal" value={f.areaSqm} onChange={set('areaSqm')} />
-        <Field id="ad-price" label={t('adPrice')} inputMode="decimal" value={f.priceSar} onChange={set('priceSar')} />
-        <Field id="ad-phone" label={t('adPhone')} dir="ltr" value={f.phone} onChange={set('phone')} />
+        <Field
+          id="ad-type"
+          label={t('adType')}
+          value={f.propertyType}
+          onChange={set('propertyType')}
+        />
+        <Field
+          id="ad-area"
+          label={t('adArea')}
+          inputMode="decimal"
+          value={f.areaSqm}
+          onChange={set('areaSqm')}
+        />
+        <Field
+          id="ad-price"
+          label={t('adPrice')}
+          inputMode="decimal"
+          value={f.priceSar}
+          onChange={set('priceSar')}
+        />
+        <Field
+          id="ad-phone"
+          label={t('adPhone')}
+          dir="ltr"
+          value={f.phone}
+          onChange={set('phone')}
+        />
         <NativeSelect
           id="ad-enc"
           label={t('adEncumbrances')}
@@ -176,7 +204,9 @@ export function AdChecker({ orgId }: { orgId: string }) {
 
       <p
         data-testid="ad-verdict"
-        className={ready ? 'text-small font-semibold text-success' : 'text-small font-semibold text-danger'}
+        className={
+          ready ? 'text-small font-semibold text-success' : 'text-small font-semibold text-danger'
+        }
       >
         {ready ? t('adReady') : t('adNotReady')}
       </p>

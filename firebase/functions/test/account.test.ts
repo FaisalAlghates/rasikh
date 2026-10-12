@@ -45,7 +45,10 @@ describe('export my data', () => {
 
     expect(await code(exportMyData(deps, undefined))).toBe('auth_required');
     const out = await exportMyData(deps, tenant);
-    const o = out.orgs[org] as { leasesAsTenant: Array<{ ejarContractNo: string }>; notifications: unknown[] };
+    const o = out.orgs[org] as {
+      leasesAsTenant: Array<{ ejarContractNo: string }>;
+      notifications: unknown[];
+    };
     expect(out.uid).toBe(tenant);
     expect(o.leasesAsTenant.map((l) => l.ejarContractNo)).toEqual(['111']);
     expect(JSON.stringify(out)).not.toContain('222');
@@ -61,7 +64,9 @@ describe('delete my account', () => {
     const uid = await person(org, ['tenant']);
     const deps = { db, auth, now: () => NOW };
     expect(await code(deleteMyAccount(deps, undefined))).toBe('auth_required');
-    expect(await code(deleteMyAccount(deps, { uid, authTime: authTime(3600) }))).toBe('recent_login_required');
+    expect(await code(deleteMyAccount(deps, { uid, authTime: authTime(3600) }))).toBe(
+      'recent_login_required',
+    );
     expect(await code(deleteMyAccount(deps, { uid }))).toBe('recent_login_required');
     expect((await db.doc(`orgs/${org}/members/${uid}`).get()).exists).toBe(true);
   });
@@ -103,6 +108,8 @@ describe('delete my account', () => {
     expect((await db.doc(`orgs/${org}/members/${owner}`).get()).exists).toBe(true);
     // a second owner makes it possible
     await db.doc(`orgs/${org}/members/${tenant}`).set({ roles: ['owner'] });
-    expect((await deleteMyAccount(deps, { uid: owner, authTime: authTime(60) })).deleted).toBe(true);
+    expect((await deleteMyAccount(deps, { uid: owner, authTime: authTime(60) })).deleted).toBe(
+      true,
+    );
   });
 });

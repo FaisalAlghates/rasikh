@@ -39,7 +39,11 @@ export async function reserve(
       return { ok: false, reason: 'monthly_cap' } as const;
     }
     tx.set(dayRef, { count: count + 1, uid: args.uid, day }, { merge: true });
-    tx.set(monthRef, { units: units + args.estimatedUnits, month: day.slice(0, 7) }, { merge: true });
+    tx.set(
+      monthRef,
+      { units: units + args.estimatedUnits, month: day.slice(0, 7) },
+      { merge: true },
+    );
     return { ok: true } as const;
   });
 }
@@ -47,7 +51,14 @@ export async function reserve(
 export interface AiLogEntry {
   uid: string;
   feature: string;
-  outcome: 'answered' | 'refused_off_topic' | 'refused_jailbreak' | 'refused_input' | 'limited' | 'denied' | 'failed';
+  outcome:
+    | 'answered'
+    | 'refused_off_topic'
+    | 'refused_jailbreak'
+    | 'refused_input'
+    | 'limited'
+    | 'denied'
+    | 'failed';
   provider: string;
   inChars: number;
   outChars: number;

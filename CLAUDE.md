@@ -30,7 +30,7 @@ day to move-out day, in one property record."
 8. Insights — neighborhood rent/sale indicators from official open data (always "indicative"); Riyadh rent-freeze
    helper (no annual increase on Riyadh contracts for 5 years from 2025-09-25; renewal notice 60 days before expiry).
 9. AI assistant restricted to real-estate tasks inside the product (see §7).
-14. AI engineering office (المكتب الهندسي الذكي) — a 24/7 design copilot FOR licensed engineering offices. Each office
+10. AI engineering office (المكتب الهندسي الذكي) — a 24/7 design copilot FOR licensed engineering offices. Each office
     has its own private AI workspace. A client brief (plot dimensions, area, program, style) becomes concept floor plans,
     Saudi Building Code checks from a deterministic rule engine, a drawing set (PDF, DXF, IFC, glTF), preliminary
     structural/MEP schematics, a BOQ range and a Balady permit checklist. Every output is a draft until a verified

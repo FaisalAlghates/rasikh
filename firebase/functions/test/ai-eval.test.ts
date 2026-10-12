@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { classifyScope, DISCLAIMERS, MAX_INPUT_CHARS, normalize, REFUSALS } from '../src/ai/guard.js';
+import {
+  classifyScope,
+  DISCLAIMERS,
+  MAX_INPUT_CHARS,
+  normalize,
+  REFUSALS,
+} from '../src/ai/guard.js';
 
 /**
  * Eval suite for the scope classifier (CLAUDE.md §7, Phase 8): real-estate questions pass, everything else and every
@@ -62,9 +68,12 @@ const WITH_DISCLAIMER: Array<[string, 'legal' | 'valuation' | 'financial']> = [
 
 describe('scope classifier eval', () => {
   it('has at least 30 Arabic prompts', () => {
-    const arabic = [...ON_TOPIC, ...OFF_TOPIC, ...JAILBREAKS, ...WITH_DISCLAIMER.map(([q]) => q)].filter((q) =>
-      /[؀-ۿ]/.test(q),
-    );
+    const arabic = [
+      ...ON_TOPIC,
+      ...OFF_TOPIC,
+      ...JAILBREAKS,
+      ...WITH_DISCLAIMER.map(([q]) => q),
+    ].filter((q) => /[؀-ۿ]/.test(q));
     expect(arabic.length).toBeGreaterThanOrEqual(30);
   });
 
@@ -88,7 +97,10 @@ describe('scope classifier eval', () => {
 
   it('rejects empty and oversized input', () => {
     expect(classifyScope('   ')).toEqual({ allowed: false, reason: 'empty' });
-    expect(classifyScope('عقد '.repeat(MAX_INPUT_CHARS))).toEqual({ allowed: false, reason: 'too_long' });
+    expect(classifyScope('عقد '.repeat(MAX_INPUT_CHARS))).toEqual({
+      allowed: false,
+      reason: 'too_long',
+    });
   });
 
   it('a jailbreak wins even when the message also talks about real estate', () => {

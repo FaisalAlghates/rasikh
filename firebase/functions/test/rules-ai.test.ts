@@ -38,6 +38,8 @@ describe('AI bookkeeping and indicative prices', () => {
   it('indicative prices are readable by a signed-in user and writable only by Functions', async () => {
     await assertSucceeds(getDoc(doc(db(), 'insights/riyadh__narjis__rent')));
     await assertFails(setDoc(doc(db(), 'insights/riyadh__narjis__rent'), { medianSarPerSqm: 1 }));
-    await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), 'insights/riyadh__narjis__rent')));
+    await assertFails(
+      getDoc(doc(env.unauthenticatedContext().firestore(), 'insights/riyadh__narjis__rent')),
+    );
   });
 });

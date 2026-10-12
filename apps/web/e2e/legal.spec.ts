@@ -21,7 +21,9 @@ for (const [path, title] of [
   });
 }
 
-test('legal: the privacy page names the Saudi data law and in-Kingdom storage', async ({ page }) => {
+test('legal: the privacy page names the Saudi data law and in-Kingdom storage', async ({
+  page,
+}) => {
   await page.goto('/ar/privacy');
   await expect(page.locator('main')).toContainText('نظام حماية البيانات الشخصية');
   await expect(page.locator('main')).toContainText('داخل المملكة');

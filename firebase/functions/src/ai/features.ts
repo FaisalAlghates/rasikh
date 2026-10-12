@@ -49,7 +49,10 @@ const denied = () => new HttpsError('permission-denied', 'not_allowed');
 export const InputSchemas = {
   explainLease: z.object({ leaseId: z.string().min(1) }),
   compareInspections: z.object({ inspectionId: z.string().min(1) }),
-  triageTicket: z.object({ title: z.string().trim().min(2).max(120), description: z.string().max(1000).default('') }),
+  triageTicket: z.object({
+    title: z.string().trim().min(2).max(120),
+    description: z.string().max(1000).default(''),
+  }),
   adHelper: z.object({
     draft: z.object({
       purpose: z.enum(['sale', 'rent']).optional(),
@@ -91,7 +94,10 @@ export function textOf(feature: keyof typeof InputSchemas, input: Record<string,
 
 // ---- explain a lease ------------------------------------------------------------------------------
 
-export async function gatherExplainLease(ctx: FeatureCtx, input: { leaseId: string }): Promise<Gathered> {
+export async function gatherExplainLease(
+  ctx: FeatureCtx,
+  input: { leaseId: string },
+): Promise<Gathered> {
   const ref = ctx.db.doc(`orgs/${ctx.orgId}/leases/${input.leaseId}`);
   const snap = await ref.get();
   const l = snap.data();
@@ -121,20 +127,30 @@ export async function gatherExplainLease(ctx: FeatureCtx, input: { leaseId: stri
 }
 
 const cycleAr = (c: string) =>
-  ({ monthly: 'شهرياً', quarterly: 'كل ٣ أشهر', semiannual: 'كل ٦ أشهر', annual: 'سنوياً' })[c] ?? c;
+  ({ monthly: 'شهرياً', quarterly: 'كل ٣ أشهر', semiannual: 'كل ٦ أشهر', annual: 'سنوياً' })[c] ??
+  c;
 
 // ---- compare move-in and move-out -----------------------------------------------------------------
 
 const RANK: Record<string, number> = { good: 0, fair: 1, poor: 2, damaged: 3 };
-const CONDITION_AR: Record<string, string> = { good: 'جيدة', fair: 'مقبولة', poor: 'سيئة', damaged: 'متضررة' };
+const CONDITION_AR: Record<string, string> = {
+  good: 'جيدة',
+  fair: 'مقبولة',
+  poor: 'سيئة',
+  damaged: 'متضررة',
+};
 
-export async function gatherCompare(ctx: FeatureCtx, input: { inspectionId: string }): Promise<Gathered> {
+export async function gatherCompare(
+  ctx: FeatureCtx,
+  input: { inspectionId: string },
+): Promise<Gathered> {
   const outRef = ctx.db.doc(`orgs/${ctx.orgId}/inspections/${input.inspectionId}`);
   const out = await outRef.get();
   const o = out.data();
   if (!out.exists || !o) throw new HttpsError('not-found', 'inspection_not_found');
   if (!isStaff(ctx.roles) && o.tenantUid !== ctx.uid) throw denied();
-  if (o.kind !== 'move_out' || !o.moveInId) throw new HttpsError('failed-precondition', 'needs_move_out');
+  if (o.kind !== 'move_out' || !o.moveInId)
+    throw new HttpsError('failed-precondition', 'needs_move_out');
 
   const inRef = ctx.db.doc(`orgs/${ctx.orgId}/inspections/${o.moveInId}`);
   const [inSnap, outItems, inItems] = await Promise.all([
@@ -151,7 +167,11 @@ export async function gatherCompare(ctx: FeatureCtx, input: { inspectionId: stri
     if (a && (RANK[b.condition as string] ?? 0) > (RANK[a.condition as string] ?? 0)) {
       worse.push(
         `${b.room} / ${b.item}: من ${CONDITION_AR[a.condition as string]} إلى ${CONDITION_AR[b.condition as string]}` +
-          (b.assessment === 'damage' ? ' (قرّر المالك: تلف)' : b.assessment === 'wear' ? ' (قرّر المالك: استهلاك عادي)' : ''),
+          (b.assessment === 'damage'
+            ? ' (قرّر المالك: تلف)'
+            : b.assessment === 'wear'
+              ? ' (قرّر المالك: استهلاك عادي)'
+              : ''),
       );
     }
   }
@@ -201,10 +221,18 @@ export function triage(title: string, description: string) {
     : URGENT.some((w) => text.includes(normalize(w)))
       ? 'urgent'
       : 'normal';
-  return { category, urgency, suggestedParty: suggestResponsibility(category), matched: bestHits > 0 };
+  return {
+    category,
+    urgency,
+    suggestedParty: suggestResponsibility(category),
+    matched: bestHits > 0,
+  };
 }
 
-export async function gatherTriage(_ctx: FeatureCtx, input: { title: string; description: string }): Promise<Gathered> {
+export async function gatherTriage(
+  _ctx: FeatureCtx,
+  input: { title: string; description: string },
+): Promise<Gathered> {
   const t = triage(input.title, input.description);
   const facts = [
     `التصنيف المقترح: ${categoryAr(t.category)}${t.matched ? '' : ' (لم أجد كلمات واضحة، راجعه)'}`,
@@ -244,12 +272,16 @@ export async function gatherAdHelper(
   const issues = checkAd(d, ctx.today);
   const errors = issues.filter((i) => i.severity === 'error').map((i) => i.code);
   const warnings = issues.filter((i) => i.severity === 'warning').map((i) => i.code);
-  const parts = [d.propertyType, d.district && `في ${d.district}`, d.city].filter(Boolean).join(' ');
+  const parts = [d.propertyType, d.district && `في ${d.district}`, d.city]
+    .filter(Boolean)
+    .join(' ');
   const draftText = parts
     ? `${d.purpose === 'sale' ? 'للبيع' : 'للإيجار'}: ${parts}${d.areaSqm ? `، مساحة ${d.areaSqm} م²` : ''}${d.priceSar ? `، السعر ${money(d.priceSar)} ريال` : ''}.`
     : '';
   const facts = [
-    errors.length ? `بيانات إلزامية ناقصة: ${errors.join('، ')}` : 'بيانات الإعلان الإلزامية مكتملة.',
+    errors.length
+      ? `بيانات إلزامية ناقصة: ${errors.join('، ')}`
+      : 'بيانات الإعلان الإلزامية مكتملة.',
     ...(warnings.length ? [`تنبيهات: ${warnings.join('، ')}`] : []),
     ...(draftText ? [`مسودة وصف مقترحة: ${draftText}`] : []),
     'المسودة اقتراح تراجعه وتعدّله بنفسك. راسخ لا ينشر الإعلان ولا يعتمده.',
@@ -283,7 +315,10 @@ export async function gatherBuildingSummary(
   const bal = balances(
     shares,
     expenses.docs.map((d) => ({ amount: d.data().amount as number })),
-    contribs.docs.map((d) => ({ memberId: d.data().memberId as string, amount: d.data().amount as number })),
+    contribs.docs.map((d) => ({
+      memberId: d.data().memberId as string,
+      amount: d.data().amount as number,
+    })),
   );
   const total = expenses.docs.reduce((s, d) => s + (d.data().amount as number), 0);
   const paid = contribs.docs.reduce((s, d) => s + (d.data().amount as number), 0);
@@ -312,7 +347,11 @@ export async function gatherAssistant(ctx: FeatureCtx): Promise<Gathered> {
   const [leases, payments] = await Promise.all([leasesQ.get(), payQ.get()]);
   const reminders = computeReminders(
     ctx.today,
-    leases.docs.map((d) => ({ id: d.id, endDate: d.data().endDate as string, status: d.data().status as string })),
+    leases.docs.map((d) => ({
+      id: d.id,
+      endDate: d.data().endDate as string,
+      status: d.data().status as string,
+    })),
     payments.docs.map((d) => ({
       id: d.id,
       leaseId: d.data().leaseId as string,
@@ -322,7 +361,9 @@ export async function gatherAssistant(ctx: FeatureCtx): Promise<Gathered> {
   );
   const late = reminders.filter((r) => r.kind === 'payment_late').length;
   const soon = reminders.filter((r) => r.kind === 'payment_upcoming').length;
-  const expiring = reminders.filter((r) => r.kind === 'lease_expiring' || r.kind === 'renewal_notice').length;
+  const expiring = reminders.filter(
+    (r) => r.kind === 'lease_expiring' || r.kind === 'renewal_notice',
+  ).length;
   const facts = [
     `عدد العقود المتاحة لك: ${leases.size}`,
     `دفعات متأخرة: ${late}، ودفعات قريبة خلال ٧ أيام: ${soon}`,
@@ -331,6 +372,8 @@ export async function gatherAssistant(ctx: FeatureCtx): Promise<Gathered> {
   ];
   return {
     facts,
-    citations: leases.docs.slice(0, 5).map((d) => ({ label: `عقد ${d.data().ejarContractNo ?? d.id}`, path: d.ref.path })),
+    citations: leases.docs
+      .slice(0, 5)
+      .map((d) => ({ label: `عقد ${d.data().ejarContractNo ?? d.id}`, path: d.ref.path })),
   };
 }

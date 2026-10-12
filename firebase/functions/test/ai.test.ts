@@ -3,7 +3,12 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { aiAssist, type AssistDeps } from '../src/ai/assist.js';
 import { importIndicativePrices } from '../src/ai/prices.js';
-import { FakeModelProvider, ProviderNotConfigured, providerFromEnv, type ModelProvider } from '../src/ai/provider.js';
+import {
+  FakeModelProvider,
+  ProviderNotConfigured,
+  providerFromEnv,
+  type ModelProvider,
+} from '../src/ai/provider.js';
 import { createRuntime } from '../src/ai/runtime.js';
 import { triage } from '../src/ai/features.js';
 import { AI_LABEL } from '../src/ai/guard.js';
@@ -61,7 +66,11 @@ const logs = async (org: string) =>
 describe('aiAssist: who may ask what', () => {
   it('needs sign-in and membership', async () => {
     const s = await seed();
-    const req = { orgId: s.org, feature: 'assistant', input: { question: 'كم دفعة متأخرة على عقدي؟' } };
+    const req = {
+      orgId: s.org,
+      feature: 'assistant',
+      input: { question: 'كم دفعة متأخرة على عقدي؟' },
+    };
     expect(await code(aiAssist(s.deps, undefined, req))).toBe('auth_required');
     expect(await code(aiAssist(s.deps, 'stranger', req))).toBe('not_allowed');
   });
@@ -81,16 +90,30 @@ describe('aiAssist: who may ask what', () => {
       expect(ok.citations).toEqual([{ label: 'العقد', path: `orgs/${s.org}/leases/L1` }]);
     }
     expect(
-      await code(aiAssist(s.deps, s.other, { orgId: s.org, feature: 'explainLease', input: { leaseId: 'L1' } })),
+      await code(
+        aiAssist(s.deps, s.other, {
+          orgId: s.org,
+          feature: 'explainLease',
+          input: { leaseId: 'L1' },
+        }),
+      ),
     ).toBe('not_allowed');
-    expect(await code(aiAssist(s.deps, s.owner, { orgId: s.org, feature: 'explainLease', input: { leaseId: 'L1' } }))).toBe(
-      'ok',
-    );
+    expect(
+      await code(
+        aiAssist(s.deps, s.owner, {
+          orgId: s.org,
+          feature: 'explainLease',
+          input: { leaseId: 'L1' },
+        }),
+      ),
+    ).toBe('ok');
   });
 
   it('the assistant only counts what the asker may see', async () => {
     const s = await seed();
-    await db.doc(`orgs/${s.org}/leases/L2`).set({ ejarContractNo: '999', tenantUid: s.other, endDate: '2027-05-01', status: 'active' });
+    await db
+      .doc(`orgs/${s.org}/leases/L2`)
+      .set({ ejarContractNo: '999', tenantUid: s.other, endDate: '2027-05-01', status: 'active' });
     const q = { orgId: s.org, feature: 'assistant', input: { question: 'كم عقداً عندي؟' } };
     const mine = await aiAssist(s.deps, s.tenant, q);
     const staff = await aiAssist(s.deps, s.owner, q);
@@ -101,11 +124,17 @@ describe('aiAssist: who may ask what', () => {
 
   it('ad help is for brokers and staff only', async () => {
     const s = await seed();
-    const req = { orgId: s.org, feature: 'adHelper', input: { draft: { purpose: 'rent', city: 'الرياض' } } };
+    const req = {
+      orgId: s.org,
+      feature: 'adHelper',
+      input: { draft: { purpose: 'rent', city: 'الرياض' } },
+    };
     expect(await code(aiAssist(s.deps, s.tenant, req))).toBe('not_allowed');
     const r = await aiAssist(s.deps, s.broker, req);
     expect(r.ok && r.text).toContain('بيانات إلزامية ناقصة');
-    expect(r.ok && r.suggestion).toMatchObject({ errors: expect.arrayContaining(['advertiser_missing']) });
+    expect(r.ok && r.suggestion).toMatchObject({
+      errors: expect.arrayContaining(['advertiser_missing']),
+    });
     // the draft description is a suggestion only: nothing is written
     expect((await db.collection(`orgs/${s.org}/ads`).get()).size).toBe(0);
   });
@@ -140,7 +169,11 @@ describe('aiAssist: guards, limits and logs', () => {
       },
     };
     const deps = { ...s.deps, runtime: createRuntime(spy) };
-    const off = await aiAssist(deps, s.tenant, { orgId: s.org, feature: 'assistant', input: { question: 'اكتب لي قصيدة عن الصحراء' } });
+    const off = await aiAssist(deps, s.tenant, {
+      orgId: s.org,
+      feature: 'assistant',
+      input: { question: 'اكتب لي قصيدة عن الصحراء' },
+    });
     expect(off).toMatchObject({ ok: false, refused: 'off_topic' });
     const jb = await aiAssist(deps, s.tenant, {
       orgId: s.org,
@@ -167,7 +200,11 @@ describe('aiAssist: guards, limits and logs', () => {
   it('enforces the per-person daily limit without charging the refused call', async () => {
     const s = await seed();
     const deps = { ...s.deps, limits: { perUserPerDay: 2, monthlyOrgUnits: 1_000_000 } };
-    const q = { orgId: s.org, feature: 'assistant', input: { question: 'كم دفعة متأخرة على عقدي؟' } };
+    const q = {
+      orgId: s.org,
+      feature: 'assistant',
+      input: { question: 'كم دفعة متأخرة على عقدي؟' },
+    };
     expect((await aiAssist(deps, s.tenant, q)).ok).toBe(true);
     expect((await aiAssist(deps, s.tenant, q)).ok).toBe(true);
     expect(await code(aiAssist(deps, s.tenant, q))).toBe('daily_limit');
@@ -182,7 +219,11 @@ describe('aiAssist: guards, limits and logs', () => {
   it('stops at the organization’s monthly cost cap', async () => {
     const s = await seed();
     const deps = { ...s.deps, limits: { perUserPerDay: 100, monthlyOrgUnits: 300 } };
-    const q = { orgId: s.org, feature: 'assistant', input: { question: 'كم دفعة متأخرة على عقدي؟' } };
+    const q = {
+      orgId: s.org,
+      feature: 'assistant',
+      input: { question: 'كم دفعة متأخرة على عقدي؟' },
+    };
     expect((await aiAssist(deps, s.tenant, q)).ok).toBe(true);
     expect(await code(aiAssist(deps, s.owner, q))).toBe('monthly_cap');
   });
@@ -190,13 +231,35 @@ describe('aiAssist: guards, limits and logs', () => {
   it('logs metadata for every outcome and never the message or the answer', async () => {
     const s = await seed();
     const secret = 'رقم هويتي 1234567890 وعقد الإيجار';
-    await aiAssist(s.deps, s.tenant, { orgId: s.org, feature: 'assistant', input: { question: secret } });
-    await aiAssist(s.deps, s.tenant, { orgId: s.org, feature: 'assistant', input: { question: 'ما عاصمة فرنسا' } });
-    await code(aiAssist(s.deps, s.other, { orgId: s.org, feature: 'explainLease', input: { leaseId: 'L1' } }));
+    await aiAssist(s.deps, s.tenant, {
+      orgId: s.org,
+      feature: 'assistant',
+      input: { question: secret },
+    });
+    await aiAssist(s.deps, s.tenant, {
+      orgId: s.org,
+      feature: 'assistant',
+      input: { question: 'ما عاصمة فرنسا' },
+    });
+    await code(
+      aiAssist(s.deps, s.other, {
+        orgId: s.org,
+        feature: 'explainLease',
+        input: { leaseId: 'L1' },
+      }),
+    );
     const all = await logs(s.org);
     expect(all.map((l) => l.outcome).sort()).toEqual(['answered', 'denied', 'refused_off_topic']);
     for (const l of all) {
-      expect(Object.keys(l).sort()).toEqual(['at', 'feature', 'inChars', 'outChars', 'outcome', 'provider', 'uid']);
+      expect(Object.keys(l).sort()).toEqual([
+        'at',
+        'feature',
+        'inChars',
+        'outChars',
+        'outcome',
+        'provider',
+        'uid',
+      ]);
     }
     expect(JSON.stringify(all)).not.toContain('1234567890');
     expect(JSON.stringify(all)).not.toContain('فرنسا');
@@ -212,14 +275,22 @@ describe('aiAssist: guards, limits and logs', () => {
     };
     const deps = { ...s.deps, runtime: createRuntime(broken) };
     expect(
-      await code(aiAssist(deps, s.tenant, { orgId: s.org, feature: 'assistant', input: { question: 'كم عقد عندي؟' } })),
+      await code(
+        aiAssist(deps, s.tenant, {
+          orgId: s.org,
+          feature: 'assistant',
+          input: { question: 'كم عقد عندي؟' },
+        }),
+      ),
     ).toBe('ai_unavailable');
     expect((await logs(s.org)).map((l) => l.outcome)).toContain('failed');
   });
 
   it('rejects malformed input before anything else', async () => {
     const s = await seed();
-    expect(await code(aiAssist(s.deps, s.tenant, { orgId: s.org, feature: 'nope', input: {} }))).toBe('invalid_input');
+    expect(
+      await code(aiAssist(s.deps, s.tenant, { orgId: s.org, feature: 'nope', input: {} })),
+    ).toBe('invalid_input');
     expect(
       await code(aiAssist(s.deps, s.tenant, { orgId: s.org, feature: 'explainLease', input: {} })),
     ).toBe('invalid_input');
@@ -232,10 +303,17 @@ describe('compare inspections and ticket triage', () => {
     const i = (id: string) => `orgs/${s.org}/inspections/${id}`;
     await db.doc(i('IN')).set({ kind: 'move_in', tenantUid: s.tenant });
     await db.doc(i('OUT')).set({ kind: 'move_out', moveInId: 'IN', tenantUid: s.tenant });
-    const item = (room: string, name: string, condition: string, extra = {}) => ({ room, item: name, condition, ...extra });
+    const item = (room: string, name: string, condition: string, extra = {}) => ({
+      room,
+      item: name,
+      condition,
+      ...extra,
+    });
     await db.doc(`${i('IN')}/items/a`).set(item('الصالة', 'الجدار', 'good'));
     await db.doc(`${i('IN')}/items/b`).set(item('المطبخ', 'الخزائن', 'fair'));
-    await db.doc(`${i('OUT')}/items/a`).set(item('الصالة', 'الجدار', 'damaged', { assessment: 'damage' }));
+    await db
+      .doc(`${i('OUT')}/items/a`)
+      .set(item('الصالة', 'الجدار', 'damaged', { assessment: 'damage' }));
     await db.doc(`${i('OUT')}/items/b`).set(item('المطبخ', 'الخزائن', 'fair'));
     const r = await aiAssist(s.deps, s.tenant, {
       orgId: s.org,
@@ -261,9 +339,15 @@ describe('compare inspections and ticket triage', () => {
   });
 
   it('classifies with deterministic keywords', () => {
-    expect(triage('شرر من القاطع', '')).toMatchObject({ category: 'electrical', urgency: 'emergency' });
+    expect(triage('شرر من القاطع', '')).toMatchObject({
+      category: 'electrical',
+      urgency: 'emergency',
+    });
     expect(triage('المكيف لا يبرد', '')).toMatchObject({ category: 'ac', suggestedParty: 'owner' });
-    expect(triage('كسرت الباب بالخطأ', '')).toMatchObject({ category: 'tenant_damage', suggestedParty: 'tenant' });
+    expect(triage('كسرت الباب بالخطأ', '')).toMatchObject({
+      category: 'tenant_damage',
+      suggestedParty: 'tenant',
+    });
     expect(triage('شيء غريب', '')).toMatchObject({ category: 'other', matched: false });
   });
 });
@@ -281,13 +365,24 @@ describe('provider and prices', () => {
       asOf: '2026-09-30',
       rows: [{ city: 'الرياض', district: 'النرجس', kind: 'rent', medianSarPerSqm: 420 }],
     };
-    expect(await code(importIndicativePrices({ db }, s.tenant, s.org, payload))).toBe('not_allowed');
-    expect(await code(importIndicativePrices({ db }, undefined, s.org, payload))).toBe('auth_required');
+    expect(await code(importIndicativePrices({ db }, s.tenant, s.org, payload))).toBe(
+      'not_allowed',
+    );
+    expect(await code(importIndicativePrices({ db }, undefined, s.org, payload))).toBe(
+      'auth_required',
+    );
     expect(
-      await code(importIndicativePrices({ db }, s.owner, s.org, { ...payload, rows: [{ city: 'الرياض' }] })),
+      await code(
+        importIndicativePrices({ db }, s.owner, s.org, { ...payload, rows: [{ city: 'الرياض' }] }),
+      ),
     ).toBe('invalid_input');
     expect(await importIndicativePrices({ db }, s.owner, s.org, payload)).toEqual({ imported: 1 });
     const doc = await db.doc('insights/الرياض__النرجس__rent').get();
-    expect(doc.data()).toMatchObject({ indicative: true, source: payload.source, asOf: '2026-09-30', medianSarPerSqm: 420 });
+    expect(doc.data()).toMatchObject({
+      indicative: true,
+      source: payload.source,
+      asOf: '2026-09-30',
+      medianSarPerSqm: 420,
+    });
   });
 });
