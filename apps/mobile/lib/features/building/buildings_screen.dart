@@ -215,11 +215,25 @@ class _BoardState extends ConsumerState<_Board> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               h(l10n.bdMembers),
-              for (final m in members)
+              for (final m in members) ...[
                 Text(
                   '${m.data.name} · ${m.data.unitLabel} · ${m.data.shareBp / 100}%',
                   key: Key('member-${m.data.unitLabel}'),
                 ),
+                if (m.data.uid != null)
+                  Text(
+                    l10n.bdLinked,
+                    key: Key('linked-${m.data.unitLabel}'),
+                    style: TextStyle(color: t.success, fontSize: 13),
+                  )
+                else
+                  _LinkOwner(
+                    orgId: widget.orgId,
+                    buildingId: widget.id,
+                    memberId: m.id,
+                    unit: m.data.unitLabel,
+                  ),
+              ],
               if (members.isNotEmpty && shareTotal != 10000)
                 Text(
                   l10n.bdSharesWarn('${shareTotal / 100}'),
@@ -625,6 +639,75 @@ class _VoteBox extends ConsumerWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Staff link a unit owner to an account by email; the owner then sees the ledger and votes for their unit.
+class _LinkOwner extends ConsumerStatefulWidget {
+  const _LinkOwner({
+    required this.orgId,
+    required this.buildingId,
+    required this.memberId,
+    required this.unit,
+  });
+  final String orgId, buildingId, memberId, unit;
+
+  @override
+  ConsumerState<_LinkOwner> createState() => _LinkOwnerState();
+}
+
+class _LinkOwnerState extends ConsumerState<_LinkOwner> {
+  final _email = TextEditingController();
+  String? _msg;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        RkField(
+          key: Key('linkEmail-${widget.unit}'),
+          label: l10n.bdOwnerEmail,
+          controller: _email,
+          ltr: true,
+          keyboardType: TextInputType.emailAddress,
+        ),
+        TextButton(
+          key: Key('linkOwner-${widget.unit}'),
+          onPressed: () async {
+            setState(() => _msg = null);
+            try {
+              final r = await ref
+                  .read(buildingRepositoryProvider)
+                  .linkOwner(
+                    widget.orgId,
+                    widget.buildingId,
+                    widget.memberId,
+                    _email.text.trim().toLowerCase(),
+                  );
+              if (mounted) {
+                setState(
+                  () => _msg = r == 'linked'
+                      ? l10n.bdLinkedNow
+                      : l10n.bdLinkPending,
+                );
+              }
+            } catch (_) {
+              if (mounted) setState(() => _msg = l10n.bdFailed);
+            }
+          },
+          child: Text(l10n.bdLinkOwner),
+        ),
+        if (_msg != null) Text(_msg!, key: Key('linkMsg-${widget.unit}')),
+      ],
     );
   }
 }

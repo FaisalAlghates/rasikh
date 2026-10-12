@@ -8,7 +8,11 @@ import 'ticket_models.dart';
 
 abstract class TicketRepository {
   /// Tenants must pass their own uid: the security rules only allow queries scoped to `tenantUid`.
-  Stream<List<Doc<TicketDoc>>> tickets(String orgId, {String? tenantUid});
+  Stream<List<Doc<TicketDoc>>> tickets(
+    String orgId, {
+    String? tenantUid,
+    String? vendorUid,
+  });
   Future<String> create(
     String orgId,
     NewTicket ticket, [
@@ -34,9 +38,15 @@ class FirestoreTicketRepository implements TicketRepository {
   final FirebaseFunctions _fn;
 
   @override
-  Stream<List<Doc<TicketDoc>>> tickets(String orgId, {String? tenantUid}) {
+  Stream<List<Doc<TicketDoc>>> tickets(
+    String orgId, {
+    String? tenantUid,
+    String? vendorUid,
+  }) {
     final col = _db.collection('orgs/$orgId/tickets');
-    final q = tenantUid == null
+    final q = vendorUid != null
+        ? col.where('vendorUid', isEqualTo: vendorUid)
+        : tenantUid == null
         ? col
         : col.where('tenantUid', isEqualTo: tenantUid);
     return q.snapshots().map(

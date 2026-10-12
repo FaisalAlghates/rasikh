@@ -15,5 +15,9 @@ final ticketsProvider = StreamProvider.autoDispose<List<Doc<TicketDoc>>>((ref) {
   if (scope == null) return Stream.value(const []);
   return ref
       .watch(ticketRepositoryProvider)
-      .tickets(scope.orgId, tenantUid: scope.staff ? null : scope.uid);
+      .tickets(
+        scope.orgId,
+        tenantUid: scope.staff || scope.vendor ? null : scope.uid,
+        vendorUid: scope.vendor ? scope.uid : null,
+      );
 }, retry: (_, _) => null);

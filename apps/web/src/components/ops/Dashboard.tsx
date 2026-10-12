@@ -2,11 +2,13 @@
 
 import { computeReminders } from '@rasikh/shared';
 import { signOut } from 'firebase/auth';
+import { where } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { InspectionsTab } from '@/components/inspect/InspectionsTab';
 import { BuildingsTab } from '@/components/building/BuildingsTab';
+import { MyBuildings } from '@/components/building/MyBuildings';
 import { TicketsTab, type TicketDoc } from '@/components/maint/TicketsTab';
 import { RecordTab } from '@/components/inspect/RecordTab';
 import { Button } from '@/components/ui/Button';
@@ -84,7 +86,14 @@ export function Dashboard() {
   const leases = useOrgCollection<LeaseDoc>(orgId, 'leases', scope, !!session);
   const payments = useOrgCollection<PaymentDoc>(orgId, 'payments', scope, !!session);
   const inspections = useOrgCollection<InspectionDoc>(orgId, 'inspections', scope, !!session);
-  const tickets = useOrgCollection<TicketDoc>(orgId, 'tickets', scope, !!session);
+  const roles = session?.roles ?? [];
+  const vendorOnly = !staff && roles.includes('vendor') && !session?.isTenant;
+  const unitOwner = !staff && roles.includes('building_owner');
+  const ticketScope = useMemo(
+    () => (staff ? [] : vendorOnly ? [where('vendorUid', '==', uid)] : tenantScope(uid)),
+    [staff, vendorOnly, uid],
+  );
+  const tickets = useOrgCollection<TicketDoc>(orgId, 'tickets', ticketScope, !!session);
   // Reminders are computed here from the user's own records: free, no server job required.
   const reminders = useMemo(
     () =>
@@ -129,9 +138,9 @@ export function Dashboard() {
       <div className="flex flex-col gap-6">
         {header}
         <VerifyEmailBanner />
-        {!lease ? (
+        {!lease && !vendorOnly && !unitOwner ? (
           <EmptyState title={t('noLeases')} />
-        ) : (
+        ) : !lease ? null : (
           <Card className="flex flex-col gap-4" data-testid="my-lease">
             <div>
               <h2 className="text-h3 font-semibold">
@@ -174,6 +183,18 @@ export function Dashboard() {
           <section className="flex flex-col gap-3" aria-label={m('tab')}>
             <h2 className="text-h3 font-semibold">{m('tab')}</h2>
             <TicketsTab orgId={orgId} staff={false} tickets={tickets.rows} leases={leases.rows} />
+          </section>
+        )}
+        {vendorOnly && (
+          <section className="flex flex-col gap-3" aria-label={m('tab')}>
+            <h2 className="text-h3 font-semibold">{m('assignedToMe')}</h2>
+            <TicketsTab orgId={orgId} staff={false} vendor tickets={tickets.rows} leases={[]} />
+          </section>
+        )}
+        {unitOwner && (
+          <section className="flex flex-col gap-3" aria-label={b('tab')}>
+            <h2 className="text-h3 font-semibold">{b('myBuildings')}</h2>
+            <MyBuildings orgId={orgId} uid={uid} />
           </section>
         )}
         <Reminders reminders={reminders} leases={leases.rows} />

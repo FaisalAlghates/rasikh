@@ -47,11 +47,14 @@ const leaseName = (l?: LeaseDoc) =>
 export function TicketsTab({
   orgId,
   staff,
+  vendor: isVendor = false,
   tickets,
   leases,
 }: {
   orgId: string;
   staff: boolean;
+  /** A vendor with their own login: sees only their tickets, cannot open new ones. */
+  vendor?: boolean;
   tickets: Row<TicketDoc>[];
   leases: Row<LeaseDoc>[];
 }) {
@@ -114,6 +117,7 @@ export function TicketsTab({
         id={current.id}
         ticket={current.data}
         staff={staff}
+        vendor={isVendor}
         place={leaseName(leases.find((l) => l.id === current.data.leaseId)?.data)}
         onBack={() => setSelected(undefined)}
       />
@@ -122,76 +126,78 @@ export function TicketsTab({
 
   return (
     <div className="flex flex-col gap-6">
-      <Card>
-        <form
-          className="grid gap-4 sm:grid-cols-2"
-          aria-label={t('new')}
-          onSubmit={(e) => {
-            e.preventDefault();
-            void create();
-          }}
-        >
-          {staff && (
-            <NativeSelect
-              id="tk-lease"
-              label={t('unit')}
-              value={leaseId}
-              onChange={(e) => setForm({ ...form, leaseId: e.target.value })}
-              options={leases.map((l) => ({ value: l.id, label: leaseName(l.data) }))}
-            />
-          )}
-          <Field
-            id="tk-title"
-            label={t('title')}
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-          />
-          <NativeSelect
-            id="tk-cat"
-            label={t('category')}
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            options={TICKET_CATEGORIES.map((c) => ({ value: c, label: t(`cat_${c}`) }))}
-          />
-          <NativeSelect
-            id="tk-urg"
-            label={t('urgency')}
-            value={form.urgency}
-            onChange={(e) => setForm({ ...form, urgency: e.target.value })}
-            options={URGENCIES.map((u) => ({ value: u, label: t(`urg_${u}`) }))}
-          />
-          <div className="sm:col-span-2">
+      {!isVendor && (
+        <Card>
+          <form
+            className="grid gap-4 sm:grid-cols-2"
+            aria-label={t('new')}
+            onSubmit={(e) => {
+              e.preventDefault();
+              void create();
+            }}
+          >
+            {staff && (
+              <NativeSelect
+                id="tk-lease"
+                label={t('unit')}
+                value={leaseId}
+                onChange={(e) => setForm({ ...form, leaseId: e.target.value })}
+                options={leases.map((l) => ({ value: l.id, label: leaseName(l.data) }))}
+              />
+            )}
             <Field
-              id="tk-desc"
-              label={t('description')}
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              id="tk-title"
+              label={t('title')}
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
             />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="text-small text-text-muted" htmlFor="tk-photo">
-              {t('photo')}
-            </label>
-            <input
-              id="tk-photo"
-              type="file"
-              accept="image/*"
-              className="mt-1 block text-small"
-              onChange={(e) => setFile(e.target.files?.[0])}
+            <NativeSelect
+              id="tk-cat"
+              label={t('category')}
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              options={TICKET_CATEGORIES.map((c) => ({ value: c, label: t(`cat_${c}`) }))}
             />
-          </div>
-          {error && (
-            <p role="alert" className="text-small text-danger sm:col-span-2">
-              {error}
-            </p>
-          )}
-          <div className="sm:col-span-2">
-            <Button type="submit" loading={busy}>
-              {t('submit')}
-            </Button>
-          </div>
-        </form>
-      </Card>
+            <NativeSelect
+              id="tk-urg"
+              label={t('urgency')}
+              value={form.urgency}
+              onChange={(e) => setForm({ ...form, urgency: e.target.value })}
+              options={URGENCIES.map((u) => ({ value: u, label: t(`urg_${u}`) }))}
+            />
+            <div className="sm:col-span-2">
+              <Field
+                id="tk-desc"
+                label={t('description')}
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-small text-text-muted" htmlFor="tk-photo">
+                {t('photo')}
+              </label>
+              <input
+                id="tk-photo"
+                type="file"
+                accept="image/*"
+                className="mt-1 block text-small"
+                onChange={(e) => setFile(e.target.files?.[0])}
+              />
+            </div>
+            {error && (
+              <p role="alert" className="text-small text-danger sm:col-span-2">
+                {error}
+              </p>
+            )}
+            <div className="sm:col-span-2">
+              <Button type="submit" loading={busy}>
+                {t('submit')}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      )}
       {tickets.length === 0 ? (
         <EmptyState title={t('none')} />
       ) : (
@@ -226,6 +232,7 @@ function TicketDetail({
   id,
   ticket,
   staff,
+  vendor: isVendor,
   place,
   onBack,
 }: {
@@ -233,11 +240,14 @@ function TicketDetail({
   id: string;
   ticket: TicketDoc;
   staff: boolean;
+  vendor?: boolean;
   place: string;
   onBack: () => void;
 }) {
   const t = useTranslations('maint');
   const [vendor, setVendor] = useState('');
+  const [vendorEmail, setVendorEmail] = useState('');
+  const worker = staff || !!isVendor; // staff or the assigned vendor may start and resolve
   const [phone, setPhone] = useState('');
   const [note, setNote] = useState('');
   const [rating, setRating] = useState('5');
@@ -308,19 +318,37 @@ function TicketDetail({
             onChange={(e) => setPhone(e.target.value)}
             dir="ltr"
           />
+          <div className="sm:col-span-2">
+            <Field
+              id="tk-vemail"
+              type="email"
+              label={t('vendorEmail')}
+              hint={t('vendorEmailHint')}
+              value={vendorEmail}
+              onChange={(e) => setVendorEmail(e.target.value)}
+              dir="ltr"
+            />
+          </div>
           <Button
             className="sm:col-span-2"
-            onClick={() => void run({ action: 'assign', vendorName: vendor, vendorPhone: phone })}
+            onClick={() =>
+              void run({
+                action: 'assign',
+                vendorName: vendor,
+                vendorPhone: phone,
+                ...(vendorEmail ? { vendorEmail } : {}),
+              })
+            }
           >
             {t('assign')}
           </Button>
         </Card>
       )}
       <div className="flex flex-wrap gap-3">
-        {staff && s === 'assigned' && (
+        {worker && s === 'assigned' && (
           <Button onClick={() => void run({ action: 'start' })}>{t('start')}</Button>
         )}
-        {staff && (s === 'assigned' || s === 'in_progress') && (
+        {worker && (s === 'assigned' || s === 'in_progress') && (
           <>
             <Field
               id="tk-note"
@@ -331,7 +359,7 @@ function TicketDetail({
             <Button onClick={() => void run({ action: 'resolve', note })}>{t('resolve')}</Button>
           </>
         )}
-        {!staff && s === 'resolved' && (
+        {!staff && !isVendor && s === 'resolved' && (
           <>
             <NativeSelect
               id="tk-rating"
@@ -352,7 +380,7 @@ function TicketDetail({
             {t('close')}
           </Button>
         )}
-        {(s === 'open' || s === 'assigned') && (
+        {!isVendor && (s === 'open' || s === 'assigned') && (
           <Button variant="quiet" onClick={() => void run({ action: 'cancel' })}>
             {t('cancel')}
           </Button>

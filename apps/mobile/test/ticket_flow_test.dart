@@ -6,6 +6,7 @@ import 'package:rasikh/app/inspection_providers.dart';
 import 'package:rasikh/app/ops_providers.dart';
 import 'package:rasikh/app/providers.dart';
 import 'package:rasikh/app/ticket_providers.dart';
+import 'package:rasikh/data/auth_repository.dart';
 import 'package:rasikh/data/ticket_models.dart';
 import 'package:rasikh/theme/app_theme.dart';
 import 'package:rasikh/widgets/live_city.dart';
@@ -48,6 +49,7 @@ Future<void> pumpTickets(
 }
 
 void main() {
+  _vendorTests();
   testWidgets(
     'tenant reports, owner assigns and resolves, tenant closes and rates',
     (tester) async {
@@ -130,3 +132,45 @@ NewTicket _ticket(String leaseId, String title) => NewTicket(
   category: 'plumbing',
   urgency: 'normal',
 );
+
+void _vendorTests() {
+  testWidgets(
+    'a vendor with a login sees only assigned tickets and can start and resolve, nothing else',
+    (tester) async {
+      final env = TestEnv();
+      final lease = await env.seedLease();
+      final repo = FakeTicketRepository()..party = 'vendor';
+      repo.vendorUid = 'vendor1';
+      await repo.create('o', _ticket(lease, 'مكيف معطل'));
+      repo.party = 'staff';
+      await repo.act('o', 'tk1', 'assign', {'vendorName': 'مؤسسة التبريد'});
+      repo.party = 'vendor';
+      await pumpTickets(
+        tester,
+        env,
+        repo,
+        const SessionUser(
+          uid: 'vendor1',
+          orgs: {
+            'o': ['vendor'],
+          },
+        ),
+      );
+      await env.tapKey(tester, 'nav-tickets');
+      expect(
+        find.byKey(const Key('submitTicket')),
+        findsNothing,
+      ); // cannot open requests
+      expect(find.text('مكيف معطل'), findsOneWidget);
+      await env.tapKey(tester, 'ticket-tk1');
+      expect(find.byKey(const Key('cancelTicket')), findsNothing);
+      expect(find.byKey(const Key('assign')), findsNothing);
+      await env.tapKey(tester, 'start');
+      await env.fill(tester, 'resolutionNote', 'تم');
+      await env.tapKey(tester, 'resolve');
+      expect(find.textContaining('تم الإصلاح'), findsWidgets);
+      expect(find.byKey(const Key('closeRate')), findsNothing);
+      expect(find.byKey(const Key('closeTicket')), findsNothing);
+    },
+  );
+}

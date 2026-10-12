@@ -48,22 +48,33 @@ class OpsHome extends ConsumerWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (lease == null)
-            EmptyState(title: l10n.opsNoLeases)
-          else
-            LeaseView(leaseId: lease.id, canManage: false),
+          if (lease != null)
+            LeaseView(leaseId: lease.id, canManage: false)
+          else if (!scope.vendor && !scope.unitOwner)
+            EmptyState(title: l10n.opsNoLeases),
           const SizedBox(height: 20),
-          _NavRow(
-            navKey: const Key('nav-inspections'),
-            icon: Icons.fact_check_outlined,
-            label: l10n.inspTab,
-            route: Routes.inspections,
-          ),
-          const SizedBox(height: 10),
+          if (scope.unitOwner) ...[
+            _NavRow(
+              navKey: const Key('nav-my-buildings'),
+              icon: Icons.domain_outlined,
+              label: l10n.bdMyBuildings,
+              route: Routes.myBuildings,
+            ),
+            const SizedBox(height: 10),
+          ],
+          if (!scope.vendor) ...[
+            _NavRow(
+              navKey: const Key('nav-inspections'),
+              icon: Icons.fact_check_outlined,
+              label: l10n.inspTab,
+              route: Routes.inspections,
+            ),
+            const SizedBox(height: 10),
+          ],
           _NavRow(
             navKey: const Key('nav-tickets'),
             icon: Icons.build_outlined,
-            label: l10n.mtTab,
+            label: scope.vendor ? l10n.mtAssignedToMe : l10n.mtTab,
             route: Routes.tickets,
           ),
           const SizedBox(height: 10),
