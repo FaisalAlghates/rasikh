@@ -1246,4 +1246,160 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inspRecordProperty => 'Property';
+
+  @override
+  String get mtTab => 'Maintenance';
+
+  @override
+  String get mtNew => 'New maintenance request';
+
+  @override
+  String get mtUnit => 'Unit';
+
+  @override
+  String get mtTitle => 'Title';
+
+  @override
+  String get mtCategory => 'Category';
+
+  @override
+  String get mtUrgency => 'Urgency';
+
+  @override
+  String get mtDescription => 'Describe the problem';
+
+  @override
+  String get mtPhoto => 'Photo (optional)';
+
+  @override
+  String get mtSubmit => 'Send request';
+
+  @override
+  String get mtNone => 'No maintenance requests.';
+
+  @override
+  String get mtBack => 'Back';
+
+  @override
+  String get mtRequired => 'Write a title of at least 3 characters.';
+
+  @override
+  String get mtNeedLease => 'No lease is linked to your account.';
+
+  @override
+  String get mtFailed => 'Could not complete the request. Try again.';
+
+  @override
+  String get mtCatConsumables => 'Consumables (bulbs, filters…)';
+
+  @override
+  String get mtCatTenantDamage => 'Damage from use';
+
+  @override
+  String get mtCatPlumbing => 'Plumbing';
+
+  @override
+  String get mtCatElectrical => 'Electrical';
+
+  @override
+  String get mtCatAc => 'Air conditioning';
+
+  @override
+  String get mtCatAppliance => 'Appliances';
+
+  @override
+  String get mtCatStructure => 'Structural';
+
+  @override
+  String get mtCatPest => 'Pests';
+
+  @override
+  String get mtCatOther => 'Other';
+
+  @override
+  String get mtUrgLow => 'Low';
+
+  @override
+  String get mtUrgNormal => 'Normal';
+
+  @override
+  String get mtUrgUrgent => 'Urgent';
+
+  @override
+  String get mtUrgEmergency => 'Emergency';
+
+  @override
+  String get mtStOpen => 'Open';
+
+  @override
+  String get mtStAssigned => 'Assigned to a vendor';
+
+  @override
+  String get mtStInProgress => 'In progress';
+
+  @override
+  String get mtStResolved => 'Fixed';
+
+  @override
+  String get mtStClosed => 'Closed';
+
+  @override
+  String get mtStCancelled => 'Cancelled';
+
+  @override
+  String get mtSlaMet => 'Handled within target';
+
+  @override
+  String get mtSlaOk => 'Within target time';
+
+  @override
+  String get mtSlaDueSoon => 'Target time is close';
+
+  @override
+  String get mtSlaBreached => 'Past target time';
+
+  @override
+  String get mtSuggestTenant => 'Suggested: the tenant.';
+
+  @override
+  String get mtSuggestOwner => 'Suggested: the owner.';
+
+  @override
+  String get mtSuggestNote =>
+      'A guideline based on Ejar\'s general guidance; you two decide, and it is not legal advice.';
+
+  @override
+  String get mtVendor => 'Vendor';
+
+  @override
+  String get mtVendorPhone => 'Vendor phone';
+
+  @override
+  String get mtAssign => 'Assign';
+
+  @override
+  String get mtStart => 'Work started';
+
+  @override
+  String get mtResolution => 'Repair note';
+
+  @override
+  String get mtResolve => 'Mark fixed';
+
+  @override
+  String get mtRating => 'Rating (out of 5)';
+
+  @override
+  String get mtCloseRate => 'Close and rate';
+
+  @override
+  String get mtClose => 'Close request';
+
+  @override
+  String get mtCancel => 'Cancel request';
+
+  @override
+  String mtRated(int n) {
+    return 'Rating: $n of 5';
+  }
 }
