@@ -45,7 +45,9 @@ export function MapView(props: MapViewProps) {
   selectRef.current = onSelect;
 
   useEffect(() => {
-    if (!TOKEN || !webglOk()) {
+    // Automated browsers use the flat schematic (deterministic, no network); set window.__RK_FORCE_MAP to test the real map.
+    const forced = (window as { __RK_FORCE_MAP?: boolean }).__RK_FORCE_MAP === true;
+    if (!TOKEN || !webglOk() || (navigator.webdriver && !forced)) {
       setMode('flat');
       return;
     }
