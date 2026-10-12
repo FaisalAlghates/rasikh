@@ -1583,4 +1583,348 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get mtVendorEmailHint =>
       'إن أضفته يدخل المنفّذ بحسابه ويرى بلاغه فقط، ويبدأ التنفيذ ويسجّل الإصلاح.';
+
+  @override
+  String get brkTab => 'الوساطة';
+
+  @override
+  String get brkIntro =>
+      'سجلّ عملك كوسيط: عملاؤك ومعاينتك وعقودك، وسجل أنشطة لا يُعدَّل. راسخ لا ينشر إعلانات ولا يعتمدها.';
+
+  @override
+  String get brkProfile => 'ملف الوسيط';
+
+  @override
+  String get brkDisplayName => 'الاسم';
+
+  @override
+  String get brkFalNo => 'رقم رخصة فال';
+
+  @override
+  String get brkFalExpiry => 'تاريخ انتهاء الرخصة';
+
+  @override
+  String get brkSaveProfile => 'احفظ الملف';
+
+  @override
+  String get brkSaved => 'تم الحفظ.';
+
+  @override
+  String get brkFalValid => 'رخصتك سارية.';
+
+  @override
+  String brkFalExpiring(int days) {
+    return 'تنتهي رخصتك خلال $days يوماً. جدّدها قبل الانتهاء.';
+  }
+
+  @override
+  String get brkFalExpired => 'انتهت رخصتك. لا تنشر إعلانات قبل تجديدها.';
+
+  @override
+  String get brkLeads => 'العملاء المحتملون';
+
+  @override
+  String get brkAddLead => 'أضف عميلاً';
+
+  @override
+  String get brkName => 'الاسم';
+
+  @override
+  String get brkPhone => 'الجوال (+9665XXXXXXXX)';
+
+  @override
+  String get brkInterest => 'الاهتمام';
+
+  @override
+  String get brkSource => 'المصدر';
+
+  @override
+  String get brkBudget => 'الميزانية (ريال)';
+
+  @override
+  String get brkNotes => 'ملاحظات';
+
+  @override
+  String get brkStatus => 'الحالة';
+
+  @override
+  String get brkNone => 'لا يوجد عملاء بعد.';
+
+  @override
+  String get brkInterestRent => 'إيجار';
+
+  @override
+  String get brkInterestBuy => 'شراء';
+
+  @override
+  String get brkInterestLetMyProperty => 'تأجير عقاره';
+
+  @override
+  String get brkInterestSellMyProperty => 'بيع عقاره';
+
+  @override
+  String get brkSourceReferral => 'ترشيح';
+
+  @override
+  String get brkSourceWalkIn => 'زيارة مباشرة';
+
+  @override
+  String get brkSourceCall => 'اتصال';
+
+  @override
+  String get brkSourceSocial => 'وسائل التواصل';
+
+  @override
+  String get brkSourceOther => 'أخرى';
+
+  @override
+  String get brkStatusNew => 'جديد';
+
+  @override
+  String get brkStatusContacted => 'تم التواصل';
+
+  @override
+  String get brkStatusViewing => 'معاينة';
+
+  @override
+  String get brkStatusNegotiating => 'تفاوض';
+
+  @override
+  String get brkStatusWon => 'تم الاتفاق';
+
+  @override
+  String get brkStatusLost => 'خسرناه';
+
+  @override
+  String get brkMoveTo => 'انقله إلى';
+
+  @override
+  String get brkOpen => 'افتح';
+
+  @override
+  String get brkBack => 'رجوع';
+
+  @override
+  String get brkLog => 'سجل الأنشطة';
+
+  @override
+  String get brkLogHint =>
+      'كل إدخال يُختم بوقت الخادم ولا يمكن تعديله أو حذفه.';
+
+  @override
+  String get brkAddNote => 'أضف ملاحظة';
+
+  @override
+  String get brkNote => 'الملاحظة';
+
+  @override
+  String get brkViewings => 'المعاينات';
+
+  @override
+  String get brkScheduleViewing => 'حدّد معاينة';
+
+  @override
+  String get brkPlace => 'المكان';
+
+  @override
+  String get brkWhen => 'الموعد';
+
+  @override
+  String get brkMarkDone => 'تمت المعاينة';
+
+  @override
+  String get brkViewingDone => 'تمت';
+
+  @override
+  String get brkContracts => 'عقود الوساطة';
+
+  @override
+  String get brkAddContract => 'أضف عقد وساطة';
+
+  @override
+  String get brkContractType => 'النوع';
+
+  @override
+  String get brkTypeRent => 'إيجار';
+
+  @override
+  String get brkTypeSale => 'بيع';
+
+  @override
+  String get brkTypeManagement => 'إدارة';
+
+  @override
+  String get brkContractNo => 'رقم العقد';
+
+  @override
+  String get brkStart => 'من';
+
+  @override
+  String get brkEnd => 'إلى';
+
+  @override
+  String get brkCommission => 'العمولة %';
+
+  @override
+  String get brkProof => 'ملف الإثبات';
+
+  @override
+  String get brkProofHint =>
+      'يطبع سجل هذا العميل بكل أنشطته الموقّتة، لتحفظه PDF.';
+
+  @override
+  String get brkLogLeadCreated => 'أُضيف العميل';
+
+  @override
+  String get brkLogStatusChanged => 'تغيّرت الحالة';
+
+  @override
+  String get brkLogViewingScheduled => 'حُدّدت معاينة';
+
+  @override
+  String get brkLogViewingDone => 'تمت معاينة';
+
+  @override
+  String get brkLogContractAdded => 'أُضيف عقد وساطة';
+
+  @override
+  String get brkLogNote => 'ملاحظة';
+
+  @override
+  String get brkRequired => 'أكمل الحقول المطلوبة بشكل صحيح.';
+
+  @override
+  String get brkFailed => 'تعذّر الحفظ. حاول مرة أخرى.';
+
+  @override
+  String get brkAdTitle => 'فاحص الإعلان';
+
+  @override
+  String get brkAdIntro =>
+      'يتحقق من اكتمال بيانات الإعلان الإلزامية قبل نشره في المنصة المعتمدة. لا ينشر ولا يعتمد. تأكد دائماً من متطلبات الهيئة العامة للعقار الحالية.';
+
+  @override
+  String get brkAdPurpose => 'الغرض';
+
+  @override
+  String get brkAdPurposeSale => 'بيع';
+
+  @override
+  String get brkAdPurposeRent => 'إيجار';
+
+  @override
+  String get brkAdAdvertiser => 'اسم المعلن';
+
+  @override
+  String get brkAdCapacity => 'صفة المعلن';
+
+  @override
+  String get brkAdCapacityOwner => 'مالك';
+
+  @override
+  String get brkAdCapacityBroker => 'وسيط';
+
+  @override
+  String get brkAdCapacityAgent => 'وكيل';
+
+  @override
+  String get brkAdCapacityDeveloper => 'مطوّر';
+
+  @override
+  String get brkAdLicenseNo => 'رقم ترخيص الإعلان';
+
+  @override
+  String get brkAdLicenseExpiry => 'انتهاء الترخيص';
+
+  @override
+  String get brkAdCity => 'المدينة';
+
+  @override
+  String get brkAdDistrict => 'الحي';
+
+  @override
+  String get brkAdType => 'نوع العقار';
+
+  @override
+  String get brkAdArea => 'المساحة (م²)';
+
+  @override
+  String get brkAdPrice => 'السعر (ريال)';
+
+  @override
+  String get brkAdPhone => 'جوال التواصل';
+
+  @override
+  String get brkAdDescription => 'وصف العقار';
+
+  @override
+  String get brkAdEncumbrances => 'هل يوجد رهن أو نزاع على العقار؟';
+
+  @override
+  String get brkAdEncUnset => 'لم أحدد';
+
+  @override
+  String get brkAdEncNo => 'لا يوجد';
+
+  @override
+  String get brkAdEncYes => 'يوجد (ويُذكر في الإعلان)';
+
+  @override
+  String get brkAdReady => 'بيانات الإعلان مكتملة. راجعها بنفسك قبل النشر.';
+
+  @override
+  String get brkAdNotReady => 'ينقص الإعلان بيانات إلزامية.';
+
+  @override
+  String get brkAdError => 'مطلوب';
+
+  @override
+  String get brkAdWarning => 'تنبيه';
+
+  @override
+  String get brkIssuePurposeMissing => 'حدّد الغرض: بيع أو إيجار.';
+
+  @override
+  String get brkIssueAdvertiserMissing => 'اكتب اسم المعلن.';
+
+  @override
+  String get brkIssueCapacityMissing => 'حدّد صفة المعلن.';
+
+  @override
+  String get brkIssueLicenseMissing => 'أدخل رقم ترخيص الإعلان.';
+
+  @override
+  String get brkIssueLicenseInvalid =>
+      'رقم الترخيص غير صحيح (أرقام فقط، 8 إلى 12 خانة).';
+
+  @override
+  String get brkIssueLicenseExpired => 'انتهى ترخيص الإعلان. جدّده قبل النشر.';
+
+  @override
+  String get brkIssueLicenseExpiring => 'ترخيص الإعلان قريب الانتهاء.';
+
+  @override
+  String get brkIssueLocationMissing => 'اكتب المدينة والحي.';
+
+  @override
+  String get brkIssuePropertyTypeMissing => 'حدّد نوع العقار.';
+
+  @override
+  String get brkIssueAreaMissing => 'اكتب المساحة.';
+
+  @override
+  String get brkIssuePriceMissing => 'اكتب السعر.';
+
+  @override
+  String get brkIssueContactMissing => 'أدخل جوال التواصل.';
+
+  @override
+  String get brkIssueContactInvalid => 'الجوال بصيغة +9665XXXXXXXX.';
+
+  @override
+  String get brkIssueDescriptionShort => 'الوصف قصير. اكتب 30 حرفاً على الأقل.';
+
+  @override
+  String get brkIssueEncumbrancesNotStated =>
+      'لم تذكر هل على العقار رهن أو نزاع.';
 }

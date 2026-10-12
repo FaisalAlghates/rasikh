@@ -1607,4 +1607,353 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get mtVendorEmailHint =>
       'If you add it, the vendor signs in with their own account, sees only their request, starts the work and records the repair.';
+
+  @override
+  String get brkTab => 'Brokerage';
+
+  @override
+  String get brkIntro =>
+      'A record of your brokerage work: leads, viewings, contracts, and an activity log that cannot be edited. Rasikh does not publish or approve ads.';
+
+  @override
+  String get brkProfile => 'Broker profile';
+
+  @override
+  String get brkDisplayName => 'Name';
+
+  @override
+  String get brkFalNo => 'FAL license number';
+
+  @override
+  String get brkFalExpiry => 'License expiry date';
+
+  @override
+  String get brkSaveProfile => 'Save profile';
+
+  @override
+  String get brkSaved => 'Saved.';
+
+  @override
+  String get brkFalValid => 'Your license is valid.';
+
+  @override
+  String brkFalExpiring(int days) {
+    return 'Your license expires in $days days. Renew it before it lapses.';
+  }
+
+  @override
+  String get brkFalExpired =>
+      'Your license has expired. Do not publish ads until it is renewed.';
+
+  @override
+  String get brkLeads => 'Leads';
+
+  @override
+  String get brkAddLead => 'Add a lead';
+
+  @override
+  String get brkName => 'Name';
+
+  @override
+  String get brkPhone => 'Mobile (+9665XXXXXXXX)';
+
+  @override
+  String get brkInterest => 'Interest';
+
+  @override
+  String get brkSource => 'Source';
+
+  @override
+  String get brkBudget => 'Budget (SAR)';
+
+  @override
+  String get brkNotes => 'Notes';
+
+  @override
+  String get brkStatus => 'Status';
+
+  @override
+  String get brkNone => 'No leads yet.';
+
+  @override
+  String get brkInterestRent => 'Rent';
+
+  @override
+  String get brkInterestBuy => 'Buy';
+
+  @override
+  String get brkInterestLetMyProperty => 'Let their property';
+
+  @override
+  String get brkInterestSellMyProperty => 'Sell their property';
+
+  @override
+  String get brkSourceReferral => 'Referral';
+
+  @override
+  String get brkSourceWalkIn => 'Walk-in';
+
+  @override
+  String get brkSourceCall => 'Call';
+
+  @override
+  String get brkSourceSocial => 'Social media';
+
+  @override
+  String get brkSourceOther => 'Other';
+
+  @override
+  String get brkStatusNew => 'New';
+
+  @override
+  String get brkStatusContacted => 'Contacted';
+
+  @override
+  String get brkStatusViewing => 'Viewing';
+
+  @override
+  String get brkStatusNegotiating => 'Negotiating';
+
+  @override
+  String get brkStatusWon => 'Won';
+
+  @override
+  String get brkStatusLost => 'Lost';
+
+  @override
+  String get brkMoveTo => 'Move to';
+
+  @override
+  String get brkOpen => 'Open';
+
+  @override
+  String get brkBack => 'Back';
+
+  @override
+  String get brkLog => 'Activity log';
+
+  @override
+  String get brkLogHint =>
+      'Every entry is stamped with the server time and cannot be edited or deleted.';
+
+  @override
+  String get brkAddNote => 'Add a note';
+
+  @override
+  String get brkNote => 'Note';
+
+  @override
+  String get brkViewings => 'Viewings';
+
+  @override
+  String get brkScheduleViewing => 'Schedule a viewing';
+
+  @override
+  String get brkPlace => 'Place';
+
+  @override
+  String get brkWhen => 'When';
+
+  @override
+  String get brkMarkDone => 'Viewing done';
+
+  @override
+  String get brkViewingDone => 'Done';
+
+  @override
+  String get brkContracts => 'Brokerage contracts';
+
+  @override
+  String get brkAddContract => 'Add a brokerage contract';
+
+  @override
+  String get brkContractType => 'Type';
+
+  @override
+  String get brkTypeRent => 'Rent';
+
+  @override
+  String get brkTypeSale => 'Sale';
+
+  @override
+  String get brkTypeManagement => 'Management';
+
+  @override
+  String get brkContractNo => 'Contract number';
+
+  @override
+  String get brkStart => 'From';
+
+  @override
+  String get brkEnd => 'To';
+
+  @override
+  String get brkCommission => 'Commission %';
+
+  @override
+  String get brkProof => 'Proof file';
+
+  @override
+  String get brkProofHint =>
+      'Prints this lead\'s full time-stamped log; save it as a PDF.';
+
+  @override
+  String get brkLogLeadCreated => 'Lead added';
+
+  @override
+  String get brkLogStatusChanged => 'Status changed';
+
+  @override
+  String get brkLogViewingScheduled => 'Viewing scheduled';
+
+  @override
+  String get brkLogViewingDone => 'Viewing done';
+
+  @override
+  String get brkLogContractAdded => 'Brokerage contract added';
+
+  @override
+  String get brkLogNote => 'Note';
+
+  @override
+  String get brkRequired => 'Fill in the required fields correctly.';
+
+  @override
+  String get brkFailed => 'Could not save. Try again.';
+
+  @override
+  String get brkAdTitle => 'Ad checker';
+
+  @override
+  String get brkAdIntro =>
+      'Checks that the mandatory ad data is complete before you publish on the approved platform. It does not publish or approve. Always confirm the current REGA requirements.';
+
+  @override
+  String get brkAdPurpose => 'Purpose';
+
+  @override
+  String get brkAdPurposeSale => 'Sale';
+
+  @override
+  String get brkAdPurposeRent => 'Rent';
+
+  @override
+  String get brkAdAdvertiser => 'Advertiser name';
+
+  @override
+  String get brkAdCapacity => 'Advertiser capacity';
+
+  @override
+  String get brkAdCapacityOwner => 'Owner';
+
+  @override
+  String get brkAdCapacityBroker => 'Broker';
+
+  @override
+  String get brkAdCapacityAgent => 'Agent';
+
+  @override
+  String get brkAdCapacityDeveloper => 'Developer';
+
+  @override
+  String get brkAdLicenseNo => 'Ad license number';
+
+  @override
+  String get brkAdLicenseExpiry => 'License expiry';
+
+  @override
+  String get brkAdCity => 'City';
+
+  @override
+  String get brkAdDistrict => 'District';
+
+  @override
+  String get brkAdType => 'Property type';
+
+  @override
+  String get brkAdArea => 'Area (sqm)';
+
+  @override
+  String get brkAdPrice => 'Price (SAR)';
+
+  @override
+  String get brkAdPhone => 'Contact mobile';
+
+  @override
+  String get brkAdDescription => 'Description';
+
+  @override
+  String get brkAdEncumbrances =>
+      'Is there a mortgage or dispute on the property?';
+
+  @override
+  String get brkAdEncUnset => 'Not stated';
+
+  @override
+  String get brkAdEncNo => 'None';
+
+  @override
+  String get brkAdEncYes => 'Yes (stated in the ad)';
+
+  @override
+  String get brkAdReady =>
+      'The ad data is complete. Review it yourself before publishing.';
+
+  @override
+  String get brkAdNotReady => 'The ad is missing mandatory data.';
+
+  @override
+  String get brkAdError => 'Required';
+
+  @override
+  String get brkAdWarning => 'Warning';
+
+  @override
+  String get brkIssuePurposeMissing => 'Choose the purpose: sale or rent.';
+
+  @override
+  String get brkIssueAdvertiserMissing => 'Enter the advertiser name.';
+
+  @override
+  String get brkIssueCapacityMissing => 'Choose the advertiser\'s capacity.';
+
+  @override
+  String get brkIssueLicenseMissing => 'Enter the ad license number.';
+
+  @override
+  String get brkIssueLicenseInvalid =>
+      'The license number is not valid (digits only, 8 to 12).';
+
+  @override
+  String get brkIssueLicenseExpired =>
+      'The ad license has expired. Renew it before publishing.';
+
+  @override
+  String get brkIssueLicenseExpiring => 'The ad license is close to expiry.';
+
+  @override
+  String get brkIssueLocationMissing => 'Enter the city and the district.';
+
+  @override
+  String get brkIssuePropertyTypeMissing => 'Choose the property type.';
+
+  @override
+  String get brkIssueAreaMissing => 'Enter the area.';
+
+  @override
+  String get brkIssuePriceMissing => 'Enter the price.';
+
+  @override
+  String get brkIssueContactMissing => 'Enter a contact mobile.';
+
+  @override
+  String get brkIssueContactInvalid => 'Mobile format is +9665XXXXXXXX.';
+
+  @override
+  String get brkIssueDescriptionShort =>
+      'The description is short. Write at least 30 characters.';
+
+  @override
+  String get brkIssueEncumbrancesNotStated =>
+      'You have not stated whether there is a mortgage or dispute.';
 }

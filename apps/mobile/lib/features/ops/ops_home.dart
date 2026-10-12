@@ -45,6 +45,22 @@ class OpsHome extends ConsumerWidget {
 
     if (!scope.staff) {
       final lease = data.leases.firstOrNull;
+      // A broker with no lease, vendor or unit-owner role has only the brokerage workspace.
+      final brokerOnly =
+          scope.broker && lease == null && !scope.vendor && !scope.unitOwner;
+      if (brokerOnly) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _NavRow(
+              navKey: const Key('nav-broker'),
+              icon: Icons.handshake_outlined,
+              label: l10n.brkTab,
+              route: Routes.broker,
+            ),
+          ],
+        );
+      }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -53,6 +69,15 @@ class OpsHome extends ConsumerWidget {
           else if (!scope.vendor && !scope.unitOwner)
             EmptyState(title: l10n.opsNoLeases),
           const SizedBox(height: 20),
+          if (scope.broker) ...[
+            _NavRow(
+              navKey: const Key('nav-broker'),
+              icon: Icons.handshake_outlined,
+              label: l10n.brkTab,
+              route: Routes.broker,
+            ),
+            const SizedBox(height: 10),
+          ],
           if (scope.unitOwner) ...[
             _NavRow(
               navKey: const Key('nav-my-buildings'),
@@ -82,7 +107,12 @@ class OpsHome extends ConsumerWidget {
         ],
       );
     }
-    return _StaffOverview(data: data, reminders: reminders, today: now);
+    return _StaffOverview(
+      data: data,
+      reminders: reminders,
+      today: now,
+      broker: scope.broker,
+    );
   }
 }
 
@@ -91,10 +121,12 @@ class _StaffOverview extends StatelessWidget {
     required this.data,
     required this.reminders,
     required this.today,
+    required this.broker,
   });
   final OpsData data;
   final List<Reminder> reminders;
   final String today;
+  final bool broker;
 
   @override
   Widget build(BuildContext context) {
@@ -257,6 +289,13 @@ class _StaffOverview extends StatelessWidget {
           label: l10n.bdTab,
           route: Routes.buildings,
         ),
+        if (broker)
+          _NavRow(
+            navKey: const Key('nav-broker'),
+            icon: Icons.handshake_outlined,
+            label: l10n.brkTab,
+            route: Routes.broker,
+          ),
         _NavRow(
           navKey: const Key('nav-expenses'),
           icon: Icons.receipt_long_outlined,
