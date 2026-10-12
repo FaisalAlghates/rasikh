@@ -81,11 +81,13 @@ Acceptance: tampered-file hash test; offline capture test; Arabic PDF renders co
 
 ## Phase 6 — Maintenance + buildings/associations
 
-- [ ] Tickets: photos, category, urgency, suggested responsibility (suggestion only), vendor flow, SLA timer, rating
-- [ ] Buildings: members/units, expense ledger (receipt required), balances, reminders, quote comparison, votes (majority/75%), monthly statement PDF
-- [ ] Copy: complements Mullak; no official-registration claims
+- [~] Tickets: photos, category, urgency, suggested responsibility (suggestion only), vendor flow, SLA timer, rating (done; the vendor is a name and phone typed by staff, not a vendor account with its own login)
+- [~] Buildings: members/units, expense ledger (receipt required), balances, quote comparison, votes (majority/75%), monthly statement PDF (done on the web; reminders to owners and owner-facing balances not built; statement is browser print-to-PDF)
+- [x] Copy: complements Mullak; no official-registration claims
 
 Acceptance: e2e ticket lifecycle and expense → statement; rules tests.
+
+**Status (2026-10-12): web and backend done and verified; Flutter screens not built.** Done: shared logic (status machine, SLA, suggested responsibility; halala-exact expense split, balances, quote ranking, vote thresholds, monthly statement; 17 tests), `createTicket` / `ticketAction` functions (server stamps time and SLA, enforces who may act; 4 tests), rules (tickets written only by functions; building ledger append-only with a receipt on every expense, one create-only ballot per unit, closed votes accept nothing; 5 tests), web tabs for both, two end-to-end tests (ticket from tenant report with photo to rating; building with members, receipt, balances, quotes, vote, statement). Gaps: no Flutter screens for tickets or buildings; vendors have no login; balances are visible to staff only (not yet to every owner); no owner payment reminders; ticket photos in Storage are readable by any organization member.
 
 ## Phase 7 — Broker CRM + ad compliance checker
 

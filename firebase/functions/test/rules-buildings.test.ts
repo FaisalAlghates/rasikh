@@ -6,7 +6,15 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
-import { deleteDoc, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest';
 
 let env: RulesTestEnvironment;
@@ -62,6 +70,12 @@ describe('buildings', () => {
     await assertFails(
       setDoc(doc(db, `${B}/members/m4`), { name: 'x', unitLabel: '2', shareBp: 100, extra: 1 }),
     );
+  });
+  it('staff can list every collection; others cannot', async () => {
+    for (const c of ['members', 'expenses', 'contributions', 'quotes', 'votes']) {
+      await assertSucceeds(getDocs(collection(as('o', owner), `orgs/org1/buildings/b1/${c}`)));
+      await assertFails(getDocs(collection(as('t', tenant), `orgs/org1/buildings/b1/${c}`)));
+    }
   });
   it('the ledger needs a receipt and can never be edited', async () => {
     const db = as('o', owner);

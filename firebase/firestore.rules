@@ -187,13 +187,12 @@ service cloud.firestore {
         allow delete: if false;
 
         match /members/{memberId} {
-          allow read, create, update, delete: if isStaff(orgId)
-            && (request.method == 'delete'
-                || (request.resource.data.keys().hasOnly(['name', 'unitLabel', 'shareBp'])
-                    && request.resource.data.shareBp is int
-                    && request.resource.data.shareBp > 0 && request.resource.data.shareBp <= 10000));
-        }
-        match /expenses/{expenseId} {
+          allow read, delete: if isStaff(orgId);
+          allow create, update: if isStaff(orgId)
+            && request.resource.data.keys().hasOnly(['name', 'unitLabel', 'shareBp'])
+            && request.resource.data.shareBp is int
+            && request.resource.data.shareBp > 0 && request.resource.data.shareBp <= 10000;
+        }        match /expenses/{expenseId} {
           allow read: if isStaff(orgId);
           allow create: if isStaff(orgId)
             && request.resource.data.keys().hasOnly(['title', 'amount', 'date', 'receiptPath', 'createdAt'])

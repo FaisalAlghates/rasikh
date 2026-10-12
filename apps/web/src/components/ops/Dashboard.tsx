@@ -6,6 +6,7 @@ import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { InspectionsTab } from '@/components/inspect/InspectionsTab';
+import { BuildingsTab } from '@/components/building/BuildingsTab';
 import { TicketsTab, type TicketDoc } from '@/components/maint/TicketsTab';
 import { RecordTab } from '@/components/inspect/RecordTab';
 import { Button } from '@/components/ui/Button';
@@ -34,6 +35,7 @@ export function Dashboard() {
   const c = useTranslations('common');
   const i = useTranslations('inspect');
   const m = useTranslations('maint');
+  const b = useTranslations('bldg');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -261,6 +263,11 @@ export function Dashboard() {
             value: 'maintenance',
             label: m('tab'),
             content: <TicketsTab orgId={orgId} staff tickets={tickets.rows} leases={leases.rows} />,
+          },
+          {
+            value: 'buildings',
+            label: b('tab'),
+            content: <BuildingsTab orgId={orgId} />,
           },
           {
             value: 'record',

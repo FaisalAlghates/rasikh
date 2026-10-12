@@ -12,6 +12,7 @@
 - Free reminders (no paid service): computed on the device from the user's own records, shown live on the overview, browser notifications on the web, and a downloadable/shareable .ics calendar file with alarms (web + app).
 - Phase 4 on the Flutter app: Dart port of the domain logic and .ics builder (same fixtures as TypeScript), owner overview, properties and units, lease form with Riyadh freeze note, lease detail with record-payment and tenant invite, expenses, yearly report, tenant lease view, 47 widget/unit tests.
 - Phase 5: guided move-in/move-out inspections (room-by-room templates, in-app camera with capture time, GPS and SHA-256, integrity check), two-party sign-off with fresh re-authentication, server-side re-hash of every file before signing, write-once after the first signature, move-out comparison report, Property Health Record; web, backend and Flutter (offline-first evidence queue).
+- Phase 6: maintenance tickets (suggested responsibility, SLA timer, vendor assignment, tenant rating) and building bookkeeping (members and shares, receipt-backed ledger, balances, quote comparison, votes, monthly statement) on web and backend.
 - Fix: tenant schedule widened the page on phones (hidden receipt input escaped its scroll box); the schedule is now a list.
 - Fix: Flutter app now connects the Firestore and Storage emulators.
 - Fix: RTL input handling (only the input is LTR), Arabic display line-height, layered hairline utility.

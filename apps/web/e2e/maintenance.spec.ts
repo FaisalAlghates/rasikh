@@ -28,13 +28,11 @@ test('maintenance: tenant reports with a photo, owner assigns and resolves, tena
   await t.getByLabel('عنوان البلاغ').fill('تسريب تحت المغسلة');
   await t.getByLabel('التصنيف').selectOption('plumbing');
   await t.getByLabel('الأولوية').selectOption('urgent');
-  await t
-    .locator('#tk-photo')
-    .setInputFiles({
-      name: 'leak.jpg',
-      mimeType: 'image/jpeg',
-      buffer: Buffer.from([255, 216, 255, 224, 0, 16]),
-    });
+  await t.locator('#tk-photo').setInputFiles({
+    name: 'leak.jpg',
+    mimeType: 'image/jpeg',
+    buffer: Buffer.from([255, 216, 255, 224, 0, 16]),
+  });
   await t.getByRole('button', { name: 'أرسل البلاغ' }).click();
   await expect(t.getByTestId('ticket-detail')).toBeVisible({ timeout: 30_000 });
   await expect(t.getByTestId('suggested')).toContainText('على المالك');
