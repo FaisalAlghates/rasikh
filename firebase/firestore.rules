@@ -371,6 +371,12 @@ service cloud.firestore {
       }
     }
 
+    // Indicative neighborhood figures imported by an admin (Functions write only). Always "indicative", never a valuation.
+    match /insights/{id} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
     // Everything else is denied.
     match /{document=**} {
       allow read, write: if false;

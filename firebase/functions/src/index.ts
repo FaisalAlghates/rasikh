@@ -6,6 +6,10 @@ import { getStorage } from 'firebase-admin/storage';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onCall, type CallableRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { aiAssist as aiAssistImpl } from './ai/assist.js';
+import { importIndicativePrices as importIndicativePricesImpl } from './ai/prices.js';
+import { providerFromEnv } from './ai/provider.js';
+import { createRuntime, type Runtime } from './ai/runtime.js';
 import { signInspection as signInspectionImpl } from './inspections.js';
 import { inviteBuildingMember as inviteBuildingMemberImpl } from './links.js';
 import { createTicket as createTicketImpl, ticketAction as ticketActionImpl } from './tickets.js';
@@ -59,6 +63,19 @@ export const createTicket = onCall({ enforceAppCheck }, (req: CallableRequest<un
 export const ticketAction = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
   ticketActionImpl({ db: getFirestore(), auth: getAuth() }, req.auth?.uid, req.data),
 );
+
+// AI runs only here, server-side (CLAUDE.md §7). The provider comes from AI_PROVIDER (default: the cost-free fake).
+let runtime: Runtime | undefined;
+const aiRuntime = () => (runtime ??= createRuntime(providerFromEnv()));
+
+export const aiAssist = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
+  aiAssistImpl({ db: getFirestore(), runtime: aiRuntime() }, req.auth?.uid, req.data),
+);
+
+export const importIndicativePrices = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) => {
+  const data = (req.data ?? {}) as { orgId?: unknown; payload?: unknown };
+  return importIndicativePricesImpl({ db: getFirestore() }, req.auth?.uid, data.orgId, data.payload);
+});
 
 /** 07:00 Riyadh time every day. */
 export const dailyReminders = onSchedule(
