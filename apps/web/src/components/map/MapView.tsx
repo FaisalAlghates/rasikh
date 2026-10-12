@@ -113,6 +113,7 @@ export function MapView(props: MapViewProps) {
         map.addLayer({
           id: 'clusters',
           type: 'circle',
+          slot: 'top',
           source: 'properties',
           filter: ['has', 'point_count'],
           paint: {
@@ -133,23 +134,27 @@ export function MapView(props: MapViewProps) {
         map.addLayer({
           id: 'property-glow',
           type: 'circle',
+          slot: 'top',
           source: 'properties',
           filter: ['!', ['has', 'point_count']],
           paint: {
+            'circle-emissive-strength': 1,
             'circle-color': CLAY_LIGHT,
-            'circle-radius': 22,
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 20, 15, 46],
             'circle-blur': 1,
-            'circle-opacity': 0.45,
+            'circle-opacity': 0.6,
           },
         });
         map.addLayer({
           id: 'property-dot',
           type: 'circle',
+          slot: 'top',
           source: 'properties',
           filter: ['!', ['has', 'point_count']],
           paint: {
+            'circle-emissive-strength': 1,
             'circle-color': CLAY,
-            'circle-radius': 8,
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 7, 15, 15],
             'circle-stroke-color': '#F4EEE4',
             'circle-stroke-width': 2,
           },

@@ -18,6 +18,12 @@ export function PortfolioClient() {
   const [filter, setFilter] = useState<Filter>('all');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selected, setSelected] = useState<string>();
+  // ?preset=night|dusk|dawn|day pins the lighting (handy for design review)
+  const q2 =
+    typeof window === 'undefined'
+      ? null
+      : new URLSearchParams(window.location.search).get('preset');
+  const forced = (['dawn', 'day', 'dusk', 'night'] as const).find((x) => x === q2);
 
   const fmt = useMemo(() => new Intl.NumberFormat('en-US'), []);
   const statusLabel = (s: Status) =>
@@ -69,6 +75,7 @@ export function PortfolioClient() {
           properties={visible}
           selectedId={selected}
           onSelect={setSelected}
+          fixedPreset={forced}
           labelFor={(id) => t(`name.${id}`)}
           mapLabel={t('mapLabel')}
         />
