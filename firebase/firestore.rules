@@ -86,6 +86,92 @@ service cloud.firestore {
         allow create, update, delete: if isStaff(orgId);
       }
 
+      // ---- Phase 5: inspections ------------------------------------------------------------
+      // A draft is edited by staff only. Signing goes through the signInspection function, which
+      // writes the signatures and the status; after the first signature nothing under it can change.
+      function insp(orgId, iid) {
+        return get(/databases/$(database)/documents/orgs/$(orgId)/inspections/$(iid));
+      }
+      function isDraft(orgId, iid) {
+        return insp(orgId, iid).data.status == 'draft';
+      }
+      function canReadInspection(orgId, iid) {
+        return isStaff(orgId)
+          || (isMember(orgId) && insp(orgId, iid).data.get('tenantUid', '') == request.auth.uid);
+      }
+
+      match /inspections/{inspectionId} {
+        allow read: if isStaff(orgId)
+          || (isMember(orgId) && resource.data.get('tenantUid', '') == request.auth.uid);
+
+        allow create: if isStaff(orgId)
+          && request.resource.data.keys().hasOnly(['unitId', 'propertyId', 'leaseId', 'tenantUid',
+               'kind', 'rooms', 'moveInId', 'status', 'createdBy', 'createdAt'])
+          && request.resource.data.keys().hasAll(['unitId', 'propertyId', 'leaseId', 'kind', 'rooms',
+               'status', 'createdBy', 'createdAt'])
+          && request.resource.data.status == 'draft'
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.kind in ['move_in', 'move_out']
+          && request.resource.data.rooms is list
+          && request.resource.data.rooms.size() > 0 && request.resource.data.rooms.size() <= 60
+          && exists(/databases/$(database)/documents/orgs/$(orgId)/leases/$(request.resource.data.leaseId))
+          && request.resource.data.get('tenantUid', '') ==
+             get(/databases/$(database)/documents/orgs/$(orgId)/leases/$(request.resource.data.leaseId)).data.get('tenantUid', '')
+          && request.resource.data.unitId ==
+             get(/databases/$(database)/documents/orgs/$(orgId)/leases/$(request.resource.data.leaseId)).data.unitId;
+
+        // The tenant may leave a comment until the inspection is sealed. Nothing else is editable.
+        allow update: if isMember(orgId)
+          && resource.data.get('tenantUid', '') == request.auth.uid
+          && resource.data.status != 'sealed'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tenantComment'])
+          && request.resource.data.tenantComment is string
+          && request.resource.data.tenantComment.size() <= 500;
+
+        allow delete: if isStaff(orgId) && resource.data.status == 'draft';
+
+        match /items/{itemId} {
+          allow read: if canReadInspection(orgId, inspectionId);
+          allow create, update: if isStaff(orgId)
+            && isDraft(orgId, inspectionId)
+            && request.resource.data.keys().hasOnly(['room', 'item', 'condition', 'note', 'assessment', 'costSar'])
+            && request.resource.data.keys().hasAll(['room', 'item', 'condition', 'note'])
+            && itemId == request.resource.data.room + '__' + request.resource.data.item
+            && request.resource.data.room in insp(orgId, inspectionId).data.rooms
+            && request.resource.data.condition in ['good', 'fair', 'poor', 'damaged']
+            && request.resource.data.note is string && request.resource.data.note.size() <= 300
+            && (!('assessment' in request.resource.data)
+                || (request.resource.data.assessment in ['wear', 'damage']
+                    && insp(orgId, inspectionId).data.kind == 'move_out'))
+            && (!('costSar' in request.resource.data)
+                || (request.resource.data.costSar is number && request.resource.data.costSar >= 0
+                    && insp(orgId, inspectionId).data.kind == 'move_out'));
+          allow delete: if isStaff(orgId) && isDraft(orgId, inspectionId);
+        }
+
+        // Evidence metadata is create-only. The file itself is write-once in Storage.
+        match /media/{mediaId} {
+          allow read: if canReadInspection(orgId, inspectionId);
+          allow create: if isStaff(orgId)
+            && isDraft(orgId, inspectionId)
+            && request.resource.data.keys().hasOnly(['room', 'item', 'path', 'sha256', 'size', 'contentType',
+                 'capturedAt', 'gps', 'device', 'source', 'uploadedBy', 'createdAt'])
+            && request.resource.data.keys().hasAll(['room', 'path', 'sha256', 'size', 'contentType',
+                 'capturedAt', 'device', 'source', 'uploadedBy', 'createdAt'])
+            && request.resource.data.source == 'in_app_camera'
+            && request.resource.data.uploadedBy == request.auth.uid
+            && request.resource.data.createdAt == request.time
+            && request.resource.data.room in insp(orgId, inspectionId).data.rooms
+            && request.resource.data.sha256 is string
+            && request.resource.data.sha256.matches('^[a-f0-9]{64}$')
+            && request.resource.data.path.matches('^orgs/' + orgId + '/inspections/' + inspectionId + '/[^/]+$')
+            && request.resource.data.size is int && request.resource.data.size > 0;
+          allow delete: if isStaff(orgId) && isDraft(orgId, inspectionId);
+          allow update: if false;
+        }
+      }
+
       // In-app reminders are written by Functions; a user reads their own and may mark them read.
       match /notifications/{nid} {
         allow read: if isMember(orgId) && resource.data.uid == request.auth.uid;

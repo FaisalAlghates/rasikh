@@ -87,19 +87,23 @@ describe('storage rules', () => {
   const png = new Uint8Array([137, 80, 78, 71]);
   it('lets members upload images, once', async () => {
     const st = env.authenticatedContext('u1', owner).storage();
-    const r = ref(st, 'orgs/org1/inspections/a.png');
+    const r = ref(st, 'orgs/org1/receipts/a.png');
     await assertSucceeds(uploadBytes(r, png, { contentType: 'image/png' }));
     await assertFails(uploadBytes(r, png, { contentType: 'image/png' })); // overwrite
     await assertFails(deleteObject(r));
   });
   it('denies outsiders and anonymous users', async () => {
     await assertFails(
-      uploadBytes(ref(env.authenticatedContext('u2', outsider).storage(), 'orgs/org1/a.png'), png, {
-        contentType: 'image/png',
-      }),
+      uploadBytes(
+        ref(env.authenticatedContext('u2', outsider).storage(), 'orgs/org1/receipts/a.png'),
+        png,
+        {
+          contentType: 'image/png',
+        },
+      ),
     );
     await assertFails(
-      uploadBytes(ref(env.unauthenticatedContext().storage(), 'orgs/org1/a.png'), png, {
+      uploadBytes(ref(env.unauthenticatedContext().storage(), 'orgs/org1/receipts/a.png'), png, {
         contentType: 'image/png',
       }),
     );
@@ -107,7 +111,9 @@ describe('storage rules', () => {
   it('rejects disallowed content types', async () => {
     const st = env.authenticatedContext('u1', owner).storage();
     await assertFails(
-      uploadBytes(ref(st, 'orgs/org1/run.exe'), png, { contentType: 'application/x-msdownload' }),
+      uploadBytes(ref(st, 'orgs/org1/receipts/run.exe'), png, {
+        contentType: 'application/x-msdownload',
+      }),
     );
   });
 });

@@ -35,8 +35,14 @@ export async function attachTenant(deps: Deps, orgId: string, leaseId: string, u
     .collection(`orgs/${orgId}/payments`)
     .where('leaseId', '==', leaseId)
     .get();
+  // Inspections carry the tenant's uid too, so the tenant can read them under the security rules.
+  const inspections = await deps.db
+    .collection(`orgs/${orgId}/inspections`)
+    .where('leaseId', '==', leaseId)
+    .get();
   const batch = deps.db.batch();
   batch.update(leaseRef, { tenantUid: uid });
+  inspections.forEach((i) => batch.update(i.ref, { tenantUid: uid }));
   payments.forEach((p) => batch.update(p.ref, { tenantUid: uid }));
   batch.set(
     deps.db.doc(`orgs/${orgId}/members/${uid}`),

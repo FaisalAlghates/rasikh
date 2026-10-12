@@ -1,7 +1,7 @@
 rules_version = '2';
 
-// Files live under orgs/{orgId}/... Members may upload images/PDFs up to 25 MB.
-// Overwrites and deletes are denied: uploaded evidence is write-once.
+// Files live under orgs/{orgId}/<area>/... Only the areas below exist; everything else is denied.
+// Uploaded evidence is write-once: no overwrite, no delete.
 service firebase.storage {
   match /b/{bucket}/o {
 
@@ -11,15 +11,40 @@ service firebase.storage {
     function hasAnyRole(orgId, allowed) {
       return isMember(orgId) && request.auth.token.orgs[orgId].hasAny(allowed);
     }
+    function isStaff(orgId) {
+      return hasAnyRole(orgId, ['owner', 'manager', 'admin']);
+    }
+    function underLimit() {
+      return request.resource.size < 25 * 1024 * 1024;
+    }
+    function inspection(orgId, inspectionId) {
+      return firestore.get(/databases/(default)/documents/orgs/$(orgId)/inspections/$(inspectionId));
+    }
 
-    match /orgs/{orgId}/{allPaths=**} {
+    // Payment receipts: any member of the organization.
+    match /orgs/{orgId}/receipts/{file} {
       allow read: if isMember(orgId);
       allow create: if resource == null
         && hasAnyRole(orgId, ['owner', 'tenant', 'manager', 'broker', 'vendor', 'admin'])
-        && request.resource.size < 25 * 1024 * 1024
+        && underLimit()
         && (request.resource.contentType.matches('image/.*')
             || request.resource.contentType.matches('video/.*')
             || request.resource.contentType == 'application/pdf');
+      allow update, delete: if false;
+    }
+
+    // Inspection photos and video: staff add them while the inspection is a draft; the staff and
+    // that lease's tenant read them. After the first signature the inspection is no longer a draft,
+    // so nothing can be added.
+    match /orgs/{orgId}/inspections/{inspectionId}/{file} {
+      allow read: if isStaff(orgId)
+        || (isMember(orgId) && inspection(orgId, inspectionId).data.get('tenantUid', '') == request.auth.uid);
+      allow create: if resource == null
+        && isStaff(orgId)
+        && underLimit()
+        && (request.resource.contentType.matches('image/.*')
+            || request.resource.contentType.matches('video/.*'))
+        && inspection(orgId, inspectionId).data.status == 'draft';
       allow update, delete: if false;
     }
 
