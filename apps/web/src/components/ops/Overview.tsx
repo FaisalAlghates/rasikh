@@ -1,65 +1,31 @@
 'use client';
 
-import { yearTotals } from '@rasikh/shared';
+import { yearTotals, type Reminder } from '@rasikh/shared';
 import { useTranslations } from 'next-intl';
 import { Card, StatTile } from '@/components/ui/Card';
 import { StatusDot } from '@/components/ui/Card';
 import { today, type Row } from '@/lib/ops/hooks';
+import { Reminders } from './Reminders';
 import {
   money,
   type ExpenseDoc,
   type LeaseDoc,
-  type NotificationDoc,
   type PaymentDoc,
   type UnitDoc,
 } from '@/lib/ops/types';
-
-export function Notifications({ items }: { items: Row<NotificationDoc>[] }) {
-  const t = useTranslations('ops');
-  const label = (n: NotificationDoc) =>
-    n.kind === 'payment_upcoming'
-      ? t('nUpcoming')
-      : n.kind === 'payment_late'
-        ? t('nLate')
-        : n.kind === 'lease_expiring'
-          ? t('nExpiring')
-          : t('nRenewal');
-  return (
-    <Card className="flex flex-col gap-3" data-testid="notifications">
-      <h3 className="text-body font-semibold">{t('notifications')}</h3>
-      {items.length === 0 ? (
-        <p className="text-small text-text-muted">{t('noNotifications')}</p>
-      ) : (
-        <ul className="flex flex-col gap-2">
-          {items.map((n) => (
-            <li key={n.id} className="flex items-center justify-between gap-3 text-small">
-              <span>
-                {label(n.data)} · {n.data.propertyName} {n.data.unitLabel}
-              </span>
-              <StatusDot
-                status={n.data.kind === 'payment_late' ? 'late' : 'warn'}
-                label={t('daysLeft', { count: Math.abs(n.data.days) })}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
-  );
-}
 
 export function Overview({
   units,
   leases,
   payments,
   expenses,
-  notifications,
+  reminders,
 }: {
   units: Row<UnitDoc>[];
   leases: Row<LeaseDoc>[];
   payments: Row<PaymentDoc>[];
   expenses: Row<ExpenseDoc>[];
-  notifications: Row<NotificationDoc>[];
+  reminders: Reminder[];
 }) {
   const t = useTranslations('ops');
   const now = today();
@@ -111,7 +77,7 @@ export function Overview({
             </ul>
           )}
         </Card>
-        <Notifications items={notifications} />
+        <Reminders reminders={reminders} leases={leases} />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import { Field } from '@/components/ui/Input';
 import { firebaseFunctions } from '@/lib/firebase';
 import type { Row } from '@/lib/ops/hooks';
 import { money, type LeaseDoc, type PaymentDoc } from '@/lib/ops/types';
+import { CalendarButton } from './Reminders';
 import { ScheduleTable } from './ScheduleTable';
 
 export function LeasesTab({
@@ -95,6 +96,10 @@ export function LeasesTab({
               {t('renewalNotice', { date: renewalNoticeDate(current.data.endDate) })}
             </p>
           </div>
+          <CalendarButton
+            lease={current}
+            payments={payments.filter((p) => p.data.leaseId === current.id)}
+          />
           <h4 className="text-body font-semibold">{t('schedule')}</h4>
           <ScheduleTable
             orgId={orgId}

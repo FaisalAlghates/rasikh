@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 
 async function signUpEmail(page: Page, email: string) {
@@ -91,6 +92,20 @@ test('owner: property → unit → lease → schedule → payment; tenant sees i
   await expect(o.getByTestId('total-collected')).toContainText('3,500');
   await expect(o.getByTestId('total-expenses')).toContainText('500');
   await expect(o.getByTestId('total-net')).toContainText('3,000');
+
+  // free reminders: live in-app alerts + a calendar file (no server, no money)
+  await o.getByRole('tab', { name: 'نظرة عامة' }).click();
+  await expect(o.getByTestId('reminders')).toContainText('دفعة متأخرة');
+  await o.getByRole('tab', { name: 'العقود والدفعات' }).click();
+  const [download] = await Promise.all([
+    o.waitForEvent('download'),
+    o.getByTestId('add-to-calendar').click(),
+  ]);
+  const ics = readFileSync((await download.path())!, 'utf8');
+  expect(ics).toContain('BEGIN:VCALENDAR');
+  expect(ics).toContain('DTSTART;VALUE=DATE:20261101');
+  expect(ics).toContain('TRIGGER:-P3D');
+  expect(download.suggestedFilename()).toBe('rasikh-10203040.ics');
 
   // ---------------------------------------------------------------- tenant
   const tCtx = await browser.newContext();

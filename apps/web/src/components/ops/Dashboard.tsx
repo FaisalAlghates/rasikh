@@ -1,7 +1,7 @@
 'use client';
 
+import { computeReminders } from '@rasikh/shared';
 import { signOut } from 'firebase/auth';
-import { orderBy, where } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
@@ -12,19 +12,13 @@ import { ShurfaLoader } from '@/components/ui/Shurfa';
 import { Tabs } from '@/components/ui/Tabs';
 import { useRouter } from '@/i18n/navigation';
 import { firebaseAuth, firebaseFunctions } from '@/lib/firebase';
-import { tenantScope, useOrgCollection, useSession } from '@/lib/ops/hooks';
-import type {
-  ExpenseDoc,
-  LeaseDoc,
-  NotificationDoc,
-  PaymentDoc,
-  PropertyDoc,
-  UnitDoc,
-} from '@/lib/ops/types';
+import { tenantScope, today, useOrgCollection, useSession } from '@/lib/ops/hooks';
+import type { ExpenseDoc, LeaseDoc, PaymentDoc, PropertyDoc, UnitDoc } from '@/lib/ops/types';
 import { useUser } from '@/lib/use-user';
 import { ExpensesTab } from './ExpensesTab';
 import { LeasesTab } from './LeasesTab';
-import { Notifications, Overview } from './Overview';
+import { Overview } from './Overview';
+import { CalendarButton, Reminders } from './Reminders';
 import { PropertiesTab } from './PropertiesTab';
 import { ReportTab } from './ReportTab';
 import { ScheduleTable } from './ScheduleTable';
@@ -81,12 +75,20 @@ export function Dashboard() {
   const scope = useMemo(() => (staff ? [] : tenantScope(uid)), [staff, uid]);
   const leases = useOrgCollection<LeaseDoc>(orgId, 'leases', scope, !!session);
   const payments = useOrgCollection<PaymentDoc>(orgId, 'payments', scope, !!session);
-  const notifScope = useMemo(() => [where('uid', '==', uid), orderBy('createdAt', 'desc')], [uid]);
-  const notifications = useOrgCollection<NotificationDoc>(
-    orgId,
-    'notifications',
-    notifScope,
-    !!session,
+  // Reminders are computed here from the user's own records: free, no server job required.
+  const reminders = useMemo(
+    () =>
+      computeReminders(
+        today(),
+        leases.rows.map((l) => ({ id: l.id, endDate: l.data.endDate, status: l.data.status })),
+        payments.rows.map((p) => ({
+          id: p.id,
+          leaseId: p.data.leaseId,
+          dueDate: p.data.dueDate,
+          status: p.data.status,
+        })),
+      ),
+    [leases.rows, payments.rows],
   );
 
   if (loading || noOrg || signedOut) {
@@ -132,6 +134,10 @@ export function Dashboard() {
                 {money(lease.data.annualRent)} {t('sar')} · {t(lease.data.cycle)}
               </p>
             </div>
+            <CalendarButton
+              lease={lease}
+              payments={payments.rows.filter((p) => p.data.leaseId === lease.id)}
+            />
             <h3 className="text-body font-semibold">{t('schedule')}</h3>
             <ScheduleTable
               orgId={orgId}
@@ -141,7 +147,7 @@ export function Dashboard() {
             />
           </Card>
         )}
-        <Notifications items={notifications.rows} />
+        <Reminders reminders={reminders} leases={leases.rows} />
       </div>
     );
   }
@@ -165,7 +171,7 @@ export function Dashboard() {
                 leases={leases.rows}
                 payments={payments.rows}
                 expenses={expenses.rows}
-                notifications={notifications.rows}
+                reminders={reminders}
               />
             ),
           },

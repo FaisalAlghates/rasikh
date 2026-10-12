@@ -64,7 +64,6 @@ Acceptance: 60 fps on mid-range Android, no jank, keys restricted by domain/bund
 
 Acceptance: rules tests for every new collection; e2e owner adds unit → lease → schedule → marks payment; tenant sees it.
 
-
 **Status (2026-10-12): web + backend done and verified on emulators; app screens not built.** Done: shared domain (schemas, payment schedule, Riyadh freeze helper, 60-day renewal notice, reminders, yearly totals; 17 tests), rules for units/leases/payments/expenses/documents/notifications with tenant isolation (9 tests), callables inviteTenant / claimInvites (verified-email only), daily reminders function (idempotent in-app notifications + FCM when a token exists; 4 tests), owner dashboard (overview, properties/units, lease form with freeze warning, schedule + record payment + receipt upload, expenses, annual report) and tenant view, full owner→tenant e2e. Gaps: Flutter owner/tenant screens, email delivery (needs a provider decision), FCM token registration on web/app, report is browser print-to-PDF (server-side Arabic PDF later), no Android/iOS runs, storage rules are org-wide (receipts are not yet per-lease scoped), documents collection has rules but no UI.
 
 ## Phase 5 — Guided inspections + Property Health Record
