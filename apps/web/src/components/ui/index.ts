@@ -6,7 +6,7 @@ export { Dialog, Sheet } from './Dialog';
 export { EmptyState } from './EmptyState';
 export { GlassPanel } from './GlassPanel';
 export { IconButton } from './IconButton';
-export { Field, Input } from './Input';
+export { Field, Input, NativeSelect } from './Input';
 export { PropertyCard } from './PropertyCard';
 export { Select } from './Select';
 export { ShurfaDivider, ShurfaLoader } from './Shurfa';

@@ -561,3 +561,21 @@ html[data-scene='on'] .hero-poster {
     scroll-behavior: auto !important;
   }
 }
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-area {
+    color: #000 !important;
+  }
+  .print-area * {
+    color: #000 !important;
+    border-color: #bbb !important;
+  }
+}

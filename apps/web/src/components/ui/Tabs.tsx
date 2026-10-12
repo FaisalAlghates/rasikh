@@ -13,14 +13,21 @@ export interface TabItem {
 export function Tabs({
   items,
   defaultValue,
+  value,
+  onValueChange,
   label,
 }: {
   items: TabItem[];
   defaultValue?: string;
+  value?: string;
+  onValueChange?: (v: string) => void;
   label: string;
 }) {
   return (
-    <RTabs.Root defaultValue={defaultValue ?? items[0]?.value}>
+    <RTabs.Root
+      {...(value === undefined ? { defaultValue: defaultValue ?? items[0]?.value } : { value })}
+      onValueChange={onValueChange}
+    >
       <RTabs.List aria-label={label} className="hairline flex rounded-md p-1">
         {items.map((i) => (
           <RTabs.Trigger

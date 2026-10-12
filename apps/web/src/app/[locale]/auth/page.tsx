@@ -2,6 +2,7 @@
 
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   RecaptchaVerifier,
   signInWithEmailAndPassword,
   signInWithPhoneNumber,
@@ -89,15 +90,17 @@ export default function AuthPage() {
   const verifyCode = () =>
     run(async () => {
       await confirmation.current?.confirm(code);
-      router.push('/onboarding');
+      router.push('/workspace');
     });
 
   const submitEmail = () =>
     run(async () => {
       const auth = firebaseAuth();
-      if (creating) await createUserWithEmailAndPassword(auth, email, password);
-      else await signInWithEmailAndPassword(auth, email, password);
-      router.push('/onboarding');
+      if (creating) {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        void sendEmailVerification(cred.user).catch(() => undefined);
+      } else await signInWithEmailAndPassword(auth, email, password);
+      router.push('/workspace');
     });
 
   return (

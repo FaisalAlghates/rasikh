@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, SelectHTMLAttributes } from 'react';
 import { cn } from './cn';
 
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
@@ -48,6 +48,40 @@ export function Field({
           {error}
         </p>
       )}
+    </div>
+  );
+}
+
+export function NativeSelect({
+  label,
+  id,
+  options,
+  className,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & {
+  label: string;
+  id: string;
+  options: Array<{ value: string; label: string }>;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-small text-text-muted">
+        {label}
+      </label>
+      <select
+        id={id}
+        {...props}
+        className={cn(
+          'hairline min-h-11 w-full rounded-md bg-surface px-3 text-body text-text',
+          className,
+        )}
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

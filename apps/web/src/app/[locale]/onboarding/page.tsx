@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { SELF_SERVICE_ROLES, type SelfServiceRole } from '@rasikh/shared';
 import { Header } from '@/components/Header';
+import { VerifyEmailBanner } from '@/components/ops/VerifyEmailBanner';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Input';
 import { useRouter } from '@/i18n/navigation';
@@ -66,6 +67,9 @@ export default function OnboardingPage() {
   return (
     <div data-theme="dark" className="clear min-h-dvh">
       <Header />
+      <div className="mx-auto mt-6 max-w-xl px-6">
+        <VerifyEmailBanner />
+      </div>
       <main className="panel mx-auto my-10 flex max-w-xl flex-col gap-8 p-6 md:p-10">
         <div>
           <h1 className="text-h2 font-semibold">{t('title')}</h1>

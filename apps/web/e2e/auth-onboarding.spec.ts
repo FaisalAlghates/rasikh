@@ -30,9 +30,10 @@ test('email sign-up → role onboarding → workspace with claims', async ({ pag
   await page.locator('main button').last().click();
 
   await expect(page).toHaveURL(/\/ar\/workspace/, { timeout: 20_000 });
-  const list = page.getByTestId('org-list');
-  await expect(list).toContainText('مالك');
-  await expect(list).toContainText('وسيط');
+  // the owner/broker claims unlock the owner dashboard
+  await expect(page.getByRole('tab', { name: 'العقارات والوحدات' })).toBeVisible({
+    timeout: 20_000,
+  });
 });
 
 test('onboarding requires a role and consent', async ({ page }, info) => {
