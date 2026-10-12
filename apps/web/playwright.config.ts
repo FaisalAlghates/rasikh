@@ -7,6 +7,8 @@ export default defineConfig({
   expect: { timeout: 10_000 }, // dev-server pages compile on first hit
   fullyParallel: false,
   workers: 1,
+  // One retry on CI only: dev-server compile times on a shared runner are not a product bug.
+  retries: process.env.CI ? 1 : 0,
   reporter: [['list']],
   use: {
     baseURL: 'http://localhost:3000',

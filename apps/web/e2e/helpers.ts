@@ -37,7 +37,8 @@ export async function verifyEmail(request: APIRequestContext, email: string) {
 /** Signs up, onboards as an owner and lands in the workspace. */
 export async function onboardOwner(page: Page, email: string) {
   await signUpEmail(page, email);
-  await expect(page).toHaveURL(/\/ar\/onboarding/);
+  // The first visit to each page compiles in the dev server, which is slow on a shared CI runner.
+  await expect(page).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
   await page.getByText('مالك', { exact: true }).click();
   await page.locator('#displayName').fill('فيصل');
   await page.locator('#orgName').fill('عقارات الاختبار');

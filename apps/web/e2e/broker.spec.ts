@@ -14,7 +14,7 @@ test('broker: FAL reminder, lead funnel, viewing, contract, immutable log and th
 
   // A broker signs up with only the broker role.
   await signUpEmail(p, `broker-${Date.now()}@rasikh.test`);
-  await expect(p).toHaveURL(/\/ar\/onboarding/);
+  await expect(p).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
   await p.getByText('وسيط', { exact: true }).click();
   await p.locator('#displayName').fill('سلمان');
   await p.locator('#orgName').fill('مكتب الأفق');

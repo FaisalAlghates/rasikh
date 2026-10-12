@@ -21,7 +21,7 @@ test('email sign-up → role onboarding → workspace with claims', async ({ pag
   await page.locator('#password').fill('E2e-pass-2026!');
   await page.locator('form button[type=submit]').click();
 
-  await expect(page).toHaveURL(/\/ar\/onboarding/);
+  await expect(page).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
   await page.getByText('مالك', { exact: true }).click();
   await page.getByText('وسيط', { exact: true }).click();
   await page.locator('#displayName').fill('فيصل');
@@ -44,7 +44,7 @@ test('onboarding requires a role and consent', async ({ page }, info) => {
   await page.locator('#email').fill(email);
   await page.locator('#password').fill('E2e-pass-2026!');
   await page.locator('form button[type=submit]').click();
-  await expect(page).toHaveURL(/\/ar\/onboarding/);
+  await expect(page).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
   await page.locator('#displayName').fill('فيصل');
   await page.locator('#orgName').fill('عقارات الشمال');
   await page.locator('main button').last().click();

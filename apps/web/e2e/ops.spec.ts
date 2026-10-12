@@ -48,7 +48,7 @@ test('owner: property → unit → lease → schedule → payment; tenant sees i
   const oCtx = await browser.newContext();
   const o = await oCtx.newPage();
   await signUpEmail(o, ownerEmail);
-  await expect(o).toHaveURL(/\/ar\/onboarding/);
+  await expect(o).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
   await o.getByText('مالك', { exact: true }).click();
   await o.locator('#displayName').fill('فيصل');
   await o.locator('#orgName').fill('عقارات الاختبار');
