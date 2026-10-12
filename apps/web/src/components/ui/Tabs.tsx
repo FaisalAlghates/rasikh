@@ -28,13 +28,13 @@ export function Tabs({
       {...(value === undefined ? { defaultValue: defaultValue ?? items[0]?.value } : { value })}
       onValueChange={onValueChange}
     >
-      <RTabs.List aria-label={label} className="hairline flex rounded-md p-1">
+      <RTabs.List aria-label={label} className="hairline flex overflow-x-auto rounded-md p-1">
         {items.map((i) => (
           <RTabs.Trigger
             key={i.value}
             value={i.value}
             className={cn(
-              'min-h-10 flex-1 rounded-sm px-3 text-small text-text-muted transition-colors duration-200 ease-rk',
+              'min-h-10 flex-1 whitespace-nowrap rounded-sm px-3 text-small text-text-muted transition-colors duration-200 ease-rk',
               'data-[state=active]:bg-surface data-[state=active]:text-text',
             )}
           >

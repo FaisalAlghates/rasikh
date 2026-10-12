@@ -70,10 +70,9 @@ export function useSession(): {
   };
 }
 
-/** Live collection under `orgs/{orgId}/{name}`. Pass constraints to scope tenant queries (rules require it). */
-export function useOrgCollection<T = DocumentData>(
-  orgId: string | undefined,
-  name: string,
+/** Live collection at any Firestore path. Pass constraints to scope tenant queries (the rules require it). */
+export function useCollectionAt<T = DocumentData>(
+  path: string | undefined,
   constraints: QueryConstraint[] = [],
   enabled = true,
 ): { rows: Row<T>[]; loading: boolean } {
@@ -82,13 +81,13 @@ export function useOrgCollection<T = DocumentData>(
   const key = constraints.map((c) => JSON.stringify(c)).join('|');
 
   useEffect(() => {
-    if (!orgId || !enabled) {
+    if (!path || !enabled) {
       setRows([]);
       setLoading(false);
       return;
     }
     setLoading(true);
-    const q = query(collection(firebaseDb(), `orgs/${orgId}/${name}`), ...constraints);
+    const q = query(collection(firebaseDb(), path), ...constraints);
     return onSnapshot(
       q,
       (snap) => {
@@ -102,10 +101,19 @@ export function useOrgCollection<T = DocumentData>(
     );
     // `key` stands in for the constraint objects, which are recreated on every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgId, name, enabled, key]);
+  }, [path, enabled, key]);
 
   return { rows, loading };
 }
 
+/** Live collection under `orgs/{orgId}/{name}`. */
+export function useOrgCollection<T = DocumentData>(
+  orgId: string | undefined,
+  name: string,
+  constraints: QueryConstraint[] = [],
+  enabled = true,
+): { rows: Row<T>[]; loading: boolean } {
+  return useCollectionAt<T>(orgId ? `orgs/${orgId}/${name}` : undefined, constraints, enabled);
+}
 export const tenantScope = (uid: string) => [where('tenantUid', '==', uid)];
 export const today = () => new Date(Date.now() + 3 * 3600_000).toISOString().slice(0, 10); // Riyadh date

@@ -571,7 +571,19 @@ html[data-scene='on'] .hero-poster {
   .no-print {
     display: none !important;
   }
+  /* Print only the report itself, never the app chrome around it. */
+  body * {
+    visibility: hidden !important;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
   .print-area {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    width: 100%;
     color: #000 !important;
   }
   .print-area * {

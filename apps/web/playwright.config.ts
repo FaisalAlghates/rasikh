@@ -13,7 +13,14 @@ export default defineConfig({
     trace: 'retain-on-failure',
     // Software WebGL so the 3D scene can run in headless/CI browsers.
     launchOptions: {
-      args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+      args: [
+        '--use-angle=swiftshader',
+        '--enable-unsafe-swiftshader',
+        '--ignore-gpu-blocklist',
+        // A synthetic camera, so the in-app capture flow can be tested without hardware.
+        '--use-fake-device-for-media-stream',
+        '--use-fake-ui-for-media-stream',
+      ],
     },
   },
   projects: [

@@ -59,82 +59,66 @@ export function ScheduleTable({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[34rem] text-start text-small">
-          <thead>
-            <tr className="text-text-muted">
-              <th className="py-2 text-start font-medium">{t('dueDate')}</th>
-              <th className="py-2 text-start font-medium">{t('amount')}</th>
-              <th className="py-2 text-start font-medium">{t('status')}</th>
-              <th className="py-2 text-start font-medium">{t('receipt')}</th>
-              <th className="py-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(({ id, data: p }) => {
-              const late = p.status === 'due' && p.dueDate < now;
-              return (
-                <tr key={id} data-testid={`pay-${p.dueDate}`} className="border-t border-border/20">
-                  <td className="tabular py-3" dir="ltr">
-                    {p.dueDate}
-                  </td>
-                  <td className="tabular py-3">
-                    {money(p.amount)} {t('sar')}
-                  </td>
-                  <td className="py-3">
-                    <StatusDot
-                      status={p.status === 'paid' ? 'ok' : late ? 'late' : 'warn'}
-                      label={
-                        p.status === 'paid'
-                          ? t('statusPaid')
-                          : late
-                            ? t('statusLate')
-                            : t('statusDue')
-                      }
+      <ul className="flex flex-col divide-y divide-border/20">
+        {rows.map(({ id, data: p }) => {
+          const late = p.status === 'due' && p.dueDate < now;
+          return (
+            // `relative` keeps the visually hidden file input inside its row instead of widening the page
+            <li
+              key={id}
+              data-testid={`pay-${p.dueDate}`}
+              className="relative flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3 text-small"
+            >
+              <div className="flex min-w-28 flex-col">
+                <span className="tabular text-body" dir="ltr">
+                  {p.dueDate}
+                </span>
+                <span className="tabular text-text-muted">
+                  {money(p.amount)} {t('sar')}
+                </span>
+              </div>
+              <StatusDot
+                status={p.status === 'paid' ? 'ok' : late ? 'late' : 'warn'}
+                label={
+                  p.status === 'paid' ? t('statusPaid') : late ? t('statusLate') : t('statusDue')
+                }
+              />
+              <div className="flex flex-wrap items-center gap-3">
+                {p.receiptPath ? (
+                  <button
+                    type="button"
+                    className="text-brand-text underline"
+                    onClick={() => void openReceipt(p.receiptPath!)}
+                  >
+                    {t('viewReceipt')}
+                  </button>
+                ) : canUpload ? (
+                  <label className="cursor-pointer text-brand-text underline">
+                    {t('uploadReceipt')}
+                    <input
+                      type="file"
+                      accept="image/*,application/pdf"
+                      className="sr-only"
+                      aria-label={`${t('uploadReceipt')} ${p.dueDate}`}
+                      onChange={(e) => e.target.files?.[0] && void upload(id, e.target.files[0])}
                     />
-                  </td>
-                  <td className="py-3">
-                    {p.receiptPath ? (
-                      <button
-                        type="button"
-                        className="text-brand-text underline"
-                        onClick={() => void openReceipt(p.receiptPath!)}
-                      >
-                        {t('viewReceipt')}
-                      </button>
-                    ) : canUpload ? (
-                      <label className="cursor-pointer text-brand-text underline">
-                        {t('uploadReceipt')}
-                        <input
-                          type="file"
-                          accept="image/*,application/pdf"
-                          className="sr-only"
-                          aria-label={`${t('uploadReceipt')} ${p.dueDate}`}
-                          onChange={(e) =>
-                            e.target.files?.[0] && void upload(id, e.target.files[0])
-                          }
-                        />
-                      </label>
-                    ) : null}
-                  </td>
-                  <td className="py-3 text-end">
-                    {canMarkPaid && p.status === 'due' && (
-                      <Button
-                        size="md"
-                        variant="quiet"
-                        disabled={busy === id}
-                        onClick={() => void markPaid(id)}
-                      >
-                        {t('markPaid')}
-                      </Button>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                  </label>
+                ) : null}
+                {canMarkPaid && p.status === 'due' && (
+                  <Button
+                    size="md"
+                    variant="quiet"
+                    disabled={busy === id}
+                    onClick={() => void markPaid(id)}
+                  >
+                    {t('markPaid')}
+                  </Button>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>{' '}
       {error && (
         <p role="alert" className="text-small text-danger">
           {error}

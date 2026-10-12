@@ -5,12 +5,15 @@ import { signOut } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import { InspectionsTab } from '@/components/inspect/InspectionsTab';
+import { RecordTab } from '@/components/inspect/RecordTab';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ShurfaLoader } from '@/components/ui/Shurfa';
 import { Tabs } from '@/components/ui/Tabs';
 import { useRouter } from '@/i18n/navigation';
+import type { InspectionDoc } from '@/lib/inspect/types';
 import { firebaseAuth, firebaseFunctions } from '@/lib/firebase';
 import { tenantScope, today, useOrgCollection, useSession } from '@/lib/ops/hooks';
 import type { ExpenseDoc, LeaseDoc, PaymentDoc, PropertyDoc, UnitDoc } from '@/lib/ops/types';
@@ -28,6 +31,7 @@ import { money } from '@/lib/ops/types';
 export function Dashboard() {
   const t = useTranslations('ops');
   const c = useTranslations('common');
+  const i = useTranslations('inspect');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -75,6 +79,7 @@ export function Dashboard() {
   const scope = useMemo(() => (staff ? [] : tenantScope(uid)), [staff, uid]);
   const leases = useOrgCollection<LeaseDoc>(orgId, 'leases', scope, !!session);
   const payments = useOrgCollection<PaymentDoc>(orgId, 'payments', scope, !!session);
+  const inspections = useOrgCollection<InspectionDoc>(orgId, 'inspections', scope, !!session);
   // Reminders are computed here from the user's own records: free, no server job required.
   const reminders = useMemo(
     () =>
@@ -147,6 +152,19 @@ export function Dashboard() {
             />
           </Card>
         )}
+        {lease && (
+          <section className="flex flex-col gap-3" aria-label={i('tab')}>
+            <h2 className="text-h3 font-semibold">{i('tab')}</h2>
+            <InspectionsTab
+              orgId={orgId}
+              uid={uid}
+              staff={false}
+              inspections={inspections.rows}
+              leases={leases.rows}
+              units={[]}
+            />
+          </section>
+        )}
         <Reminders reminders={reminders} leases={leases.rows} />
       </div>
     );
@@ -213,6 +231,32 @@ export function Dashboard() {
                 selectedId={selectedLease}
                 onSelect={setSelectedLease}
                 banner={banner}
+              />
+            ),
+          },
+          {
+            value: 'inspections',
+            label: i('tab'),
+            content: (
+              <InspectionsTab
+                orgId={orgId}
+                uid={uid}
+                staff
+                inspections={inspections.rows}
+                leases={leases.rows}
+                units={units.rows}
+              />
+            ),
+          },
+          {
+            value: 'record',
+            label: i('tabRecord'),
+            content: (
+              <RecordTab
+                properties={properties.rows}
+                leases={leases.rows}
+                inspections={inspections.rows}
+                expenses={expenses.rows}
               />
             ),
           },
