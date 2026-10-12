@@ -60,6 +60,13 @@ class OpsHome extends ConsumerWidget {
             route: Routes.inspections,
           ),
           const SizedBox(height: 10),
+          _NavRow(
+            navKey: const Key('nav-tickets'),
+            icon: Icons.build_outlined,
+            label: l10n.mtTab,
+            route: Routes.tickets,
+          ),
+          const SizedBox(height: 10),
           RemindersCard(reminders: reminders, leases: data.leases),
         ],
       );
@@ -226,6 +233,12 @@ class _StaffOverview extends StatelessWidget {
           icon: Icons.fact_check_outlined,
           label: l10n.inspTab,
           route: Routes.inspections,
+        ),
+        _NavRow(
+          navKey: const Key('nav-tickets'),
+          icon: Icons.build_outlined,
+          label: l10n.mtTab,
+          route: Routes.tickets,
         ),
         _NavRow(
           navKey: const Key('nav-expenses'),
