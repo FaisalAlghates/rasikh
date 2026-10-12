@@ -102,4 +102,14 @@ describe('runReminders', () => {
     const again = await runReminders({ db: deps.db }, '2026-10-12');
     expect(again.created).toBe(0); // idempotent
   });
+
+  it('skips malformed leases and payments instead of failing for everyone', async () => {
+    const { orgId } = await seed('+966544000006');
+    await deps.db.doc('orgs/broken/leases/L0').set({ unitId: 'u' }); // no end date
+    await deps.db.doc('orgs/broken/payments/P0').set({ leaseId: 'L0', status: 'due' }); // no due date
+    const res = await runReminders({ db: deps.db }, '2026-10-12');
+    expect(res.created).toBeGreaterThan(0);
+    const notes = await deps.db.collection(`orgs/${orgId}/notifications`).get();
+    expect(notes.size).toBeGreaterThan(0);
+  });
 });

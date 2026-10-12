@@ -8,6 +8,8 @@ export interface ReminderDeps {
 }
 
 const orgOf = (path: string) => path.split('/')[1]!;
+const isIsoDate = (v: unknown): v is string =>
+  typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
 
 /**
  * Daily job: finds upcoming/late payments, expiring leases and renewal-notice windows, writes one
@@ -28,8 +30,16 @@ export async function runReminders(deps: ReminderDeps, today: string) {
     }
   >();
   const bucket = (o: string) => byOrg.get(o) ?? byOrg.set(o, { leases: [], payments: [] }).get(o)!;
-  leaseSnap.forEach((d) => bucket(orgOf(d.ref.path)).leases.push({ id: d.id, ...d.data() }));
-  paymentSnap.forEach((d) => bucket(orgOf(d.ref.path)).payments.push({ id: d.id, ...d.data() }));
+  // A malformed document must never stop everyone else's reminders: skip it.
+  leaseSnap.forEach((d) => {
+    if (isIsoDate(d.data().endDate))
+      bucket(orgOf(d.ref.path)).leases.push({ id: d.id, ...d.data() });
+  });
+  paymentSnap.forEach((d) => {
+    if (isIsoDate(d.data().dueDate)) {
+      bucket(orgOf(d.ref.path)).payments.push({ id: d.id, ...d.data() });
+    }
+  });
 
   let created = 0;
   for (const [orgId, { leases, payments }] of byOrg) {
