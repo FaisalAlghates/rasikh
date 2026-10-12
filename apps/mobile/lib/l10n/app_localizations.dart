@@ -2737,6 +2737,330 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'التقييم: {n} من 5'**
   String mtRated(int n);
+
+  /// No description provided for @bdTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمارات والجمعيات'**
+  String get bdTab;
+
+  /// No description provided for @bdMullak.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجلات مساعدة لإدارة الجمعية، تكمّل منصة ملاك الرسمية ولا تُعدّ تسجيلاً رسمياً.'**
+  String get bdMullak;
+
+  /// No description provided for @bdAddBuilding.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عمارة'**
+  String get bdAddBuilding;
+
+  /// No description provided for @bdBuildingName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم العمارة'**
+  String get bdBuildingName;
+
+  /// No description provided for @bdBuilding.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمارة'**
+  String get bdBuilding;
+
+  /// No description provided for @bdNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تضف عمارات بعد.'**
+  String get bdNone;
+
+  /// No description provided for @bdFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الحفظ. راجع البيانات وحاول مرة أخرى.'**
+  String get bdFailed;
+
+  /// No description provided for @bdMembers.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملاك والوحدات'**
+  String get bdMembers;
+
+  /// No description provided for @bdAddMember.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف مالكاً'**
+  String get bdAddMember;
+
+  /// No description provided for @bdOwnerName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المالك'**
+  String get bdOwnerName;
+
+  /// No description provided for @bdUnitLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوحدة'**
+  String get bdUnitLabel;
+
+  /// No description provided for @bdSharePct.
+  ///
+  /// In ar, this message translates to:
+  /// **'النصيب من المصاريف (%)'**
+  String get bdSharePct;
+
+  /// No description provided for @bdSharesWarn.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجموع الأنصبة {pct}% وليس 100%.'**
+  String bdSharesWarn(String pct);
+
+  /// No description provided for @bdExpenses.
+  ///
+  /// In ar, this message translates to:
+  /// **'المصروفات المشتركة'**
+  String get bdExpenses;
+
+  /// No description provided for @bdAddExpense.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف مصروفاً'**
+  String get bdAddExpense;
+
+  /// No description provided for @bdExpenseTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'البيان'**
+  String get bdExpenseTitle;
+
+  /// No description provided for @bdAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ (ر.س)'**
+  String get bdAmount;
+
+  /// No description provided for @bdDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'التاريخ'**
+  String get bdDate;
+
+  /// No description provided for @bdReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإيصال (مطلوب)'**
+  String get bdReceipt;
+
+  /// No description provided for @bdReceiptRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرفق إيصال المصروف.'**
+  String get bdReceiptRequired;
+
+  /// No description provided for @bdBalances.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرصدة الملاك'**
+  String get bdBalances;
+
+  /// No description provided for @bdOwed.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستحق'**
+  String get bdOwed;
+
+  /// No description provided for @bdPaid.
+  ///
+  /// In ar, this message translates to:
+  /// **'المدفوع'**
+  String get bdPaid;
+
+  /// No description provided for @bdRemaining.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتبقي'**
+  String get bdRemaining;
+
+  /// No description provided for @bdAddContribution.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل دفعة'**
+  String get bdAddContribution;
+
+  /// No description provided for @bdRecordsOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسجّل الدفعات فقط؛ لا نستلم الأموال.'**
+  String get bdRecordsOnly;
+
+  /// No description provided for @bdQuotes.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقارنة عروض الأسعار'**
+  String get bdQuotes;
+
+  /// No description provided for @bdAddQuote.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عرضاً'**
+  String get bdAddQuote;
+
+  /// No description provided for @bdQuoteFor.
+  ///
+  /// In ar, this message translates to:
+  /// **'العرض لأجل'**
+  String get bdQuoteFor;
+
+  /// No description provided for @bdVendor.
+  ///
+  /// In ar, this message translates to:
+  /// **'المورّد'**
+  String get bdVendor;
+
+  /// No description provided for @bdCheapest.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأقل سعراً'**
+  String get bdCheapest;
+
+  /// No description provided for @bdVotes.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصويت'**
+  String get bdVotes;
+
+  /// No description provided for @bdAddVote.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنشئ تصويتاً'**
+  String get bdAddVote;
+
+  /// No description provided for @bdVoteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'موضوع التصويت'**
+  String get bdVoteTitle;
+
+  /// No description provided for @bdRule.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة القبول'**
+  String get bdRule;
+
+  /// No description provided for @bdRuleMajority.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغلبية (أكثر من النصف)'**
+  String get bdRuleMajority;
+
+  /// No description provided for @bdRuleThreeQuarters.
+  ///
+  /// In ar, this message translates to:
+  /// **'75% فأكثر'**
+  String get bdRuleThreeQuarters;
+
+  /// No description provided for @bdRuleNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'صوت لكل وحدة، والنسبة اختيار الجمعية وليست رأياً قانونياً.'**
+  String get bdRuleNote;
+
+  /// No description provided for @bdYes.
+  ///
+  /// In ar, this message translates to:
+  /// **'موافق'**
+  String get bdYes;
+
+  /// No description provided for @bdNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير موافق'**
+  String get bdNo;
+
+  /// No description provided for @bdAbstain.
+  ///
+  /// In ar, this message translates to:
+  /// **'ممتنع'**
+  String get bdAbstain;
+
+  /// No description provided for @bdMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يصوّت'**
+  String get bdMissing;
+
+  /// No description provided for @bdVotePassed.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُقرّ'**
+  String get bdVotePassed;
+
+  /// No description provided for @bdVoteFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يُقرّ'**
+  String get bdVoteFailed;
+
+  /// No description provided for @bdVoteOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفتوح'**
+  String get bdVoteOpen;
+
+  /// No description provided for @bdCloseVote.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغلق التصويت'**
+  String get bdCloseVote;
+
+  /// No description provided for @bdMonth.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشهر'**
+  String get bdMonth;
+
+  /// No description provided for @bdPrint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطبع أو احفظ PDF'**
+  String get bdPrint;
+
+  /// No description provided for @bdStatement.
+  ///
+  /// In ar, this message translates to:
+  /// **'كشف الجمعية الشهري'**
+  String get bdStatement;
+
+  /// No description provided for @bdStExpenses.
+  ///
+  /// In ar, this message translates to:
+  /// **'المصروفات'**
+  String get bdStExpenses;
+
+  /// No description provided for @bdStContributions.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفعات المسجّلة'**
+  String get bdStContributions;
+
+  /// No description provided for @bdStNet.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصافي'**
+  String get bdStNet;
+
+  /// No description provided for @bdSar.
+  ///
+  /// In ar, this message translates to:
+  /// **'ر.س'**
+  String get bdSar;
+
+  /// No description provided for @bdPickReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر صورة الإيصال'**
+  String get bdPickReceipt;
 }
 
 class _AppLocalizationsDelegate

@@ -8,6 +8,7 @@ import '../features/intro/intro_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/inspect/inspection_screen.dart';
 import '../features/inspect/inspections_screen.dart';
+import '../features/building/buildings_screen.dart';
 import '../features/maint/tickets_screen.dart';
 import '../features/ops/expenses_screen.dart';
 import '../features/ops/lease_form_screen.dart';
@@ -31,6 +32,7 @@ abstract final class Routes {
   static const report = '/report';
   static const inspections = '/inspections';
   static const tickets = '/tickets';
+  static const buildings = '/buildings';
   static String ticketFor(String id) => '/tickets/$id';
   static String inspectionFor(String id) => '/inspections/$id';
   static String leaseFor(String id) => '/leases/$id';
@@ -44,6 +46,7 @@ abstract final class Routes {
       loc == leases ||
       loc == inspections ||
       loc == tickets ||
+      loc == buildings ||
       loc.startsWith('$tickets/') ||
       loc.startsWith('$inspections/') ||
       loc.startsWith('$leases/') ||
@@ -98,6 +101,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: Routes.expenses, builder: (_, _) => const ExpensesScreen()),
       GoRoute(path: Routes.report, builder: (_, _) => const ReportScreen()),
+      GoRoute(
+        path: Routes.buildings,
+        builder: (_, _) => const BuildingsScreen(),
+      ),
       GoRoute(path: Routes.tickets, builder: (_, _) => const TicketsScreen()),
       GoRoute(
         path: '/tickets/:id',

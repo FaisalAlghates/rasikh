@@ -1402,4 +1402,171 @@ class AppLocalizationsEn extends AppLocalizations {
   String mtRated(int n) {
     return 'Rating: $n of 5';
   }
+
+  @override
+  String get bdTab => 'Buildings and associations';
+
+  @override
+  String get bdMullak =>
+      'Bookkeeping aids for running the association; they complement the official Mullak platform and are not an official registration.';
+
+  @override
+  String get bdAddBuilding => 'Add a building';
+
+  @override
+  String get bdBuildingName => 'Building name';
+
+  @override
+  String get bdBuilding => 'Building';
+
+  @override
+  String get bdNone => 'No buildings yet.';
+
+  @override
+  String get bdFailed => 'Could not save. Check the details and try again.';
+
+  @override
+  String get bdMembers => 'Owners and units';
+
+  @override
+  String get bdAddMember => 'Add an owner';
+
+  @override
+  String get bdOwnerName => 'Owner name';
+
+  @override
+  String get bdUnitLabel => 'Unit';
+
+  @override
+  String get bdSharePct => 'Share of expenses (%)';
+
+  @override
+  String bdSharesWarn(String pct) {
+    return 'Shares add up to $pct%, not 100%.';
+  }
+
+  @override
+  String get bdExpenses => 'Shared expenses';
+
+  @override
+  String get bdAddExpense => 'Add an expense';
+
+  @override
+  String get bdExpenseTitle => 'Description';
+
+  @override
+  String get bdAmount => 'Amount (SAR)';
+
+  @override
+  String get bdDate => 'Date';
+
+  @override
+  String get bdReceipt => 'Receipt (required)';
+
+  @override
+  String get bdReceiptRequired => 'Attach the expense receipt.';
+
+  @override
+  String get bdBalances => 'Owner balances';
+
+  @override
+  String get bdOwed => 'Owed';
+
+  @override
+  String get bdPaid => 'Paid';
+
+  @override
+  String get bdRemaining => 'Remaining';
+
+  @override
+  String get bdAddContribution => 'Record a payment';
+
+  @override
+  String get bdRecordsOnly =>
+      'We only record payments; we never receive money.';
+
+  @override
+  String get bdQuotes => 'Quote comparison';
+
+  @override
+  String get bdAddQuote => 'Add a quote';
+
+  @override
+  String get bdQuoteFor => 'Quote for';
+
+  @override
+  String get bdVendor => 'Vendor';
+
+  @override
+  String get bdCheapest => 'cheapest';
+
+  @override
+  String get bdVotes => 'Votes';
+
+  @override
+  String get bdAddVote => 'Create a vote';
+
+  @override
+  String get bdVoteTitle => 'Vote subject';
+
+  @override
+  String get bdRule => 'Approval threshold';
+
+  @override
+  String get bdRuleMajority => 'Majority (more than half)';
+
+  @override
+  String get bdRuleThreeQuarters => '75% or more';
+
+  @override
+  String get bdRuleNote =>
+      'One vote per unit; the threshold is the association\'s own choice, not legal advice.';
+
+  @override
+  String get bdYes => 'Yes';
+
+  @override
+  String get bdNo => 'No';
+
+  @override
+  String get bdAbstain => 'Abstain';
+
+  @override
+  String get bdMissing => 'Not voted';
+
+  @override
+  String get bdVotePassed => 'Passed';
+
+  @override
+  String get bdVoteFailed => 'Failed';
+
+  @override
+  String get bdVoteOpen => 'Open';
+
+  @override
+  String get bdCloseVote => 'Close the vote';
+
+  @override
+  String get bdMonth => 'Month';
+
+  @override
+  String get bdPrint => 'Print or save as PDF';
+
+  @override
+  String get bdStatement => 'Monthly association statement';
+
+  @override
+  String get bdStExpenses => 'Expenses';
+
+  @override
+  String get bdStContributions => 'Recorded payments';
+
+  @override
+  String get bdStNet => 'Net';
+
+  @override
+  String get bdSar => 'SAR';
+
+  @override
+  String get bdPickReceipt => 'Choose the receipt photo';
 }

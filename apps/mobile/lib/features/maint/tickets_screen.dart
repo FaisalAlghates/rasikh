@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../app/ops_providers.dart';
 import '../../app/router.dart';
 import '../../app/ticket_providers.dart';
+import '../../app/building_providers.dart';
 import '../../data/ops_models.dart';
+import '../../data/photo_picker.dart';
 import '../../data/ticket_models.dart';
 import '../../domain/maintenance.dart';
 import '../../l10n/app_localizations.dart';
@@ -37,6 +39,7 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
   String _category = 'plumbing';
   String _urgency = 'normal';
   String? _leaseId;
+  PickedFile? _photo;
   bool _submitted = false;
   bool _busy = false;
 
@@ -60,20 +63,20 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
     if (_title.text.trim().length < 3) return;
     setState(() => _busy = true);
     try {
-      final id = await ref
-          .read(ticketRepositoryProvider)
-          .create(
-            scope.orgId,
-            NewTicket(
-              unitId: lease.data.unitId,
-              propertyId: lease.data.propertyId,
-              leaseId: lease.id,
-              title: _title.text.trim(),
-              description: _description.text.trim(),
-              category: _category,
-              urgency: _urgency,
-            ),
-          );
+      final id = await ref.read(ticketRepositoryProvider).create(
+        scope.orgId,
+        NewTicket(
+          unitId: lease.data.unitId,
+          propertyId: lease.data.propertyId,
+          leaseId: lease.id,
+          title: _title.text.trim(),
+          description: _description.text.trim(),
+          category: _category,
+          urgency: _urgency,
+        ),
+        [?_photo],
+      );
+      _photo = null;
       _title.clear();
       _description.clear();
       setState(() => _submitted = false);
@@ -162,6 +165,16 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
                   key: const Key('ticketDescription'),
                   label: l10n.mtDescription,
                   controller: _description,
+                ),
+                const SizedBox(height: 12),
+                RkButton(
+                  key: const Key('attachPhoto'),
+                  label: _photo == null ? l10n.mtPhoto : '${l10n.mtPhoto} ✓',
+                  variant: RkButtonVariant.quiet,
+                  onPressed: () async {
+                    final p = await ref.read(photoPickerProvider).pick();
+                    if (p != null) setState(() => _photo = p);
+                  },
                 ),
                 const SizedBox(height: 16),
                 RkButton(

@@ -48,16 +48,19 @@ service firebase.storage {
       allow update, delete: if false;
     }
 
-    // Ticket photos: staff, or the tenant of that ticket's lease (checked against the ticket once it exists;
-    // before that, any tenant of the organization may add images under a ticket id they are about to create).
+    // Ticket photos: written by staff or a tenant (the ticket id is chosen before the ticket exists), read only by
+    // staff and the tenant the ticket belongs to.
     match /orgs/{orgId}/tickets/{ticketId}/{file} {
-      allow read: if isMember(orgId);
+      allow read: if isStaff(orgId)
+        || (isMember(orgId)
+            && firestore.get(/databases/(default)/documents/orgs/$(orgId)/tickets/$(ticketId)).data.get('tenantUid', '') == request.auth.uid);
       allow create: if resource == null
         && hasAnyRole(orgId, ['owner', 'tenant', 'manager', 'admin'])
         && underLimit()
         && request.resource.contentType.matches('image/.*');
       allow update, delete: if false;
     }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }
