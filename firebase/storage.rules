@@ -53,7 +53,8 @@ service firebase.storage {
     match /orgs/{orgId}/tickets/{ticketId}/{file} {
       allow read: if isStaff(orgId)
         || (isMember(orgId)
-            && firestore.get(/databases/(default)/documents/orgs/$(orgId)/tickets/$(ticketId)).data.get('tenantUid', '') == request.auth.uid);
+            && (firestore.get(/databases/(default)/documents/orgs/$(orgId)/tickets/$(ticketId)).data.get('tenantUid', '') == request.auth.uid
+                || firestore.get(/databases/(default)/documents/orgs/$(orgId)/tickets/$(ticketId)).data.get('vendorUid', '') == request.auth.uid));
       allow create: if resource == null
         && hasAnyRole(orgId, ['owner', 'tenant', 'manager', 'admin'])
         && underLimit()

@@ -1,4 +1,12 @@
-export const ROLES = ['owner', 'tenant', 'manager', 'broker', 'vendor', 'admin'] as const;
+export const ROLES = [
+  'owner',
+  'tenant',
+  'manager',
+  'broker',
+  'vendor',
+  'admin',
+  'building_owner',
+] as const;
 export type Role = (typeof ROLES)[number];
 
 /** Roles a user may pick for themselves at onboarding. `admin` is never self-assigned. */

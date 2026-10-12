@@ -10,6 +10,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   serverTimestamp,
   setDoc,
@@ -48,6 +49,60 @@ beforeEach(async () => {
 });
 const as = (uid: string, c: Parameters<RulesTestEnvironment['authenticatedContext']>[1]) =>
   env.authenticatedContext(uid, c).firestore();
+
+describe('unit owners linked to a building', () => {
+  const unitOwner = { orgs: { org1: ['building_owner'] } };
+  beforeEach(async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), `${B}/owners/u1`), { memberId: 'm1' });
+      await setDoc(doc(ctx.firestore(), `${B}/members/m1`), {
+        name: 'سالم',
+        unitLabel: '1',
+        shareBp: 5000,
+      });
+      await setDoc(doc(ctx.firestore(), 'users/u1/memberships/org1_b1'), {
+        orgId: 'org1',
+        buildingId: 'b1',
+        memberId: 'm1',
+      });
+    });
+  });
+  it('read the ledger of their building but cannot write it', async () => {
+    const db = as('u1', unitOwner);
+    await assertSucceeds(getDoc(doc(db, B)));
+    for (const c of ['members', 'expenses', 'contributions', 'quotes', 'votes']) {
+      await assertSucceeds(getDocs(collection(db, `${B}/${c}`)));
+    }
+    await assertFails(
+      setDoc(doc(db, `${B}/members/m9`), { name: 'x', unitLabel: '9', shareBp: 100 }),
+    );
+    await assertFails(
+      setDoc(doc(db, `${B}/contributions/c9`), {
+        memberId: 'm1',
+        amount: 1,
+        date: '2026-10-01',
+        createdAt: serverTimestamp(),
+      }),
+    );
+    await assertFails(setDoc(doc(db, `${B}/owners/u1`), { memberId: 'm2' }));
+  });
+  it('a stranger, even a member of the org, sees nothing', async () => {
+    await assertFails(getDoc(doc(as('u2', unitOwner), B)));
+    await assertFails(getDocs(collection(as('t', tenant), `${B}/members`)));
+  });
+  it('cast only their own ballot, once, while the vote is open', async () => {
+    const db = as('u1', unitOwner);
+    await assertSucceeds(setDoc(doc(db, `${B}/votes/open/ballots/m1`), { choice: 'yes' }));
+    await assertFails(setDoc(doc(db, `${B}/votes/open/ballots/m1`), { choice: 'no' }));
+    await assertFails(setDoc(doc(db, `${B}/votes/open/ballots/m2`), { choice: 'yes' })); // someone else's unit
+    await assertFails(setDoc(doc(db, `${B}/votes/shut/ballots/m1`), { choice: 'yes' }));
+  });
+  it('the membership list is private', async () => {
+    await assertSucceeds(getDoc(doc(as('u1', unitOwner), 'users/u1/memberships/org1_b1')));
+    await assertFails(getDoc(doc(as('u2', unitOwner), 'users/u1/memberships/org1_b1')));
+    await assertFails(setDoc(doc(as('u1', unitOwner), 'users/u1/memberships/x'), { a: 1 }));
+  });
+});
 
 describe('buildings', () => {
   it('staff only', async () => {

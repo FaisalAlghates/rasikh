@@ -31,6 +31,12 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Links from a person to the buildings they own a unit in; written only by Functions.
+    match /users/{uid}/memberships/{id} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
     // Organization root and member list: readable by members, written only by Functions.
     match /orgs/{orgId} {
       allow read: if isMember(orgId);
@@ -176,24 +182,43 @@ service cloud.firestore {
       // Created and moved along only by the createTicket / ticketAction functions.
       match /tickets/{ticketId} {
         allow read: if isStaff(orgId)
-          || (isMember(orgId) && resource.data.get('tenantUid', '') == request.auth.uid);
+          || (isMember(orgId) && resource.data.get('tenantUid', '') == request.auth.uid)
+          || (isMember(orgId) && resource.data.get('vendorUid', '') == request.auth.uid);
         allow write: if false;
       }
       // ---- Phase 6: buildings and owners associations -------------------------------------
       // The association's own records, kept by the organization's staff. The ledger is append-only:
       // every shared expense needs a receipt, and expenses, contributions and ballots can never be edited.
       match /buildings/{buildingId} {
-        allow read, create, update: if isStaff(orgId);
+        // A unit owner linked by the invite function (owners/{uid}) reads the whole ledger of that building.
+        function isUnitOwner() {
+          return isMember(orgId)
+            && exists(/databases/$(database)/documents/orgs/$(orgId)/buildings/$(buildingId)/owners/$(request.auth.uid));
+        }
+        function readsBuilding() {
+          return isStaff(orgId) || isUnitOwner();
+        }
+
+        allow read: if readsBuilding();
+        allow create, update: if isStaff(orgId);
         allow delete: if false;
 
+        // Written only by the inviteBuildingMember function.
+        match /owners/{uid} {
+          allow read: if isStaff(orgId) || (signedIn() && request.auth.uid == uid);
+          allow write: if false;
+        }
+
         match /members/{memberId} {
-          allow read, delete: if isStaff(orgId);
+          allow read: if readsBuilding();
+          allow delete: if isStaff(orgId);
           allow create, update: if isStaff(orgId)
             && request.resource.data.keys().hasOnly(['name', 'unitLabel', 'shareBp'])
             && request.resource.data.shareBp is int
             && request.resource.data.shareBp > 0 && request.resource.data.shareBp <= 10000;
-        }        match /expenses/{expenseId} {
-          allow read: if isStaff(orgId);
+        }
+        match /expenses/{expenseId} {
+          allow read: if readsBuilding();
           allow create: if isStaff(orgId)
             && request.resource.data.keys().hasOnly(['title', 'amount', 'date', 'receiptPath', 'createdAt'])
             && request.resource.data.amount is number && request.resource.data.amount > 0
@@ -202,7 +227,7 @@ service cloud.firestore {
           allow update, delete: if false;
         }
         match /contributions/{contributionId} {
-          allow read: if isStaff(orgId);
+          allow read: if readsBuilding();
           allow create: if isStaff(orgId)
             && request.resource.data.keys().hasOnly(['memberId', 'amount', 'date', 'createdAt'])
             && request.resource.data.amount is number && request.resource.data.amount > 0
@@ -210,11 +235,12 @@ service cloud.firestore {
           allow update, delete: if false;
         }
         match /quotes/{quoteId} {
-          allow read, create, delete: if isStaff(orgId);
+          allow read: if readsBuilding();
+          allow create, delete: if isStaff(orgId);
           allow update: if false;
         }
         match /votes/{voteId} {
-          allow read: if isStaff(orgId);
+          allow read: if readsBuilding();
           allow create: if isStaff(orgId)
             && request.resource.data.rule in ['majority', 'three_quarters']
             && request.resource.data.keys().hasOnly(['title', 'rule', 'closed', 'createdAt']);
@@ -222,13 +248,22 @@ service cloud.firestore {
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['closed']);
           allow delete: if false;
           match /ballots/{memberId} {
-            allow read: if isStaff(orgId);
-            allow create: if isStaff(orgId) && request.resource.data.choice in ['yes', 'no', 'abstain']
-              && !get(/databases/$(database)/documents/orgs/$(orgId)/buildings/$(buildingId)/votes/$(voteId)).data.closed;
+            function voteOpen() {
+              return !get(/databases/$(database)/documents/orgs/$(orgId)/buildings/$(buildingId)/votes/$(voteId)).data.closed;
+            }
+            allow read: if readsBuilding();
+            // Staff record a ballot for any unit; a unit owner casts only their own. One per unit, never edited.
+            allow create: if request.resource.data.choice in ['yes', 'no', 'abstain']
+              && request.resource.data.keys().hasOnly(['choice'])
+              && voteOpen()
+              && (isStaff(orgId)
+                  || (isUnitOwner()
+                      && get(/databases/$(database)/documents/orgs/$(orgId)/buildings/$(buildingId)/owners/$(request.auth.uid)).data.memberId == memberId));
             allow update, delete: if false;
           }
         }
       }
+
       // In-app reminders are written by Functions; a user reads their own and may mark them read.
       match /notifications/{nid} {
         allow read: if isMember(orgId) && resource.data.uid == request.auth.uid;

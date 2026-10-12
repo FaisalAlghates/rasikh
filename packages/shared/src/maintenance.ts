@@ -81,13 +81,13 @@ export type TicketCreate = z.infer<typeof TicketCreateSchema>;
 export const TICKET_ACTIONS = ['assign', 'start', 'resolve', 'close', 'cancel'] as const;
 export type TicketAction = (typeof TICKET_ACTIONS)[number];
 
-export type TicketParty = 'staff' | 'tenant';
+export type TicketParty = 'staff' | 'tenant' | 'vendor';
 
 /** Which status each action leaves, who may do it, and from which statuses. */
 const RULES: Record<TicketAction, { from: TicketStatus[]; to: TicketStatus; by: TicketParty[] }> = {
   assign: { from: ['open', 'assigned'], to: 'assigned', by: ['staff'] },
-  start: { from: ['assigned'], to: 'in_progress', by: ['staff'] },
-  resolve: { from: ['assigned', 'in_progress'], to: 'resolved', by: ['staff'] },
+  start: { from: ['assigned'], to: 'in_progress', by: ['staff', 'vendor'] },
+  resolve: { from: ['assigned', 'in_progress'], to: 'resolved', by: ['staff', 'vendor'] },
   close: { from: ['resolved'], to: 'closed', by: ['tenant', 'staff'] },
   cancel: { from: ['open', 'assigned'], to: 'cancelled', by: ['tenant', 'staff'] },
 };
@@ -107,6 +107,8 @@ export const TicketActionSchema = z.discriminatedUnion('action', [
     action: z.literal('assign'),
     vendorName: z.string().trim().min(2).max(80),
     vendorPhone: z.string().trim().max(20).default(''),
+    /** When given, the vendor gets their own login: they see and move only the tickets assigned to them. */
+    vendorEmail: z.string().trim().toLowerCase().email().optional(),
   }),
   z.object({ action: z.literal('start') }),
   z.object({ action: z.literal('resolve'), note: z.string().trim().max(500).default('') }),

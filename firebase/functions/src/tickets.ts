@@ -8,10 +8,14 @@ import {
 } from '@rasikh/shared';
 import { FieldValue, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError } from 'firebase-functions/v2/https';
+import type { Auth } from 'firebase-admin/auth';
 import { z } from 'zod';
+import { addInvite, attachVendor, linkByEmail } from './links.js';
 
 export interface TicketDeps {
   db: Firestore;
+  /** Needed only to give a vendor their own login. */
+  auth?: Auth;
   now?: () => Date;
 }
 
@@ -94,14 +98,20 @@ export async function ticketAction(deps: TicketDeps, uid: string | undefined, ra
   const ref = deps.db.doc(`orgs/${orgId}/tickets/${ticketId}`);
   const snap = await ref.get();
   if (!snap.exists) throw new HttpsError('not-found', 'ticket_not_found');
-  const t = snap.data() as { status: Parameters<typeof nextStatus>[0]; tenantUid?: string };
+  const t = snap.data() as {
+    status: Parameters<typeof nextStatus>[0];
+    tenantUid?: string;
+    vendorUid?: string;
+  };
 
   const staff = (await rolesOf(deps, orgId, uid)).some((r) => STAFF.has(r));
   const party: TicketParty | undefined = staff
     ? 'staff'
     : t.tenantUid === uid
       ? 'tenant'
-      : undefined;
+      : t.vendorUid === uid
+        ? 'vendor'
+        : undefined;
   if (!party) throw new HttpsError('permission-denied', 'not_allowed');
 
   const to = nextStatus(t.status, input.action, party);
@@ -112,6 +122,15 @@ export async function ticketAction(deps: TicketDeps, uid: string | undefined, ra
   if (input.action === 'assign') {
     patch.vendorName = input.vendorName;
     patch.vendorPhone = input.vendorPhone;
+    if (input.vendorEmail) {
+      if (!deps.auth) throw new HttpsError('failed-precondition', 'auth_unavailable');
+      const link = { db: deps.db, auth: deps.auth };
+      const linked = await linkByEmail(link, input.vendorEmail, (vuid) =>
+        attachVendor(link, orgId, ticketId, vuid),
+      );
+      if (!linked) await addInvite(link, input.vendorEmail, { kind: 'vendor', orgId, ticketId });
+      patch.vendorEmail = input.vendorEmail;
+    }
   }
   if (input.action === 'resolve') {
     patch.resolvedAtIso = now.toISOString();
