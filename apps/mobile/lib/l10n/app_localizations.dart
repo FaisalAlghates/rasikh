@@ -3931,6 +3931,96 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'وضع تجريبي: الإجابة من حقائق سجلاتك مباشرة بدون نموذج لغوي.'**
   String get aiFake;
+
+  /// No description provided for @accTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'خصوصيتي'**
+  String get accTab;
+
+  /// No description provided for @accIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'وفق نظام حماية البيانات الشخصية، لك أن تحصل على نسخة من بياناتك أو تحذف حسابك.'**
+  String get accIntro;
+
+  /// No description provided for @accExport.
+  ///
+  /// In ar, this message translates to:
+  /// **'نزّل نسخة من بياناتي'**
+  String get accExport;
+
+  /// No description provided for @accExporting.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التجهيز…'**
+  String get accExporting;
+
+  /// No description provided for @accExported.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تنزيل الملف.'**
+  String get accExported;
+
+  /// No description provided for @accDeleteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف حسابي'**
+  String get accDeleteTitle;
+
+  /// No description provided for @accDeleteWarn.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُحذف حسابك وبياناتك الشخصية وسجلات الوساطة الخاصة بك نهائياً. سجلات المنظمة التي يعتمد عليها غيرك (مثل عقد وقّعه مالك) تبقى لدى المنظمة. لا يمكن التراجع.'**
+  String get accDeleteWarn;
+
+  /// No description provided for @accPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور للتأكيد'**
+  String get accPassword;
+
+  /// No description provided for @accConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'أفهم أن الحذف نهائي'**
+  String get accConfirm;
+
+  /// No description provided for @accDelete.
+  ///
+  /// In ar, this message translates to:
+  /// **'احذف حسابي نهائياً'**
+  String get accDelete;
+
+  /// No description provided for @accPhoneNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابك بالجوال: لحذفه تواصل معنا ليتم التحقق من هويتك.'**
+  String get accPhoneNote;
+
+  /// No description provided for @accWrongPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور غير صحيحة.'**
+  String get accWrongPassword;
+
+  /// No description provided for @accTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنت المالك الوحيد لمنظمة فيها أعضاء. انقل الملكية أولاً.'**
+  String get accTransfer;
+
+  /// No description provided for @accFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تنفيذ الطلب. حاول مرة أخرى.'**
+  String get accFailed;
+
+  /// No description provided for @accPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get accPolicy;
 }
 
 class _AppLocalizationsDelegate
