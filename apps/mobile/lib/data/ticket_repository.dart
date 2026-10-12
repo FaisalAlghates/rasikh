@@ -1,13 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'ops_models.dart' show Doc;
+import 'photo_picker.dart';
 import 'ticket_models.dart';
 
 abstract class TicketRepository {
   /// Tenants must pass their own uid: the security rules only allow queries scoped to `tenantUid`.
   Stream<List<Doc<TicketDoc>>> tickets(String orgId, {String? tenantUid});
-  Future<String> create(String orgId, NewTicket ticket);
+  Future<String> create(
+    String orgId,
+    NewTicket ticket, [
+    List<PickedFile> photos = const [],
+  ]);
 
   /// `action` is one of assign, start, resolve, close, cancel; the server decides who may do what.
   Future<void> act(
@@ -50,14 +56,30 @@ class FirestoreTicketRepository implements TicketRepository {
   }
 
   @override
-  Future<String> create(String orgId, NewTicket ticket) async {
+  Future<String> create(
+    String orgId,
+    NewTicket ticket, [
+    List<PickedFile> photos = const [],
+  ]) async {
     final id = _db.collection('orgs/$orgId/tickets').doc().id;
+    final paths = <String>[];
+    for (var i = 0; i < photos.length; i++) {
+      final path =
+          'orgs/$orgId/tickets/$id/${DateTime.now().millisecondsSinceEpoch}-$i.jpg';
+      await FirebaseStorage.instance
+          .ref(path)
+          .putData(
+            photos[i].bytes,
+            SettableMetadata(contentType: 'image/jpeg'),
+          );
+      paths.add(path);
+    }
     await _call(
       () => _fn.httpsCallable('createTicket').call({
         'orgId': orgId,
         'ticketId': id,
         'ticket': ticket.toMap(),
-        'photos': <String>[],
+        'photos': paths,
       }),
     );
     return id;

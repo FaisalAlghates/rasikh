@@ -519,5 +519,66 @@
         "type": "int"
       }
     }
-  }
+  },
+  "bdTab": "العمارات والجمعيات",
+  "bdMullak": "سجلات مساعدة لإدارة الجمعية، تكمّل منصة ملاك الرسمية ولا تُعدّ تسجيلاً رسمياً.",
+  "bdAddBuilding": "أضف عمارة",
+  "bdBuildingName": "اسم العمارة",
+  "bdBuilding": "العمارة",
+  "bdNone": "لم تضف عمارات بعد.",
+  "bdFailed": "تعذّر الحفظ. راجع البيانات وحاول مرة أخرى.",
+  "bdMembers": "الملاك والوحدات",
+  "bdAddMember": "أضف مالكاً",
+  "bdOwnerName": "اسم المالك",
+  "bdUnitLabel": "الوحدة",
+  "bdSharePct": "النصيب من المصاريف (%)",
+  "bdSharesWarn": "مجموع الأنصبة {pct}% وليس 100%.",
+  "@bdSharesWarn": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "bdExpenses": "المصروفات المشتركة",
+  "bdAddExpense": "أضف مصروفاً",
+  "bdExpenseTitle": "البيان",
+  "bdAmount": "المبلغ (ر.س)",
+  "bdDate": "التاريخ",
+  "bdReceipt": "الإيصال (مطلوب)",
+  "bdReceiptRequired": "أرفق إيصال المصروف.",
+  "bdBalances": "أرصدة الملاك",
+  "bdOwed": "المستحق",
+  "bdPaid": "المدفوع",
+  "bdRemaining": "المتبقي",
+  "bdAddContribution": "سجّل دفعة",
+  "bdRecordsOnly": "نسجّل الدفعات فقط؛ لا نستلم الأموال.",
+  "bdQuotes": "مقارنة عروض الأسعار",
+  "bdAddQuote": "أضف عرضاً",
+  "bdQuoteFor": "العرض لأجل",
+  "bdVendor": "المورّد",
+  "bdCheapest": "الأقل سعراً",
+  "bdVotes": "التصويت",
+  "bdAddVote": "أنشئ تصويتاً",
+  "bdVoteTitle": "موضوع التصويت",
+  "bdRule": "نسبة القبول",
+  "bdRuleMajority": "أغلبية (أكثر من النصف)",
+  "bdRuleThreeQuarters": "75% فأكثر",
+  "bdRuleNote": "صوت لكل وحدة، والنسبة اختيار الجمعية وليست رأياً قانونياً.",
+  "bdYes": "موافق",
+  "bdNo": "غير موافق",
+  "bdAbstain": "ممتنع",
+  "bdMissing": "لم يصوّت",
+  "bdVotePassed": "أُقرّ",
+  "bdVoteFailed": "لم يُقرّ",
+  "bdVoteOpen": "مفتوح",
+  "bdCloseVote": "أغلق التصويت",
+  "bdMonth": "الشهر",
+  "bdPrint": "اطبع أو احفظ PDF",
+  "bdStatement": "كشف الجمعية الشهري",
+  "bdStExpenses": "المصروفات",
+  "bdStContributions": "الدفعات المسجّلة",
+  "bdStNet": "الصافي",
+  "bdSar": "ر.س",
+  "bdPickReceipt": "اختر صورة الإيصال"
 }

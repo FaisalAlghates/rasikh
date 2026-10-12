@@ -241,6 +241,12 @@ class _StaffOverview extends StatelessWidget {
           route: Routes.tickets,
         ),
         _NavRow(
+          navKey: const Key('nav-buildings'),
+          icon: Icons.domain_outlined,
+          label: l10n.bdTab,
+          route: Routes.buildings,
+        ),
+        _NavRow(
           navKey: const Key('nav-expenses'),
           icon: Icons.receipt_long_outlined,
           label: l10n.opsTabExpenses,

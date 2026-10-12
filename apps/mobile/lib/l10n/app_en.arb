@@ -519,5 +519,66 @@
         "type": "int"
       }
     }
-  }
+  },
+  "bdTab": "Buildings and associations",
+  "bdMullak": "Bookkeeping aids for running the association; they complement the official Mullak platform and are not an official registration.",
+  "bdAddBuilding": "Add a building",
+  "bdBuildingName": "Building name",
+  "bdBuilding": "Building",
+  "bdNone": "No buildings yet.",
+  "bdFailed": "Could not save. Check the details and try again.",
+  "bdMembers": "Owners and units",
+  "bdAddMember": "Add an owner",
+  "bdOwnerName": "Owner name",
+  "bdUnitLabel": "Unit",
+  "bdSharePct": "Share of expenses (%)",
+  "bdSharesWarn": "Shares add up to {pct}%, not 100%.",
+  "@bdSharesWarn": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "bdExpenses": "Shared expenses",
+  "bdAddExpense": "Add an expense",
+  "bdExpenseTitle": "Description",
+  "bdAmount": "Amount (SAR)",
+  "bdDate": "Date",
+  "bdReceipt": "Receipt (required)",
+  "bdReceiptRequired": "Attach the expense receipt.",
+  "bdBalances": "Owner balances",
+  "bdOwed": "Owed",
+  "bdPaid": "Paid",
+  "bdRemaining": "Remaining",
+  "bdAddContribution": "Record a payment",
+  "bdRecordsOnly": "We only record payments; we never receive money.",
+  "bdQuotes": "Quote comparison",
+  "bdAddQuote": "Add a quote",
+  "bdQuoteFor": "Quote for",
+  "bdVendor": "Vendor",
+  "bdCheapest": "cheapest",
+  "bdVotes": "Votes",
+  "bdAddVote": "Create a vote",
+  "bdVoteTitle": "Vote subject",
+  "bdRule": "Approval threshold",
+  "bdRuleMajority": "Majority (more than half)",
+  "bdRuleThreeQuarters": "75% or more",
+  "bdRuleNote": "One vote per unit; the threshold is the association's own choice, not legal advice.",
+  "bdYes": "Yes",
+  "bdNo": "No",
+  "bdAbstain": "Abstain",
+  "bdMissing": "Not voted",
+  "bdVotePassed": "Passed",
+  "bdVoteFailed": "Failed",
+  "bdVoteOpen": "Open",
+  "bdCloseVote": "Close the vote",
+  "bdMonth": "Month",
+  "bdPrint": "Print or save as PDF",
+  "bdStatement": "Monthly association statement",
+  "bdStExpenses": "Expenses",
+  "bdStContributions": "Recorded payments",
+  "bdStNet": "Net",
+  "bdSar": "SAR",
+  "bdPickReceipt": "Choose the receipt photo"
 }

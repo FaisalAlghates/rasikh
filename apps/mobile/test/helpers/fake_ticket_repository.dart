@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:rasikh/data/ops_models.dart' show Doc;
+import 'package:rasikh/data/photo_picker.dart';
 import 'package:rasikh/data/ticket_models.dart';
 import 'package:rasikh/data/ticket_repository.dart';
 import 'package:rasikh/domain/maintenance.dart';
@@ -11,6 +12,7 @@ class FakeTicketRepository implements TicketRepository {
   final _tickets = <String, Map<String, Object?>>{};
   int _seq = 0;
   final calls = <String>[];
+  int photoCount = 0;
 
   /// Which party the signed-in test user is (the real server decides this from the account).
   String party = 'staff';
@@ -34,9 +36,14 @@ class FakeTicketRepository implements TicketRepository {
       _live((m) => tenantUid == null || m['tenantUid'] == tenantUid);
 
   @override
-  Future<String> create(String orgId, NewTicket t) async {
+  Future<String> create(
+    String orgId,
+    NewTicket t, [
+    List<PickedFile> photos = const [],
+  ]) async {
     final id = 'tk${++_seq}';
     calls.add('create:${t.title}');
+    photoCount = photos.length;
     _tickets[id] = {
       ...t.toMap(),
       if (tenantUid != null) 'tenantUid': tenantUid,

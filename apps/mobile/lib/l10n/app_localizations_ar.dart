@@ -1380,4 +1380,170 @@ class AppLocalizationsAr extends AppLocalizations {
   String mtRated(int n) {
     return 'التقييم: $n من 5';
   }
+
+  @override
+  String get bdTab => 'العمارات والجمعيات';
+
+  @override
+  String get bdMullak =>
+      'سجلات مساعدة لإدارة الجمعية، تكمّل منصة ملاك الرسمية ولا تُعدّ تسجيلاً رسمياً.';
+
+  @override
+  String get bdAddBuilding => 'أضف عمارة';
+
+  @override
+  String get bdBuildingName => 'اسم العمارة';
+
+  @override
+  String get bdBuilding => 'العمارة';
+
+  @override
+  String get bdNone => 'لم تضف عمارات بعد.';
+
+  @override
+  String get bdFailed => 'تعذّر الحفظ. راجع البيانات وحاول مرة أخرى.';
+
+  @override
+  String get bdMembers => 'الملاك والوحدات';
+
+  @override
+  String get bdAddMember => 'أضف مالكاً';
+
+  @override
+  String get bdOwnerName => 'اسم المالك';
+
+  @override
+  String get bdUnitLabel => 'الوحدة';
+
+  @override
+  String get bdSharePct => 'النصيب من المصاريف (%)';
+
+  @override
+  String bdSharesWarn(String pct) {
+    return 'مجموع الأنصبة $pct% وليس 100%.';
+  }
+
+  @override
+  String get bdExpenses => 'المصروفات المشتركة';
+
+  @override
+  String get bdAddExpense => 'أضف مصروفاً';
+
+  @override
+  String get bdExpenseTitle => 'البيان';
+
+  @override
+  String get bdAmount => 'المبلغ (ر.س)';
+
+  @override
+  String get bdDate => 'التاريخ';
+
+  @override
+  String get bdReceipt => 'الإيصال (مطلوب)';
+
+  @override
+  String get bdReceiptRequired => 'أرفق إيصال المصروف.';
+
+  @override
+  String get bdBalances => 'أرصدة الملاك';
+
+  @override
+  String get bdOwed => 'المستحق';
+
+  @override
+  String get bdPaid => 'المدفوع';
+
+  @override
+  String get bdRemaining => 'المتبقي';
+
+  @override
+  String get bdAddContribution => 'سجّل دفعة';
+
+  @override
+  String get bdRecordsOnly => 'نسجّل الدفعات فقط؛ لا نستلم الأموال.';
+
+  @override
+  String get bdQuotes => 'مقارنة عروض الأسعار';
+
+  @override
+  String get bdAddQuote => 'أضف عرضاً';
+
+  @override
+  String get bdQuoteFor => 'العرض لأجل';
+
+  @override
+  String get bdVendor => 'المورّد';
+
+  @override
+  String get bdCheapest => 'الأقل سعراً';
+
+  @override
+  String get bdVotes => 'التصويت';
+
+  @override
+  String get bdAddVote => 'أنشئ تصويتاً';
+
+  @override
+  String get bdVoteTitle => 'موضوع التصويت';
+
+  @override
+  String get bdRule => 'نسبة القبول';
+
+  @override
+  String get bdRuleMajority => 'أغلبية (أكثر من النصف)';
+
+  @override
+  String get bdRuleThreeQuarters => '75% فأكثر';
+
+  @override
+  String get bdRuleNote =>
+      'صوت لكل وحدة، والنسبة اختيار الجمعية وليست رأياً قانونياً.';
+
+  @override
+  String get bdYes => 'موافق';
+
+  @override
+  String get bdNo => 'غير موافق';
+
+  @override
+  String get bdAbstain => 'ممتنع';
+
+  @override
+  String get bdMissing => 'لم يصوّت';
+
+  @override
+  String get bdVotePassed => 'أُقرّ';
+
+  @override
+  String get bdVoteFailed => 'لم يُقرّ';
+
+  @override
+  String get bdVoteOpen => 'مفتوح';
+
+  @override
+  String get bdCloseVote => 'أغلق التصويت';
+
+  @override
+  String get bdMonth => 'الشهر';
+
+  @override
+  String get bdPrint => 'اطبع أو احفظ PDF';
+
+  @override
+  String get bdStatement => 'كشف الجمعية الشهري';
+
+  @override
+  String get bdStExpenses => 'المصروفات';
+
+  @override
+  String get bdStContributions => 'الدفعات المسجّلة';
+
+  @override
+  String get bdStNet => 'الصافي';
+
+  @override
+  String get bdSar => 'ر.س';
+
+  @override
+  String get bdPickReceipt => 'اختر صورة الإيصال';
 }
