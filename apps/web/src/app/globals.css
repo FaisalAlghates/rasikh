@@ -236,8 +236,9 @@ html[data-scene='on'] .hero-poster {
 .words .w > span {
   display: inline-block;
   transform: translateY(118%);
-  animation: word-in 1100ms var(--rk-ease) forwards;
-  animation-delay: calc(var(--i, 0) * 80ms + 120ms);
+  /* 700 ms is the slowest motion token; the headline is the LCP element, so it must not be late. */
+  animation: word-in 700ms var(--rk-ease) forwards;
+  animation-delay: calc(var(--i, 0) * 50ms);
 }
 .js [data-reveal-words]:not(.is-in) .w > span {
   animation-play-state: paused;
