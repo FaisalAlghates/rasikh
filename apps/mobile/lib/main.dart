@@ -19,7 +19,8 @@ Future<void> main() async {
     // A demo project needs no console setup. Real projects use `flutterfire configure` (see docs).
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: 'demo-key',
+        // Not a secret: the Android SDK rejects keys that are not 39 characters starting with "A".
+        apiKey: 'AIzaSyDemoKeyForEmulatorsOnly0000000000',
         appId: '1:000000000000:web:0000000000000000000000',
         messagingSenderId: '000000000000',
         projectId: 'demo-rasikh',
