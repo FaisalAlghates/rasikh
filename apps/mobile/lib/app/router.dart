@@ -8,6 +8,7 @@ import '../features/intro/intro_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/inspect/inspection_screen.dart';
 import '../features/inspect/inspections_screen.dart';
+import '../features/ai/assistant_screen.dart';
 import '../features/broker/ad_checker_screen.dart';
 import '../features/broker/broker_screen.dart';
 import '../features/broker/lead_screen.dart';
@@ -38,6 +39,7 @@ abstract final class Routes {
   static const tickets = '/tickets';
   static const buildings = '/buildings';
   static const myBuildings = '/my-buildings';
+  static const assistant = '/assistant';
   static const broker = '/broker';
   static const brokerAd = '/broker/ad';
   static String ticketFor(String id) => '/tickets/$id';
@@ -55,6 +57,7 @@ abstract final class Routes {
       loc == tickets ||
       loc == buildings ||
       loc == myBuildings ||
+      loc == assistant ||
       loc == broker ||
       loc.startsWith('$broker/') ||
       loc.startsWith('$tickets/') ||
@@ -118,6 +121,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.buildings,
         builder: (_, _) => const BuildingsScreen(),
+      ),
+      GoRoute(
+        path: Routes.assistant,
+        builder: (_, _) => const AssistantScreen(),
       ),
       GoRoute(path: Routes.broker, builder: (_, _) => const BrokerScreen()),
       GoRoute(

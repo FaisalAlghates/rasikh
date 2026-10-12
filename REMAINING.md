@@ -1,4 +1,4 @@
-# Rasikh — what remains, in detail
+﻿# Rasikh — what remains, in detail
 
 Last updated: 2026-10-12. References: `PLAN.md` (phases), `CLAUDE.md` (rules), `docs/ENGINEERING_OFFICE.md` (engineering office spec). Arabic version: `REMAINING.ar.md`.
 
@@ -23,21 +23,9 @@ Last updated: 2026-10-12. References: `PLAN.md` (phases), `CLAUDE.md` (rules), `
 - Verification on real devices: camera, GPS, evidence upload queue on a real Android phone and on iOS (so far emulator only; iOS untried).
 - Switching between several organizations (today the first one is active).
 
-## 3. Phase 7 — Broker CRM and ad compliance checker
+## 3. Phase 7 and 4. Phase 8: done (2026-10-12)
 
-- Broker profile: FAL license number and expiry reminders.
-- Leads, contacts, brokerage contracts, viewings.
-- Immutable server-timestamped activity log and a proof-file PDF.
-- Ad compliance checker (no publishing): purpose, advertiser and capacity, ad license number and expiry, location, contact, description, price, disclosures, near-expiry warning.
-- Acceptance: checker unit tests (valid and invalid ads) and rules tests. Covers web, backend and Flutter.
-
-## 4. Phase 8 — Real-estate AI
-
-- Genkit in Cloud Functions (me-central2), one provider interface (Gemini via Vertex AI default, Claude optional), scope classifier first, per-user rate limits, monthly cost cap, metadata-only logging.
-- Features: explain a lease, compare photos, ticket triage, ad helper, building summary, in-app assistant with citations, indicative-price import pipeline.
-- AI output visibly marked; no record changes without a human tap.
-- Eval suite of at least 30 Arabic prompts (off-topic and jailbreaks refused; legal and valuation questions get a disclaimer).
-- **Your decision before starting:** paid model keys (Vertex or Claude), or I build it against a fake model first.
+Broker CRM and the ad checker are done on web, backend and Flutter. The AI is built with a cost-free fake model; connecting a real provider (Vertex AI Gemini or Claude) needs your decision and a key, then one new class in `firebase/functions/src/ai/provider.ts`. See PLAN.md Phase 7 and 8 for the gaps.
 
 ## 5. Phase 9 — AI engineering office (10 slices)
 

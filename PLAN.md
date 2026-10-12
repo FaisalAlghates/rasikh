@@ -101,12 +101,14 @@ Acceptance: checker unit tests (valid + invalid ads); rules tests.
 
 ## Phase 8 — Real-estate AI
 
-- [ ] Genkit in Functions (me-central2), provider interface, Arabic prompts, scope classifier first, rate limits, monthly cost cap, metadata logging
-- [ ] Features: (a) explain lease (b) compare photos (c) ticket triage (d) ad helper (e) building summary (f) in-app assistant w/ citations (g) indicative prices import pipeline
-- [ ] AI output visually marked; no record change without human tap
-- [ ] Eval suite ≥ 30 Arabic prompts (off-topic, jailbreaks refused; legal/valuation get disclaimer)
+- [x] Genkit in Functions (me-central2), provider interface, Arabic prompts, scope classifier first, rate limits, monthly cost cap, metadata logging
+- [x] Features: (a) explain lease (b) compare inspections (c) ticket triage (d) ad helper (e) building summary (f) in-app assistant w/ citations (g) indicative prices import pipeline
+- [x] AI output visually marked; no record change without human tap
+- [x] Eval suite ≥ 30 Arabic prompts (off-topic, jailbreaks refused; legal/valuation get disclaimer)
 
 Acceptance: eval suite passes; no model key reachable from clients.
+
+**Status (2026-10-12): built with a cost-free FAKE model; no real model is connected.** Genkit 1.42 flows (one per feature) sit behind one provider interface; `AI_PROVIDER` defaults to `fake`, which only passes the computed facts through, so the whole product works end to end and tests are stable. Order of checks on every request: sign-in and org membership, input shape, scope classifier (jailbreaks refused first, then off-topic), the data the person may see (checked in the function, since the Admin SDK bypasses rules), the daily limit (30 per person) and the monthly organization cap, then the model; metadata only is logged (never the message or the answer). Legal, valuation and financial questions carry a disclaimer. Suggestions (ticket category, ad description) change a form only when the person taps. Web: assistant tab (staff and tenants), triage and ad-description suggestions; Flutter: assistant screen. Tests: 46 eval prompts, 17 integration tests, rules for usage/log/insights. Gaps: connecting a real provider needs your decision and a key in Secret Manager (one new class in `provider.ts`, no flow changes); "compare photos" compares the recorded conditions of two inspections, not the images (that needs a vision model); the indicative-prices import has a callable but no admin screen and no automatic feed; scope classifier is keyword-based and must be re-evaluated with a real model; monthly cost is estimated from characters until the provider reports tokens; Flutter assistant has not run on a device.
 
 ## Phase 9 — AI engineering office (المكتب الهندسي الذكي)
 

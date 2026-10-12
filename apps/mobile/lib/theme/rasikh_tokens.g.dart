@@ -86,20 +86,19 @@ class RasikhTokens extends ThemeExtension<RasikhTokens> {
     Color? success,
     Color? warning,
     Color? danger,
-  }) =>
-      RasikhTokens(
-        bg: bg ?? this.bg,
-        surface: surface ?? this.surface,
-        text: text ?? this.text,
-        textMuted: textMuted ?? this.textMuted,
-        border: border ?? this.border,
-        brand: brand ?? this.brand,
-        onBrand: onBrand ?? this.onBrand,
-        brandText: brandText ?? this.brandText,
-        success: success ?? this.success,
-        warning: warning ?? this.warning,
-        danger: danger ?? this.danger,
-      );
+  }) => RasikhTokens(
+    bg: bg ?? this.bg,
+    surface: surface ?? this.surface,
+    text: text ?? this.text,
+    textMuted: textMuted ?? this.textMuted,
+    border: border ?? this.border,
+    brand: brand ?? this.brand,
+    onBrand: onBrand ?? this.onBrand,
+    brandText: brandText ?? this.brandText,
+    success: success ?? this.success,
+    warning: warning ?? this.warning,
+    danger: danger ?? this.danger,
+  );
 
   @override
   RasikhTokens lerp(ThemeExtension<RasikhTokens>? other, double t) {

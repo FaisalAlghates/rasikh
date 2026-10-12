@@ -3799,6 +3799,138 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لم تذكر هل على العقار رهن أو نزاع.'**
   String get brkIssueEncumbrancesNotStated;
+
+  /// No description provided for @aiTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساعد'**
+  String get aiTab;
+
+  /// No description provided for @aiIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'مساعد داخل راسخ يجيب عن عقاراتك ومن بياناتك أنت فقط. إجاباته اقتراحات تراجعها، ولا يغيّر أي سجل بنفسه.'**
+  String get aiIntro;
+
+  /// No description provided for @aiQuestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسأل عن عقودك أو دفعاتك أو صيانتك'**
+  String get aiQuestion;
+
+  /// No description provided for @aiSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسأل'**
+  String get aiSend;
+
+  /// No description provided for @aiSending.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التفكير…'**
+  String get aiSending;
+
+  /// No description provided for @aiExplainLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'اشرح عقدي'**
+  String get aiExplainLease;
+
+  /// No description provided for @aiPickLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر العقد'**
+  String get aiPickLease;
+
+  /// No description provided for @aiExplainSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'اشرح هذا العقد'**
+  String get aiExplainSend;
+
+  /// No description provided for @aiCitations.
+  ///
+  /// In ar, this message translates to:
+  /// **'المصادر'**
+  String get aiCitations;
+
+  /// No description provided for @aiRefused.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا أستطيع المساعدة في هذا الطلب.'**
+  String get aiRefused;
+
+  /// No description provided for @aiLimitDaily.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت للحد اليومي من الأسئلة. جرّب غداً.'**
+  String get aiLimitDaily;
+
+  /// No description provided for @aiLimitMonthly.
+  ///
+  /// In ar, this message translates to:
+  /// **'استُهلك الحد الشهري للمساعد في مساحتك. تواصل مع المسؤول.'**
+  String get aiLimitMonthly;
+
+  /// No description provided for @aiUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساعد غير متاح الآن. حاول لاحقاً.'**
+  String get aiUnavailable;
+
+  /// No description provided for @aiFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تنفيذ الطلب. حاول مرة أخرى.'**
+  String get aiFailed;
+
+  /// No description provided for @aiNotAllowed.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الطلب ليس من صلاحياتك.'**
+  String get aiNotAllowed;
+
+  /// No description provided for @aiSuggestTriage.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقترح التصنيف والأولوية'**
+  String get aiSuggestTriage;
+
+  /// No description provided for @aiTriageResult.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراح المساعد'**
+  String get aiTriageResult;
+
+  /// No description provided for @aiApplySuggestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'طبّق الاقتراح على النموذج'**
+  String get aiApplySuggestion;
+
+  /// No description provided for @aiSuggestDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقترح وصفاً'**
+  String get aiSuggestDescription;
+
+  /// No description provided for @aiUseDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدم هذا الوصف'**
+  String get aiUseDescription;
+
+  /// No description provided for @aiSuggestedDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصف مقترح'**
+  String get aiSuggestedDescription;
+
+  /// No description provided for @aiFake.
+  ///
+  /// In ar, this message translates to:
+  /// **'وضع تجريبي: الإجابة من حقائق سجلاتك مباشرة بدون نموذج لغوي.'**
+  String get aiFake;
 }
 
 class _AppLocalizationsDelegate
