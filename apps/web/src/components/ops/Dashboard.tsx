@@ -6,6 +6,7 @@ import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { InspectionsTab } from '@/components/inspect/InspectionsTab';
+import { TicketsTab, type TicketDoc } from '@/components/maint/TicketsTab';
 import { RecordTab } from '@/components/inspect/RecordTab';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -32,6 +33,7 @@ export function Dashboard() {
   const t = useTranslations('ops');
   const c = useTranslations('common');
   const i = useTranslations('inspect');
+  const m = useTranslations('maint');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -80,6 +82,7 @@ export function Dashboard() {
   const leases = useOrgCollection<LeaseDoc>(orgId, 'leases', scope, !!session);
   const payments = useOrgCollection<PaymentDoc>(orgId, 'payments', scope, !!session);
   const inspections = useOrgCollection<InspectionDoc>(orgId, 'inspections', scope, !!session);
+  const tickets = useOrgCollection<TicketDoc>(orgId, 'tickets', scope, !!session);
   // Reminders are computed here from the user's own records: free, no server job required.
   const reminders = useMemo(
     () =>
@@ -165,6 +168,12 @@ export function Dashboard() {
             />
           </section>
         )}
+        {lease && (
+          <section className="flex flex-col gap-3" aria-label={m('tab')}>
+            <h2 className="text-h3 font-semibold">{m('tab')}</h2>
+            <TicketsTab orgId={orgId} staff={false} tickets={tickets.rows} leases={leases.rows} />
+          </section>
+        )}
         <Reminders reminders={reminders} leases={leases.rows} />
       </div>
     );
@@ -247,6 +256,11 @@ export function Dashboard() {
                 units={units.rows}
               />
             ),
+          },
+          {
+            value: 'maintenance',
+            label: m('tab'),
+            content: <TicketsTab orgId={orgId} staff tickets={tickets.rows} leases={leases.rows} />,
           },
           {
             value: 'record',
