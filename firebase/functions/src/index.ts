@@ -7,6 +7,7 @@ import { setGlobalOptions } from 'firebase-functions/v2';
 import { onCall, type CallableRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { signInspection as signInspectionImpl } from './inspections.js';
+import { inviteBuildingMember as inviteBuildingMemberImpl } from './links.js';
 import { createTicket as createTicketImpl, ticketAction as ticketActionImpl } from './tickets.js';
 import { createOrganization as createOrganizationImpl } from './organizations.js';
 import { runReminders } from './reminders.js';
@@ -47,12 +48,16 @@ export const signInspection = onCall({ enforceAppCheck }, (req: CallableRequest<
   ),
 );
 
+export const inviteBuildingMember = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
+  inviteBuildingMemberImpl(deps(), req.auth?.uid, req.data),
+);
+
 export const createTicket = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
   createTicketImpl({ db: getFirestore() }, req.auth?.uid, req.data),
 );
 
 export const ticketAction = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
-  ticketActionImpl({ db: getFirestore() }, req.auth?.uid, req.data),
+  ticketActionImpl({ db: getFirestore(), auth: getAuth() }, req.auth?.uid, req.data),
 );
 
 /** 07:00 Riyadh time every day. */

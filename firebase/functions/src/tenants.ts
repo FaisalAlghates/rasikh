@@ -2,6 +2,7 @@ import type { Role } from '@rasikh/shared';
 import type { Auth } from 'firebase-admin/auth';
 import { FieldValue, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError } from 'firebase-functions/v2/https';
+import { applyInvite, type InviteItem } from './links.js';
 import { z } from 'zod';
 
 export interface Deps {
@@ -105,8 +106,12 @@ export async function claimInvites(deps: Deps, uid: string | undefined) {
   const ref = deps.db.doc(`invites/${inviteDocId(user.email)}`);
   const snap = await ref.get();
   if (!snap.exists) return { claimed: 0 };
-  const items = (snap.data()?.items ?? []) as Array<{ orgId: string; leaseId: string }>;
-  for (const it of items) await attachTenant(deps, it.orgId, it.leaseId, uid);
+  const items = (snap.data()?.items ?? []) as InviteItem[];
+  for (const it of items) {
+    if (it.kind === undefined || it.kind === 'lease')
+      await attachTenant(deps, it.orgId, it.leaseId, uid);
+    else await applyInvite(deps, it, uid);
+  }
   await ref.delete();
   return { claimed: items.length };
 }

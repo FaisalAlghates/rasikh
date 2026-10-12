@@ -29,7 +29,8 @@ beforeEach(async () => {
   await env.withSecurityRulesDisabled(async (ctx) => {
     await setDoc(doc(ctx.firestore(), 'orgs/org1/tickets/tk1'), {
       tenantUid: 'tA',
-      status: 'open',
+      vendorUid: 'vV',
+      status: 'assigned',
     });
   });
 });
@@ -72,6 +73,9 @@ describe('tickets', () => {
     );
     await assertSucceeds(getBytes(ref(env.authenticatedContext('o', owner).storage(), path)));
     await assertSucceeds(getBytes(ref(env.authenticatedContext('tA', tenant).storage(), path)));
+    await assertSucceeds(
+      getBytes(ref(env.authenticatedContext('vV', { orgs: { org1: ['vendor'] } }).storage(), path)),
+    );
     await assertFails(getBytes(ref(env.authenticatedContext('tB', tenant).storage(), path)));
   });
 });

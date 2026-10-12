@@ -61,6 +61,13 @@ describe('status machine', () => {
     expect(nextStatus('in_progress', 'cancel', 'tenant')).toBeUndefined();
     expect(nextStatus('resolved', 'close', 'tenant')).toBe('closed');
   });
+  it('a vendor can start and resolve, nothing else', () => {
+    expect(nextStatus('assigned', 'start', 'vendor')).toBe('in_progress');
+    expect(nextStatus('in_progress', 'resolve', 'vendor')).toBe('resolved');
+    expect(nextStatus('open', 'assign', 'vendor')).toBeUndefined();
+    expect(nextStatus('resolved', 'close', 'vendor')).toBeUndefined();
+    expect(nextStatus('assigned', 'cancel', 'vendor')).toBeUndefined();
+  });
   it('can reassign before work starts', () => {
     expect(nextStatus('assigned', 'assign', 'staff')).toBe('assigned');
   });
