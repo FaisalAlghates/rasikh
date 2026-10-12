@@ -264,6 +264,104 @@ service cloud.firestore {
         }
       }
 
+      // ---- Phase 7: broker CRM -------------------------------------------------------------
+      // A broker's leads, viewings, contracts and log are private to that broker (brokerUid); owners and
+      // admins of the organization can read them. The activity log is create-only and time-stamped by the server.
+      function isBroker() {
+        return hasAnyRole(orgId, ['broker']);
+      }
+      function canSeeBrokerData() {
+        return hasAnyRole(orgId, ['owner', 'admin']);
+      }
+      function leadOf(leadId) {
+        return get(/databases/$(database)/documents/orgs/$(orgId)/leads/$(leadId));
+      }
+      function leadRank() {
+        return {'new': 0, 'contacted': 1, 'viewing': 2, 'negotiating': 3, 'won': 4, 'lost': 5};
+      }
+
+      match /brokers/{uid} {
+        allow read: if (isBroker() && request.auth.uid == uid) || canSeeBrokerData();
+        allow create, update: if isBroker() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['displayName', 'falNo', 'falExpiry'])
+          && request.resource.data.falNo.matches('^[0-9]{8,12}$')
+          && request.resource.data.falExpiry.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && request.resource.data.displayName is string
+          && request.resource.data.displayName.size() >= 2 && request.resource.data.displayName.size() <= 80;
+        allow delete: if false;
+      }
+
+      match /leads/{leadId} {
+        allow read: if (isBroker() && resource.data.brokerUid == request.auth.uid) || canSeeBrokerData();
+        allow create: if isBroker()
+          && request.resource.data.keys().hasOnly(['name', 'phone', 'interest', 'source', 'budgetSar', 'notes',
+               'status', 'brokerUid', 'createdAt'])
+          && request.resource.data.keys().hasAll(['name', 'phone', 'interest', 'source', 'status', 'brokerUid', 'createdAt'])
+          && request.resource.data.brokerUid == request.auth.uid
+          && request.resource.data.status == 'new'
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.phone.matches('^\\+9665[0-9]{8}$')
+          && request.resource.data.interest in ['rent', 'buy', 'let_my_property', 'sell_my_property']
+          && request.resource.data.source in ['referral', 'walk_in', 'call', 'social', 'other']
+          && request.resource.data.name is string
+          && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 80;
+        // Only the status moves (forward, or to lost; never out of won/lost) and the notes change.
+        allow update: if isBroker() && resource.data.brokerUid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes'])
+          && request.resource.data.status in leadRank().keys()
+          && (request.resource.data.status == resource.data.status
+              || (!(resource.data.status in ['won', 'lost'])
+                  && (request.resource.data.status == 'lost'
+                      || leadRank()[request.resource.data.status] > leadRank()[resource.data.status])))
+          && (!('notes' in request.resource.data) || request.resource.data.notes.size() <= 500);
+        allow delete: if false;
+      }
+
+      match /viewings/{viewingId} {
+        allow read: if (isBroker() && resource.data.brokerUid == request.auth.uid) || canSeeBrokerData();
+        allow create: if isBroker()
+          && request.resource.data.keys().hasOnly(['leadId', 'placeLabel', 'scheduledAt', 'notes', 'done',
+               'brokerUid', 'createdAt'])
+          && request.resource.data.keys().hasAll(['leadId', 'placeLabel', 'scheduledAt', 'done', 'brokerUid', 'createdAt'])
+          && request.resource.data.brokerUid == request.auth.uid
+          && request.resource.data.done == false
+          && request.resource.data.createdAt == request.time
+          && leadOf(request.resource.data.leadId).data.brokerUid == request.auth.uid;
+        allow update: if isBroker() && resource.data.brokerUid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['done'])
+          && request.resource.data.done == true;
+        allow delete: if false;
+      }
+
+      match /brokerContracts/{contractId} {
+        allow read: if (isBroker() && resource.data.brokerUid == request.auth.uid) || canSeeBrokerData();
+        allow create: if isBroker()
+          && request.resource.data.keys().hasOnly(['leadId', 'type', 'contractNo', 'startDate', 'endDate',
+               'commissionPct', 'brokerUid', 'createdAt'])
+          && request.resource.data.keys().hasAll(['leadId', 'type', 'contractNo', 'startDate', 'endDate',
+               'brokerUid', 'createdAt'])
+          && request.resource.data.brokerUid == request.auth.uid
+          && request.resource.data.type in ['rent', 'sale', 'management']
+          && request.resource.data.endDate > request.resource.data.startDate
+          && request.resource.data.createdAt == request.time
+          && leadOf(request.resource.data.leadId).data.brokerUid == request.auth.uid;
+        allow update, delete: if false;
+      }
+
+      match /brokerActivity/{entryId} {
+        allow read: if (isBroker() && resource.data.brokerUid == request.auth.uid) || canSeeBrokerData();
+        allow create: if isBroker()
+          && request.resource.data.keys().hasOnly(['leadId', 'type', 'text', 'brokerUid', 'createdAt'])
+          && request.resource.data.brokerUid == request.auth.uid
+          && request.resource.data.type in ['lead_created', 'status_changed', 'viewing_scheduled',
+               'viewing_done', 'contract_added', 'note']
+          && request.resource.data.text is string
+          && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 300
+          && request.resource.data.createdAt == request.time
+          && leadOf(request.resource.data.leadId).data.brokerUid == request.auth.uid;
+        allow update, delete: if false;
+      }
+
       // In-app reminders are written by Functions; a user reads their own and may mark them read.
       match /notifications/{nid} {
         allow read: if isMember(orgId) && resource.data.uid == request.auth.uid;

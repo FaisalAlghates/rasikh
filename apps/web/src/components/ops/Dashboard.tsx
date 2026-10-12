@@ -7,6 +7,7 @@ import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { InspectionsTab } from '@/components/inspect/InspectionsTab';
+import { BrokerView } from '@/components/broker/BrokerView';
 import { BuildingsTab } from '@/components/building/BuildingsTab';
 import { MyBuildings } from '@/components/building/MyBuildings';
 import { TicketsTab, type TicketDoc } from '@/components/maint/TicketsTab';
@@ -38,6 +39,7 @@ export function Dashboard() {
   const i = useTranslations('inspect');
   const m = useTranslations('maint');
   const b = useTranslations('bldg');
+  const br = useTranslations('broker');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -89,6 +91,8 @@ export function Dashboard() {
   const roles = session?.roles ?? [];
   const vendorOnly = !staff && roles.includes('vendor') && !session?.isTenant;
   const unitOwner = !staff && roles.includes('building_owner');
+  const isBroker = roles.includes('broker');
+  const brokerOnly = !staff && isBroker && !session?.isTenant;
   const ticketScope = useMemo(
     () => (staff ? [] : vendorOnly ? [where('vendorUid', '==', uid)] : tenantScope(uid)),
     [staff, vendorOnly, uid],
@@ -130,6 +134,25 @@ export function Dashboard() {
       </Button>
     </div>
   );
+
+  // ----------------------------------------------------------- broker-only view
+  if (brokerOnly) {
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-h2 font-semibold">{br('tab')}</h1>
+          <Button
+            variant="quiet"
+            onClick={() => void signOut(firebaseAuth()).then(() => router.replace('/'))}
+          >
+            {c('signOut')}
+          </Button>
+        </div>
+        <VerifyEmailBanner />
+        <BrokerView orgId={orgId} uid={uid} />
+      </div>
+    );
+  }
 
   // ----------------------------------------------------------- tenant view
   if (!staff) {
@@ -290,6 +313,15 @@ export function Dashboard() {
             label: b('tab'),
             content: <BuildingsTab orgId={orgId} />,
           },
+          ...(isBroker
+            ? [
+                {
+                  value: 'broker',
+                  label: br('tab'),
+                  content: <BrokerView orgId={orgId} uid={uid} />,
+                },
+              ]
+            : []),
           {
             value: 'record',
             label: i('tabRecord'),
