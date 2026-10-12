@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UNIT_TYPES } from './domain.js';
+import type { UNIT_TYPES } from './domain.js';
 
 /**
  * Guided inspections (move-in / move-out). The inspection is evidence: photos carry a capture time,
@@ -87,8 +87,6 @@ export type RoomBase = keyof typeof ITEMS;
 export const ROOM_BASES = Object.keys(ITEMS) as RoomBase[];
 /** Every distinct item key, for translation completeness checks. */
 export const ALL_ITEM_KEYS = Array.from(new Set(Object.values(ITEMS).flat())).sort();
-
-const NUMBERED: RoomBase[] = ['bedroom', 'bathroom'];
 
 /** `bedroom_2` → `{ base: 'bedroom', index: 2 }`; `kitchen` → `{ base: 'kitchen' }`. */
 export function splitRoomKey(key: string): { base: RoomBase; index?: number } {
