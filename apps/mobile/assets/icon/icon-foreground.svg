@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Adaptive icon foreground: the mark inside the 66% safe zone, transparent background. -->
+  <g fill="#D9825A" transform="translate(262 262) scale(15)">
+    <path d="M16 2 22 10H10z"/>
+    <path d="M16 11.5 25 21H7z"/>
+    <path d="M16 22.5 28 30H4z"/>
+  </g>
+</svg>
