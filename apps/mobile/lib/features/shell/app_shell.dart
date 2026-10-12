@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,7 +10,8 @@ import '../../l10n/app_localizations.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/rasikh_tokens.g.dart';
 import '../../widgets/brand_mark.dart';
-import '../../widgets/hero_scene.dart';
+import '../../widgets/live_city.dart';
+import '../../widgets/reveal.dart';
 import '../../widgets/rk_button.dart';
 import '../../widgets/rk_surfaces.dart';
 
@@ -45,7 +47,22 @@ class _AppShellState extends ConsumerState<AppShell> {
       extendBody: true,
       body: Stack(
         children: [
-          IndexedStack(index: _index, children: tabs),
+          // Tabs cross-fade and rise slightly; the map tab keeps its camera between visits.
+          AnimatedSwitcher(
+            duration: RasikhTokens.base,
+            switchInCurve: RasikhTokens.ease,
+            transitionBuilder: (child, anim) => FadeTransition(
+              opacity: anim,
+              child: SlideTransition(
+                position: Tween(
+                  begin: const Offset(0, 0.015),
+                  end: Offset.zero,
+                ).animate(anim),
+                child: child,
+              ),
+            ),
+            child: KeyedSubtree(key: ValueKey(_index), child: tabs[_index]),
+          ),
           Positioned(
             left: 16,
             right: 16,
@@ -62,18 +79,59 @@ class _AppShellState extends ConsumerState<AppShell> {
                       vertical: 6,
                     ),
                     radius: RasikhTokens.radiusXl,
-                    child: Row(
+                    child: Stack(
                       children: [
-                        for (var i = 0; i < items.length; i++)
-                          Expanded(
-                            child: _DockItem(
-                              key: Key('dock-$i'),
-                              icon: _index == i ? items[i].$2 : items[i].$1,
-                              label: items[i].$3,
-                              selected: _index == i,
-                              onTap: () => setState(() => _index = i),
+                        // a clay pill slides under the selected destination
+                        Positioned.fill(
+                          child: AnimatedAlign(
+                            duration: RasikhTokens.base,
+                            curve: RasikhTokens.ease,
+                            alignment: AlignmentDirectional(
+                              -1 + 2 * _index / (items.length - 1),
+                              0,
+                            ),
+                            child: FractionallySizedBox(
+                              widthFactor: 1 / items.length,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.tokens.brand.withValues(
+                                    alpha: 0.18,
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                    RasikhTokens.radiusLg,
+                                  ),
+                                  border: Border.all(
+                                    color: context.tokens.brandText.withValues(
+                                      alpha: 0.35,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
+                        ),
+                        Row(
+                          children: [
+                            for (var i = 0; i < items.length; i++)
+                              Expanded(
+                                child: _DockItem(
+                                  key: Key('dock-$i'),
+                                  icon: _index == i ? items[i].$2 : items[i].$1,
+                                  label: items[i].$3,
+                                  selected: _index == i,
+                                  onTap: () {
+                                    if (_index != i) {
+                                      HapticFeedback.selectionClick();
+                                    }
+                                    setState(() => _index = i);
+                                  },
+                                ),
+                              ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -169,7 +227,8 @@ class _TabPage extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              ...children,
+              for (var i = 0; i < children.length; i++)
+                Reveal(index: i + 1, child: children[i]),
             ],
           ),
         ),
@@ -241,7 +300,7 @@ class _MapTab extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        const HeroScene(focusX: 0.2),
+        const LiveCity(fixedProgress: 0.5),
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),

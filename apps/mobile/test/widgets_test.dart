@@ -3,6 +3,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rasikh/theme/app_theme.dart';
+import 'package:rasikh/widgets/live_city.dart';
 import 'package:rasikh/widgets/rk_button.dart';
 import 'package:rasikh/widgets/rk_overlays.dart';
 import 'package:rasikh/widgets/rk_surfaces.dart';
@@ -14,6 +15,8 @@ Widget host(
   bool reduceMotion = false,
 }) {
   FontConfig.webFonts = false;
+  SceneConfig.animate =
+      false; // paint the city once so pumpAndSettle can finish
   return MaterialApp(
     theme: buildTheme(Brightness.dark, arabic: true),
     home: MediaQuery(

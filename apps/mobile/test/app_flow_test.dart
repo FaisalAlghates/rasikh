@@ -5,6 +5,7 @@ import 'package:rasikh/app/app.dart';
 import 'package:rasikh/app/providers.dart';
 import 'package:rasikh/data/auth_repository.dart';
 import 'package:rasikh/theme/app_theme.dart';
+import 'package:rasikh/widgets/live_city.dart';
 
 import 'helpers/fake_auth_repository.dart';
 
@@ -13,6 +14,8 @@ Future<FakeAuthRepository> pumpApp(
   SessionUser? initial,
 }) async {
   FontConfig.webFonts = false;
+  SceneConfig.animate =
+      false; // paint the city once so pumpAndSettle can finish
   final repo = FakeAuthRepository(initial: initial);
   tester.view.physicalSize = const Size(900, 1800);
   tester.view.devicePixelRatio = 1.0;

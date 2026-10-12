@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 import '../theme/rasikh_tokens.g.dart';
+import 'reveal.dart';
 import 'shurfa_loader.dart';
 
 enum RkButtonVariant { primary, quiet, ghost }
@@ -55,23 +56,25 @@ class RkButton extends StatelessWidget {
     };
 
     final cb = enabled ? onPressed : null;
-    return switch (variant) {
-      RkButtonVariant.primary => FilledButton(
-        onPressed: cb,
-        style: style,
-        child: child,
-      ),
-      RkButtonVariant.quiet => OutlinedButton(
-        onPressed: cb,
-        style: style,
-        child: child,
-      ),
-      RkButtonVariant.ghost => TextButton(
-        onPressed: cb,
-        style: style,
-        child: child,
-      ),
-    };
+    return Pressable(
+      child: switch (variant) {
+        RkButtonVariant.primary => FilledButton(
+          onPressed: cb,
+          style: style,
+          child: child,
+        ),
+        RkButtonVariant.quiet => OutlinedButton(
+          onPressed: cb,
+          style: style,
+          child: child,
+        ),
+        RkButtonVariant.ghost => TextButton(
+          onPressed: cb,
+          style: style,
+          child: child,
+        ),
+      },
+    );
   }
 }
 

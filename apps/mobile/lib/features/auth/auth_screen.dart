@@ -100,6 +100,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           const SizedBox(height: 24),
           SegmentedButton<bool>(
             showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              foregroundColor: t.textMuted,
+              selectedBackgroundColor: t.brand.withValues(alpha: 0.2),
+              selectedForegroundColor: t.brandText,
+              side: BorderSide(color: t.border.withValues(alpha: 0.35)),
+              minimumSize: const Size.fromHeight(44),
+            ),
             segments: [
               ButtonSegment(value: true, label: Text(l10n.tabPhone)),
               ButtonSegment(value: false, label: Text(l10n.tabEmail)),
