@@ -143,6 +143,6 @@ Acceptance: see "Acceptance" in `docs/ENGINEERING_OFFICE.md` (rules isolation, d
 ## Pre-launch checklist (user-owned)
 
 - [ ] SAIP trademark search · [ ] rasikh.sa / .com / .app · [ ] App Store / Play name · [ ] X / Instagram / TikTok / Snapchat handles
-- [ ] Two Firebase projects on Blaze, me-central2 · [ ] Mapbox restricted token · [ ] (opt) Google Maps key
+- [ ] Two Firebase projects on Blaze, me-central2 (the dev project `rasikh-eca19` has Firestore in me-central2, Email/Password sign-in and a registered web app as of 2026-10-12, still on Spark; Storage, phone sign-in, backups and Functions need Blaze) · [ ] Mapbox restricted token · [ ] (opt) Google Maps key
 - [ ] Vertex AI enabled (or Claude key) · [ ] Apple + Google Play accounts · [ ] Domain + GitHub
 - [ ] Budget alerts (Google Cloud, Mapbox) · [ ] Lawyer review of privacy policy + terms
