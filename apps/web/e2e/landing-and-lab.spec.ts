@@ -22,7 +22,8 @@ test.describe('landing', () => {
   for (const path of ['/ar', '/en']) {
     test(`axe: no WCAG A/AA violations on ${path}`, async ({ page }) => {
       await page.goto(path);
-      await page.waitForTimeout(800); // entrance animations settle (contrast is computed on final state)
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(3500); // kinetic headline + entrance animations settle (contrast is read from the final state)
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
         .analyze();

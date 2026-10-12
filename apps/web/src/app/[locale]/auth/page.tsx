@@ -101,9 +101,9 @@ export default function AuthPage() {
     });
 
   return (
-    <>
+    <div data-theme="dark" className="clear min-h-dvh">
       <Header />
-      <main className="mx-auto flex max-w-md flex-col gap-6 px-6 pb-24 pt-10">
+      <main className="panel mx-auto my-10 flex max-w-md flex-col gap-6 p-6 md:p-8">
         <div>
           <h1 className="text-h2 font-semibold">{t('title')}</h1>
           <p className="mt-2 text-text-muted">{t('subtitle')}</p>
@@ -222,6 +222,6 @@ export default function AuthPage() {
           </form>
         )}
       </main>
-    </>
+    </div>
   );
 }

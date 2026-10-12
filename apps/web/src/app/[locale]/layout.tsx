@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ClientMessages } from '@/components/ClientMessages';
+import { SceneBackdrop } from '@/components/immersive/SceneBackdrop';
+import { ScrollEffects } from '@/components/immersive/ScrollEffects';
 import { themeInitScript } from '@/lib/theme-script';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
@@ -67,7 +69,11 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
-        <ClientMessages namespaces={['common']}>{children}</ClientMessages>
+        <ClientMessages namespaces={['common']}>
+          <SceneBackdrop />
+          <ScrollEffects />
+          {children}
+        </ClientMessages>
       </body>
     </html>
   );

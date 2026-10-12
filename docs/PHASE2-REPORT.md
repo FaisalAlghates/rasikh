@@ -17,22 +17,22 @@ with four destinations and the floating glass dock (the one glass layer per scre
 
 ## Self-critique loop (web landing + lab + app)
 
-| # | Gap found (against the design principles) | Fix |
-|---|---|---|
-| 1 | Reem Kufi used at 20–28 px (brief: large sizes only); tashkeel collided in cards | Small headings use IBM Plex Sans Arabic semibold; Reem Kufi only ≥ 40 px |
-| 2 | Hero sub-copy (stone on clay-lit sky) below AA contrast | Sand at 90 % |
-| 3 | Tallest tower collided with the CTA buttons | Scene towers scaled to 80 %; headline zone kept clear |
-| 4 | Dead black band under the hero skyline | Ground band reduced, scene re-anchored |
-| 5 | Role cards had no affordance | Mirrored arrow (RTL-aware) + hover shift |
-| 6 | Insights skeleton read as broken UI | Bar-chart placeholder + explicit "coming in a later release" caption |
-| 7 | Arch image showed an empty dark arch with a hard rectangle at the bottom | Portrait crop of the scene (`crop="arch"`) |
-| 8 | Arabic display line-height 1.15 clipped diacritics | 1.3 for Arabic display |
-| 9 | Error state invisible: `.hairline` (unlayered CSS) beat `border-danger` | Moved `.hairline` into `@layer components` |
-| 10 | Property card truncated title/place to "…" in narrow columns | `line-clamp-2` instead of single-line truncate |
-| App 11 | Auth helper text garbled: whole field forced LTR inside an RTL page | Only the input is LTR; label/helper keep page direction; `+966` prefix wrapped in LRM |
-| App 12 | StatTile/EmptyState shrank to content width in the gallery | Blocks stretch to full width |
-| App 13 | Helper/error text used default (too large, wrong colour) styles | Theme `helperStyle`/`errorStyle` at 13 px, muted/danger tokens |
-| App 14 | Map tab scene cropped to empty sky + two far towers | `focusX` crop keeps the near Najdi towers in frame |
+| #      | Gap found (against the design principles)                                        | Fix                                                                                   |
+| ------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| 1      | Reem Kufi used at 20–28 px (brief: large sizes only); tashkeel collided in cards | Small headings use IBM Plex Sans Arabic semibold; Reem Kufi only ≥ 40 px              |
+| 2      | Hero sub-copy (stone on clay-lit sky) below AA contrast                          | Sand at 90 %                                                                          |
+| 3      | Tallest tower collided with the CTA buttons                                      | Scene towers scaled to 80 %; headline zone kept clear                                 |
+| 4      | Dead black band under the hero skyline                                           | Ground band reduced, scene re-anchored                                                |
+| 5      | Role cards had no affordance                                                     | Mirrored arrow (RTL-aware) + hover shift                                              |
+| 6      | Insights skeleton read as broken UI                                              | Bar-chart placeholder + explicit "coming in a later release" caption                  |
+| 7      | Arch image showed an empty dark arch with a hard rectangle at the bottom         | Portrait crop of the scene (`crop="arch"`)                                            |
+| 8      | Arabic display line-height 1.15 clipped diacritics                               | 1.3 for Arabic display                                                                |
+| 9      | Error state invisible: `.hairline` (unlayered CSS) beat `border-danger`          | Moved `.hairline` into `@layer components`                                            |
+| 10     | Property card truncated title/place to "…" in narrow columns                     | `line-clamp-2` instead of single-line truncate                                        |
+| App 11 | Auth helper text garbled: whole field forced LTR inside an RTL page              | Only the input is LTR; label/helper keep page direction; `+966` prefix wrapped in LRM |
+| App 12 | StatTile/EmptyState shrank to content width in the gallery                       | Blocks stretch to full width                                                          |
+| App 13 | Helper/error text used default (too large, wrong colour) styles                  | Theme `helperStyle`/`errorStyle` at 13 px, muted/danger tokens                        |
+| App 14 | Map tab scene cropped to empty sky + two far towers                              | `focusX` crop keeps the near Najdi towers in frame                                    |
 
 ## Acceptance
 

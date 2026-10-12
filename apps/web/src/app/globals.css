@@ -18,7 +18,8 @@ html[lang='en'] {
 }
 body {
   min-height: 100dvh;
-  background: var(--rk-bg);
+  /* html paints the page colour; a transparent body lets the fixed 3D canvas (z-index -10) show through. */
+  background: transparent;
 }
 .display-font {
   font-family: var(--font-fraunces), var(--font-reem-kufi), serif;
@@ -126,6 +127,428 @@ html[lang='ar'] .display-font {
   from {
     opacity: 0;
     transform: translateY(12px);
+  }
+}
+
+/* =====================================================================
+   Immersive layer: 3D backdrop, kinetic type, tilt, pinned storytelling.
+   Everything here has a reduced-motion fallback at the bottom of the file.
+   ===================================================================== */
+.scene-canvas {
+  background: #0b0908;
+  opacity: 0;
+  transition: opacity 1.4s var(--rk-ease);
+}
+.scene-canvas[data-ready='true'] {
+  opacity: 1;
+}
+.scene-scrim {
+  background: color-mix(in srgb, var(--rk-c-night) 62%, transparent);
+}
+/* Soft vignette keeps copy readable over the bright horizon without hiding the city. */
+.scene-vignette {
+  background:
+    radial-gradient(
+      ellipse at 50% 55%,
+      transparent 38%,
+      color-mix(in srgb, var(--rk-c-night) 58%, transparent) 100%
+    ),
+    color-mix(in srgb, var(--rk-c-night) 18%, transparent);
+}
+.hero-copy {
+  /* Legibility comes from the vignette and the framing; no per-text shadow or filter (they are costly to paint). */
+}
+/* Immersive pages sit on the dark base even if the OS or the user theme is light. */
+html[data-immersive] {
+  background: var(--rk-c-night);
+}
+/* No WebGL, saved data, or a device that cannot keep up: the illustrated dusk stands in. */
+html[data-scene='off'] body::before,
+html[data-scene='degraded'] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -15;
+  background: url('/hero-dusk.svg') center bottom / cover no-repeat;
+  opacity: 0.6;
+}
+.hero-poster {
+  transition: opacity 1.4s var(--rk-ease);
+}
+html[data-scene='on'] .hero-poster {
+  opacity: 0;
+}
+.clear {
+  background: transparent !important;
+}
+.panel {
+  background: color-mix(in srgb, var(--rk-surface) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rk-border) 28%, transparent);
+  border-radius: var(--rk-radius-lg);
+}
+
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--rk-c-clay-light) 15%, transparent),
+    transparent
+  );
+  mix-blend-mode: screen;
+  transition: opacity 0.6s var(--rk-ease);
+}
+@media (pointer: coarse) {
+  .cursor-glow {
+    display: none;
+  }
+}
+
+/* Reveal on scroll (only when JS is running, so the page never ships hidden). */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 900ms var(--rk-ease),
+    transform 900ms var(--rk-ease);
+  transition-delay: calc(var(--d, 0) * 90ms);
+}
+.js [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Kinetic headline: each word rises out of a mask. */
+.words .w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-block: 0.22em;
+  margin-block: -0.22em;
+}
+.words .w > span {
+  display: inline-block;
+  transform: translateY(118%);
+  animation: word-in 1100ms var(--rk-ease) forwards;
+  animation-delay: calc(var(--i, 0) * 80ms + 120ms);
+}
+.js [data-reveal-words]:not(.is-in) .w > span {
+  animation-play-state: paused;
+}
+@keyframes word-in {
+  to {
+    transform: none;
+  }
+}
+
+/* 3D tilt card with a moving highlight. */
+.tilt {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 380ms var(--rk-ease);
+  will-change: transform;
+}
+.tilt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--rk-c-clay-light) 22%, transparent),
+    transparent 62%
+  );
+  transition: opacity 320ms var(--rk-ease);
+}
+.tilt:hover::after {
+  opacity: 1;
+}
+.depth-1 {
+  transform: translateZ(26px);
+}
+.depth-2 {
+  transform: translateZ(52px);
+}
+
+/* Buttons: a clay glow instead of a shadow. */
+.btn-glow {
+  position: relative;
+  transition:
+    box-shadow 320ms var(--rk-ease),
+    background-color 200ms var(--rk-ease),
+    filter 200ms var(--rk-ease);
+}
+.btn-glow:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--rk-c-clay-light) 55%, transparent),
+    0 0 36px color-mix(in srgb, var(--rk-c-clay-light) 38%, transparent);
+}
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: var(--rk-radius-md);
+  border: 1px solid var(--rk-c-clay-light);
+  animation: ring 2.6s var(--rk-ease) infinite;
+  pointer-events: none;
+}
+@keyframes ring {
+  from {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.16, 1.5);
+  }
+}
+
+/* Scroll cue + lit-window glyph. */
+.scroll-cue i {
+  display: block;
+  width: 0;
+  height: 0;
+  border-inline: 7px solid transparent;
+  border-bottom: 12px solid currentColor;
+  animation: cue 2s var(--rk-ease) infinite;
+}
+@keyframes cue {
+  0% {
+    opacity: 0.15;
+    transform: translateY(10px);
+  }
+  50% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0.15;
+    transform: translateY(-10px);
+  }
+}
+.win-glyph {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-inline: 6px solid transparent;
+  border-bottom: 11px solid var(--rk-c-clay-light);
+  filter: drop-shadow(0 0 6px var(--rk-c-clay-light));
+  animation: glow 3.2s ease-in-out infinite;
+}
+@keyframes glow {
+  50% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 1px var(--rk-c-clay-light));
+  }
+}
+
+/* Najdi frieze: a slow band of shurfa. */
+.frieze {
+  position: relative;
+  height: 18px;
+  overflow: hidden;
+  opacity: 0.5;
+}
+.frieze::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: calc(100% + 36px * 20);
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18'%3E%3Cpath d='M0 18 18 0 36 18z'/%3E%3C/svg%3E")
+    repeat-x 0 0 / 36px 18px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18'%3E%3Cpath d='M0 18 18 0 36 18z'/%3E%3C/svg%3E")
+    repeat-x 0 0 / 36px 18px;
+  /* transform animation stays on the compositor (animating mask-position repaints every frame) */
+  animation: frieze 40s linear infinite;
+}
+[dir='rtl'] .frieze::before {
+  animation-name: frieze-rtl;
+}
+@keyframes frieze {
+  to {
+    transform: translate3d(-720px, 0, 0);
+  }
+}
+@keyframes frieze-rtl {
+  to {
+    transform: translate3d(720px, 0, 0);
+  }
+}
+
+/* Pinned "how it works": scroll drives the active step. */
+.how-pin {
+  height: 320vh;
+}
+.how-sticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100svh;
+  align-items: center;
+}
+.how-num {
+  position: relative;
+  height: clamp(9rem, 26vw, 19rem);
+}
+.how-num > span {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  opacity: 0;
+  transform: translateY(46px) scale(0.94);
+  transition:
+    opacity 700ms var(--rk-ease),
+    transform 900ms var(--rk-ease);
+}
+.how-item {
+  /* Inactive steps recede by size, border and heading colour, never by opacity (text must keep AA contrast). */
+  transform: scale(0.965);
+  border-color: transparent;
+  transition:
+    transform 700ms var(--rk-ease),
+    border-color 600ms var(--rk-ease),
+    background-color 600ms var(--rk-ease);
+}
+.how-item h3 {
+  color: var(--rk-text-muted);
+  transition: color 600ms var(--rk-ease);
+}
+.how[data-step='0'] .how-item[data-i='0'] h3,
+.how[data-step='1'] .how-item[data-i='1'] h3,
+.how[data-step='2'] .how-item[data-i='2'] h3 {
+  color: var(--rk-text);
+}
+.how[data-step='0'] .how-num > span:nth-child(1),
+.how[data-step='1'] .how-num > span:nth-child(2),
+.how[data-step='2'] .how-num > span:nth-child(3) {
+  opacity: 1;
+  transform: none;
+}
+.how[data-step='0'] .how-item[data-i='0'],
+.how[data-step='1'] .how-item[data-i='1'],
+.how[data-step='2'] .how-item[data-i='2'] {
+  transform: none;
+  border-color: var(--rk-c-clay-light);
+}
+.how-bar {
+  transform-origin: top;
+  transform: scaleY(var(--p, 0));
+}
+@media (max-width: 767px) {
+  .how-pin {
+    height: 260vh;
+  }
+}
+
+/* Property record: the line draws itself, nodes pop in. */
+.tl-line {
+  transform-origin: top;
+  transform: scaleY(clamp(0, calc((var(--p, 0) - 0.18) * 2.1), 1));
+}
+.tl-node {
+  transform: scale(0);
+  transition: transform 700ms var(--rk-ease) 200ms;
+}
+.is-in .tl-node,
+.tl-node.is-in {
+  transform: scale(1);
+}
+
+/* Doorway: three arches that drift against each other for depth. */
+.arch-stack {
+  position: relative;
+  aspect-ratio: 3 / 4;
+}
+.arch-layer {
+  position: absolute;
+  border-start-start-radius: 999px;
+  border-start-end-radius: 999px;
+}
+.arch-layer.l1 {
+  inset: -3% -6% 6%;
+  border: 1px solid color-mix(in srgb, var(--rk-c-clay-light) 34%, transparent);
+  transform: translate(calc((var(--p, 0.5) - 0.5) * 34px), calc((var(--p, 0.5) - 0.5) * -40px));
+}
+.arch-layer.l2 {
+  inset: 3% -2% 3%;
+  border: 1px solid color-mix(in srgb, var(--rk-c-clay-light) 55%, transparent);
+  transform: translate(calc((var(--p, 0.5) - 0.5) * -20px), calc((var(--p, 0.5) - 0.5) * -22px));
+}
+.arch-layer.l3 {
+  inset: 8% 3% 0;
+  overflow: hidden;
+}
+.arch-layer.l3 > * {
+  width: 100%;
+  height: 100%;
+  transform: scale(1.18) translateY(calc((var(--p, 0.5) - 0.5) * -46px));
+}
+
+/* Insight bars rise when they enter. */
+.bar {
+  transform-origin: bottom;
+  transform: scaleY(0.05);
+  transition: transform 1200ms var(--rk-ease);
+  transition-delay: calc(var(--i, 0) * 100ms);
+}
+.is-in .bar,
+.bar.is-in {
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .tilt,
+  .how-item,
+  .how-num > span,
+  .bar,
+  .tl-node {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .words .w > span {
+    transform: none;
+    animation: none;
+  }
+  .how-pin {
+    height: auto;
+  }
+  .how-sticky {
+    position: static;
+    height: auto;
+    padding-block: 6rem;
+  }
+  .how-num > span {
+    position: static;
+    display: block;
+  }
+  .how-num {
+    height: auto;
+  }
+  .how-bar,
+  .tl-line {
+    transform: none;
+  }
+  .frieze,
+  .pulse-ring::before,
+  .win-glyph,
+  .scroll-cue i {
+    animation: none;
+  }
+  .cursor-glow {
+    display: none;
   }
 }
 

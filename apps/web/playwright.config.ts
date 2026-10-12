@@ -8,7 +8,14 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   reporter: [['list']],
-  use: { baseURL: 'http://localhost:3000', trace: 'retain-on-failure' },
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'retain-on-failure',
+    // Software WebGL so the 3D scene can run in headless/CI browsers.
+    launchOptions: {
+      args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+    },
+  },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
     { name: 'mobile', use: { ...devices['Pixel 7'] } },

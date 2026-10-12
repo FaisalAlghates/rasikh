@@ -64,9 +64,9 @@ export default function OnboardingPage() {
   };
 
   return (
-    <>
+    <div data-theme="dark" className="clear min-h-dvh">
       <Header />
-      <main className="mx-auto flex max-w-xl flex-col gap-8 px-6 pb-24 pt-10">
+      <main className="panel mx-auto my-10 flex max-w-xl flex-col gap-8 p-6 md:p-10">
         <div>
           <h1 className="text-h2 font-semibold">{t('title')}</h1>
           <p className="mt-2 text-text-muted">{t('subtitle')}</p>
@@ -135,6 +135,6 @@ export default function OnboardingPage() {
           {t('submit')}
         </Button>
       </main>
-    </>
+    </div>
   );
 }

@@ -7,7 +7,7 @@ type Variant = 'primary' | 'quiet' | 'ghost';
 type Size = 'md' | 'lg';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-brand text-on-brand hover:brightness-110',
+  primary: 'btn-glow bg-brand text-on-brand hover:brightness-110',
   quiet: 'hairline text-text hover:bg-surface',
   ghost: 'text-brand-text hover:bg-surface',
 };

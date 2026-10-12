@@ -1,25 +1,39 @@
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
-import { use } from 'react';
+import { use, type CSSProperties } from 'react';
 import { BrandMark } from '@/components/BrandMark';
 import { Header } from '@/components/Header';
 import { HeroScene } from '@/components/HeroScene';
-import { ArchImage } from '@/components/ui/ArchImage';
+import { CursorGlow } from '@/components/immersive/CursorGlow';
+import { Magnetic } from '@/components/immersive/Magnetic';
+import { SplitWords } from '@/components/immersive/SplitWords';
+import { Tilt } from '@/components/immersive/Tilt';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { ShurfaDivider } from '@/components/ui/Shurfa';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Timeline } from '@/components/ui/Timeline';
 import { Link } from '@/i18n/navigation';
 
 const ROLES = ['Owner', 'Tenant', 'Manager', 'Broker'] as const;
 
+function Frieze() {
+  return (
+    <div data-theme="dark" className="clear px-6 py-6 text-brand-text" aria-hidden="true">
+      <div className="frieze mx-auto max-w-6xl" />
+    </div>
+  );
+}
+
 function SectionTitle({ title, body }: { title: string; body?: string }) {
   return (
-    <div className="mb-10 flex max-w-2xl flex-col gap-3">
-      <h2 className="display-font text-h1 md:text-d2/none">{title}</h2>
-      {body && <p className="text-h3 text-text-muted">{body}</p>}
+    <div className="mb-12 flex max-w-2xl flex-col gap-4">
+      <h2 className="display-font text-h1 md:text-d2/none">
+        <SplitWords text={title} onView />
+      </h2>
+      {body && (
+        <p data-reveal className="text-h3 text-text/75" style={{ '--d': 2 } as CSSProperties}>
+          {body}
+        </p>
+      )}
     </div>
   );
 }
@@ -36,11 +50,24 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
       new Date(iso),
     );
 
+  const events = [
+    { id: 'e1', date: fmt('2026-01-05'), title: t('ev1Title'), detail: t('ev1Detail') },
+    { id: 'e4', date: fmt('2026-01-05'), title: t('ev4Title'), detail: t('ev4Detail') },
+    { id: 'e2', date: fmt('2026-06-18'), title: t('ev2Title'), detail: t('ev2Detail') },
+    { id: 'e3', date: fmt('2026-11-02'), title: t('ev3Title'), detail: t('ev3Detail') },
+  ];
+
   return (
-    <main>
-      {/* 1. Hero: one scene, one sentence */}
-      <section data-theme="dark" className="relative isolate min-h-[100svh] overflow-hidden">
-        {/* A real image (generated from HeroScene) so the hero is the LCP element. */}
+    <main className="relative">
+      <CursorGlow />
+
+      {/* 1. Hero: the 3D city is the backdrop; the poster is the first paint and the fallback. */}
+      <section
+        data-theme="dark"
+        data-scene-stop
+        className="clear relative isolate min-h-[100svh] overflow-hidden"
+      >
+        {/* A real image (generated from HeroScene) shown until the 3D scene is ready. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/hero-dusk.svg"
@@ -48,144 +75,223 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
           width={1600}
           height={900}
           fetchPriority="high"
-          className="absolute inset-0 -z-10 h-full w-full object-cover object-bottom"
+          className="hero-poster absolute inset-0 -z-10 h-full w-full object-cover object-bottom"
         />
         <Header showTheme={false} />
-        <div className="mx-auto flex max-w-5xl flex-col gap-8 px-6 pb-48 pt-20 md:pt-36">
-          <h1 className="display-font max-w-3xl text-h1 md:text-d2">{h('headline')}</h1>
-          <p className="rise-in max-w-xl text-h3 text-text/90" style={{ animationDelay: '120ms' }}>
+        <div className="hero-copy mx-auto flex max-w-6xl flex-col gap-8 px-6 pb-44 pt-14 md:pt-28">
+          <h1 className="display-font max-w-4xl text-h1 md:max-w-[52%] md:text-d1">
+            <SplitWords text={h('headline')} />
+          </h1>
+          <p
+            className="rise-in max-w-xl text-h3 text-text md:max-w-[42%]"
+            style={{ animationDelay: '900ms' }}
+          >
             {h('subhead')}
           </p>
-          <div className="rise-in flex flex-wrap gap-3" style={{ animationDelay: '240ms' }}>
-            <Button asChild size="lg">
-              <Link href="/auth">{h('start')}</Link>
-            </Button>
-            <Button asChild size="lg" variant="quiet">
-              <a href="#how">{t('heroSecondary')}</a>
-            </Button>
+          <div
+            className="rise-in flex flex-wrap items-center gap-4"
+            style={{ animationDelay: '1100ms' }}
+          >
+            <Magnetic>
+              <Button asChild size="lg" className="pulse-ring">
+                <Link href="/auth">{h('start')}</Link>
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button asChild size="lg" variant="quiet">
+                <a href="#how">{t('heroSecondary')}</a>
+              </Button>
+            </Magnetic>
+          </div>
+        </div>
+        <div className="rise-in absolute inset-x-0 bottom-0" style={{ animationDelay: '1500ms' }}>
+          <div className="mx-auto flex max-w-6xl items-end justify-between gap-6 px-6 pb-8">
+            <p className="flex items-center gap-3 text-small text-text/85">
+              <span className="win-glyph" aria-hidden="true" />
+              {t('heroCaption')}
+            </p>
+            <span
+              className="scroll-cue flex flex-col items-center gap-1 text-brand-text"
+              aria-hidden="true"
+            >
+              <i />
+            </span>
+            <span className="sr-only">{t('scrollHint')}</span>
           </div>
         </div>
       </section>
 
-      {/* 2. Role fork */}
-      <section data-theme="light" className="px-6 py-24">
-        <div className="mx-auto max-w-5xl">
+      {/* 2. Role fork: four cards that tilt toward the pointer */}
+      <section data-theme="dark" data-scene-stop className="clear px-6 py-28">
+        <div className="mx-auto max-w-6xl">
           <SectionTitle title={t('rolesTitle')} body={t('rolesSubtitle')} />
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {ROLES.map((r) => (
-              <li key={r}>
-                <Link
-                  href="/auth"
-                  className="hairline group flex h-full flex-col gap-2 rounded-lg bg-surface p-6 transition-colors duration-200 hover:border-brand"
-                >
-                  <span className="flex items-center justify-between gap-4">
-                    <span className="text-h2 font-semibold">{t(`role${r}`)}</span>
-                    <ArrowRight
-                      size={20}
-                      aria-hidden="true"
-                      className="text-brand-text transition-transform duration-200 ease-rk rtl:rotate-180 rtl:group-hover:-translate-x-1 ltr:group-hover:translate-x-1"
-                    />
-                  </span>
-                  <span className="text-text-muted">{t(`role${r}Body`)}</span>
-                </Link>
+          <ul className="grid gap-5 sm:grid-cols-2">
+            {ROLES.map((r, i) => (
+              <li key={r} data-reveal style={{ '--d': i } as CSSProperties}>
+                <Tilt className="panel h-full">
+                  <Link href="/auth" className="group flex h-full flex-col gap-3 p-7">
+                    <span className="flex items-center justify-between gap-4">
+                      <span className="depth-1 text-h2 font-semibold">{t(`role${r}`)}</span>
+                      <ArrowRight
+                        size={22}
+                        aria-hidden="true"
+                        className="depth-2 text-brand-text transition-transform duration-300 ease-rk rtl:rotate-180 rtl:group-hover:-translate-x-2 ltr:group-hover:translate-x-2"
+                      />
+                    </span>
+                    <span className="text-text/75">{t(`role${r}Body`)}</span>
+                  </Link>
+                </Tilt>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      <div data-theme="light" className="px-6">
-        <ShurfaDivider className="mx-auto max-w-5xl" />
-      </div>
+      <Frieze />
 
-      {/* 3. How it works */}
-      <section id="how" data-theme="light" className="px-6 py-24">
-        <div className="mx-auto max-w-5xl">
-          <SectionTitle title={t('howTitle')} />
-          <ol className="grid gap-10 md:grid-cols-3">
-            {[1, 2, 3].map((n) => (
-              <li key={n} className="flex flex-col gap-3">
-                <span
-                  className="display-font tabular text-d2/none text-brand-text"
-                  aria-hidden="true"
-                >
-                  {n}
-                </span>
-                <h3 className="text-h2 font-semibold">{t(`step${n}Title`)}</h3>
-                <p className="text-text-muted">{t(`step${n}Body`)}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* 4. Property Health Record story */}
-      <section data-theme="dark" className="px-6 py-24">
-        <div className="mx-auto grid max-w-5xl items-center gap-14 md:grid-cols-2">
-          <div className="flex flex-col gap-6">
-            <h2 className="display-font text-h1 md:text-d2/none">{t('recordTitle')}</h2>
-            <p className="text-h3 text-text-muted">{t('recordBody')}</p>
-            <p className="text-caption text-text-muted">{t('recordSample')}</p>
-            <Timeline
-              label={t('recordTimelineLabel')}
-              events={[
-                { id: 'e1', date: fmt('2026-01-05'), title: t('ev1Title'), detail: t('ev1Detail') },
-                { id: 'e4', date: fmt('2026-01-05'), title: t('ev4Title'), detail: t('ev4Detail') },
-                { id: 'e2', date: fmt('2026-06-18'), title: t('ev2Title'), detail: t('ev2Detail') },
-                { id: 'e3', date: fmt('2026-11-02'), title: t('ev3Title'), detail: t('ev3Detail') },
-              ]}
-            />
-          </div>
-          <div className="mx-auto w-full max-w-sm">
-            <ArchImage>
-              <HeroScene crop="arch" className="absolute inset-0 h-full w-full" />
-            </ArchImage>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Insights teaser */}
-      <section data-theme="light" className="px-6 py-24">
-        <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-2">
-          <SectionTitle title={t('insightsTitle')} body={t('insightsBody')} />
-          <Card aria-label={t('insightsSoon')} className="flex flex-col gap-4 p-6">
-            <div className="flex items-end gap-2" aria-hidden="true">
-              {[40, 64, 52, 88, 72, 100].map((h, i) => (
-                <Skeleton key={i} className="flex-1 !rounded-sm" style={{ height: `${h}px` }} />
-              ))}
+      {/* 3. How it works: pinned; scrolling advances the step */}
+      <section
+        id="how"
+        data-theme="dark"
+        data-scene-stop
+        data-pin
+        data-steps="3"
+        className="how how-pin clear relative"
+      >
+        <div className="how-sticky">
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 md:grid-cols-[0.85fr_1.15fr]">
+            <div className="flex flex-col gap-4">
+              <h2 className="text-h2 font-semibold text-text">{t('howTitle')}</h2>
+              <div
+                className="how-num display-font text-[clamp(8rem,24vw,18rem)] leading-none text-brand-text"
+                aria-hidden="true"
+              >
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+              </div>
             </div>
-            <Skeleton className="h-3 w-2/3" />
-            <p className="text-small text-text-muted">{t('insightsSoon')}</p>
-          </Card>
+            <div className="flex gap-6">
+              <div className="relative w-px shrink-0 bg-border/30" aria-hidden="true">
+                <div className="how-bar absolute inset-0 bg-brand" />
+              </div>
+              <ol className="flex flex-col gap-4">
+                {[1, 2, 3].map((n, i) => (
+                  <li key={n} data-i={i} className="how-item panel p-6">
+                    <h3 className="text-h2 font-semibold">{t(`step${n}Title`)}</h3>
+                    <p className="mt-2 text-text/75">{t(`step${n}Body`)}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Property Health Record: the line draws itself; the doorway has depth */}
+      <section data-theme="dark" data-scene-stop className="clear px-6 py-28">
+        <div className="mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-2">
+          <div className="panel flex flex-col gap-6 p-8">
+            <h2 className="display-font text-h1 md:text-d2/none">
+              <SplitWords text={t('recordTitle')} onView />
+            </h2>
+            <p data-reveal className="text-h3 text-text/75">
+              {t('recordBody')}
+            </p>
+            <p className="text-caption text-text/75">{t('recordSample')}</p>
+            <ol
+              data-progress
+              aria-label={t('recordTimelineLabel')}
+              className="relative mt-2 flex flex-col gap-9"
+            >
+              <span
+                aria-hidden="true"
+                className="absolute inset-y-2 start-[7px] w-px bg-border/30"
+              />
+              <span
+                aria-hidden="true"
+                className="tl-line absolute inset-y-2 start-[7px] w-px bg-brand"
+              />
+              {events.map((e) => (
+                <li key={e.id} data-reveal className="relative ps-10">
+                  <span
+                    aria-hidden="true"
+                    className="tl-node absolute start-0 top-1.5 size-[15px] rounded-full bg-brand ring-4 ring-bg"
+                  />
+                  <p className="tabular text-caption text-text/75">{e.date}</p>
+                  <p className="text-body font-medium text-text">{e.title}</p>
+                  <p className="mt-0.5 text-small text-text/75">{e.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <Tilt max={6} className="mx-auto w-full max-w-sm">
+            <div className="arch-stack" data-progress>
+              <div className="arch-layer l1" aria-hidden="true" />
+              <div className="arch-layer l2" aria-hidden="true" />
+              <div className="arch-layer l3">
+                <HeroScene crop="arch" className="block" />
+              </div>
+            </div>
+          </Tilt>
+        </div>
+      </section>
+
+      {/* 5. Insights: a sand interlude (the 3D city rests) */}
+      <section data-theme="light" className="px-6 py-28">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
+          <SectionTitle title={t('insightsTitle')} body={t('insightsBody')} />
+          <Tilt max={5} className="panel bg-surface!">
+            <div data-reveal className="flex flex-col gap-5 p-7">
+              <div className="flex h-28 items-end gap-2.5" aria-hidden="true">
+                {[40, 64, 52, 92, 72, 108].map((v, i) => (
+                  <div
+                    key={i}
+                    className="bar flex-1 rounded-sm bg-brand"
+                    style={{ height: `${v}px`, '--i': i, opacity: 0.35 + i * 0.1 } as CSSProperties}
+                  />
+                ))}
+              </div>
+              <Skeleton className="h-3 w-2/3" />
+              <p className="text-small text-text/75">{t('insightsSoon')}</p>
+            </div>
+          </Tilt>
         </div>
       </section>
 
       {/* 6. Trust */}
-      <section data-theme="dark" className="px-6 py-24">
-        <div className="mx-auto max-w-5xl">
+      <section data-theme="dark" className="clear px-6 py-28">
+        <div className="mx-auto max-w-6xl">
           <SectionTitle title={t('trustTitle')} />
-          <ul className="grid gap-4 md:grid-cols-3">
+          <ul className="grid gap-5 md:grid-cols-3">
             {[1, 2, 3].map((n) => (
-              <li key={n}>
-                <Card className="flex h-full flex-col gap-2">
-                  <h3 className="text-h3 font-semibold">{t(`trust${n}Title`)}</h3>
-                  <p className="text-small text-text-muted">{t(`trust${n}Body`)}</p>
-                </Card>
+              <li key={n} data-reveal style={{ '--d': n } as CSSProperties}>
+                <Tilt className="panel h-full">
+                  <div className="flex h-full flex-col gap-3 p-7">
+                    <h3 className="depth-1 text-h3 font-semibold">{t(`trust${n}Title`)}</h3>
+                    <p className="text-small text-text/75">{t(`trust${n}Body`)}</p>
+                  </div>
+                </Tilt>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      {/* 7. Footer CTA */}
-      <section data-theme="light" className="px-6 pt-24 pb-12">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-8">
-          <h2 className="display-font text-h1 md:text-d2/none">{t('ctaTitle')}</h2>
-          <Button asChild size="lg">
-            <Link href="/auth">{h('start')}</Link>
-          </Button>
-          <ShurfaDivider className="mt-8" />
-          <footer className="flex w-full flex-wrap items-center justify-between gap-4 text-small text-text-muted">
+      <Frieze />
+
+      {/* 7. Finale: night falls, the windows are lit */}
+      <section data-theme="dark" data-scene-stop className="clear px-6 pb-12 pt-32">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-10">
+          <h2 className="display-font max-w-4xl text-h1 md:text-d1">
+            <SplitWords text={t('ctaTitle')} onView />
+          </h2>
+          <Magnetic>
+            <Button asChild size="lg" className="pulse-ring">
+              <Link href="/auth">{h('start')}</Link>
+            </Button>
+          </Magnetic>
+          <footer className="mt-24 flex w-full flex-wrap items-center justify-between gap-4 border-t border-border/20 pt-8 text-small text-text/75">
             <span className="flex items-center gap-2 text-brand-text">
               <BrandMark size={20} />
               <span className="display-font text-text">{c('appName')}</span>
