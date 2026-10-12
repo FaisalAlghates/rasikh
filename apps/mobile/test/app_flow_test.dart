@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rasikh/app/app.dart';
+import 'package:rasikh/app/inspection_providers.dart';
 import 'package:rasikh/app/ops_providers.dart';
 import 'package:rasikh/app/providers.dart';
 import 'package:rasikh/data/auth_repository.dart';
@@ -9,6 +10,7 @@ import 'package:rasikh/theme/app_theme.dart';
 import 'package:rasikh/widgets/live_city.dart';
 
 import 'helpers/fake_auth_repository.dart';
+import 'helpers/fake_inspection_repository.dart';
 import 'helpers/fake_ops_repository.dart';
 
 Future<FakeAuthRepository> pumpApp(
@@ -27,6 +29,9 @@ Future<FakeAuthRepository> pumpApp(
       overrides: [
         authRepositoryProvider.overrideWithValue(repo),
         opsRepositoryProvider.overrideWithValue(FakeOpsRepository()),
+        inspectionRepositoryProvider.overrideWithValue(
+          FakeInspectionRepository(),
+        ),
         calendarExporterProvider.overrideWithValue(FakeCalendarExporter()),
       ],
       child: const RasikhApp(),
@@ -206,8 +211,10 @@ void main() {
 
       await tester.tap(find.byKey(const Key('dock-2')));
       await tester.pumpAndSettle();
-      expect(find.text('مثال توضيحي'), findsOneWidget);
-      expect(find.text('استلام الوحدة'), findsOneWidget);
+      expect(
+        find.text('ستظهر هنا أحداث العقار: العقود والفحوصات والمصروفات.'),
+        findsOneWidget,
+      );
 
       await tester.tap(find.byKey(const Key('dock-3')));
       await tester.pumpAndSettle();

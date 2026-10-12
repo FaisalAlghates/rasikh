@@ -6,6 +6,10 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>نستخدم الكاميرا لتوثيق حالة العقار في الفحص. Used to document the property's condition during an inspection.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>نسجّل موقع التصوير كجزء من إثبات الفحص. Used to record where an inspection photo was taken.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Rasikh</string>
 	<key>CFBundleExecutable</key>

@@ -76,6 +76,35 @@ class FakeAuthRepository implements AuthRepository {
     _emit(SessionUser(uid: 'u1', orgs: {'org1': roles}));
   }
 
+  /// Set to make the next re-authentication fail.
+  AuthFailure? failNextReauthWith;
+
+  void _maybeFailReauth() {
+    final f = failNextReauthWith;
+    if (f != null) {
+      failNextReauthWith = null;
+      throw AuthException(f);
+    }
+  }
+
+  @override
+  Future<void> reauthWithPassword(String password) async {
+    calls.add('reauthPassword');
+    _maybeFailReauth();
+  }
+
+  @override
+  Future<void> startReauthPhone() async {
+    calls.add('startReauthPhone');
+    _maybeFailReauth();
+  }
+
+  @override
+  Future<void> confirmReauthPhone(String code) async {
+    calls.add('confirmReauthPhone:$code');
+    _maybeFailReauth();
+  }
+
   @override
   Future<void> signOut() async => _emit(null);
 }

@@ -13,6 +13,7 @@ import '../../widgets/live_city.dart';
 import '../../widgets/rk_button.dart';
 import '../../widgets/rk_surfaces.dart';
 import '../../widgets/tab_page.dart';
+import '../inspect/health_record.dart';
 import '../ops/ops_home.dart';
 
 /// Signed-in home shell: four destinations and a floating glass dock.
@@ -296,36 +297,9 @@ class _RecordTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final t = context.tokens;
     return TabPage(
       title: l10n.recordEmptyTitle,
-      children: [
-        Text(
-          l10n.recordSample,
-          style: TextStyle(fontSize: 13, color: t.textMuted),
-        ),
-        const SizedBox(height: 16),
-        RkTimeline(
-          semanticLabel: l10n.recordEmptyTitle,
-          events: [
-            TimelineEvent(
-              title: l10n.recordEv1,
-              date: '2026-01-05',
-              detail: l10n.recordEv1Detail,
-            ),
-            TimelineEvent(
-              title: l10n.recordEv2,
-              date: '2026-06-18',
-              detail: l10n.recordEv2Detail,
-            ),
-            TimelineEvent(
-              title: l10n.recordEv3,
-              date: '2026-11-02',
-              detail: l10n.recordEv3Detail,
-            ),
-          ],
-        ),
-      ],
+      children: const [HealthRecord()],
     );
   }
 }

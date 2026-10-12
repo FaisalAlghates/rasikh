@@ -734,4 +734,494 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get opsInvalidEmail => 'اكتب بريداً إلكترونياً صحيحاً';
+
+  @override
+  String get inspTab => 'الفحوصات';
+
+  @override
+  String get inspTabRecord => 'سجل العقار';
+
+  @override
+  String get inspBack => 'رجوع';
+
+  @override
+  String get inspStart => 'ابدأ فحصاً';
+
+  @override
+  String get inspLease => 'العقد';
+
+  @override
+  String get inspKind => 'نوع الفحص';
+
+  @override
+  String get inspMoveIn => 'فحص الاستلام';
+
+  @override
+  String get inspMoveOut => 'فحص التسليم';
+
+  @override
+  String get inspChoose => 'اختر';
+
+  @override
+  String get inspPickLease => 'اختر العقد أولاً.';
+
+  @override
+  String get inspNeedLease => 'أضف عقداً أولاً لتبدأ فحص الاستلام.';
+
+  @override
+  String get inspNone => 'لا توجد فحوصات بعد.';
+
+  @override
+  String get inspBedrooms => 'عدد غرف النوم';
+
+  @override
+  String get inspBathrooms => 'عدد دورات المياه';
+
+  @override
+  String get inspComparedWithMoveIn =>
+      'سيُقارَن هذا الفحص بفحص الاستلام الموثّق.';
+
+  @override
+  String get inspNoSealedMoveIn =>
+      'لا يوجد فحص استلام موثّق لهذا العقد، لذلك لن تظهر مقارنة.';
+
+  @override
+  String get inspSaveFailed => 'تعذّر الحفظ. حاول مرة أخرى.';
+
+  @override
+  String get inspUploadFailed => 'تعذّر رفع الصورة. حاول مرة أخرى.';
+
+  @override
+  String get inspStatusDraft => 'مسودة';
+
+  @override
+  String get inspStatusPendingSignatures => 'بانتظار التوقيع';
+
+  @override
+  String get inspStatusSealed => 'موثّق ومقفل';
+
+  @override
+  String inspProgress(int done, int total) {
+    return '$done من $total بنداً';
+  }
+
+  @override
+  String get inspPartyOwner => 'المالك';
+
+  @override
+  String get inspPartyTenant => 'المستأجر';
+
+  @override
+  String get inspSigned => 'وقّع';
+
+  @override
+  String get inspNotSigned => 'لم يوقّع بعد';
+
+  @override
+  String get inspSealedNote =>
+      'اكتمل التوقيع من الطرفين ولا يمكن تعديل الفحص. بصمة المحتوى:';
+
+  @override
+  String get inspFinishFirst => 'أجب عن كل البنود قبل التوقيع.';
+
+  @override
+  String get inspWaitingTenant => 'وقّعت أنت. بانتظار توقيع المستأجر.';
+
+  @override
+  String get inspComplementsEjar =>
+      'هذا الفحص يكمّل نموذج التسليم الرسمي في إيجار ولا يحلّ محله.';
+
+  @override
+  String get inspRoomEntrance => 'المدخل';
+
+  @override
+  String get inspRoomLiving => 'الصالة';
+
+  @override
+  String get inspRoomMajlis => 'المجلس';
+
+  @override
+  String get inspRoomBedroom => 'غرفة نوم';
+
+  @override
+  String get inspRoomKitchen => 'المطبخ';
+
+  @override
+  String get inspRoomBathroom => 'دورة المياه';
+
+  @override
+  String get inspRoomBalcony => 'الشرفة';
+
+  @override
+  String get inspRoomYard => 'الحوش';
+
+  @override
+  String get inspRoomParking => 'الموقف';
+
+  @override
+  String get inspRoomRoof => 'السطح';
+
+  @override
+  String get inspRoomMeters => 'العدادات';
+
+  @override
+  String get inspItemDoor => 'الباب';
+
+  @override
+  String get inspItemLock => 'القفل';
+
+  @override
+  String get inspItemIntercom => 'الاتصال الداخلي';
+
+  @override
+  String get inspItemFloor => 'الأرضية';
+
+  @override
+  String get inspItemLighting => 'الإنارة';
+
+  @override
+  String get inspItemWalls => 'الجدران';
+
+  @override
+  String get inspItemCeiling => 'السقف';
+
+  @override
+  String get inspItemWindows => 'النوافذ';
+
+  @override
+  String get inspItemOutlets => 'المقابس';
+
+  @override
+  String get inspItemAc => 'المكيّف';
+
+  @override
+  String get inspItemDoors => 'الأبواب';
+
+  @override
+  String get inspItemWardrobe => 'الدولاب';
+
+  @override
+  String get inspItemCabinets => 'الخزائن';
+
+  @override
+  String get inspItemCountertop => 'سطح العمل';
+
+  @override
+  String get inspItemSink => 'الحوض';
+
+  @override
+  String get inspItemFaucet => 'الصنبور';
+
+  @override
+  String get inspItemHookup => 'توصيلة الغاز أو الكهرباء';
+
+  @override
+  String get inspItemExhaust => 'المروحة الشافطة';
+
+  @override
+  String get inspItemToilet => 'المرحاض';
+
+  @override
+  String get inspItemBasin => 'المغسلة';
+
+  @override
+  String get inspItemShower => 'الدش';
+
+  @override
+  String get inspItemHeater => 'سخّان المياه';
+
+  @override
+  String get inspItemRailing => 'الدرابزين';
+
+  @override
+  String get inspItemFence => 'السور';
+
+  @override
+  String get inspItemGate => 'البوابة';
+
+  @override
+  String get inspItemGround => 'الأرضية الخارجية';
+
+  @override
+  String get inspItemWaterproofing => 'العزل';
+
+  @override
+  String get inspItemAccess => 'باب السطح';
+
+  @override
+  String get inspItemTank => 'خزان المياه';
+
+  @override
+  String get inspItemElectricity => 'عدّاد الكهرباء (اكتب القراءة في الملاحظة)';
+
+  @override
+  String get inspItemWater => 'عدّاد المياه (اكتب القراءة في الملاحظة)';
+
+  @override
+  String get inspItemGas => 'عدّاد الغاز (اكتب القراءة في الملاحظة)';
+
+  @override
+  String get inspCondGood => 'سليم';
+
+  @override
+  String get inspCondFair => 'مقبول';
+
+  @override
+  String get inspCondPoor => 'رديء';
+
+  @override
+  String get inspCondDamaged => 'تالف';
+
+  @override
+  String get inspCondition => 'الحالة';
+
+  @override
+  String get inspNote => 'ملاحظة';
+
+  @override
+  String get inspNotAnswered => 'لم تُسجَّل حالته';
+
+  @override
+  String inspWasAtMoveIn(String cond) {
+    return 'عند الاستلام: $cond';
+  }
+
+  @override
+  String get inspAllGood => 'كل بنود الغرفة سليمة';
+
+  @override
+  String get inspRoomPhoto => 'صورة للغرفة';
+
+  @override
+  String get inspPhoto => 'صوّر';
+
+  @override
+  String inspPhotoOf(String what) {
+    return 'تصوير: $what';
+  }
+
+  @override
+  String get inspCapture => 'التقط الصورة';
+
+  @override
+  String get inspCameraDenied =>
+      'لم نتمكن من فتح الكاميرا. اسمح بالوصول إليها من إعدادات المتصفح ثم أعد المحاولة.';
+
+  @override
+  String get inspCaptureNote =>
+      'تُسجَّل الصورة بوقتها وموقعها وبصمة SHA-256 لحظة التقاطها، ولا يمكن رفع صور من المعرض.';
+
+  @override
+  String get inspEvidenceAlt => 'صورة من الفحص';
+
+  @override
+  String get inspHasGps => 'الموقع مسجّل';
+
+  @override
+  String get inspNoGps => 'بدون موقع';
+
+  @override
+  String get inspVerify => 'تحقق من سلامة الملف';
+
+  @override
+  String get inspVerifying => 'جارٍ التحقق';
+
+  @override
+  String get inspVerifiedOk => 'الملف مطابق للبصمة المسجّلة';
+
+  @override
+  String get inspVerifiedBad => 'الملف لا يطابق البصمة المسجّلة';
+
+  @override
+  String get inspAssessment => 'التقييم';
+
+  @override
+  String get inspAssessWear => 'استهلاك عادي';
+
+  @override
+  String get inspAssessDamage => 'ضرر على المستأجر';
+
+  @override
+  String get inspCostSar => 'التكلفة (ر.س)';
+
+  @override
+  String get inspAssessNote =>
+      'القرار لك: الشاشة لا تحكم نيابةً عنك، والمبلغ يخضع لاتفاقكما ولشروط عقد إيجار.';
+
+  @override
+  String get inspNotAssessed => 'لم يُقيَّم بعد';
+
+  @override
+  String get inspSignAsOwner => 'وقّع كمالك';
+
+  @override
+  String get inspSignAsTenant => 'وقّع كمستأجر';
+
+  @override
+  String get inspSignExplain =>
+      'للتوقيع نتأكد أنك أنت: أدخل ما يُثبت هويتك الآن. بعد توقيع الطرفين يُقفل الفحص ولا يمكن تعديله.';
+
+  @override
+  String get inspConfirmPassword => 'كلمة المرور';
+
+  @override
+  String get inspConfirmAndSign => 'أكّد ووقّع';
+
+  @override
+  String get inspSmsCode => 'رمز التحقق المرسل لجوالك';
+
+  @override
+  String get inspSendCode => 'أرسل رمز التحقق';
+
+  @override
+  String get inspSignLegal =>
+      'التوقيع هنا توثيق داخل راسخ، ولا يغني عن إجراءات إيجار الرسمية.';
+
+  @override
+  String get inspErrGeneric => 'تعذّر التوقيع. حاول مرة أخرى.';
+
+  @override
+  String get inspErrAuth =>
+      'تعذّر التحقق من هويتك. راجع البيانات وحاول مرة أخرى.';
+
+  @override
+  String get inspErrRecentLoginRequired => 'انتهت صلاحية التحقق، أعد المحاولة.';
+
+  @override
+  String get inspErrChecklistIncomplete => 'ما زالت هناك بنود بلا إجابة.';
+
+  @override
+  String get inspErrEvidenceMissing => 'كل بند رديء أو تالف يحتاج صورة.';
+
+  @override
+  String get inspErrMediaHashMismatch =>
+      'تغيّر أحد الملفات عن بصمته المسجّلة، ولا يمكن التوقيع.';
+
+  @override
+  String get inspErrOwnerMustSignFirst => 'يوقّع المالك أولاً.';
+
+  @override
+  String get inspErrAlreadySigned => 'وقّعت سابقاً.';
+
+  @override
+  String get inspErrAlreadySealed => 'الفحص مقفل بتوقيع الطرفين.';
+
+  @override
+  String get inspErrContentChanged => 'تغيّر محتوى الفحص بعد التوقيع الأول.';
+
+  @override
+  String get inspErrMoveInNotSealed => 'فحص الاستلام لم يُوثَّق بعد.';
+
+  @override
+  String get inspErrNotAParty => 'لست طرفاً في هذا الفحص.';
+
+  @override
+  String get inspErrSamePerson => 'لا يمكن أن يوقّع الشخص نفسه بصفتين.';
+
+  @override
+  String get inspTenantComment => 'ملاحظات المستأجر';
+
+  @override
+  String get inspTenantCommentHint => 'اكتب أي اعتراض أو إضافة قبل أن توقّع.';
+
+  @override
+  String get inspSaveComment => 'احفظ الملاحظة';
+
+  @override
+  String get inspCommentSaved => 'تم الحفظ.';
+
+  @override
+  String get inspCompareTitle => 'مقارنة الاستلام والتسليم';
+
+  @override
+  String get inspNoChanges => 'لا فروق بين الاستلام والتسليم.';
+
+  @override
+  String get inspColItem => 'البند';
+
+  @override
+  String get inspColBefore => 'عند الاستلام';
+
+  @override
+  String get inspColAfter => 'عند التسليم';
+
+  @override
+  String get inspMissingNow => 'غير مسجّل';
+
+  @override
+  String get inspBetter => 'تحسّن';
+
+  @override
+  String get inspDamageTotal => 'إجمالي الضرر المقدّر';
+
+  @override
+  String get inspPendingAssessment => 'بنود تنتظر قرارك';
+
+  @override
+  String get inspCompareNote =>
+      'تقرير توثيقي من سجلات الفحص، يُرفق مع إجراءات إيجار ولا يحلّ محلها، وليس رأياً قانونياً.';
+
+  @override
+  String get inspSar => 'ر.س';
+
+  @override
+  String get inspRecordTitle => 'سجل العقار';
+
+  @override
+  String get inspRecordEmpty =>
+      'ستظهر هنا أحداث العقار: العقود والفحوصات والمصروفات.';
+
+  @override
+  String get inspRecordNote => 'السجل يُحسب من سجلاتك فلا يتعارض معها.';
+
+  @override
+  String get inspEvLeaseStarted => 'بداية عقد';
+
+  @override
+  String get inspEvLeaseEnded => 'نهاية عقد';
+
+  @override
+  String get inspEvMoveIn => 'فحص استلام موثّق';
+
+  @override
+  String get inspEvMoveOut => 'فحص تسليم موثّق';
+
+  @override
+  String get inspEvExpense => 'مصروف';
+
+  @override
+  String inspPendingUploads(int count) {
+    return '$count صور بانتظار الرفع';
+  }
+
+  @override
+  String get inspPendingUploadsNote =>
+      'الصور محفوظة على جوالك وتُرفع تلقائياً عند توفر الاتصال.';
+
+  @override
+  String get inspRejectedUploads =>
+      'تعذّر رفع بعض الصور لأن الفحص قُفل بالتوقيع.';
+
+  @override
+  String get inspRetryUploads => 'أعد المحاولة الآن';
+
+  @override
+  String get inspCameraTitle => 'الكاميرا';
+
+  @override
+  String get inspCloseCamera => 'أغلق الكاميرا';
+
+  @override
+  String get inspVerifyFailedToLoad => 'تعذّر تنزيل الملف للتحقق.';
+
+  @override
+  String get inspSignIn => 'أدخل كلمة المرور أو الرمز لتأكيد هويتك';
+
+  @override
+  String inspStartedBy(String who) {
+    return 'بدأه $who';
+  }
+
+  @override
+  String get inspRecordProperty => 'العقار';
 }

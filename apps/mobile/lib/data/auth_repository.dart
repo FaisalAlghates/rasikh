@@ -6,9 +6,17 @@ import 'package:flutter/foundation.dart';
 
 /// The signed-in user plus the organizations/roles from the server-set custom claims.
 class SessionUser {
-  const SessionUser({required this.uid, this.orgs = const {}});
+  const SessionUser({
+    required this.uid,
+    this.orgs = const {},
+    this.hasPassword = false,
+    this.hasPhone = false,
+  });
   final String uid;
   final Map<String, List<String>> orgs;
+
+  /// How this person signs in, so a signature can ask for the matching proof (password or an SMS code).
+  final bool hasPassword, hasPhone;
 
   bool get hasOrg => orgs.isNotEmpty;
 
@@ -59,6 +67,14 @@ abstract class AuthRepository {
     required List<String> roles,
     required String locale,
   });
+
+  /// Proves the person is still here, right before a signature. Email accounts re-enter the password.
+  Future<void> reauthWithPassword(String password);
+
+  /// Phone accounts get a fresh SMS code, then confirm it.
+  Future<void> startReauthPhone();
+  Future<void> confirmReauthPhone(String code);
+
   Future<void> signOut();
 }
 
@@ -83,6 +99,8 @@ class FirebaseAuthRepository implements AuthRepository {
       final raw = (result.claims?['orgs'] as Map?) ?? const {};
       yield SessionUser(
         uid: user.uid,
+        hasPassword: user.providerData.any((p) => p.providerId == 'password'),
+        hasPhone: user.providerData.any((p) => p.providerId == 'phone'),
         orgs: {
           for (final e in raw.entries)
             e.key as String: [for (final r in (e.value as List)) r as String],
@@ -181,6 +199,44 @@ class FirebaseAuthRepository implements AuthRepository {
             ? OrgFailure.tooManyOrgs
             : OrgFailure.generic,
       );
+    }
+  }
+
+  @override
+  Future<void> reauthWithPassword(String password) async {
+    final u = _auth.currentUser;
+    if (u == null || u.email == null) {
+      throw const AuthException(AuthFailure.generic);
+    }
+    try {
+      await u.reauthenticateWithCredential(
+        EmailAuthProvider.credential(email: u.email!, password: password),
+      );
+      await u.getIdToken(true); // carry the fresh sign-in time to the server
+    } on FirebaseAuthException catch (e) {
+      throw _map(e);
+    }
+  }
+
+  @override
+  Future<void> startReauthPhone() async {
+    final phone = _auth.currentUser?.phoneNumber;
+    if (phone == null) throw const AuthException(AuthFailure.generic);
+    await startPhone(phone);
+  }
+
+  @override
+  Future<void> confirmReauthPhone(String code) async {
+    final u = _auth.currentUser;
+    final id = _verificationId;
+    if (u == null || id == null) throw const AuthException(AuthFailure.generic);
+    try {
+      await u.reauthenticateWithCredential(
+        PhoneAuthProvider.credential(verificationId: id, smsCode: code),
+      );
+      await u.getIdToken(true);
+    } on FirebaseAuthException catch (e) {
+      throw _map(e);
     }
   }
 

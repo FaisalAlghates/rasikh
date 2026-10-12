@@ -68,14 +68,16 @@ Acceptance: rules tests for every new collection; e2e owner adds unit → lease 
 
 ## Phase 5 — Guided inspections + Property Health Record
 
-- [ ] Templates per unit type (studio, apartment, villa)
-- [ ] App capture: in-app camera only; time, GPS, device, SHA-256; offline-first queue with retry
-- [ ] Two-party OTP sign-off; write-once afterwards
-- [ ] Move-out comparison; human marks wear vs damage + cost; Arabic PDF for Ejar
-- [ ] Health Record timeline fed by all modules; ownership transfer with consent
-- [ ] Web: view inspections, timeline, PDFs
+- [x] Templates per unit type (studio, apartment, villa)
+- [~] App capture: in-app camera only; time, GPS, device, SHA-256; offline-first queue with retry (queue, hashing and flows tested with fakes; the real camera and GPS code has not run on a device)
+- [~] Two-party sign-off; write-once afterwards (done with a fresh re-authentication instead of a dedicated OTP: SMS code for phone accounts, password for email accounts, and the server requires a sign-in no older than 5 minutes)
+- [~] Move-out comparison; human marks wear vs damage + cost; Arabic PDF for Ejar (web: print or save as PDF from the browser; the app shows the comparison on screen only)
+- [~] Health Record timeline fed by all modules; ownership transfer with consent (timeline done for leases, inspections and expenses; transfer to a new owner not built)
+- [x] Web: view inspections, timeline, PDFs
 
 Acceptance: tampered-file hash test; offline capture test; Arabic PDF renders correctly (RTL, shaping, fonts).
+
+**Status (2026-10-12): web, backend and Flutter screens built; verified on emulators (web) and with widget tests (app).** Done: shared model (3 unit-type templates, schemas, SHA-256, canonical digest, comparison, health-record timeline; 36 tests) with a Dart port that reproduces the TypeScript digest byte for byte (golden test); rules for inspections, items and evidence metadata (create-only, frozen after the first signature) and Storage rules that read Firestore to refuse uploads once an inspection is no longer a draft (19 tests); `signInspection` function: fresh-login check, owner first, complete checklist, a photo for every poor or damaged item, every stored file re-hashed against its capture hash, one shared digest, second signature seals (10 tests, including the tampered-file case). Web: inspections tab (start, room-by-room checklist, in-app camera with time/GPS/hash, integrity check, sign dialog, tenant comment), move-out comparison report, Property Health Record; one end-to-end test covers capture, a tampered file blocking the signature, two-party sealing, move-out comparison and the record, plus axe and phone-width overflow checks. App: inspections list/editor, offline-first evidence queue (kept on the phone, retried with backoff, order preserved, survives restarts), sign sheet, comparison, record tab (13 flow tests, 7 queue tests). Found and fixed on the way: a Phase 4 receipt input that widened the tenant page on phones. Gaps: the camera and GPS screens and the file-based queue have not run on a device or emulator (no Android SDK); the app's inspection screens were not run against the Firebase emulators; no server-side Arabic PDF; no ownership transfer; the SMS re-authentication path is covered by fakes only (the emulator e2e uses the password path); Storage receipts are still org-wide.
 
 ## Phase 6 — Maintenance + buildings/associations
 

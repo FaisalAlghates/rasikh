@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +23,7 @@ Future<void> main() async {
         appId: '1:000000000000:web:0000000000000000000000',
         messagingSenderId: '000000000000',
         projectId: 'demo-rasikh',
+        storageBucket: 'demo-rasikh.appspot.com',
       ),
     );
     // Android emulators reach the host machine at 10.0.2.2.
@@ -34,6 +37,8 @@ Future<void> main() async {
     );
     FirebaseFunctions.instanceFor(region: 'me-central2')
         .useFunctionsEmulator(host, 5001);
+    FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+    await FirebaseStorage.instance.useStorageEmulator(host, 9199);
   } else {
     await Firebase.initializeApp();
   }

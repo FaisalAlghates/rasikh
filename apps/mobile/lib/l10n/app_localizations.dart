@@ -1501,6 +1501,936 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'اكتب بريداً إلكترونياً صحيحاً'**
   String get opsInvalidEmail;
+
+  /// No description provided for @inspTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفحوصات'**
+  String get inspTab;
+
+  /// No description provided for @inspTabRecord.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل العقار'**
+  String get inspTabRecord;
+
+  /// No description provided for @inspBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get inspBack;
+
+  /// No description provided for @inspStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ فحصاً'**
+  String get inspStart;
+
+  /// No description provided for @inspLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'العقد'**
+  String get inspLease;
+
+  /// No description provided for @inspKind.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الفحص'**
+  String get inspKind;
+
+  /// No description provided for @inspMoveIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص الاستلام'**
+  String get inspMoveIn;
+
+  /// No description provided for @inspMoveOut.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص التسليم'**
+  String get inspMoveOut;
+
+  /// No description provided for @inspChoose.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر'**
+  String get inspChoose;
+
+  /// No description provided for @inspPickLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر العقد أولاً.'**
+  String get inspPickLease;
+
+  /// No description provided for @inspNeedLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عقداً أولاً لتبدأ فحص الاستلام.'**
+  String get inspNeedLease;
+
+  /// No description provided for @inspNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد فحوصات بعد.'**
+  String get inspNone;
+
+  /// No description provided for @inspBedrooms.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد غرف النوم'**
+  String get inspBedrooms;
+
+  /// No description provided for @inspBathrooms.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد دورات المياه'**
+  String get inspBathrooms;
+
+  /// No description provided for @inspComparedWithMoveIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيُقارَن هذا الفحص بفحص الاستلام الموثّق.'**
+  String get inspComparedWithMoveIn;
+
+  /// No description provided for @inspNoSealedMoveIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد فحص استلام موثّق لهذا العقد، لذلك لن تظهر مقارنة.'**
+  String get inspNoSealedMoveIn;
+
+  /// No description provided for @inspSaveFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الحفظ. حاول مرة أخرى.'**
+  String get inspSaveFailed;
+
+  /// No description provided for @inspUploadFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر رفع الصورة. حاول مرة أخرى.'**
+  String get inspUploadFailed;
+
+  /// No description provided for @inspStatusDraft.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسودة'**
+  String get inspStatusDraft;
+
+  /// No description provided for @inspStatusPendingSignatures.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار التوقيع'**
+  String get inspStatusPendingSignatures;
+
+  /// No description provided for @inspStatusSealed.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثّق ومقفل'**
+  String get inspStatusSealed;
+
+  /// No description provided for @inspProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'{done} من {total} بنداً'**
+  String inspProgress(int done, int total);
+
+  /// No description provided for @inspPartyOwner.
+  ///
+  /// In ar, this message translates to:
+  /// **'المالك'**
+  String get inspPartyOwner;
+
+  /// No description provided for @inspPartyTenant.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستأجر'**
+  String get inspPartyTenant;
+
+  /// No description provided for @inspSigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقّع'**
+  String get inspSigned;
+
+  /// No description provided for @inspNotSigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يوقّع بعد'**
+  String get inspNotSigned;
+
+  /// No description provided for @inspSealedNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتمل التوقيع من الطرفين ولا يمكن تعديل الفحص. بصمة المحتوى:'**
+  String get inspSealedNote;
+
+  /// No description provided for @inspFinishFirst.
+  ///
+  /// In ar, this message translates to:
+  /// **'أجب عن كل البنود قبل التوقيع.'**
+  String get inspFinishFirst;
+
+  /// No description provided for @inspWaitingTenant.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقّعت أنت. بانتظار توقيع المستأجر.'**
+  String get inspWaitingTenant;
+
+  /// No description provided for @inspComplementsEjar.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الفحص يكمّل نموذج التسليم الرسمي في إيجار ولا يحلّ محله.'**
+  String get inspComplementsEjar;
+
+  /// No description provided for @inspRoomEntrance.
+  ///
+  /// In ar, this message translates to:
+  /// **'المدخل'**
+  String get inspRoomEntrance;
+
+  /// No description provided for @inspRoomLiving.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصالة'**
+  String get inspRoomLiving;
+
+  /// No description provided for @inspRoomMajlis.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجلس'**
+  String get inspRoomMajlis;
+
+  /// No description provided for @inspRoomBedroom.
+  ///
+  /// In ar, this message translates to:
+  /// **'غرفة نوم'**
+  String get inspRoomBedroom;
+
+  /// No description provided for @inspRoomKitchen.
+  ///
+  /// In ar, this message translates to:
+  /// **'المطبخ'**
+  String get inspRoomKitchen;
+
+  /// No description provided for @inspRoomBathroom.
+  ///
+  /// In ar, this message translates to:
+  /// **'دورة المياه'**
+  String get inspRoomBathroom;
+
+  /// No description provided for @inspRoomBalcony.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشرفة'**
+  String get inspRoomBalcony;
+
+  /// No description provided for @inspRoomYard.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحوش'**
+  String get inspRoomYard;
+
+  /// No description provided for @inspRoomParking.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقف'**
+  String get inspRoomParking;
+
+  /// No description provided for @inspRoomRoof.
+  ///
+  /// In ar, this message translates to:
+  /// **'السطح'**
+  String get inspRoomRoof;
+
+  /// No description provided for @inspRoomMeters.
+  ///
+  /// In ar, this message translates to:
+  /// **'العدادات'**
+  String get inspRoomMeters;
+
+  /// No description provided for @inspItemDoor.
+  ///
+  /// In ar, this message translates to:
+  /// **'الباب'**
+  String get inspItemDoor;
+
+  /// No description provided for @inspItemLock.
+  ///
+  /// In ar, this message translates to:
+  /// **'القفل'**
+  String get inspItemLock;
+
+  /// No description provided for @inspItemIntercom.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاتصال الداخلي'**
+  String get inspItemIntercom;
+
+  /// No description provided for @inspItemFloor.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأرضية'**
+  String get inspItemFloor;
+
+  /// No description provided for @inspItemLighting.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإنارة'**
+  String get inspItemLighting;
+
+  /// No description provided for @inspItemWalls.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجدران'**
+  String get inspItemWalls;
+
+  /// No description provided for @inspItemCeiling.
+  ///
+  /// In ar, this message translates to:
+  /// **'السقف'**
+  String get inspItemCeiling;
+
+  /// No description provided for @inspItemWindows.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوافذ'**
+  String get inspItemWindows;
+
+  /// No description provided for @inspItemOutlets.
+  ///
+  /// In ar, this message translates to:
+  /// **'المقابس'**
+  String get inspItemOutlets;
+
+  /// No description provided for @inspItemAc.
+  ///
+  /// In ar, this message translates to:
+  /// **'المكيّف'**
+  String get inspItemAc;
+
+  /// No description provided for @inspItemDoors.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأبواب'**
+  String get inspItemDoors;
+
+  /// No description provided for @inspItemWardrobe.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدولاب'**
+  String get inspItemWardrobe;
+
+  /// No description provided for @inspItemCabinets.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخزائن'**
+  String get inspItemCabinets;
+
+  /// No description provided for @inspItemCountertop.
+  ///
+  /// In ar, this message translates to:
+  /// **'سطح العمل'**
+  String get inspItemCountertop;
+
+  /// No description provided for @inspItemSink.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحوض'**
+  String get inspItemSink;
+
+  /// No description provided for @inspItemFaucet.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصنبور'**
+  String get inspItemFaucet;
+
+  /// No description provided for @inspItemHookup.
+  ///
+  /// In ar, this message translates to:
+  /// **'توصيلة الغاز أو الكهرباء'**
+  String get inspItemHookup;
+
+  /// No description provided for @inspItemExhaust.
+  ///
+  /// In ar, this message translates to:
+  /// **'المروحة الشافطة'**
+  String get inspItemExhaust;
+
+  /// No description provided for @inspItemToilet.
+  ///
+  /// In ar, this message translates to:
+  /// **'المرحاض'**
+  String get inspItemToilet;
+
+  /// No description provided for @inspItemBasin.
+  ///
+  /// In ar, this message translates to:
+  /// **'المغسلة'**
+  String get inspItemBasin;
+
+  /// No description provided for @inspItemShower.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدش'**
+  String get inspItemShower;
+
+  /// No description provided for @inspItemHeater.
+  ///
+  /// In ar, this message translates to:
+  /// **'سخّان المياه'**
+  String get inspItemHeater;
+
+  /// No description provided for @inspItemRailing.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدرابزين'**
+  String get inspItemRailing;
+
+  /// No description provided for @inspItemFence.
+  ///
+  /// In ar, this message translates to:
+  /// **'السور'**
+  String get inspItemFence;
+
+  /// No description provided for @inspItemGate.
+  ///
+  /// In ar, this message translates to:
+  /// **'البوابة'**
+  String get inspItemGate;
+
+  /// No description provided for @inspItemGround.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأرضية الخارجية'**
+  String get inspItemGround;
+
+  /// No description provided for @inspItemWaterproofing.
+  ///
+  /// In ar, this message translates to:
+  /// **'العزل'**
+  String get inspItemWaterproofing;
+
+  /// No description provided for @inspItemAccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'باب السطح'**
+  String get inspItemAccess;
+
+  /// No description provided for @inspItemTank.
+  ///
+  /// In ar, this message translates to:
+  /// **'خزان المياه'**
+  String get inspItemTank;
+
+  /// No description provided for @inspItemElectricity.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدّاد الكهرباء (اكتب القراءة في الملاحظة)'**
+  String get inspItemElectricity;
+
+  /// No description provided for @inspItemWater.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدّاد المياه (اكتب القراءة في الملاحظة)'**
+  String get inspItemWater;
+
+  /// No description provided for @inspItemGas.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدّاد الغاز (اكتب القراءة في الملاحظة)'**
+  String get inspItemGas;
+
+  /// No description provided for @inspCondGood.
+  ///
+  /// In ar, this message translates to:
+  /// **'سليم'**
+  String get inspCondGood;
+
+  /// No description provided for @inspCondFair.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقبول'**
+  String get inspCondFair;
+
+  /// No description provided for @inspCondPoor.
+  ///
+  /// In ar, this message translates to:
+  /// **'رديء'**
+  String get inspCondPoor;
+
+  /// No description provided for @inspCondDamaged.
+  ///
+  /// In ar, this message translates to:
+  /// **'تالف'**
+  String get inspCondDamaged;
+
+  /// No description provided for @inspCondition.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get inspCondition;
+
+  /// No description provided for @inspNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة'**
+  String get inspNote;
+
+  /// No description provided for @inspNotAnswered.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تُسجَّل حالته'**
+  String get inspNotAnswered;
+
+  /// No description provided for @inspWasAtMoveIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'عند الاستلام: {cond}'**
+  String inspWasAtMoveIn(String cond);
+
+  /// No description provided for @inspAllGood.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل بنود الغرفة سليمة'**
+  String get inspAllGood;
+
+  /// No description provided for @inspRoomPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة للغرفة'**
+  String get inspRoomPhoto;
+
+  /// No description provided for @inspPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'صوّر'**
+  String get inspPhoto;
+
+  /// No description provided for @inspPhotoOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصوير: {what}'**
+  String inspPhotoOf(String what);
+
+  /// No description provided for @inspCapture.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقط الصورة'**
+  String get inspCapture;
+
+  /// No description provided for @inspCameraDenied.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم نتمكن من فتح الكاميرا. اسمح بالوصول إليها من إعدادات المتصفح ثم أعد المحاولة.'**
+  String get inspCameraDenied;
+
+  /// No description provided for @inspCaptureNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُسجَّل الصورة بوقتها وموقعها وبصمة SHA-256 لحظة التقاطها، ولا يمكن رفع صور من المعرض.'**
+  String get inspCaptureNote;
+
+  /// No description provided for @inspEvidenceAlt.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة من الفحص'**
+  String get inspEvidenceAlt;
+
+  /// No description provided for @inspHasGps.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع مسجّل'**
+  String get inspHasGps;
+
+  /// No description provided for @inspNoGps.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدون موقع'**
+  String get inspNoGps;
+
+  /// No description provided for @inspVerify.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق من سلامة الملف'**
+  String get inspVerify;
+
+  /// No description provided for @inspVerifying.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ التحقق'**
+  String get inspVerifying;
+
+  /// No description provided for @inspVerifiedOk.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف مطابق للبصمة المسجّلة'**
+  String get inspVerifiedOk;
+
+  /// No description provided for @inspVerifiedBad.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف لا يطابق البصمة المسجّلة'**
+  String get inspVerifiedBad;
+
+  /// No description provided for @inspAssessment.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقييم'**
+  String get inspAssessment;
+
+  /// No description provided for @inspAssessWear.
+  ///
+  /// In ar, this message translates to:
+  /// **'استهلاك عادي'**
+  String get inspAssessWear;
+
+  /// No description provided for @inspAssessDamage.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضرر على المستأجر'**
+  String get inspAssessDamage;
+
+  /// No description provided for @inspCostSar.
+  ///
+  /// In ar, this message translates to:
+  /// **'التكلفة (ر.س)'**
+  String get inspCostSar;
+
+  /// No description provided for @inspAssessNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'القرار لك: الشاشة لا تحكم نيابةً عنك، والمبلغ يخضع لاتفاقكما ولشروط عقد إيجار.'**
+  String get inspAssessNote;
+
+  /// No description provided for @inspNotAssessed.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يُقيَّم بعد'**
+  String get inspNotAssessed;
+
+  /// No description provided for @inspSignAsOwner.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقّع كمالك'**
+  String get inspSignAsOwner;
+
+  /// No description provided for @inspSignAsTenant.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقّع كمستأجر'**
+  String get inspSignAsTenant;
+
+  /// No description provided for @inspSignExplain.
+  ///
+  /// In ar, this message translates to:
+  /// **'للتوقيع نتأكد أنك أنت: أدخل ما يُثبت هويتك الآن. بعد توقيع الطرفين يُقفل الفحص ولا يمكن تعديله.'**
+  String get inspSignExplain;
+
+  /// No description provided for @inspConfirmPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور'**
+  String get inspConfirmPassword;
+
+  /// No description provided for @inspConfirmAndSign.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكّد ووقّع'**
+  String get inspConfirmAndSign;
+
+  /// No description provided for @inspSmsCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التحقق المرسل لجوالك'**
+  String get inspSmsCode;
+
+  /// No description provided for @inspSendCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل رمز التحقق'**
+  String get inspSendCode;
+
+  /// No description provided for @inspSignLegal.
+  ///
+  /// In ar, this message translates to:
+  /// **'التوقيع هنا توثيق داخل راسخ، ولا يغني عن إجراءات إيجار الرسمية.'**
+  String get inspSignLegal;
+
+  /// No description provided for @inspErrGeneric.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر التوقيع. حاول مرة أخرى.'**
+  String get inspErrGeneric;
+
+  /// No description provided for @inspErrAuth.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر التحقق من هويتك. راجع البيانات وحاول مرة أخرى.'**
+  String get inspErrAuth;
+
+  /// No description provided for @inspErrRecentLoginRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت صلاحية التحقق، أعد المحاولة.'**
+  String get inspErrRecentLoginRequired;
+
+  /// No description provided for @inspErrChecklistIncomplete.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما زالت هناك بنود بلا إجابة.'**
+  String get inspErrChecklistIncomplete;
+
+  /// No description provided for @inspErrEvidenceMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل بند رديء أو تالف يحتاج صورة.'**
+  String get inspErrEvidenceMissing;
+
+  /// No description provided for @inspErrMediaHashMismatch.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّر أحد الملفات عن بصمته المسجّلة، ولا يمكن التوقيع.'**
+  String get inspErrMediaHashMismatch;
+
+  /// No description provided for @inspErrOwnerMustSignFirst.
+  ///
+  /// In ar, this message translates to:
+  /// **'يوقّع المالك أولاً.'**
+  String get inspErrOwnerMustSignFirst;
+
+  /// No description provided for @inspErrAlreadySigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقّعت سابقاً.'**
+  String get inspErrAlreadySigned;
+
+  /// No description provided for @inspErrAlreadySealed.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفحص مقفل بتوقيع الطرفين.'**
+  String get inspErrAlreadySealed;
+
+  /// No description provided for @inspErrContentChanged.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّر محتوى الفحص بعد التوقيع الأول.'**
+  String get inspErrContentChanged;
+
+  /// No description provided for @inspErrMoveInNotSealed.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص الاستلام لم يُوثَّق بعد.'**
+  String get inspErrMoveInNotSealed;
+
+  /// No description provided for @inspErrNotAParty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لست طرفاً في هذا الفحص.'**
+  String get inspErrNotAParty;
+
+  /// No description provided for @inspErrSamePerson.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن أن يوقّع الشخص نفسه بصفتين.'**
+  String get inspErrSamePerson;
+
+  /// No description provided for @inspTenantComment.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات المستأجر'**
+  String get inspTenantComment;
+
+  /// No description provided for @inspTenantCommentHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب أي اعتراض أو إضافة قبل أن توقّع.'**
+  String get inspTenantCommentHint;
+
+  /// No description provided for @inspSaveComment.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ الملاحظة'**
+  String get inspSaveComment;
+
+  /// No description provided for @inspCommentSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحفظ.'**
+  String get inspCommentSaved;
+
+  /// No description provided for @inspCompareTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقارنة الاستلام والتسليم'**
+  String get inspCompareTitle;
+
+  /// No description provided for @inspNoChanges.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا فروق بين الاستلام والتسليم.'**
+  String get inspNoChanges;
+
+  /// No description provided for @inspColItem.
+  ///
+  /// In ar, this message translates to:
+  /// **'البند'**
+  String get inspColItem;
+
+  /// No description provided for @inspColBefore.
+  ///
+  /// In ar, this message translates to:
+  /// **'عند الاستلام'**
+  String get inspColBefore;
+
+  /// No description provided for @inspColAfter.
+  ///
+  /// In ar, this message translates to:
+  /// **'عند التسليم'**
+  String get inspColAfter;
+
+  /// No description provided for @inspMissingNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مسجّل'**
+  String get inspMissingNow;
+
+  /// No description provided for @inspBetter.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحسّن'**
+  String get inspBetter;
+
+  /// No description provided for @inspDamageTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي الضرر المقدّر'**
+  String get inspDamageTotal;
+
+  /// No description provided for @inspPendingAssessment.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنود تنتظر قرارك'**
+  String get inspPendingAssessment;
+
+  /// No description provided for @inspCompareNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقرير توثيقي من سجلات الفحص، يُرفق مع إجراءات إيجار ولا يحلّ محلها، وليس رأياً قانونياً.'**
+  String get inspCompareNote;
+
+  /// No description provided for @inspSar.
+  ///
+  /// In ar, this message translates to:
+  /// **'ر.س'**
+  String get inspSar;
+
+  /// No description provided for @inspRecordTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل العقار'**
+  String get inspRecordTitle;
+
+  /// No description provided for @inspRecordEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستظهر هنا أحداث العقار: العقود والفحوصات والمصروفات.'**
+  String get inspRecordEmpty;
+
+  /// No description provided for @inspRecordNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجل يُحسب من سجلاتك فلا يتعارض معها.'**
+  String get inspRecordNote;
+
+  /// No description provided for @inspEvLeaseStarted.
+  ///
+  /// In ar, this message translates to:
+  /// **'بداية عقد'**
+  String get inspEvLeaseStarted;
+
+  /// No description provided for @inspEvLeaseEnded.
+  ///
+  /// In ar, this message translates to:
+  /// **'نهاية عقد'**
+  String get inspEvLeaseEnded;
+
+  /// No description provided for @inspEvMoveIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص استلام موثّق'**
+  String get inspEvMoveIn;
+
+  /// No description provided for @inspEvMoveOut.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص تسليم موثّق'**
+  String get inspEvMoveOut;
+
+  /// No description provided for @inspEvExpense.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصروف'**
+  String get inspEvExpense;
+
+  /// No description provided for @inspPendingUploads.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} صور بانتظار الرفع'**
+  String inspPendingUploads(int count);
+
+  /// No description provided for @inspPendingUploadsNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصور محفوظة على جوالك وتُرفع تلقائياً عند توفر الاتصال.'**
+  String get inspPendingUploadsNote;
+
+  /// No description provided for @inspRejectedUploads.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر رفع بعض الصور لأن الفحص قُفل بالتوقيع.'**
+  String get inspRejectedUploads;
+
+  /// No description provided for @inspRetryUploads.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعد المحاولة الآن'**
+  String get inspRetryUploads;
+
+  /// No description provided for @inspCameraTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكاميرا'**
+  String get inspCameraTitle;
+
+  /// No description provided for @inspCloseCamera.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغلق الكاميرا'**
+  String get inspCloseCamera;
+
+  /// No description provided for @inspVerifyFailedToLoad.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تنزيل الملف للتحقق.'**
+  String get inspVerifyFailedToLoad;
+
+  /// No description provided for @inspSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل كلمة المرور أو الرمز لتأكيد هويتك'**
+  String get inspSignIn;
+
+  /// No description provided for @inspStartedBy.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدأه {who}'**
+  String inspStartedBy(String who);
+
+  /// No description provided for @inspRecordProperty.
+  ///
+  /// In ar, this message translates to:
+  /// **'العقار'**
+  String get inspRecordProperty;
 }
 
 class _AppLocalizationsDelegate

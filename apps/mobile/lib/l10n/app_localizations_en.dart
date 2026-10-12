@@ -743,4 +743,507 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get opsInvalidEmail => 'Enter a valid email address';
+
+  @override
+  String get inspTab => 'Inspections';
+
+  @override
+  String get inspTabRecord => 'Property record';
+
+  @override
+  String get inspBack => 'Back';
+
+  @override
+  String get inspStart => 'Start an inspection';
+
+  @override
+  String get inspLease => 'Lease';
+
+  @override
+  String get inspKind => 'Inspection type';
+
+  @override
+  String get inspMoveIn => 'Move-in inspection';
+
+  @override
+  String get inspMoveOut => 'Move-out inspection';
+
+  @override
+  String get inspChoose => 'Choose';
+
+  @override
+  String get inspPickLease => 'Pick the lease first.';
+
+  @override
+  String get inspNeedLease =>
+      'Add a lease first to start a move-in inspection.';
+
+  @override
+  String get inspNone => 'No inspections yet.';
+
+  @override
+  String get inspBedrooms => 'Bedrooms';
+
+  @override
+  String get inspBathrooms => 'Bathrooms';
+
+  @override
+  String get inspComparedWithMoveIn =>
+      'This inspection will be compared with the signed move-in.';
+
+  @override
+  String get inspNoSealedMoveIn =>
+      'There is no signed move-in for this lease, so no comparison will be shown.';
+
+  @override
+  String get inspSaveFailed => 'Could not save. Try again.';
+
+  @override
+  String get inspUploadFailed => 'Could not upload the photo. Try again.';
+
+  @override
+  String get inspStatusDraft => 'Draft';
+
+  @override
+  String get inspStatusPendingSignatures => 'Waiting for signatures';
+
+  @override
+  String get inspStatusSealed => 'Signed and locked';
+
+  @override
+  String inspProgress(int done, int total) {
+    return '$done of $total items';
+  }
+
+  @override
+  String get inspPartyOwner => 'Owner';
+
+  @override
+  String get inspPartyTenant => 'Tenant';
+
+  @override
+  String get inspSigned => 'Signed';
+
+  @override
+  String get inspNotSigned => 'Not signed yet';
+
+  @override
+  String get inspSealedNote =>
+      'Both parties have signed and the inspection can no longer change. Content fingerprint:';
+
+  @override
+  String get inspFinishFirst => 'Answer every item before signing.';
+
+  @override
+  String get inspWaitingTenant =>
+      'You have signed. Waiting for the tenant to sign.';
+
+  @override
+  String get inspComplementsEjar =>
+      'This inspection complements Ejar\'s official handover form; it does not replace it.';
+
+  @override
+  String get inspRoomEntrance => 'Entrance';
+
+  @override
+  String get inspRoomLiving => 'Living room';
+
+  @override
+  String get inspRoomMajlis => 'Majlis';
+
+  @override
+  String get inspRoomBedroom => 'Bedroom';
+
+  @override
+  String get inspRoomKitchen => 'Kitchen';
+
+  @override
+  String get inspRoomBathroom => 'Bathroom';
+
+  @override
+  String get inspRoomBalcony => 'Balcony';
+
+  @override
+  String get inspRoomYard => 'Yard';
+
+  @override
+  String get inspRoomParking => 'Parking';
+
+  @override
+  String get inspRoomRoof => 'Roof';
+
+  @override
+  String get inspRoomMeters => 'Meters';
+
+  @override
+  String get inspItemDoor => 'Door';
+
+  @override
+  String get inspItemLock => 'Lock';
+
+  @override
+  String get inspItemIntercom => 'Intercom';
+
+  @override
+  String get inspItemFloor => 'Floor';
+
+  @override
+  String get inspItemLighting => 'Lighting';
+
+  @override
+  String get inspItemWalls => 'Walls';
+
+  @override
+  String get inspItemCeiling => 'Ceiling';
+
+  @override
+  String get inspItemWindows => 'Windows';
+
+  @override
+  String get inspItemOutlets => 'Outlets';
+
+  @override
+  String get inspItemAc => 'Air conditioner';
+
+  @override
+  String get inspItemDoors => 'Doors';
+
+  @override
+  String get inspItemWardrobe => 'Wardrobe';
+
+  @override
+  String get inspItemCabinets => 'Cabinets';
+
+  @override
+  String get inspItemCountertop => 'Countertop';
+
+  @override
+  String get inspItemSink => 'Sink';
+
+  @override
+  String get inspItemFaucet => 'Faucet';
+
+  @override
+  String get inspItemHookup => 'Gas or electric hookup';
+
+  @override
+  String get inspItemExhaust => 'Exhaust fan';
+
+  @override
+  String get inspItemToilet => 'Toilet';
+
+  @override
+  String get inspItemBasin => 'Basin';
+
+  @override
+  String get inspItemShower => 'Shower';
+
+  @override
+  String get inspItemHeater => 'Water heater';
+
+  @override
+  String get inspItemRailing => 'Railing';
+
+  @override
+  String get inspItemFence => 'Fence';
+
+  @override
+  String get inspItemGate => 'Gate';
+
+  @override
+  String get inspItemGround => 'Outdoor ground';
+
+  @override
+  String get inspItemWaterproofing => 'Waterproofing';
+
+  @override
+  String get inspItemAccess => 'Roof access';
+
+  @override
+  String get inspItemTank => 'Water tank';
+
+  @override
+  String get inspItemElectricity =>
+      'Electricity meter (write the reading in the note)';
+
+  @override
+  String get inspItemWater => 'Water meter (write the reading in the note)';
+
+  @override
+  String get inspItemGas => 'Gas meter (write the reading in the note)';
+
+  @override
+  String get inspCondGood => 'Good';
+
+  @override
+  String get inspCondFair => 'Fair';
+
+  @override
+  String get inspCondPoor => 'Poor';
+
+  @override
+  String get inspCondDamaged => 'Damaged';
+
+  @override
+  String get inspCondition => 'Condition';
+
+  @override
+  String get inspNote => 'Note';
+
+  @override
+  String get inspNotAnswered => 'No condition recorded';
+
+  @override
+  String inspWasAtMoveIn(String cond) {
+    return 'At move-in: $cond';
+  }
+
+  @override
+  String get inspAllGood => 'Whole room is in good condition';
+
+  @override
+  String get inspRoomPhoto => 'Room photo';
+
+  @override
+  String get inspPhoto => 'Photo';
+
+  @override
+  String inspPhotoOf(String what) {
+    return 'Photo: $what';
+  }
+
+  @override
+  String get inspCapture => 'Take the photo';
+
+  @override
+  String get inspCameraDenied =>
+      'We could not open the camera. Allow camera access in the browser settings and try again.';
+
+  @override
+  String get inspCaptureNote =>
+      'The photo is stamped with its time, location and SHA-256 at the moment of capture. Photos cannot be uploaded from the gallery.';
+
+  @override
+  String get inspEvidenceAlt => 'Inspection photo';
+
+  @override
+  String get inspHasGps => 'Location recorded';
+
+  @override
+  String get inspNoGps => 'No location';
+
+  @override
+  String get inspVerify => 'Check file integrity';
+
+  @override
+  String get inspVerifying => 'Checking';
+
+  @override
+  String get inspVerifiedOk => 'The file matches its recorded fingerprint';
+
+  @override
+  String get inspVerifiedBad =>
+      'The file does not match its recorded fingerprint';
+
+  @override
+  String get inspAssessment => 'Assessment';
+
+  @override
+  String get inspAssessWear => 'Normal wear';
+
+  @override
+  String get inspAssessDamage => 'Damage the tenant answers for';
+
+  @override
+  String get inspCostSar => 'Cost (SAR)';
+
+  @override
+  String get inspAssessNote =>
+      'The decision is yours: the screen never judges for you, and the amount depends on your agreement and the Ejar contract terms.';
+
+  @override
+  String get inspNotAssessed => 'Not assessed yet';
+
+  @override
+  String get inspSignAsOwner => 'Sign as owner';
+
+  @override
+  String get inspSignAsTenant => 'Sign as tenant';
+
+  @override
+  String get inspSignExplain =>
+      'To sign we confirm it is you: provide your proof of identity now. Once both parties sign, the inspection is locked and cannot be edited.';
+
+  @override
+  String get inspConfirmPassword => 'Password';
+
+  @override
+  String get inspConfirmAndSign => 'Confirm and sign';
+
+  @override
+  String get inspSmsCode => 'Verification code sent to your phone';
+
+  @override
+  String get inspSendCode => 'Send verification code';
+
+  @override
+  String get inspSignLegal =>
+      'Signing here documents the inspection inside Rasikh; it does not replace the official Ejar procedures.';
+
+  @override
+  String get inspErrGeneric => 'Could not sign. Try again.';
+
+  @override
+  String get inspErrAuth =>
+      'We could not verify your identity. Check the details and try again.';
+
+  @override
+  String get inspErrRecentLoginRequired =>
+      'The verification expired, try again.';
+
+  @override
+  String get inspErrChecklistIncomplete => 'Some items still have no answer.';
+
+  @override
+  String get inspErrEvidenceMissing =>
+      'Every poor or damaged item needs a photo.';
+
+  @override
+  String get inspErrMediaHashMismatch =>
+      'A file no longer matches its recorded fingerprint, so signing is blocked.';
+
+  @override
+  String get inspErrOwnerMustSignFirst => 'The owner signs first.';
+
+  @override
+  String get inspErrAlreadySigned => 'You have already signed.';
+
+  @override
+  String get inspErrAlreadySealed =>
+      'The inspection is locked by both signatures.';
+
+  @override
+  String get inspErrContentChanged =>
+      'The inspection changed after the first signature.';
+
+  @override
+  String get inspErrMoveInNotSealed =>
+      'The move-in inspection is not signed yet.';
+
+  @override
+  String get inspErrNotAParty => 'You are not a party to this inspection.';
+
+  @override
+  String get inspErrSamePerson => 'One person cannot sign as both parties.';
+
+  @override
+  String get inspTenantComment => 'Tenant\'s comments';
+
+  @override
+  String get inspTenantCommentHint =>
+      'Write any objection or addition before you sign.';
+
+  @override
+  String get inspSaveComment => 'Save comment';
+
+  @override
+  String get inspCommentSaved => 'Saved.';
+
+  @override
+  String get inspCompareTitle => 'Move-in vs move-out';
+
+  @override
+  String get inspNoChanges => 'No differences between move-in and move-out.';
+
+  @override
+  String get inspColItem => 'Item';
+
+  @override
+  String get inspColBefore => 'At move-in';
+
+  @override
+  String get inspColAfter => 'At move-out';
+
+  @override
+  String get inspMissingNow => 'Not recorded';
+
+  @override
+  String get inspBetter => 'improved';
+
+  @override
+  String get inspDamageTotal => 'Estimated damage total';
+
+  @override
+  String get inspPendingAssessment => 'Items waiting for your decision';
+
+  @override
+  String get inspCompareNote =>
+      'A documentation report built from the inspection records. Attach it alongside the Ejar procedures; it does not replace them and is not legal advice.';
+
+  @override
+  String get inspSar => 'SAR';
+
+  @override
+  String get inspRecordTitle => 'Property record';
+
+  @override
+  String get inspRecordEmpty =>
+      'The property\'s events will appear here: leases, inspections and expenses.';
+
+  @override
+  String get inspRecordNote =>
+      'The record is computed from your own records, so it can never contradict them.';
+
+  @override
+  String get inspEvLeaseStarted => 'Lease started';
+
+  @override
+  String get inspEvLeaseEnded => 'Lease ended';
+
+  @override
+  String get inspEvMoveIn => 'Signed move-in inspection';
+
+  @override
+  String get inspEvMoveOut => 'Signed move-out inspection';
+
+  @override
+  String get inspEvExpense => 'Expense';
+
+  @override
+  String inspPendingUploads(int count) {
+    return '$count photos waiting to upload';
+  }
+
+  @override
+  String get inspPendingUploadsNote =>
+      'Photos are kept on your phone and upload automatically when you are online.';
+
+  @override
+  String get inspRejectedUploads =>
+      'Some photos could not be uploaded because the inspection was already signed.';
+
+  @override
+  String get inspRetryUploads => 'Retry now';
+
+  @override
+  String get inspCameraTitle => 'Camera';
+
+  @override
+  String get inspCloseCamera => 'Close camera';
+
+  @override
+  String get inspVerifyFailedToLoad =>
+      'Could not download the file to check it.';
+
+  @override
+  String get inspSignIn =>
+      'Enter your password or code to confirm your identity';
+
+  @override
+  String inspStartedBy(String who) {
+    return 'Started by $who';
+  }
+
+  @override
+  String get inspRecordProperty => 'Property';
 }

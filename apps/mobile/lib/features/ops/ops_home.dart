@@ -53,6 +53,13 @@ class OpsHome extends ConsumerWidget {
           else
             LeaseView(leaseId: lease.id, canManage: false),
           const SizedBox(height: 20),
+          _NavRow(
+            navKey: const Key('nav-inspections'),
+            icon: Icons.fact_check_outlined,
+            label: l10n.inspTab,
+            route: Routes.inspections,
+          ),
+          const SizedBox(height: 10),
           RemindersCard(reminders: reminders, leases: data.leases),
         ],
       );
@@ -213,6 +220,12 @@ class _StaffOverview extends StatelessWidget {
           icon: Icons.description_outlined,
           label: l10n.opsTabLeases,
           route: Routes.leases,
+        ),
+        _NavRow(
+          navKey: const Key('nav-inspections'),
+          icon: Icons.fact_check_outlined,
+          label: l10n.inspTab,
+          route: Routes.inspections,
         ),
         _NavRow(
           navKey: const Key('nav-expenses'),
