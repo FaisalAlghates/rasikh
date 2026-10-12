@@ -1996,4 +1996,53 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get aiFake =>
       'وضع تجريبي: الإجابة من حقائق سجلاتك مباشرة بدون نموذج لغوي.';
+
+  @override
+  String get accTab => 'خصوصيتي';
+
+  @override
+  String get accIntro =>
+      'وفق نظام حماية البيانات الشخصية، لك أن تحصل على نسخة من بياناتك أو تحذف حسابك.';
+
+  @override
+  String get accExport => 'نزّل نسخة من بياناتي';
+
+  @override
+  String get accExporting => 'جاري التجهيز…';
+
+  @override
+  String get accExported => 'تم تنزيل الملف.';
+
+  @override
+  String get accDeleteTitle => 'حذف حسابي';
+
+  @override
+  String get accDeleteWarn =>
+      'يُحذف حسابك وبياناتك الشخصية وسجلات الوساطة الخاصة بك نهائياً. سجلات المنظمة التي يعتمد عليها غيرك (مثل عقد وقّعه مالك) تبقى لدى المنظمة. لا يمكن التراجع.';
+
+  @override
+  String get accPassword => 'كلمة المرور للتأكيد';
+
+  @override
+  String get accConfirm => 'أفهم أن الحذف نهائي';
+
+  @override
+  String get accDelete => 'احذف حسابي نهائياً';
+
+  @override
+  String get accPhoneNote =>
+      'حسابك بالجوال: لحذفه تواصل معنا ليتم التحقق من هويتك.';
+
+  @override
+  String get accWrongPassword => 'كلمة المرور غير صحيحة.';
+
+  @override
+  String get accTransfer =>
+      'أنت المالك الوحيد لمنظمة فيها أعضاء. انقل الملكية أولاً.';
+
+  @override
+  String get accFailed => 'تعذّر تنفيذ الطلب. حاول مرة أخرى.';
+
+  @override
+  String get accPolicy => 'سياسة الخصوصية';
 }

@@ -2027,4 +2027,53 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get aiFake =>
       'Test mode: the answer comes straight from the facts in your records, without a language model.';
+
+  @override
+  String get accTab => 'My privacy';
+
+  @override
+  String get accIntro =>
+      'Under the Personal Data Protection Law you can get a copy of your data or delete your account.';
+
+  @override
+  String get accExport => 'Download a copy of my data';
+
+  @override
+  String get accExporting => 'Preparing…';
+
+  @override
+  String get accExported => 'The file was downloaded.';
+
+  @override
+  String get accDeleteTitle => 'Delete my account';
+
+  @override
+  String get accDeleteWarn =>
+      'Your account, personal data and your brokerage records are deleted permanently. Organization records that others rely on (such as a lease an owner signed) stay with the organization. This cannot be undone.';
+
+  @override
+  String get accPassword => 'Password to confirm';
+
+  @override
+  String get accConfirm => 'I understand the deletion is permanent';
+
+  @override
+  String get accDelete => 'Delete my account permanently';
+
+  @override
+  String get accPhoneNote =>
+      'Your account uses a phone number: contact us to delete it so we can verify your identity.';
+
+  @override
+  String get accWrongPassword => 'The password is not correct.';
+
+  @override
+  String get accTransfer =>
+      'You are the only owner of an organization that has members. Transfer ownership first.';
+
+  @override
+  String get accFailed => 'The request could not be completed. Try again.';
+
+  @override
+  String get accPolicy => 'Privacy policy';
 }

@@ -58,6 +58,8 @@ class OpsHome extends ConsumerWidget {
               label: l10n.brkTab,
               route: Routes.broker,
             ),
+            const SizedBox(height: 10),
+            _privacyRow(l10n),
           ],
         );
       }
@@ -112,6 +114,8 @@ class OpsHome extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
           ],
+          _privacyRow(l10n),
+          const SizedBox(height: 10),
           RemindersCard(reminders: reminders, leases: data.leases),
         ],
       );
@@ -124,6 +128,14 @@ class OpsHome extends ConsumerWidget {
     );
   }
 }
+
+/// PDPL rights entry, shown to everyone with a workspace.
+Widget _privacyRow(AppLocalizations l10n) => _NavRow(
+  navKey: const Key('nav-privacy'),
+  icon: Icons.shield_outlined,
+  label: l10n.accTab,
+  route: Routes.privacy,
+);
 
 class _StaffOverview extends StatelessWidget {
   const _StaffOverview({
@@ -304,6 +316,7 @@ class _StaffOverview extends StatelessWidget {
           label: l10n.aiTab,
           route: Routes.assistant,
         ),
+        _privacyRow(l10n),
         if (broker)
           _NavRow(
             navKey: const Key('nav-broker'),
