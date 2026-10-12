@@ -44,6 +44,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const t = useTranslations('landing');
   const h = useTranslations('home');
   const c = useTranslations('common');
+  const lg = useTranslations('legal');
   const lang = locale === 'ar' ? 'ar-SA-u-nu-latn' : 'en-GB';
   const fmt = (iso: string) =>
     new Intl.DateTimeFormat(lang, { year: 'numeric', month: 'long', day: 'numeric' }).format(
@@ -297,6 +298,17 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
               <span className="display-font text-text">{c('appName')}</span>
             </span>
             <p className="max-w-md">{t('footerNote')}</p>
+            <nav aria-label={lg('footerPrivacy')} className="flex w-full flex-wrap gap-x-6 gap-y-2">
+              <Link href="/privacy" className="underline-offset-4 hover:underline">
+                {lg('footerPrivacy')}
+              </Link>
+              <Link href="/terms" className="underline-offset-4 hover:underline">
+                {lg('footerTerms')}
+              </Link>
+              <Link href="/disclaimers" className="underline-offset-4 hover:underline">
+                {lg('footerDisclaimers')}
+              </Link>
+            </nav>
           </footer>
         </div>
       </section>

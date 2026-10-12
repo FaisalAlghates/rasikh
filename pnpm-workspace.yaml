@@ -12,3 +12,6 @@ allowBuilds:
   '@firebase/util': true
   '@swc/core': true
   playwright: true
+overrides:
+  '@grpc/grpc-js': '>=1.13.6'
+  uuid: '>=11.1.1'
