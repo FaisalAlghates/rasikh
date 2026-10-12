@@ -30,7 +30,7 @@ test('buildings: members, receipt-backed expense, balances, quotes, vote and mon
   await o.getByLabel('البيان').fill('صيانة المصعد');
   await o.getByLabel('المبلغ (ر.س)', { exact: true }).first().fill('1000');
   await o.getByRole('button', { name: 'أضف مصروفاً' }).click();
-  await expect(o.getByRole('alert').filter({ hasText: /./ })).toContainText('أرفق إيصال');
+  await expect(o.getByText('أرفق إيصال المصروف.')).toBeVisible();
   await o
     .locator('#be-receipt')
     .setInputFiles({ name: 'r.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4') });

@@ -2432,312 +2432,6 @@ abstract class AppLocalizations {
   /// **'العقار'**
   String get inspRecordProperty;
 
-  /// No description provided for @mtTab.
-  ///
-  /// In ar, this message translates to:
-  /// **'الصيانة'**
-  String get mtTab;
-
-  /// No description provided for @mtNew.
-  ///
-  /// In ar, this message translates to:
-  /// **'بلاغ صيانة جديد'**
-  String get mtNew;
-
-  /// No description provided for @mtUnit.
-  ///
-  /// In ar, this message translates to:
-  /// **'الوحدة'**
-  String get mtUnit;
-
-  /// No description provided for @mtTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'عنوان البلاغ'**
-  String get mtTitle;
-
-  /// No description provided for @mtCategory.
-  ///
-  /// In ar, this message translates to:
-  /// **'التصنيف'**
-  String get mtCategory;
-
-  /// No description provided for @mtUrgency.
-  ///
-  /// In ar, this message translates to:
-  /// **'الأولوية'**
-  String get mtUrgency;
-
-  /// No description provided for @mtDescription.
-  ///
-  /// In ar, this message translates to:
-  /// **'وصف المشكلة'**
-  String get mtDescription;
-
-  /// No description provided for @mtPhoto.
-  ///
-  /// In ar, this message translates to:
-  /// **'صورة (اختياري)'**
-  String get mtPhoto;
-
-  /// No description provided for @mtSubmit.
-  ///
-  /// In ar, this message translates to:
-  /// **'أرسل البلاغ'**
-  String get mtSubmit;
-
-  /// No description provided for @mtNone.
-  ///
-  /// In ar, this message translates to:
-  /// **'لا توجد بلاغات صيانة.'**
-  String get mtNone;
-
-  /// No description provided for @mtBack.
-  ///
-  /// In ar, this message translates to:
-  /// **'رجوع'**
-  String get mtBack;
-
-  /// No description provided for @mtRequired.
-  ///
-  /// In ar, this message translates to:
-  /// **'اكتب عنواناً من 3 أحرف على الأقل.'**
-  String get mtRequired;
-
-  /// No description provided for @mtNeedLease.
-  ///
-  /// In ar, this message translates to:
-  /// **'لا يوجد عقد مرتبط بحسابك.'**
-  String get mtNeedLease;
-
-  /// No description provided for @mtFailed.
-  ///
-  /// In ar, this message translates to:
-  /// **'تعذّر تنفيذ الطلب. حاول مرة أخرى.'**
-  String get mtFailed;
-
-  /// No description provided for @mtCatConsumables.
-  ///
-  /// In ar, this message translates to:
-  /// **'مستهلكات (لمبات، فلاتر…)'**
-  String get mtCatConsumables;
-
-  /// No description provided for @mtCatTenantDamage.
-  ///
-  /// In ar, this message translates to:
-  /// **'ضرر ناتج عن الاستخدام'**
-  String get mtCatTenantDamage;
-
-  /// No description provided for @mtCatPlumbing.
-  ///
-  /// In ar, this message translates to:
-  /// **'سباكة'**
-  String get mtCatPlumbing;
-
-  /// No description provided for @mtCatElectrical.
-  ///
-  /// In ar, this message translates to:
-  /// **'كهرباء'**
-  String get mtCatElectrical;
-
-  /// No description provided for @mtCatAc.
-  ///
-  /// In ar, this message translates to:
-  /// **'تكييف'**
-  String get mtCatAc;
-
-  /// No description provided for @mtCatAppliance.
-  ///
-  /// In ar, this message translates to:
-  /// **'أجهزة'**
-  String get mtCatAppliance;
-
-  /// No description provided for @mtCatStructure.
-  ///
-  /// In ar, this message translates to:
-  /// **'إنشائي'**
-  String get mtCatStructure;
-
-  /// No description provided for @mtCatPest.
-  ///
-  /// In ar, this message translates to:
-  /// **'حشرات'**
-  String get mtCatPest;
-
-  /// No description provided for @mtCatOther.
-  ///
-  /// In ar, this message translates to:
-  /// **'أخرى'**
-  String get mtCatOther;
-
-  /// No description provided for @mtUrgLow.
-  ///
-  /// In ar, this message translates to:
-  /// **'منخفضة'**
-  String get mtUrgLow;
-
-  /// No description provided for @mtUrgNormal.
-  ///
-  /// In ar, this message translates to:
-  /// **'عادية'**
-  String get mtUrgNormal;
-
-  /// No description provided for @mtUrgUrgent.
-  ///
-  /// In ar, this message translates to:
-  /// **'عاجلة'**
-  String get mtUrgUrgent;
-
-  /// No description provided for @mtUrgEmergency.
-  ///
-  /// In ar, this message translates to:
-  /// **'طارئة'**
-  String get mtUrgEmergency;
-
-  /// No description provided for @mtStOpen.
-  ///
-  /// In ar, this message translates to:
-  /// **'مفتوح'**
-  String get mtStOpen;
-
-  /// No description provided for @mtStAssigned.
-  ///
-  /// In ar, this message translates to:
-  /// **'أُسند لجهة تنفيذ'**
-  String get mtStAssigned;
-
-  /// No description provided for @mtStInProgress.
-  ///
-  /// In ar, this message translates to:
-  /// **'قيد التنفيذ'**
-  String get mtStInProgress;
-
-  /// No description provided for @mtStResolved.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم الإصلاح'**
-  String get mtStResolved;
-
-  /// No description provided for @mtStClosed.
-  ///
-  /// In ar, this message translates to:
-  /// **'مغلق'**
-  String get mtStClosed;
-
-  /// No description provided for @mtStCancelled.
-  ///
-  /// In ar, this message translates to:
-  /// **'ملغى'**
-  String get mtStCancelled;
-
-  /// No description provided for @mtSlaMet.
-  ///
-  /// In ar, this message translates to:
-  /// **'تمت المعالجة ضمن المدة'**
-  String get mtSlaMet;
-
-  /// No description provided for @mtSlaOk.
-  ///
-  /// In ar, this message translates to:
-  /// **'ضمن المدة المستهدفة'**
-  String get mtSlaOk;
-
-  /// No description provided for @mtSlaDueSoon.
-  ///
-  /// In ar, this message translates to:
-  /// **'تقترب المدة المستهدفة'**
-  String get mtSlaDueSoon;
-
-  /// No description provided for @mtSlaBreached.
-  ///
-  /// In ar, this message translates to:
-  /// **'تجاوز المدة المستهدفة'**
-  String get mtSlaBreached;
-
-  /// No description provided for @mtSuggestTenant.
-  ///
-  /// In ar, this message translates to:
-  /// **'المقترح: على المستأجر.'**
-  String get mtSuggestTenant;
-
-  /// No description provided for @mtSuggestOwner.
-  ///
-  /// In ar, this message translates to:
-  /// **'المقترح: على المالك.'**
-  String get mtSuggestOwner;
-
-  /// No description provided for @mtSuggestNote.
-  ///
-  /// In ar, this message translates to:
-  /// **'اقتراح استرشادي بحسب إرشادات إيجار العامة، والقرار لكما وليس رأياً قانونياً.'**
-  String get mtSuggestNote;
-
-  /// No description provided for @mtVendor.
-  ///
-  /// In ar, this message translates to:
-  /// **'جهة التنفيذ'**
-  String get mtVendor;
-
-  /// No description provided for @mtVendorPhone.
-  ///
-  /// In ar, this message translates to:
-  /// **'جوال جهة التنفيذ'**
-  String get mtVendorPhone;
-
-  /// No description provided for @mtAssign.
-  ///
-  /// In ar, this message translates to:
-  /// **'أسند'**
-  String get mtAssign;
-
-  /// No description provided for @mtStart.
-  ///
-  /// In ar, this message translates to:
-  /// **'بدأ التنفيذ'**
-  String get mtStart;
-
-  /// No description provided for @mtResolution.
-  ///
-  /// In ar, this message translates to:
-  /// **'ملاحظة الإصلاح'**
-  String get mtResolution;
-
-  /// No description provided for @mtResolve.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم الإصلاح'**
-  String get mtResolve;
-
-  /// No description provided for @mtRating.
-  ///
-  /// In ar, this message translates to:
-  /// **'التقييم (من 5)'**
-  String get mtRating;
-
-  /// No description provided for @mtCloseRate.
-  ///
-  /// In ar, this message translates to:
-  /// **'أغلق وقيّم'**
-  String get mtCloseRate;
-
-  /// No description provided for @mtClose.
-  ///
-  /// In ar, this message translates to:
-  /// **'أغلق البلاغ'**
-  String get mtClose;
-
-  /// No description provided for @mtCancel.
-  ///
-  /// In ar, this message translates to:
-  /// **'ألغِ البلاغ'**
-  String get mtCancel;
-
-  /// No description provided for @mtRated.
-  ///
-  /// In ar, this message translates to:
-  /// **'التقييم: {n} من 5'**
-  String mtRated(int n);
-
   /// No description provided for @bdTab.
   ///
   /// In ar, this message translates to:
@@ -3056,11 +2750,383 @@ abstract class AppLocalizations {
   /// **'ر.س'**
   String get bdSar;
 
+  /// No description provided for @bdLinked.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرتبط بحساب'**
+  String get bdLinked;
+
+  /// No description provided for @bdLinkOwner.
+  ///
+  /// In ar, this message translates to:
+  /// **'اربط بحساب'**
+  String get bdLinkOwner;
+
+  /// No description provided for @bdOwnerEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'بريد المالك'**
+  String get bdOwnerEmail;
+
+  /// No description provided for @bdLinkedNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الربط. سيرى المالك العمارة ويصوّت لوحدته.'**
+  String get bdLinkedNow;
+
+  /// No description provided for @bdLinkPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسلت الدعوة، وتُفعَّل عند تسجيله بهذا البريد بعد تأكيده.'**
+  String get bdLinkPending;
+
+  /// No description provided for @bdMyBuildings.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمارتي'**
+  String get bdMyBuildings;
+
+  /// No description provided for @bdYouOwe.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتبقي عليك {amount} ر.س للجمعية.'**
+  String bdYouOwe(String amount);
+
+  /// No description provided for @bdNothingOwed.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد مبلغ متبقٍّ عليك.'**
+  String get bdNothingOwed;
+
   /// No description provided for @bdPickReceipt.
   ///
   /// In ar, this message translates to:
   /// **'اختر صورة الإيصال'**
   String get bdPickReceipt;
+
+  /// No description provided for @mtTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصيانة'**
+  String get mtTab;
+
+  /// No description provided for @mtNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلاغ صيانة جديد'**
+  String get mtNew;
+
+  /// No description provided for @mtUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوحدة'**
+  String get mtUnit;
+
+  /// No description provided for @mtTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان البلاغ'**
+  String get mtTitle;
+
+  /// No description provided for @mtCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف'**
+  String get mtCategory;
+
+  /// No description provided for @mtUrgency.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأولوية'**
+  String get mtUrgency;
+
+  /// No description provided for @mtDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصف المشكلة'**
+  String get mtDescription;
+
+  /// No description provided for @mtPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة (اختياري)'**
+  String get mtPhoto;
+
+  /// No description provided for @mtSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل البلاغ'**
+  String get mtSubmit;
+
+  /// No description provided for @mtNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد بلاغات صيانة.'**
+  String get mtNone;
+
+  /// No description provided for @mtBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get mtBack;
+
+  /// No description provided for @mtRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب عنواناً من 3 أحرف على الأقل.'**
+  String get mtRequired;
+
+  /// No description provided for @mtNeedLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد عقد مرتبط بحسابك.'**
+  String get mtNeedLease;
+
+  /// No description provided for @mtFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تنفيذ الطلب. حاول مرة أخرى.'**
+  String get mtFailed;
+
+  /// No description provided for @mtCatConsumables.
+  ///
+  /// In ar, this message translates to:
+  /// **'مستهلكات (لمبات، فلاتر…)'**
+  String get mtCatConsumables;
+
+  /// No description provided for @mtCatTenantDamage.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضرر ناتج عن الاستخدام'**
+  String get mtCatTenantDamage;
+
+  /// No description provided for @mtCatPlumbing.
+  ///
+  /// In ar, this message translates to:
+  /// **'سباكة'**
+  String get mtCatPlumbing;
+
+  /// No description provided for @mtCatElectrical.
+  ///
+  /// In ar, this message translates to:
+  /// **'كهرباء'**
+  String get mtCatElectrical;
+
+  /// No description provided for @mtCatAc.
+  ///
+  /// In ar, this message translates to:
+  /// **'تكييف'**
+  String get mtCatAc;
+
+  /// No description provided for @mtCatAppliance.
+  ///
+  /// In ar, this message translates to:
+  /// **'أجهزة'**
+  String get mtCatAppliance;
+
+  /// No description provided for @mtCatStructure.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشائي'**
+  String get mtCatStructure;
+
+  /// No description provided for @mtCatPest.
+  ///
+  /// In ar, this message translates to:
+  /// **'حشرات'**
+  String get mtCatPest;
+
+  /// No description provided for @mtCatOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'أخرى'**
+  String get mtCatOther;
+
+  /// No description provided for @mtUrgLow.
+  ///
+  /// In ar, this message translates to:
+  /// **'منخفضة'**
+  String get mtUrgLow;
+
+  /// No description provided for @mtUrgNormal.
+  ///
+  /// In ar, this message translates to:
+  /// **'عادية'**
+  String get mtUrgNormal;
+
+  /// No description provided for @mtUrgUrgent.
+  ///
+  /// In ar, this message translates to:
+  /// **'عاجلة'**
+  String get mtUrgUrgent;
+
+  /// No description provided for @mtUrgEmergency.
+  ///
+  /// In ar, this message translates to:
+  /// **'طارئة'**
+  String get mtUrgEmergency;
+
+  /// No description provided for @mtStOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفتوح'**
+  String get mtStOpen;
+
+  /// No description provided for @mtStAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُسند لجهة تنفيذ'**
+  String get mtStAssigned;
+
+  /// No description provided for @mtStInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التنفيذ'**
+  String get mtStInProgress;
+
+  /// No description provided for @mtStResolved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الإصلاح'**
+  String get mtStResolved;
+
+  /// No description provided for @mtStClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مغلق'**
+  String get mtStClosed;
+
+  /// No description provided for @mtStCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغى'**
+  String get mtStCancelled;
+
+  /// No description provided for @mtSlaMet.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت المعالجة ضمن المدة'**
+  String get mtSlaMet;
+
+  /// No description provided for @mtSlaOk.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضمن المدة المستهدفة'**
+  String get mtSlaOk;
+
+  /// No description provided for @mtSlaDueSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقترب المدة المستهدفة'**
+  String get mtSlaDueSoon;
+
+  /// No description provided for @mtSlaBreached.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجاوز المدة المستهدفة'**
+  String get mtSlaBreached;
+
+  /// No description provided for @mtSuggestTenant.
+  ///
+  /// In ar, this message translates to:
+  /// **'المقترح: على المستأجر.'**
+  String get mtSuggestTenant;
+
+  /// No description provided for @mtSuggestOwner.
+  ///
+  /// In ar, this message translates to:
+  /// **'المقترح: على المالك.'**
+  String get mtSuggestOwner;
+
+  /// No description provided for @mtSuggestNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراح استرشادي بحسب إرشادات إيجار العامة، والقرار لكما وليس رأياً قانونياً.'**
+  String get mtSuggestNote;
+
+  /// No description provided for @mtVendor.
+  ///
+  /// In ar, this message translates to:
+  /// **'جهة التنفيذ'**
+  String get mtVendor;
+
+  /// No description provided for @mtVendorPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'جوال جهة التنفيذ'**
+  String get mtVendorPhone;
+
+  /// No description provided for @mtAssign.
+  ///
+  /// In ar, this message translates to:
+  /// **'أسند'**
+  String get mtAssign;
+
+  /// No description provided for @mtStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدأ التنفيذ'**
+  String get mtStart;
+
+  /// No description provided for @mtResolution.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة الإصلاح'**
+  String get mtResolution;
+
+  /// No description provided for @mtResolve.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الإصلاح'**
+  String get mtResolve;
+
+  /// No description provided for @mtRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقييم (من 5)'**
+  String get mtRating;
+
+  /// No description provided for @mtCloseRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغلق وقيّم'**
+  String get mtCloseRate;
+
+  /// No description provided for @mtClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغلق البلاغ'**
+  String get mtClose;
+
+  /// No description provided for @mtCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ألغِ البلاغ'**
+  String get mtCancel;
+
+  /// No description provided for @mtRated.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقييم: {n} من 5'**
+  String mtRated(int n);
+
+  /// No description provided for @mtAssignedToMe.
+  ///
+  /// In ar, this message translates to:
+  /// **'البلاغات المسندة إليّ'**
+  String get mtAssignedToMe;
+
+  /// No description provided for @mtVendorEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'بريد جهة التنفيذ (اختياري)'**
+  String get mtVendorEmail;
+
+  /// No description provided for @mtVendorEmailHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'إن أضفته يدخل المنفّذ بحسابه ويرى بلاغه فقط، ويبدأ التنفيذ ويسجّل الإصلاح.'**
+  String get mtVendorEmailHint;
 }
 
 class _AppLocalizationsDelegate

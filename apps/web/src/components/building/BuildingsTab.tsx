@@ -11,6 +11,7 @@ import {
   type VoteRule,
 } from '@rasikh/shared';
 import { addDoc, collection, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 import { ref, uploadBytes } from 'firebase/storage';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -19,14 +20,15 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Field, NativeSelect } from '@/components/ui/Input';
-import { firebaseDb, firebaseStorage } from '@/lib/firebase';
+import { firebaseDb, firebaseFunctions, firebaseStorage } from '@/lib/firebase';
 import { today, useCollectionAt, useOrgCollection } from '@/lib/ops/hooks';
 import { money } from '@/lib/ops/types';
 
-interface BuildingDoc {
+export interface BuildingDoc {
   name: string;
 }
 interface MemberDoc {
+  uid?: string;
   name: string;
   unitLabel: string;
   shareBp: number;
@@ -161,8 +163,12 @@ function BuildingBoard({ orgId, id, name }: { orgId: string; id: string; name: s
         <h3 className="text-body font-semibold">{t('members')}</h3>
         <ul className="flex flex-col gap-1 text-small">
           {members.rows.map((x) => (
-            <li key={x.id} data-testid="member-row">
-              {x.data.name} · {x.data.unitLabel} · {x.data.shareBp / 100}%
+            <li key={x.id} data-testid="member-row" className="flex flex-col gap-1">
+              <span>
+                {x.data.name} · {x.data.unitLabel} · {x.data.shareBp / 100}%
+                {x.data.uid ? <span className="text-success"> · {t('linked')}</span> : null}
+              </span>
+              {!x.data.uid && <LinkMember orgId={orgId} buildingId={id} memberId={x.id} />}
             </li>
           ))}
         </ul>
@@ -486,14 +492,17 @@ function BuildingBoard({ orgId, id, name }: { orgId: string; id: string; name: s
   );
 }
 
-function VoteBox({
+export function VoteBox({
   path,
   vote,
   members,
+  mine,
 }: {
   path: string;
   vote: VoteDoc;
   members: Array<{ id: string; data: MemberDoc }>;
+  /** A unit owner voting for their own unit only. */
+  mine?: string;
 }) {
   const t = useTranslations('bldg');
   const ballots = useCollectionAt<{ choice: Ballot }>(`${path}/ballots`);
@@ -504,7 +513,7 @@ function VoteBox({
   );
   const voted = new Set(ballots.rows.map((b) => b.id));
   const [who, setWho] = useState('');
-  const pick = who || members.find((x) => !voted.has(x.id))?.id || '';
+  const pick = mine ?? (who || members.find((x) => !voted.has(x.id))?.id || '');
   const cast = (choice: Ballot) => {
     if (pick) void setDoc(doc(firebaseDb(), `${path}/ballots/${pick}`), { choice });
   };
@@ -517,17 +526,19 @@ function VoteBox({
         {t(`vote_${res.status}`)} · {t('yes')} {res.yes} · {t('no')} {res.no} · {t('abstain')}{' '}
         {res.abstain} · {t('missing')} {res.missing}
       </p>
-      {!vote.closed && pick && (
+      {!vote.closed && pick && !(mine && voted.has(mine)) && (
         <div className="flex flex-wrap items-end gap-2">
-          <NativeSelect
-            id={`vw-${path}`}
-            label={t('ownerName')}
-            value={pick}
-            onChange={(x) => setWho(x.target.value)}
-            options={members
-              .filter((x) => !voted.has(x.id))
-              .map((x) => ({ value: x.id, label: `${x.data.name} · ${x.data.unitLabel}` }))}
-          />
+          {!mine && (
+            <NativeSelect
+              id={`vw-${path}`}
+              label={t('ownerName')}
+              value={pick}
+              onChange={(x) => setWho(x.target.value)}
+              options={members
+                .filter((x) => !voted.has(x.id))
+                .map((x) => ({ value: x.id, label: `${x.data.name} · ${x.data.unitLabel}` }))}
+            />
+          )}
           <Button size="md" variant="quiet" onClick={() => cast('yes')}>
             {t('yes')}
           </Button>
@@ -539,7 +550,7 @@ function VoteBox({
           </Button>
         </div>
       )}
-      {!vote.closed && (
+      {!vote.closed && !mine && (
         <Button
           size="md"
           variant="ghost"
@@ -609,5 +620,58 @@ function Statement({
       </ul>
       <p className="text-caption text-text-muted">{t('mullak')}</p>
     </Card>
+  );
+}
+
+/** Staff link a unit owner to an account by email; they then see the ledger and vote for their own unit. */
+function LinkMember({
+  orgId,
+  buildingId,
+  memberId,
+}: {
+  orgId: string;
+  buildingId: string;
+  memberId: string;
+}) {
+  const t = useTranslations('bldg');
+  const [email, setEmail] = useState('');
+  const [msg, setMsg] = useState<string>();
+  return (
+    <form
+      className="flex flex-wrap items-end gap-2"
+      aria-label={t('linkOwner')}
+      onSubmit={(ev) => {
+        ev.preventDefault();
+        setMsg(undefined);
+        void httpsCallable<unknown, { status: 'linked' | 'pending' }>(
+          firebaseFunctions(),
+          'inviteBuildingMember',
+        )({
+          orgId,
+          buildingId,
+          memberId,
+          email,
+        })
+          .then((r) => setMsg(r.data.status === 'linked' ? t('linkedNow') : t('linkPending')))
+          .catch(() => setMsg(t('failed')));
+      }}
+    >
+      <Field
+        id={`lm-${memberId}`}
+        type="email"
+        label={t('ownerEmail')}
+        value={email}
+        onChange={(x) => setEmail(x.target.value)}
+        dir="ltr"
+      />
+      <Button size="md" variant="quiet" type="submit">
+        {t('linkOwner')}
+      </Button>
+      {msg && (
+        <span role="status" className="text-caption text-text-muted">
+          {msg}
+        </span>
+      )}
+    </form>
   );
 }

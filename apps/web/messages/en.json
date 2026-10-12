@@ -523,7 +523,10 @@
     "closeRate": "Close and rate",
     "close": "Close request",
     "cancel": "Cancel request",
-    "rated": "Rating: {n} of 5"
+    "rated": "Rating: {n} of 5",
+    "assignedToMe": "Requests assigned to me",
+    "vendorEmail": "Vendor email (optional)",
+    "vendorEmailHint": "If you add it, the vendor signs in with their own account, sees only their request, starts the work and records the repair."
   },
   "bldg": {
     "tab": "Buildings and associations",
@@ -578,6 +581,14 @@
     "st_expenses": "Expenses",
     "st_contributions": "Recorded payments",
     "st_net": "Net",
-    "sar": "SAR"
+    "sar": "SAR",
+    "linked": "linked to an account",
+    "linkOwner": "Link to an account",
+    "ownerEmail": "Owner email",
+    "linkedNow": "Linked. The owner will see the building and vote for their unit.",
+    "linkPending": "Invitation sent; it applies when they sign up with this email and verify it.",
+    "myBuildings": "My building",
+    "youOwe": "You still owe the association {amount} SAR.",
+    "nothingOwed": "You owe nothing."
   }
 }

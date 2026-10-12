@@ -17,6 +17,7 @@ class FakeTicketRepository implements TicketRepository {
   /// Which party the signed-in test user is (the real server decides this from the account).
   String party = 'staff';
   String? tenantUid;
+  String? vendorUid;
 
   Stream<List<Doc<TicketDoc>>> _live(
     bool Function(Map<String, Object?>) keep,
@@ -32,8 +33,15 @@ class FakeTicketRepository implements TicketRepository {
   }
 
   @override
-  Stream<List<Doc<TicketDoc>>> tickets(String orgId, {String? tenantUid}) =>
-      _live((m) => tenantUid == null || m['tenantUid'] == tenantUid);
+  Stream<List<Doc<TicketDoc>>> tickets(
+    String orgId, {
+    String? tenantUid,
+    String? vendorUid,
+  }) => _live(
+    (m) => vendorUid != null
+        ? m['vendorUid'] == vendorUid
+        : tenantUid == null || m['tenantUid'] == tenantUid,
+  );
 
   @override
   Future<String> create(
@@ -47,6 +55,7 @@ class FakeTicketRepository implements TicketRepository {
     _tickets[id] = {
       ...t.toMap(),
       if (tenantUid != null) 'tenantUid': tenantUid,
+      if (vendorUid != null) 'vendorUid': vendorUid,
       'status': 'open',
       'suggestedParty': suggestResponsibility(t.category),
       'createdAtIso': DateTime.now().toUtc().toIso8601String(),

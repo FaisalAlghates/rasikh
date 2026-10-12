@@ -1226,162 +1226,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get inspRecordProperty => 'العقار';
 
   @override
-  String get mtTab => 'الصيانة';
-
-  @override
-  String get mtNew => 'بلاغ صيانة جديد';
-
-  @override
-  String get mtUnit => 'الوحدة';
-
-  @override
-  String get mtTitle => 'عنوان البلاغ';
-
-  @override
-  String get mtCategory => 'التصنيف';
-
-  @override
-  String get mtUrgency => 'الأولوية';
-
-  @override
-  String get mtDescription => 'وصف المشكلة';
-
-  @override
-  String get mtPhoto => 'صورة (اختياري)';
-
-  @override
-  String get mtSubmit => 'أرسل البلاغ';
-
-  @override
-  String get mtNone => 'لا توجد بلاغات صيانة.';
-
-  @override
-  String get mtBack => 'رجوع';
-
-  @override
-  String get mtRequired => 'اكتب عنواناً من 3 أحرف على الأقل.';
-
-  @override
-  String get mtNeedLease => 'لا يوجد عقد مرتبط بحسابك.';
-
-  @override
-  String get mtFailed => 'تعذّر تنفيذ الطلب. حاول مرة أخرى.';
-
-  @override
-  String get mtCatConsumables => 'مستهلكات (لمبات، فلاتر…)';
-
-  @override
-  String get mtCatTenantDamage => 'ضرر ناتج عن الاستخدام';
-
-  @override
-  String get mtCatPlumbing => 'سباكة';
-
-  @override
-  String get mtCatElectrical => 'كهرباء';
-
-  @override
-  String get mtCatAc => 'تكييف';
-
-  @override
-  String get mtCatAppliance => 'أجهزة';
-
-  @override
-  String get mtCatStructure => 'إنشائي';
-
-  @override
-  String get mtCatPest => 'حشرات';
-
-  @override
-  String get mtCatOther => 'أخرى';
-
-  @override
-  String get mtUrgLow => 'منخفضة';
-
-  @override
-  String get mtUrgNormal => 'عادية';
-
-  @override
-  String get mtUrgUrgent => 'عاجلة';
-
-  @override
-  String get mtUrgEmergency => 'طارئة';
-
-  @override
-  String get mtStOpen => 'مفتوح';
-
-  @override
-  String get mtStAssigned => 'أُسند لجهة تنفيذ';
-
-  @override
-  String get mtStInProgress => 'قيد التنفيذ';
-
-  @override
-  String get mtStResolved => 'تم الإصلاح';
-
-  @override
-  String get mtStClosed => 'مغلق';
-
-  @override
-  String get mtStCancelled => 'ملغى';
-
-  @override
-  String get mtSlaMet => 'تمت المعالجة ضمن المدة';
-
-  @override
-  String get mtSlaOk => 'ضمن المدة المستهدفة';
-
-  @override
-  String get mtSlaDueSoon => 'تقترب المدة المستهدفة';
-
-  @override
-  String get mtSlaBreached => 'تجاوز المدة المستهدفة';
-
-  @override
-  String get mtSuggestTenant => 'المقترح: على المستأجر.';
-
-  @override
-  String get mtSuggestOwner => 'المقترح: على المالك.';
-
-  @override
-  String get mtSuggestNote =>
-      'اقتراح استرشادي بحسب إرشادات إيجار العامة، والقرار لكما وليس رأياً قانونياً.';
-
-  @override
-  String get mtVendor => 'جهة التنفيذ';
-
-  @override
-  String get mtVendorPhone => 'جوال جهة التنفيذ';
-
-  @override
-  String get mtAssign => 'أسند';
-
-  @override
-  String get mtStart => 'بدأ التنفيذ';
-
-  @override
-  String get mtResolution => 'ملاحظة الإصلاح';
-
-  @override
-  String get mtResolve => 'تم الإصلاح';
-
-  @override
-  String get mtRating => 'التقييم (من 5)';
-
-  @override
-  String get mtCloseRate => 'أغلق وقيّم';
-
-  @override
-  String get mtClose => 'أغلق البلاغ';
-
-  @override
-  String get mtCancel => 'ألغِ البلاغ';
-
-  @override
-  String mtRated(int n) {
-    return 'التقييم: $n من 5';
-  }
-
-  @override
   String get bdTab => 'العمارات والجمعيات';
 
   @override
@@ -1545,5 +1389,198 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bdSar => 'ر.س';
 
   @override
+  String get bdLinked => 'مرتبط بحساب';
+
+  @override
+  String get bdLinkOwner => 'اربط بحساب';
+
+  @override
+  String get bdOwnerEmail => 'بريد المالك';
+
+  @override
+  String get bdLinkedNow => 'تم الربط. سيرى المالك العمارة ويصوّت لوحدته.';
+
+  @override
+  String get bdLinkPending =>
+      'أُرسلت الدعوة، وتُفعَّل عند تسجيله بهذا البريد بعد تأكيده.';
+
+  @override
+  String get bdMyBuildings => 'عمارتي';
+
+  @override
+  String bdYouOwe(String amount) {
+    return 'المتبقي عليك $amount ر.س للجمعية.';
+  }
+
+  @override
+  String get bdNothingOwed => 'لا يوجد مبلغ متبقٍّ عليك.';
+
+  @override
   String get bdPickReceipt => 'اختر صورة الإيصال';
+
+  @override
+  String get mtTab => 'الصيانة';
+
+  @override
+  String get mtNew => 'بلاغ صيانة جديد';
+
+  @override
+  String get mtUnit => 'الوحدة';
+
+  @override
+  String get mtTitle => 'عنوان البلاغ';
+
+  @override
+  String get mtCategory => 'التصنيف';
+
+  @override
+  String get mtUrgency => 'الأولوية';
+
+  @override
+  String get mtDescription => 'وصف المشكلة';
+
+  @override
+  String get mtPhoto => 'صورة (اختياري)';
+
+  @override
+  String get mtSubmit => 'أرسل البلاغ';
+
+  @override
+  String get mtNone => 'لا توجد بلاغات صيانة.';
+
+  @override
+  String get mtBack => 'رجوع';
+
+  @override
+  String get mtRequired => 'اكتب عنواناً من 3 أحرف على الأقل.';
+
+  @override
+  String get mtNeedLease => 'لا يوجد عقد مرتبط بحسابك.';
+
+  @override
+  String get mtFailed => 'تعذّر تنفيذ الطلب. حاول مرة أخرى.';
+
+  @override
+  String get mtCatConsumables => 'مستهلكات (لمبات، فلاتر…)';
+
+  @override
+  String get mtCatTenantDamage => 'ضرر ناتج عن الاستخدام';
+
+  @override
+  String get mtCatPlumbing => 'سباكة';
+
+  @override
+  String get mtCatElectrical => 'كهرباء';
+
+  @override
+  String get mtCatAc => 'تكييف';
+
+  @override
+  String get mtCatAppliance => 'أجهزة';
+
+  @override
+  String get mtCatStructure => 'إنشائي';
+
+  @override
+  String get mtCatPest => 'حشرات';
+
+  @override
+  String get mtCatOther => 'أخرى';
+
+  @override
+  String get mtUrgLow => 'منخفضة';
+
+  @override
+  String get mtUrgNormal => 'عادية';
+
+  @override
+  String get mtUrgUrgent => 'عاجلة';
+
+  @override
+  String get mtUrgEmergency => 'طارئة';
+
+  @override
+  String get mtStOpen => 'مفتوح';
+
+  @override
+  String get mtStAssigned => 'أُسند لجهة تنفيذ';
+
+  @override
+  String get mtStInProgress => 'قيد التنفيذ';
+
+  @override
+  String get mtStResolved => 'تم الإصلاح';
+
+  @override
+  String get mtStClosed => 'مغلق';
+
+  @override
+  String get mtStCancelled => 'ملغى';
+
+  @override
+  String get mtSlaMet => 'تمت المعالجة ضمن المدة';
+
+  @override
+  String get mtSlaOk => 'ضمن المدة المستهدفة';
+
+  @override
+  String get mtSlaDueSoon => 'تقترب المدة المستهدفة';
+
+  @override
+  String get mtSlaBreached => 'تجاوز المدة المستهدفة';
+
+  @override
+  String get mtSuggestTenant => 'المقترح: على المستأجر.';
+
+  @override
+  String get mtSuggestOwner => 'المقترح: على المالك.';
+
+  @override
+  String get mtSuggestNote =>
+      'اقتراح استرشادي بحسب إرشادات إيجار العامة، والقرار لكما وليس رأياً قانونياً.';
+
+  @override
+  String get mtVendor => 'جهة التنفيذ';
+
+  @override
+  String get mtVendorPhone => 'جوال جهة التنفيذ';
+
+  @override
+  String get mtAssign => 'أسند';
+
+  @override
+  String get mtStart => 'بدأ التنفيذ';
+
+  @override
+  String get mtResolution => 'ملاحظة الإصلاح';
+
+  @override
+  String get mtResolve => 'تم الإصلاح';
+
+  @override
+  String get mtRating => 'التقييم (من 5)';
+
+  @override
+  String get mtCloseRate => 'أغلق وقيّم';
+
+  @override
+  String get mtClose => 'أغلق البلاغ';
+
+  @override
+  String get mtCancel => 'ألغِ البلاغ';
+
+  @override
+  String mtRated(int n) {
+    return 'التقييم: $n من 5';
+  }
+
+  @override
+  String get mtAssignedToMe => 'البلاغات المسندة إليّ';
+
+  @override
+  String get mtVendorEmail => 'بريد جهة التنفيذ (اختياري)';
+
+  @override
+  String get mtVendorEmailHint =>
+      'إن أضفته يدخل المنفّذ بحسابه ويرى بلاغه فقط، ويبدأ التنفيذ ويسجّل الإصلاح.';
 }

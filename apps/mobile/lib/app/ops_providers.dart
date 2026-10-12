@@ -16,25 +16,43 @@ final calendarExporterProvider = Provider<CalendarExporter>(
 
 /// Who is looking at which organization. Staff read the whole org; a tenant reads only their own lease.
 class OpsScope {
-  const OpsScope(this.orgId, this.uid, this.staff);
+  const OpsScope(
+    this.orgId,
+    this.uid,
+    this.staff, {
+    this.vendor = false,
+    this.unitOwner = false,
+  });
   final String orgId, uid;
   final bool staff;
+
+  /// A vendor with their own login (sees only tickets assigned to them) / an owner of a unit in an association.
+  final bool vendor, unitOwner;
 
   @override
   bool operator ==(Object other) =>
       other is OpsScope &&
       other.orgId == orgId &&
       other.uid == uid &&
-      other.staff == staff;
+      other.staff == staff &&
+      other.vendor == vendor &&
+      other.unitOwner == unitOwner;
   @override
-  int get hashCode => Object.hash(orgId, uid, staff);
+  int get hashCode => Object.hash(orgId, uid, staff, vendor, unitOwner);
 }
 
 final opsScopeProvider = Provider<OpsScope?>((ref) {
   final s = ref.watch(sessionProvider).value;
   final org = s?.activeOrgId;
   if (s == null || org == null) return null;
-  return OpsScope(org, s.uid, s.isStaff);
+  return OpsScope(
+    org,
+    s.uid,
+    s.isStaff,
+    vendor:
+        !s.isStaff && s.roles.contains('vendor') && !s.roles.contains('tenant'),
+    unitOwner: !s.isStaff && s.roles.contains('building_owner'),
+  );
 });
 
 // A failed query (for example a rules denial) must not retry in a loop.

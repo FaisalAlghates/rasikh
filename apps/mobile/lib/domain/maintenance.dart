@@ -45,7 +45,11 @@ SlaState slaState(
 const _rules = {
   'assign': (from: ['open', 'assigned'], to: 'assigned', by: ['staff']),
   'start': (from: ['assigned'], to: 'in_progress', by: ['staff', 'vendor']),
-  'resolve': (from: ['assigned', 'in_progress'], to: 'resolved', by: ['staff', 'vendor']),
+  'resolve': (
+    from: ['assigned', 'in_progress'],
+    to: 'resolved',
+    by: ['staff', 'vendor'],
+  ),
   'close': (from: ['resolved'], to: 'closed', by: ['tenant', 'staff']),
   'cancel': (
     from: ['open', 'assigned'],

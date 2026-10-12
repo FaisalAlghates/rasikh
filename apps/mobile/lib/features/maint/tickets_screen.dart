@@ -103,7 +103,7 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
     return SubPage(
       title: l10n.mtTab,
       children: [
-        if (scope != null)
+        if (scope != null && !scope.vendor)
           RkCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -245,6 +245,7 @@ class TicketScreen extends ConsumerStatefulWidget {
 class _TicketScreenState extends ConsumerState<TicketScreen> {
   final _vendor = TextEditingController();
   final _phone = TextEditingController();
+  final _vendorEmail = TextEditingController();
   final _note = TextEditingController();
   int _rating = 5;
   String? _error;
@@ -253,6 +254,7 @@ class _TicketScreenState extends ConsumerState<TicketScreen> {
   void dispose() {
     _vendor.dispose();
     _phone.dispose();
+    _vendorEmail.dispose();
     _note.dispose();
     super.dispose();
   }
@@ -292,6 +294,7 @@ class _TicketScreenState extends ConsumerState<TicketScreen> {
     final tk = found.data;
     final s = tk.status;
     final staff = scope.staff;
+    final vendor = scope.vendor;
     final lease = ref
         .watch(opsDataProvider)
         .value
@@ -374,24 +377,35 @@ class _TicketScreenState extends ConsumerState<TicketScreen> {
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 12),
+                RkField(
+                  key: const Key('vendorEmail'),
+                  label: l10n.mtVendorEmail,
+                  hint: l10n.mtVendorEmailHint,
+                  controller: _vendorEmail,
+                  ltr: true,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 12),
                 RkButton(
                   key: const Key('assign'),
                   label: l10n.mtAssign,
                   onPressed: () => _act(scope, 'assign', {
                     'vendorName': _vendor.text.trim(),
                     'vendorPhone': _phone.text.trim(),
+                    if (_vendorEmail.text.trim().isNotEmpty)
+                      'vendorEmail': _vendorEmail.text.trim().toLowerCase(),
                   }),
                 ),
               ],
             ),
           ),
-        if (staff && s == 'assigned')
+        if ((staff || vendor) && s == 'assigned')
           RkButton(
             key: const Key('start'),
             label: l10n.mtStart,
             onPressed: () => _act(scope, 'start'),
           ),
-        if (staff && (s == 'assigned' || s == 'in_progress'))
+        if ((staff || vendor) && (s == 'assigned' || s == 'in_progress'))
           RkCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -411,7 +425,7 @@ class _TicketScreenState extends ConsumerState<TicketScreen> {
               ],
             ),
           ),
-        if (!staff && s == 'resolved')
+        if (!staff && !vendor && s == 'resolved')
           RkCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -444,7 +458,7 @@ class _TicketScreenState extends ConsumerState<TicketScreen> {
             variant: RkButtonVariant.quiet,
             onPressed: () => _act(scope, 'close', {'ratingNote': ''}),
           ),
-        if (s == 'open' || s == 'assigned')
+        if (!vendor && (s == 'open' || s == 'assigned'))
           RkButton(
             key: const Key('cancelTicket'),
             label: l10n.mtCancel,

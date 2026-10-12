@@ -80,8 +80,11 @@ export async function inviteTenant(deps: Deps, callerUid: string | undefined, ra
 
   try {
     const user = await deps.auth.getUserByEmail(email);
-    await attachTenant(deps, orgId, leaseId, user.uid);
-    return { status: 'linked' as const };
+    // An unverified address could belong to someone else: link only once the real owner has verified it.
+    if (user.emailVerified) {
+      await attachTenant(deps, orgId, leaseId, user.uid);
+      return { status: 'linked' as const };
+    }
   } catch (e) {
     if ((e as { code?: string }).code !== 'auth/user-not-found') throw e;
   }

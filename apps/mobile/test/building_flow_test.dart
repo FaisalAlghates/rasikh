@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +8,10 @@ import 'package:rasikh/app/building_providers.dart';
 import 'package:rasikh/app/inspection_providers.dart';
 import 'package:rasikh/app/ops_providers.dart';
 import 'package:rasikh/app/providers.dart';
+import 'package:rasikh/data/auth_repository.dart';
+import 'package:rasikh/data/building_repository.dart';
+import 'package:rasikh/data/ops_models.dart' show Doc;
+import 'package:rasikh/data/photo_picker.dart';
 import 'package:rasikh/app/ticket_providers.dart';
 import 'package:rasikh/theme/app_theme.dart';
 import 'package:rasikh/widgets/live_city.dart';
@@ -22,8 +28,9 @@ void main() {
     TestEnv env,
     FakeBuildingRepository repo,
     FakePhotoPicker picker,
-    FakeTicketRepository tickets,
-  ) async {
+    FakeTicketRepository tickets, [
+    SessionUser session = ownerSession,
+  ]) async {
     FontConfig.webFonts = false;
     SceneConfig.animate = false;
     tester.view.physicalSize = const Size(900, 9000);
@@ -33,7 +40,7 @@ void main() {
       ProviderScope(
         overrides: [
           authRepositoryProvider.overrideWithValue(
-            FakeAuthRepository(initial: ownerSession),
+            FakeAuthRepository(initial: session),
           ),
           opsRepositoryProvider.overrideWithValue(env.ops),
           inspectionRepositoryProvider.overrideWithValue(
@@ -75,6 +82,12 @@ void main() {
         findsOneWidget,
       ); // 60% is not 100%
       await member('نورة', '2', '40');
+      // link the first owner to an account by email
+      await env.fill(tester, 'linkEmail-1', 'salem@test.sa');
+      await env.tapKey(tester, 'linkOwner-1');
+      expect(repo.calls, contains('link:salem@test.sa'));
+      expect(find.byKey(const Key('linked-1')), findsOneWidget);
+      expect(find.byKey(const Key('linked-2')), findsNothing);
       expect(find.byKey(const Key('sharesWarn')), findsNothing);
       expect(repo.calls, containsAll(['member:6000', 'member:4000']));
 
@@ -141,6 +154,61 @@ void main() {
         tester.widget<Text>(find.byKey(const Key('stmt-net'))).data,
         contains('-750'),
       );
+    },
+  );
+  testWidgets(
+    'a linked unit owner sees their balance and votes for their own unit only',
+    (tester) async {
+      final env = TestEnv();
+      final repo = FakeBuildingRepository();
+      await repo.addBuilding('o', 'عمارة الملاك');
+      await repo.addMember('o', 'b1', const BMember('سالم', '1', 6000));
+      await repo.addMember('o', 'b1', const BMember('نورة', '2', 4000));
+      await repo.addExpense(
+        'o',
+        'b1',
+        'صيانة المصعد',
+        1000,
+        '2026-10-01',
+        PickedFile(Uint8List(1), 'r.jpg', 'image/jpeg'),
+      );
+      await repo.addContribution(
+        'o',
+        'b1',
+        const BContribution('m3', 100, '2026-10-02'),
+      );
+      await repo.addVote('o', 'b1', 'اعتماد الميزانية', 'majority');
+      repo.linked.add(
+        Doc('o_b1', const BMembership('o', 'b1', 'm3', 'عمارة الملاك')),
+      );
+      await pump(
+        tester,
+        env,
+        repo,
+        FakePhotoPicker(),
+        FakeTicketRepository(),
+        const SessionUser(
+          uid: 'unit1',
+          orgs: {
+            'o': ['building_owner'],
+          },
+        ),
+      );
+      await env.tapKey(tester, 'nav-my-buildings');
+      // the second unit (40%) owes 400, has paid 100
+      expect(
+        tester.widget<Text>(find.byKey(const Key('myBalance'))).data,
+        contains('300'),
+      );
+      expect(find.byKey(const Key('ownerExpense-e4')), findsOneWidget);
+      expect(find.byKey(const Key('addExpense')), findsNothing); // read only
+      await env.tapFinder(tester, find.widgetWithText(OutlinedButton, 'موافق'));
+      expect(repo.calls, contains('ballot:yes'));
+      expect(
+        find.widgetWithText(OutlinedButton, 'موافق'),
+        findsNothing,
+      ); // one ballot per unit
+      expect(find.textContaining('موافق 1'), findsOneWidget);
     },
   );
 }

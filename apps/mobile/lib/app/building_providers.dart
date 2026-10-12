@@ -54,3 +54,13 @@ final bBallotsProvider = StreamProvider.autoDispose
           ref.watch(buildingRepositoryProvider).ballots(a.orgId, a.id, a.vote),
       retry: (_, _) => null,
     );
+
+/// Buildings the signed-in person owns a unit in (they cannot list a building collection, so the invite
+/// function leaves them a membership record).
+final myBuildingsProvider = StreamProvider.autoDispose<List<Doc<BMembership>>>((
+  ref,
+) {
+  final scope = ref.watch(opsScopeProvider);
+  if (scope == null || !scope.unitOwner) return Stream.value(const []);
+  return ref.watch(buildingRepositoryProvider).memberships(scope.uid);
+}, retry: (_, _) => null);

@@ -38,6 +38,7 @@ export async function attachBuildingOwner(
 ) {
   const member = deps.db.doc(`orgs/${orgId}/buildings/${buildingId}/members/${memberId}`);
   if (!(await member.get()).exists) throw new HttpsError('not-found', 'member_not_found');
+  const building = await deps.db.doc(`orgs/${orgId}/buildings/${buildingId}`).get();
   const batch = deps.db.batch();
   batch.update(member, { uid });
   batch.set(deps.db.doc(`orgs/${orgId}/buildings/${buildingId}/owners/${uid}`), { memberId });
@@ -45,6 +46,7 @@ export async function attachBuildingOwner(
     orgId,
     buildingId,
     memberId,
+    name: (building.data()?.name as string | undefined) ?? '',
   });
   batch.set(deps.db.collection(`orgs/${orgId}/audit`).doc(), {
     action: 'building.owner_linked',
@@ -86,6 +88,8 @@ export async function linkByEmail(
 ) {
   try {
     const user = await deps.auth.getUserByEmail(email);
+    // An unverified address could belong to someone else: wait for the real owner to verify it.
+    if (!user.emailVerified) return false;
     await apply(user.uid);
     return true;
   } catch (e) {

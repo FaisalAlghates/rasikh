@@ -28,6 +28,13 @@ class FakeBuildingRepository implements BuildingRepository {
   String _id(String p) => '$p${++_seq}';
   void _touch() => _changes.add(null);
 
+  /// Pretend the signed-in test person is linked to a building, as the invite function would.
+  final linked = <Doc<BMembership>>[];
+
+  @override
+  Stream<List<Doc<BMembership>>> memberships(String uid) =>
+      _live(() => List.of(linked));
+
   @override
   Stream<List<Doc<String>>> buildings(String orgId) => _live(() => List.of(_b));
   @override
@@ -59,6 +66,24 @@ class FakeBuildingRepository implements BuildingRepository {
     calls.add('building:$name');
     _b.add(Doc(_id('b'), name));
     _touch();
+  }
+
+  @override
+  Future<String> linkOwner(
+    String orgId,
+    String bid,
+    String memberId,
+    String email,
+  ) async {
+    calls.add('link:$email');
+    final i = _m.indexWhere((x) => x.id == memberId);
+    final old = _m[i].data;
+    _m[i] = Doc(
+      memberId,
+      BMember(old.name, old.unitLabel, old.shareBp, uid: 'u-$email'),
+    );
+    _touch();
+    return 'linked';
   }
 
   @override

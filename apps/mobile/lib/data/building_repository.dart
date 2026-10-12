@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'ops_models.dart' show Doc;
 import 'photo_picker.dart';
 
 class BMember {
-  const BMember(this.name, this.unitLabel, this.shareBp);
+  const BMember(this.name, this.unitLabel, this.shareBp, {this.uid});
   final String name, unitLabel;
+
+  /// Set by the invite function once the owner is linked to an account.
+  final String? uid;
   final int shareBp;
 }
 
@@ -28,6 +32,11 @@ class BQuote {
   final double amount;
 }
 
+class BMembership {
+  const BMembership(this.orgId, this.buildingId, this.memberId, this.name);
+  final String orgId, buildingId, memberId, name;
+}
+
 class BVote {
   const BVote(this.title, this.rule, this.closed);
   final String title, rule;
@@ -36,6 +45,8 @@ class BVote {
 
 /// Owners-association bookkeeping for one organization (staff only). The ledger is append-only.
 abstract class BuildingRepository {
+  /// The buildings a unit owner is linked to (written by the invite function); readable by that person only.
+  Stream<List<Doc<BMembership>>> memberships(String uid);
   Stream<List<Doc<String>>> buildings(String orgId);
   Stream<List<Doc<BMember>>> members(String orgId, String bid);
   Stream<List<Doc<BExpense>>> expenses(String orgId, String bid);
@@ -46,6 +57,14 @@ abstract class BuildingRepository {
 
   Future<void> addBuilding(String orgId, String name);
   Future<void> addMember(String orgId, String bid, BMember m);
+
+  /// Links a unit owner to an account by email: 'linked' at once for a verified account, otherwise 'pending'.
+  Future<String> linkOwner(
+    String orgId,
+    String bid,
+    String memberId,
+    String email,
+  );
 
   /// Uploads the receipt first, then writes the expense; a receipt is required for every shared expense.
   Future<void> addExpense(
@@ -93,12 +112,28 @@ class FirestoreBuildingRepository implements BuildingRepository {
   String _s(Object? v) => (v as String?) ?? '';
 
   @override
+  Stream<List<Doc<BMembership>>> memberships(String uid) => _w(
+    _db.collection('users/$uid/memberships'),
+    (m) => BMembership(
+      _s(m['orgId']),
+      _s(m['buildingId']),
+      _s(m['memberId']),
+      _s(m['name']),
+    ),
+  );
+
+  @override
   Stream<List<Doc<String>>> buildings(String orgId) =>
       _w(_db.collection('orgs/$orgId/buildings'), (m) => _s(m['name']));
   @override
   Stream<List<Doc<BMember>>> members(String orgId, String bid) => _w(
     _c(orgId, bid, 'members'),
-    (m) => BMember(_s(m['name']), _s(m['unitLabel']), _n(m['shareBp']).toInt()),
+    (m) => BMember(
+      _s(m['name']),
+      _s(m['unitLabel']),
+      _n(m['shareBp']).toInt(),
+      uid: m['uid'] as String?,
+    ),
   );
   @override
   Stream<List<Doc<BExpense>>> expenses(String orgId, String bid) => _w(
@@ -136,6 +171,24 @@ class FirestoreBuildingRepository implements BuildingRepository {
   @override
   Future<void> addBuilding(String orgId, String name) =>
       _db.collection('orgs/$orgId/buildings').add({'name': name});
+
+  @override
+  Future<String> linkOwner(
+    String orgId,
+    String bid,
+    String memberId,
+    String email,
+  ) async {
+    final r = await FirebaseFunctions.instanceFor(region: 'me-central2')
+        .httpsCallable('inviteBuildingMember')
+        .call({
+          'orgId': orgId,
+          'buildingId': bid,
+          'memberId': memberId,
+          'email': email,
+        });
+    return (r.data as Map)['status'] as String;
+  }
 
   @override
   Future<void> addMember(String orgId, String bid, BMember m) => _c(
