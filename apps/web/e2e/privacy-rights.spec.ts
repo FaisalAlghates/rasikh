@@ -42,5 +42,7 @@ test('PDPL: download my data, then delete my account with a password; the sign-i
   await p.locator('#password').fill(PASSWORD);
   await p.locator('form button[type=submit]').click();
   await expect(p).toHaveURL(/\/ar\/auth/);
-  await expect(p.getByRole('alert').filter({ hasText: /\S/ }).first()).toBeVisible({ timeout: 15_000 });
+  await expect(p.getByRole('alert').filter({ hasText: /\S/ }).first()).toBeVisible({
+    timeout: 15_000,
+  });
 });

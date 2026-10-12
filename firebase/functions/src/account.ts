@@ -32,7 +32,9 @@ export async function exportMyData(deps: AccountDeps, uid: string | undefined) {
   if (!uid) throw new HttpsError('unauthenticated', 'auth_required');
   const now = (deps.now ?? (() => new Date()))();
   const profile = (await deps.db.doc(`users/${uid}`).get()).data() ?? {};
-  const memberships = (await deps.db.collection(`users/${uid}/memberships`).get()).docs.map((d) => d.data());
+  const memberships = (await deps.db.collection(`users/${uid}/memberships`).get()).docs.map((d) =>
+    d.data(),
+  );
   const orgs: Record<string, unknown> = {};
   for (const orgId of await orgsOf(deps, uid)) {
     const o = `orgs/${orgId}`;
@@ -88,7 +90,9 @@ export async function deleteMyAccount(
   for (const orgId of orgIds) {
     const members = await deps.db.collection(`orgs/${orgId}/members`).get();
     const mine = members.docs.find((d) => d.id === uid);
-    const owners = members.docs.filter((d) => ((d.data().roles ?? []) as string[]).includes('owner'));
+    const owners = members.docs.filter((d) =>
+      ((d.data().roles ?? []) as string[]).includes('owner'),
+    );
     const iAmOwner = ((mine?.data().roles ?? []) as string[]).includes('owner');
     if (iAmOwner && owners.length === 1 && members.size > 1) {
       throw new HttpsError('failed-precondition', 'transfer_ownership_first');
@@ -97,7 +101,9 @@ export async function deleteMyAccount(
 
   for (const orgId of orgIds) {
     const o = `orgs/${orgId}`;
-    await deps.db.collection(`${o}/audit`).add({ action: 'account_deleted', uid, at: FieldValue.serverTimestamp() });
+    await deps.db
+      .collection(`${o}/audit`)
+      .add({ action: 'account_deleted', uid, at: FieldValue.serverTimestamp() });
     for (const [col, field] of [
       ['leads', 'brokerUid'],
       ['viewings', 'brokerUid'],

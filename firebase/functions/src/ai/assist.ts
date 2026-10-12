@@ -51,7 +51,11 @@ const RIYADH_OFFSET_MS = 3 * 3600_000;
  * then the data the person is allowed to see, then rate/cost limits, and only then the model. Metadata is logged
  * for every outcome; the message and the answer never are.
  */
-export async function aiAssist(deps: AssistDeps, uid: string | undefined, raw: unknown): Promise<AssistResult> {
+export async function aiAssist(
+  deps: AssistDeps,
+  uid: string | undefined,
+  raw: unknown,
+): Promise<AssistResult> {
   if (!uid) throw new HttpsError('unauthenticated', 'auth_required');
   const parsed = Request.safeParse(raw);
   if (!parsed.success) throw new HttpsError('invalid-argument', 'invalid_input');
@@ -135,7 +139,11 @@ export async function aiAssist(deps: AssistDeps, uid: string | undefined, raw: u
   };
 }
 
-function gather(feature: Feature, ctx: FeatureCtx, input: Record<string, unknown>): Promise<Gathered> {
+function gather(
+  feature: Feature,
+  ctx: FeatureCtx,
+  input: Record<string, unknown>,
+): Promise<Gathered> {
   switch (feature) {
     case 'explainLease':
       return gatherExplainLease(ctx, input as { leaseId: string });

@@ -82,7 +82,12 @@ export function BrokerView({ orgId, uid }: { orgId: string; uid: string }) {
       <p className="text-small text-text-muted">{t('intro')}</p>
       <ProfileCard orgId={orgId} uid={uid} />
       {openLead ? (
-        <LeadDetail orgId={orgId} uid={uid} leadId={openLead} onBack={() => setOpenLead(undefined)} />
+        <LeadDetail
+          orgId={orgId}
+          uid={uid}
+          leadId={openLead}
+          onBack={() => setOpenLead(undefined)}
+        />
       ) : (
         <Leads orgId={orgId} uid={uid} onOpen={setOpenLead} />
       )}
@@ -189,7 +194,13 @@ function ProfileCard({ orgId, uid }: { orgId: string; uid: string }) {
 
 // ---------------------------------------------------------------- leads
 
-async function logEntry(orgId: string, uid: string, leadId: string, type: ActivityType, text: string) {
+async function logEntry(
+  orgId: string,
+  uid: string,
+  leadId: string,
+  type: ActivityType,
+  text: string,
+) {
   await addDoc(collection(firebaseDb(), `orgs/${orgId}/brokerActivity`), {
     leadId,
     type,
@@ -256,7 +267,12 @@ function Leads({
             void add();
           }}
         >
-          <Field id="ld-name" label={t('name')} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
+          <Field
+            id="ld-name"
+            label={t('name')}
+            value={f.name}
+            onChange={(e) => setF({ ...f, name: e.target.value })}
+          />
           <Field
             id="ld-phone"
             label={t('phone')}
@@ -378,7 +394,13 @@ function LeadDetail({
   const move = (to: LeadStatus) =>
     guard(async () => {
       await updateDoc(doc(firebaseDb(), `orgs/${orgId}/leads/${leadId}`), { status: to });
-      await logEntry(orgId, uid, leadId, 'status_changed', `${t(`status_${lead.data.status}`)} → ${t(`status_${to}`)}`);
+      await logEntry(
+        orgId,
+        uid,
+        leadId,
+        'status_changed',
+        `${t(`status_${lead.data.status}`)} → ${t(`status_${to}`)}`,
+      );
     });
 
   return (
@@ -467,7 +489,12 @@ function LeadDetail({
             });
           }}
         >
-          <Field id="vw-place" label={t('place')} value={v.place} onChange={(e) => setV({ ...v, place: e.target.value })} />
+          <Field
+            id="vw-place"
+            label={t('place')}
+            value={v.place}
+            onChange={(e) => setV({ ...v, place: e.target.value })}
+          />
           <Field
             id="vw-when"
             type="datetime-local"
@@ -486,7 +513,8 @@ function LeadDetail({
         <ul className="flex flex-col gap-1 text-small">
           {mine(contracts.rows).map((x) => (
             <li key={x.id} data-testid="contract-row">
-              {t(`type_${x.data.type}`)} · {x.data.contractNo} · {x.data.startDate} → {x.data.endDate}
+              {t(`type_${x.data.type}`)} · {x.data.contractNo} · {x.data.startDate} →{' '}
+              {x.data.endDate}
             </li>
           ))}
         </ul>
@@ -522,7 +550,12 @@ function LeadDetail({
             onChange={(e) => setC({ ...c, type: e.target.value })}
             options={BROKERAGE_TYPES.map((x) => ({ value: x, label: t(`type_${x}`) }))}
           />
-          <Field id="bc-no" label={t('contractNo')} value={c.no} onChange={(e) => setC({ ...c, no: e.target.value })} />
+          <Field
+            id="bc-no"
+            label={t('contractNo')}
+            value={c.no}
+            onChange={(e) => setC({ ...c, no: e.target.value })}
+          />
           <Field
             id="bc-pct"
             label={t('commission')}
@@ -530,8 +563,20 @@ function LeadDetail({
             value={c.pct}
             onChange={(e) => setC({ ...c, pct: e.target.value })}
           />
-          <Field id="bc-start" type="date" label={t('start')} value={c.start} onChange={(e) => setC({ ...c, start: e.target.value })} />
-          <Field id="bc-end" type="date" label={t('end')} value={c.end} onChange={(e) => setC({ ...c, end: e.target.value })} />
+          <Field
+            id="bc-start"
+            type="date"
+            label={t('start')}
+            value={c.start}
+            onChange={(e) => setC({ ...c, start: e.target.value })}
+          />
+          <Field
+            id="bc-end"
+            type="date"
+            label={t('end')}
+            value={c.end}
+            onChange={(e) => setC({ ...c, end: e.target.value })}
+          />
           <div className="flex items-end">
             <Button type="submit">{t('addContract')}</Button>
           </div>
@@ -562,7 +607,12 @@ function LeadDetail({
           }}
         >
           <div className="min-w-56 flex-1">
-            <Field id="log-note" label={t('note')} value={note} onChange={(e) => setNote(e.target.value)} />
+            <Field
+              id="log-note"
+              label={t('note')}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
           <Button type="submit">{t('addNote')}</Button>
         </form>

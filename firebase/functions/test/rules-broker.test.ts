@@ -82,7 +82,9 @@ describe('broker profile', () => {
   it('a broker writes only their own profile, with a valid license number', async () => {
     await assertSucceeds(setDoc(doc(as('b1', broker), `${O}/brokers/b1`), profile));
     await assertFails(setDoc(doc(as('b1', broker), `${O}/brokers/b2`), profile));
-    await assertFails(setDoc(doc(as('b1', broker), `${O}/brokers/b1`), { ...profile, falNo: '12' }));
+    await assertFails(
+      setDoc(doc(as('b1', broker), `${O}/brokers/b1`), { ...profile, falNo: '12' }),
+    );
     await assertFails(
       setDoc(doc(as('b1', broker), `${O}/brokers/b1`), { ...profile, verified: true }),
     );
@@ -113,9 +115,7 @@ describe('leads', () => {
     const db = as('b2', otherBroker);
     await assertFails(getDoc(doc(db, `${O}/leads/l1`)));
     await assertFails(updateDoc(doc(db, `${O}/leads/l1`), { status: 'contacted' }));
-    await assertFails(
-      getDocs(query(collection(db, `${O}/leads`), where('brokerUid', '==', 'b1'))),
-    );
+    await assertFails(getDocs(query(collection(db, `${O}/leads`), where('brokerUid', '==', 'b1'))));
     await assertSucceeds(
       getDocs(query(collection(db, `${O}/leads`), where('brokerUid', '==', 'b2'))),
     );
@@ -197,7 +197,7 @@ describe('immutable activity log', () => {
   it('a broker appends entries to their own lead with the server time', async () => {
     await assertSucceeds(setDoc(doc(as('b1', broker), `${O}/brokerActivity/n1`), entry()));
   });
-  it('rejects a client-chosen time, someone else\'s lead, a bad type or an empty text', async () => {
+  it("rejects a client-chosen time, someone else's lead, a bad type or an empty text", async () => {
     const db = as('b1', broker);
     await assertFails(
       setDoc(doc(db, `${O}/brokerActivity/n1`), entry({ createdAt: new Date('2020-01-01') })),

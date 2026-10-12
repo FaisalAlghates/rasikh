@@ -31,7 +31,8 @@ export async function importIndicativePrices(
   raw: unknown,
 ) {
   if (!uid) throw new HttpsError('unauthenticated', 'auth_required');
-  if (typeof orgId !== 'string' || !orgId) throw new HttpsError('invalid-argument', 'invalid_input');
+  if (typeof orgId !== 'string' || !orgId)
+    throw new HttpsError('invalid-argument', 'invalid_input');
   const m = await deps.db.doc(`orgs/${orgId}/members/${uid}`).get();
   if (!((m.data()?.roles ?? []) as string[]).includes('admin')) {
     throw new HttpsError('permission-denied', 'not_allowed');

@@ -12,7 +12,10 @@ export const FEATURES = [
 ] as const;
 export type Feature = (typeof FEATURES)[number];
 
-const PhraseIn = z.object({ facts: z.string().max(8000), question: z.string().max(2000).optional() });
+const PhraseIn = z.object({
+  facts: z.string().max(8000),
+  question: z.string().max(2000).optional(),
+});
 const PhraseOut = z.object({ text: z.string() });
 
 /** What each flow tells the model: write only from the facts, in Arabic, never rule on law, value or money. */
@@ -58,7 +61,10 @@ export function createRuntime(provider: ModelProvider) {
         },
       ),
     ]),
-  ) as unknown as Record<Feature, (input: z.infer<typeof PhraseIn>) => Promise<z.infer<typeof PhraseOut>>>;
+  ) as unknown as Record<
+    Feature,
+    (input: z.infer<typeof PhraseIn>) => Promise<z.infer<typeof PhraseOut>>
+  >;
 
   return { provider, flows };
 }

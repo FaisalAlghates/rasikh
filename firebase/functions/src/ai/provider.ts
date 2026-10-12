@@ -36,7 +36,9 @@ export class ProviderNotConfigured extends Error {
 }
 
 /** Chooses the provider from `AI_PROVIDER` (default `fake`). Real providers are added here when approved. */
-export function providerFromEnv(env: Record<string, string | undefined> = process.env): ModelProvider {
+export function providerFromEnv(
+  env: Record<string, string | undefined> = process.env,
+): ModelProvider {
   const name = env.AI_PROVIDER ?? 'fake';
   if (name === 'fake') return new FakeModelProvider();
   throw new ProviderNotConfigured(name);
