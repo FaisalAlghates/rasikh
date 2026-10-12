@@ -390,4 +390,357 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gArch => 'Najdi arch · Shurfa';
+
+  @override
+  String get opsTabOverview => 'Overview';
+
+  @override
+  String get opsTabProperties => 'Properties & units';
+
+  @override
+  String get opsTabLeases => 'Leases & payments';
+
+  @override
+  String get opsTabExpenses => 'Expenses';
+
+  @override
+  String get opsTabReport => 'Annual report';
+
+  @override
+  String get opsTabMyLease => 'My lease';
+
+  @override
+  String get opsUnits => 'Units';
+
+  @override
+  String get opsActiveLeases => 'Active leases';
+
+  @override
+  String get opsCollected => 'Collected this year';
+
+  @override
+  String get opsOutstanding => 'Outstanding';
+
+  @override
+  String get opsUpcoming => 'Upcoming payments';
+
+  @override
+  String get opsNoUpcoming => 'No upcoming payments.';
+
+  @override
+  String get opsNotifications => 'Alerts';
+
+  @override
+  String get opsNoNotifications => 'No alerts.';
+
+  @override
+  String get opsName => 'Name';
+
+  @override
+  String get opsCity => 'City';
+
+  @override
+  String get opsDistrict => 'District';
+
+  @override
+  String get opsKindBuilding => 'Building';
+
+  @override
+  String get opsKindVilla => 'Villa';
+
+  @override
+  String get opsAddProperty => 'Add property';
+
+  @override
+  String get opsNoProperties => 'No properties yet.';
+
+  @override
+  String get opsAddUnit => 'Add unit';
+
+  @override
+  String get opsUnitLabel => 'Unit number or name';
+
+  @override
+  String get opsTypeStudio => 'Studio';
+
+  @override
+  String get opsTypeApartment => 'Apartment';
+
+  @override
+  String get opsTypeVilla => 'Villa';
+
+  @override
+  String get opsNoUnits => 'No units.';
+
+  @override
+  String get opsAddLease => 'Add lease';
+
+  @override
+  String get opsEjarNo => 'Ejar contract number';
+
+  @override
+  String get opsEjarHint =>
+      'We store the number for reference; the contract itself stays in Ejar.';
+
+  @override
+  String get opsTenantName => 'Tenant name';
+
+  @override
+  String get opsTenantEmail => 'Tenant email (for the invite)';
+
+  @override
+  String get opsStartDate => 'Lease start';
+
+  @override
+  String get opsEndDate => 'Lease end';
+
+  @override
+  String get opsAnnualRent => 'Annual rent (SAR)';
+
+  @override
+  String get opsCycle => 'Payment cycle';
+
+  @override
+  String get opsMonthly => 'Monthly';
+
+  @override
+  String get opsQuarterly => 'Quarterly';
+
+  @override
+  String get opsSemiannual => 'Semi-annual';
+
+  @override
+  String get opsAnnual => 'Annual';
+
+  @override
+  String get opsDeposit => 'Deposit amount (information only)';
+
+  @override
+  String get opsDepositNote =>
+      'The deposit is held through Ejar; we never receive money.';
+
+  @override
+  String get opsPreviousRent => 'Previous rent (for a renewal)';
+
+  @override
+  String opsFreezeWarn(String max) {
+    return 'Heads-up: rent increases on Riyadh contracts are currently frozen. The usual renewal ceiling is SAR $max.';
+  }
+
+  @override
+  String get opsFreezeNote =>
+      'Indicative only, not legal advice. Check with Ejar or a licensed professional.';
+
+  @override
+  String get opsSaveLease => 'Save lease and create schedule';
+
+  @override
+  String get opsLeaseSaved => 'Lease and payment schedule saved.';
+
+  @override
+  String get opsSchedule => 'Payment schedule';
+
+  @override
+  String get opsDueDate => 'Due';
+
+  @override
+  String get opsAmount => 'Amount';
+
+  @override
+  String get opsStatus => 'Status';
+
+  @override
+  String get opsStatusDue => 'Due';
+
+  @override
+  String get opsStatusPaid => 'Paid';
+
+  @override
+  String get opsStatusLate => 'Late';
+
+  @override
+  String get opsMarkPaid => 'Record payment';
+
+  @override
+  String get opsNoLeases => 'No leases.';
+
+  @override
+  String opsRenewalNotice(String date) {
+    return 'Renewal notice by $date';
+  }
+
+  @override
+  String get opsInviteTenant => 'Invite tenant';
+
+  @override
+  String get opsInviteLinked => 'Tenant linked to the lease.';
+
+  @override
+  String get opsInvitePending =>
+      'Invite sent; it activates when they sign in with this verified email.';
+
+  @override
+  String get opsRecordsOnly =>
+      'We only record payments; we do not receive money or finance rent.';
+
+  @override
+  String get opsAddExpense => 'Add expense';
+
+  @override
+  String get opsCategory => 'Category';
+
+  @override
+  String get opsCatMaintenance => 'Maintenance';
+
+  @override
+  String get opsCatUtilities => 'Utilities';
+
+  @override
+  String get opsCatInsurance => 'Insurance';
+
+  @override
+  String get opsCatFees => 'Fees';
+
+  @override
+  String get opsCatOther => 'Other';
+
+  @override
+  String get opsDate => 'Date';
+
+  @override
+  String get opsNote => 'Note';
+
+  @override
+  String get opsNoExpenses => 'No expenses.';
+
+  @override
+  String get opsProperty => 'Property';
+
+  @override
+  String get opsReportTitle => 'Annual income and expense report';
+
+  @override
+  String get opsYear => 'Year';
+
+  @override
+  String get opsExpected => 'Expected';
+
+  @override
+  String get opsExpenses => 'Expenses';
+
+  @override
+  String get opsNet => 'Net';
+
+  @override
+  String get opsReportNote =>
+      'An indicative report from your records, not an accounting or legal document.';
+
+  @override
+  String get opsAddToCalendar => 'Add to calendar';
+
+  @override
+  String get opsCalPayment => 'Rent payment';
+
+  @override
+  String get opsCalLeaseEnd => 'Lease end';
+
+  @override
+  String get opsCalRenewal => 'Renewal notice';
+
+  @override
+  String get opsNUpcoming => 'Payment due soon';
+
+  @override
+  String get opsNLate => 'Payment overdue';
+
+  @override
+  String get opsNExpiring => 'Lease ending soon';
+
+  @override
+  String get opsNRenewal => 'Time for the renewal notice';
+
+  @override
+  String opsDaysLeft(int count) {
+    return '$count days';
+  }
+
+  @override
+  String get opsSave => 'Save';
+
+  @override
+  String get opsSaving => 'Saving';
+
+  @override
+  String get opsErrorGeneric => 'Could not save. Please try again.';
+
+  @override
+  String get opsRequired => 'This field is required';
+
+  @override
+  String get opsSar => 'SAR';
+
+  @override
+  String get opsChoose => 'Choose';
+
+  @override
+  String get opsCalendarNote =>
+      'A free calendar file: your payments and lease dates show up in your phone calendar with alerts.';
+
+  @override
+  String get opsRemindersFree =>
+      'Reminders are computed from your records and shown here for free; you can also add them to your phone calendar.';
+
+  @override
+  String get opsBack => 'Back';
+
+  @override
+  String get opsOpenLease => 'Open lease';
+
+  @override
+  String opsLeaseOf(String unit) {
+    return 'Lease $unit';
+  }
+
+  @override
+  String get opsHomeStaffHint => 'Your portfolio summary and alerts.';
+
+  @override
+  String opsPaidOn(String date) {
+    return 'Paid on $date';
+  }
+
+  @override
+  String get opsChooseUnit => 'Pick a unit to add a lease';
+
+  @override
+  String get opsInvalidDate => 'Write the date like 2026-01-31';
+
+  @override
+  String get opsInvalidEjar =>
+      'Ejar contract number: 6 to 30 letters or digits';
+
+  @override
+  String get opsInvalidAmount => 'Enter a valid amount above zero';
+
+  @override
+  String get opsEndBeforeStart => 'The lease must end after it starts';
+
+  @override
+  String get opsCalendarFailed => 'Could not prepare the calendar file.';
+
+  @override
+  String get opsLoadFailed =>
+      'Could not load your data. Check the connection and try again.';
+
+  @override
+  String get opsPickDate => 'Pick a date';
+
+  @override
+  String get opsInvitedAgain => 'Invitation sent.';
+
+  @override
+  String get opsTenantLabel => 'Tenant';
+
+  @override
+  String get opsInvalidEmail => 'Enter a valid email address';
 }

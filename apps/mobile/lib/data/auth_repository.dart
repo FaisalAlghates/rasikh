@@ -11,6 +11,14 @@ class SessionUser {
   final Map<String, List<String>> orgs;
 
   bool get hasOrg => orgs.isNotEmpty;
+
+  /// The first organization is the active one (multi-org switching comes later).
+  String? get activeOrgId => orgs.isEmpty ? null : orgs.keys.first;
+  List<String> get roles => orgs.isEmpty ? const [] : orgs.values.first;
+
+  /// Owners, managers and admins see the whole organization; everyone else only their own lease.
+  bool get isStaff =>
+      roles.any((r) => r == 'owner' || r == 'manager' || r == 'admin');
 }
 
 /// Typed failures so the UI can map them to translated messages (no raw strings from the backend).

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rasikh/app/app.dart';
+import 'package:rasikh/app/ops_providers.dart';
 import 'package:rasikh/app/providers.dart';
 import 'package:rasikh/data/auth_repository.dart';
 import 'package:rasikh/theme/app_theme.dart';
 import 'package:rasikh/widgets/live_city.dart';
 
 import 'helpers/fake_auth_repository.dart';
+import 'helpers/fake_ops_repository.dart';
 
 Future<FakeAuthRepository> pumpApp(
   WidgetTester tester, {
@@ -22,7 +24,11 @@ Future<FakeAuthRepository> pumpApp(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [authRepositoryProvider.overrideWithValue(repo)],
+      overrides: [
+        authRepositoryProvider.overrideWithValue(repo),
+        opsRepositoryProvider.overrideWithValue(FakeOpsRepository()),
+        calendarExporterProvider.overrideWithValue(FakeCalendarExporter()),
+      ],
       child: const RasikhApp(),
     ),
   );

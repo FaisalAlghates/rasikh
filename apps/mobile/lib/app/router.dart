@@ -6,6 +6,11 @@ import '../features/auth/auth_screen.dart';
 import '../features/gallery/gallery_screen.dart';
 import '../features/intro/intro_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
+import '../features/ops/expenses_screen.dart';
+import '../features/ops/lease_form_screen.dart';
+import '../features/ops/leases_screen.dart';
+import '../features/ops/properties_screen.dart';
+import '../features/ops/report_screen.dart';
 import '../features/shell/app_shell.dart';
 import 'providers.dart';
 
@@ -15,6 +20,23 @@ abstract final class Routes {
   static const onboarding = '/onboarding';
   static const workspace = '/workspace';
   static const gallery = '/gallery';
+
+  // Pushed above the shell once the user has an organization.
+  static const properties = '/properties';
+  static const leases = '/leases';
+  static const expenses = '/expenses';
+  static const report = '/report';
+  static String leaseFor(String id) => '/leases/$id';
+  static String leaseNewFor(String unitId) => '/lease/new/$unitId';
+
+  static bool isWorkspace(String loc) =>
+      loc == workspace ||
+      loc == properties ||
+      loc == expenses ||
+      loc == report ||
+      loc == leases ||
+      loc.startsWith('$leases/') ||
+      loc.startsWith('/lease/new/');
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -40,7 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!user.hasOrg) {
         return loc == Routes.onboarding ? null : Routes.onboarding;
       }
-      return loc == Routes.workspace ? null : Routes.workspace;
+      return Routes.isWorkspace(loc) ? null : Routes.workspace;
     },
     routes: [
       GoRoute(path: Routes.home, builder: (_, _) => const IntroScreen()),
@@ -50,6 +72,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const OnboardingScreen(),
       ),
       GoRoute(path: Routes.workspace, builder: (_, _) => const AppShell()),
+      GoRoute(
+        path: Routes.properties,
+        builder: (_, _) => const PropertiesScreen(),
+      ),
+      GoRoute(path: Routes.leases, builder: (_, _) => const LeasesScreen()),
+      GoRoute(
+        path: '/leases/:id',
+        builder: (_, s) => LeaseDetailScreen(leaseId: s.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/lease/new/:unitId',
+        builder: (_, s) => LeaseFormScreen(unitId: s.pathParameters['unitId']!),
+      ),
+      GoRoute(path: Routes.expenses, builder: (_, _) => const ExpensesScreen()),
+      GoRoute(path: Routes.report, builder: (_, _) => const ReportScreen()),
       GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
     ],
   );

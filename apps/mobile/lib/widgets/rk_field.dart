@@ -46,6 +46,57 @@ class RkField extends StatelessWidget {
   }
 }
 
+/// Date entered as YYYY-MM-DD (always left-to-right), with a calendar button for picking.
+class RkDateField extends StatelessWidget {
+  const RkDateField({
+    super.key,
+    required this.label,
+    required this.controller,
+    required this.pickerLabel,
+    this.error,
+    this.onChanged,
+  });
+  final String label, pickerLabel;
+  final TextEditingController controller;
+  final String? error;
+  final ValueChanged<String>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      textDirection: TextDirection.ltr,
+      keyboardType: TextInputType.datetime,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: '2026-01-31',
+        errorText: error,
+        errorStyle: TextStyle(color: context.tokens.danger),
+        suffixIcon: IconButton(
+          tooltip: pickerLabel,
+          icon: const Icon(Icons.calendar_today_outlined, size: 20),
+          onPressed: () async {
+            final now = DateTime.now();
+            final current = DateTime.tryParse(controller.text.trim());
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: current ?? now,
+              firstDate: DateTime(now.year - 5),
+              lastDate: DateTime(now.year + 15),
+            );
+            if (picked == null) return;
+            final text =
+                '${picked.year.toString().padLeft(4, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+            controller.text = text;
+            onChanged?.call(text);
+          },
+        ),
+      ),
+    );
+  }
+}
+
 class RkSelectOption<T> {
   const RkSelectOption(this.value, this.label);
   final T value;

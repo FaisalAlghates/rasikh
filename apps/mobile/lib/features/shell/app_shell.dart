@@ -9,11 +9,11 @@ import '../../app/router.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/rasikh_tokens.g.dart';
-import '../../widgets/brand_mark.dart';
 import '../../widgets/live_city.dart';
-import '../../widgets/reveal.dart';
 import '../../widgets/rk_button.dart';
 import '../../widgets/rk_surfaces.dart';
+import '../../widgets/tab_page.dart';
+import '../ops/ops_home.dart';
 
 /// Signed-in home shell: four destinations and a floating glass dock.
 /// The dock is the one glass layer on these screens.
@@ -193,50 +193,6 @@ class _DockItem extends StatelessWidget {
   }
 }
 
-/// Header + padded scroll body shared by the tabs (keeps room for the dock).
-class _TabPage extends ConsumerWidget {
-  const _TabPage({required this.title, required this.children});
-  final String title;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
-      bottom: false,
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 560),
-          child: ListView(
-            padding: EdgeInsets.fromLTRB(
-              24,
-              16,
-              24,
-              120 + MediaQuery.paddingOf(context).bottom,
-            ),
-            children: [
-              Row(
-                children: [
-                  BrandMark(size: 24, color: context.tokens.brandText),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(title, style: displayStyle(context, 28)),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              for (var i = 0; i < children.length; i++)
-                Reveal(index: i + 1, child: children[i]),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _HomeTab extends ConsumerWidget {
   const _HomeTab();
 
@@ -256,35 +212,31 @@ class _HomeTab extends ConsumerWidget {
       _ => r,
     };
 
-    return _TabPage(
+    return TabPage(
       title: l10n.workspaceTitle,
       children: [
-        Text(
-          orgs.isEmpty ? l10n.workspaceNoOrg : l10n.workspaceReady,
-          style: TextStyle(color: t.textMuted, fontSize: 17, height: 1.7),
-        ),
-        const SizedBox(height: 16),
-        for (final org in orgs)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: RkCard(
-              child: Wrap(
-                spacing: 8,
-                children: [
-                  for (final r in org.value)
-                    Chip(
-                      key: Key('role-chip-$r'),
-                      label: Text(
-                        roleLabel(r),
-                        style: TextStyle(color: t.brandText, fontSize: 13),
-                      ),
-                      backgroundColor: t.bg,
-                      side: BorderSide.none,
-                    ),
-                ],
-              ),
-            ),
+        if (orgs.isEmpty)
+          Text(
+            l10n.workspaceNoOrg,
+            style: TextStyle(color: t.textMuted, fontSize: 17, height: 1.7),
           ),
+        for (final org in orgs.take(1))
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final r in org.value)
+                Chip(
+                  key: Key('role-chip-$r'),
+                  label: Text(
+                    roleLabel(r),
+                    style: TextStyle(color: t.brandText, fontSize: 13),
+                  ),
+                  backgroundColor: t.surface,
+                  side: BorderSide.none,
+                ),
+            ],
+          ),
+        if (orgs.isNotEmpty) const OpsHome(),
       ],
     );
   }
@@ -345,7 +297,7 @@ class _RecordTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final t = context.tokens;
-    return _TabPage(
+    return TabPage(
       title: l10n.recordEmptyTitle,
       children: [
         Text(
@@ -385,7 +337,7 @@ class _ProfileTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final dark = ref.watch(themeModeProvider) == ThemeMode.dark;
-    return _TabPage(
+    return TabPage(
       title: l10n.profileTitle,
       children: [
         RkButton(

@@ -122,5 +122,151 @@
   "gAddUnit": "أضف وحدة",
   "gGlass": "الزجاج: للعناصر العائمة فوق الخريطة فقط",
   "gGlassSample": "ابحث عن حي أو عقار",
-  "gArch": "قوس نجدي · الشرفات"
+  "gArch": "قوس نجدي · الشرفات",
+  "opsTabOverview": "نظرة عامة",
+  "opsTabProperties": "العقارات والوحدات",
+  "opsTabLeases": "العقود والدفعات",
+  "opsTabExpenses": "المصروفات",
+  "opsTabReport": "التقرير السنوي",
+  "opsTabMyLease": "عقدي",
+  "opsUnits": "الوحدات",
+  "opsActiveLeases": "عقود سارية",
+  "opsCollected": "المحصّل هذا العام",
+  "opsOutstanding": "المتبقي",
+  "opsUpcoming": "الدفعات القادمة",
+  "opsNoUpcoming": "لا توجد دفعات قادمة.",
+  "opsNotifications": "التنبيهات",
+  "opsNoNotifications": "لا توجد تنبيهات.",
+  "opsName": "الاسم",
+  "opsCity": "المدينة",
+  "opsDistrict": "الحي",
+  "opsKindBuilding": "عمارة",
+  "opsKindVilla": "فيلا",
+  "opsAddProperty": "أضف عقاراً",
+  "opsNoProperties": "ما أضفت عقارات بعد.",
+  "opsAddUnit": "أضف وحدة",
+  "opsUnitLabel": "رقم أو اسم الوحدة",
+  "opsTypeStudio": "استوديو",
+  "opsTypeApartment": "شقة",
+  "opsTypeVilla": "فيلا",
+  "opsNoUnits": "لا توجد وحدات.",
+  "opsAddLease": "أضف عقداً",
+  "opsEjarNo": "رقم عقد إيجار",
+  "opsEjarHint": "نسجّل الرقم للرجوع إليه، والعقد نفسه يبقى في إيجار.",
+  "opsTenantName": "اسم المستأجر",
+  "opsTenantEmail": "بريد المستأجر (للدعوة)",
+  "opsStartDate": "بداية العقد",
+  "opsEndDate": "نهاية العقد",
+  "opsAnnualRent": "الإيجار السنوي (ر.س)",
+  "opsCycle": "دورة الدفع",
+  "opsMonthly": "شهري",
+  "opsQuarterly": "ربع سنوي",
+  "opsSemiannual": "نصف سنوي",
+  "opsAnnual": "سنوي",
+  "opsDeposit": "مبلغ الوديعة (للعلم فقط)",
+  "opsDepositNote": "الوديعة تُحفظ عبر إيجار، ولا نستلم أي مبالغ.",
+  "opsPreviousRent": "الإيجار السابق (عند التجديد)",
+  "opsFreezeWarn": "تنبيه: الزيادة في عقود الرياض موقوفة حالياً. الحد المعتاد للتجديد {max} ر.س.",
+  "@opsFreezeWarn": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "opsFreezeNote": "معلومة استرشادية وليست رأياً قانونياً. راجع إيجار أو مختصاً مرخّصاً.",
+  "opsSaveLease": "احفظ العقد وأنشئ الجدول",
+  "opsLeaseSaved": "تم حفظ العقد وجدول الدفعات.",
+  "opsSchedule": "جدول الدفعات",
+  "opsDueDate": "الاستحقاق",
+  "opsAmount": "المبلغ",
+  "opsStatus": "الحالة",
+  "opsStatusDue": "مستحقة",
+  "opsStatusPaid": "مدفوعة",
+  "opsStatusLate": "متأخرة",
+  "opsMarkPaid": "سجّل الدفع",
+  "opsNoLeases": "لا توجد عقود.",
+  "opsRenewalNotice": "إشعار التجديد قبل {date}",
+  "@opsRenewalNotice": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "opsInviteTenant": "ادعُ المستأجر",
+  "opsInviteLinked": "تم ربط المستأجر بالعقد.",
+  "opsInvitePending": "أُرسلت الدعوة، وتُفعَّل عند تسجيله بهذا البريد بعد تأكيده.",
+  "opsRecordsOnly": "نسجّل الدفعات فقط؛ لا نستلم الأموال ولا نموّل الإيجار.",
+  "opsAddExpense": "أضف مصروفاً",
+  "opsCategory": "التصنيف",
+  "opsCatMaintenance": "صيانة",
+  "opsCatUtilities": "خدمات",
+  "opsCatInsurance": "تأمين",
+  "opsCatFees": "رسوم",
+  "opsCatOther": "أخرى",
+  "opsDate": "التاريخ",
+  "opsNote": "ملاحظة",
+  "opsNoExpenses": "لا توجد مصروفات.",
+  "opsProperty": "العقار",
+  "opsReportTitle": "التقرير السنوي للدخل والمصروفات",
+  "opsYear": "السنة",
+  "opsExpected": "المتوقع",
+  "opsExpenses": "المصروفات",
+  "opsNet": "الصافي",
+  "opsReportNote": "تقرير استرشادي من سجلاتك، وليس مستنداً محاسبياً أو قانونياً.",
+  "opsAddToCalendar": "أضف للتقويم",
+  "opsCalPayment": "دفعة إيجار",
+  "opsCalLeaseEnd": "نهاية العقد",
+  "opsCalRenewal": "إشعار التجديد",
+  "opsNUpcoming": "دفعة قريبة الاستحقاق",
+  "opsNLate": "دفعة متأخرة",
+  "opsNExpiring": "عقد ينتهي قريباً",
+  "opsNRenewal": "حان وقت إشعار التجديد",
+  "opsDaysLeft": "{count} يوماً",
+  "@opsDaysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "opsSave": "احفظ",
+  "opsSaving": "جارٍ الحفظ",
+  "opsErrorGeneric": "تعذّر الحفظ. حاول مرة أخرى.",
+  "opsRequired": "هذا الحقل مطلوب",
+  "opsSar": "ر.س",
+  "opsChoose": "اختر",
+  "opsCalendarNote": "ملف تقويم مجاني: دفعاتك وتواريخ العقد تظهر في تقويم جوالك وتجيك منه إشعارات.",
+  "opsRemindersFree": "التنبيهات تُحسب من سجلاتك وتظهر هنا مجاناً، ويمكنك إضافتها لتقويم جوالك.",
+  "opsBack": "رجوع",
+  "opsOpenLease": "افتح العقد",
+  "opsLeaseOf": "عقد {unit}",
+  "@opsLeaseOf": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "opsHomeStaffHint": "ملخّص محفظتك وتنبيهاتك.",
+  "opsPaidOn": "دُفعت في {date}",
+  "@opsPaidOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "opsChooseUnit": "اختر وحدة لإضافة عقد",
+  "opsInvalidDate": "اكتب التاريخ بصيغة 2026-01-31",
+  "opsInvalidEjar": "رقم عقد إيجار من 6 إلى 30 حرفاً أو رقماً",
+  "opsInvalidAmount": "اكتب مبلغاً صحيحاً أكبر من صفر",
+  "opsEndBeforeStart": "نهاية العقد لازم تكون بعد بدايته",
+  "opsCalendarFailed": "تعذّر تجهيز ملف التقويم.",
+  "opsLoadFailed": "تعذّر تحميل البيانات. تأكد من الاتصال وحاول مرة أخرى.",
+  "opsPickDate": "اختر التاريخ",
+  "opsInvitedAgain": "أُرسلت الدعوة.",
+  "opsTenantLabel": "المستأجر",
+  "opsInvalidEmail": "اكتب بريداً إلكترونياً صحيحاً"
 }

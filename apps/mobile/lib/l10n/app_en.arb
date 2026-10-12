@@ -122,5 +122,151 @@
   "gAddUnit": "Add unit",
   "gGlass": "Glass: only for controls floating over a map",
   "gGlassSample": "Search a district or property",
-  "gArch": "Najdi arch · Shurfa"
+  "gArch": "Najdi arch · Shurfa",
+  "opsTabOverview": "Overview",
+  "opsTabProperties": "Properties & units",
+  "opsTabLeases": "Leases & payments",
+  "opsTabExpenses": "Expenses",
+  "opsTabReport": "Annual report",
+  "opsTabMyLease": "My lease",
+  "opsUnits": "Units",
+  "opsActiveLeases": "Active leases",
+  "opsCollected": "Collected this year",
+  "opsOutstanding": "Outstanding",
+  "opsUpcoming": "Upcoming payments",
+  "opsNoUpcoming": "No upcoming payments.",
+  "opsNotifications": "Alerts",
+  "opsNoNotifications": "No alerts.",
+  "opsName": "Name",
+  "opsCity": "City",
+  "opsDistrict": "District",
+  "opsKindBuilding": "Building",
+  "opsKindVilla": "Villa",
+  "opsAddProperty": "Add property",
+  "opsNoProperties": "No properties yet.",
+  "opsAddUnit": "Add unit",
+  "opsUnitLabel": "Unit number or name",
+  "opsTypeStudio": "Studio",
+  "opsTypeApartment": "Apartment",
+  "opsTypeVilla": "Villa",
+  "opsNoUnits": "No units.",
+  "opsAddLease": "Add lease",
+  "opsEjarNo": "Ejar contract number",
+  "opsEjarHint": "We store the number for reference; the contract itself stays in Ejar.",
+  "opsTenantName": "Tenant name",
+  "opsTenantEmail": "Tenant email (for the invite)",
+  "opsStartDate": "Lease start",
+  "opsEndDate": "Lease end",
+  "opsAnnualRent": "Annual rent (SAR)",
+  "opsCycle": "Payment cycle",
+  "opsMonthly": "Monthly",
+  "opsQuarterly": "Quarterly",
+  "opsSemiannual": "Semi-annual",
+  "opsAnnual": "Annual",
+  "opsDeposit": "Deposit amount (information only)",
+  "opsDepositNote": "The deposit is held through Ejar; we never receive money.",
+  "opsPreviousRent": "Previous rent (for a renewal)",
+  "opsFreezeWarn": "Heads-up: rent increases on Riyadh contracts are currently frozen. The usual renewal ceiling is SAR {max}.",
+  "@opsFreezeWarn": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "opsFreezeNote": "Indicative only, not legal advice. Check with Ejar or a licensed professional.",
+  "opsSaveLease": "Save lease and create schedule",
+  "opsLeaseSaved": "Lease and payment schedule saved.",
+  "opsSchedule": "Payment schedule",
+  "opsDueDate": "Due",
+  "opsAmount": "Amount",
+  "opsStatus": "Status",
+  "opsStatusDue": "Due",
+  "opsStatusPaid": "Paid",
+  "opsStatusLate": "Late",
+  "opsMarkPaid": "Record payment",
+  "opsNoLeases": "No leases.",
+  "opsRenewalNotice": "Renewal notice by {date}",
+  "@opsRenewalNotice": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "opsInviteTenant": "Invite tenant",
+  "opsInviteLinked": "Tenant linked to the lease.",
+  "opsInvitePending": "Invite sent; it activates when they sign in with this verified email.",
+  "opsRecordsOnly": "We only record payments; we do not receive money or finance rent.",
+  "opsAddExpense": "Add expense",
+  "opsCategory": "Category",
+  "opsCatMaintenance": "Maintenance",
+  "opsCatUtilities": "Utilities",
+  "opsCatInsurance": "Insurance",
+  "opsCatFees": "Fees",
+  "opsCatOther": "Other",
+  "opsDate": "Date",
+  "opsNote": "Note",
+  "opsNoExpenses": "No expenses.",
+  "opsProperty": "Property",
+  "opsReportTitle": "Annual income and expense report",
+  "opsYear": "Year",
+  "opsExpected": "Expected",
+  "opsExpenses": "Expenses",
+  "opsNet": "Net",
+  "opsReportNote": "An indicative report from your records, not an accounting or legal document.",
+  "opsAddToCalendar": "Add to calendar",
+  "opsCalPayment": "Rent payment",
+  "opsCalLeaseEnd": "Lease end",
+  "opsCalRenewal": "Renewal notice",
+  "opsNUpcoming": "Payment due soon",
+  "opsNLate": "Payment overdue",
+  "opsNExpiring": "Lease ending soon",
+  "opsNRenewal": "Time for the renewal notice",
+  "opsDaysLeft": "{count} days",
+  "@opsDaysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "opsSave": "Save",
+  "opsSaving": "Saving",
+  "opsErrorGeneric": "Could not save. Please try again.",
+  "opsRequired": "This field is required",
+  "opsSar": "SAR",
+  "opsChoose": "Choose",
+  "opsCalendarNote": "A free calendar file: your payments and lease dates show up in your phone calendar with alerts.",
+  "opsRemindersFree": "Reminders are computed from your records and shown here for free; you can also add them to your phone calendar.",
+  "opsBack": "Back",
+  "opsOpenLease": "Open lease",
+  "opsLeaseOf": "Lease {unit}",
+  "@opsLeaseOf": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "opsHomeStaffHint": "Your portfolio summary and alerts.",
+  "opsPaidOn": "Paid on {date}",
+  "@opsPaidOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "opsChooseUnit": "Pick a unit to add a lease",
+  "opsInvalidDate": "Write the date like 2026-01-31",
+  "opsInvalidEjar": "Ejar contract number: 6 to 30 letters or digits",
+  "opsInvalidAmount": "Enter a valid amount above zero",
+  "opsEndBeforeStart": "The lease must end after it starts",
+  "opsCalendarFailed": "Could not prepare the calendar file.",
+  "opsLoadFailed": "Could not load your data. Check the connection and try again.",
+  "opsPickDate": "Pick a date",
+  "opsInvitedAgain": "Invitation sent.",
+  "opsTenantLabel": "Tenant",
+  "opsInvalidEmail": "Enter a valid email address"
 }

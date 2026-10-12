@@ -835,6 +835,672 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'قوس نجدي · الشرفات'**
   String get gArch;
+
+  /// No description provided for @opsTabOverview.
+  ///
+  /// In ar, this message translates to:
+  /// **'نظرة عامة'**
+  String get opsTabOverview;
+
+  /// No description provided for @opsTabProperties.
+  ///
+  /// In ar, this message translates to:
+  /// **'العقارات والوحدات'**
+  String get opsTabProperties;
+
+  /// No description provided for @opsTabLeases.
+  ///
+  /// In ar, this message translates to:
+  /// **'العقود والدفعات'**
+  String get opsTabLeases;
+
+  /// No description provided for @opsTabExpenses.
+  ///
+  /// In ar, this message translates to:
+  /// **'المصروفات'**
+  String get opsTabExpenses;
+
+  /// No description provided for @opsTabReport.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقرير السنوي'**
+  String get opsTabReport;
+
+  /// No description provided for @opsTabMyLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقدي'**
+  String get opsTabMyLease;
+
+  /// No description provided for @opsUnits.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوحدات'**
+  String get opsUnits;
+
+  /// No description provided for @opsActiveLeases.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقود سارية'**
+  String get opsActiveLeases;
+
+  /// No description provided for @opsCollected.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحصّل هذا العام'**
+  String get opsCollected;
+
+  /// No description provided for @opsOutstanding.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتبقي'**
+  String get opsOutstanding;
+
+  /// No description provided for @opsUpcoming.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفعات القادمة'**
+  String get opsUpcoming;
+
+  /// No description provided for @opsNoUpcoming.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد دفعات قادمة.'**
+  String get opsNoUpcoming;
+
+  /// No description provided for @opsNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيهات'**
+  String get opsNotifications;
+
+  /// No description provided for @opsNoNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تنبيهات.'**
+  String get opsNoNotifications;
+
+  /// No description provided for @opsName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get opsName;
+
+  /// No description provided for @opsCity.
+  ///
+  /// In ar, this message translates to:
+  /// **'المدينة'**
+  String get opsCity;
+
+  /// No description provided for @opsDistrict.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحي'**
+  String get opsDistrict;
+
+  /// No description provided for @opsKindBuilding.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمارة'**
+  String get opsKindBuilding;
+
+  /// No description provided for @opsKindVilla.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيلا'**
+  String get opsKindVilla;
+
+  /// No description provided for @opsAddProperty.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عقاراً'**
+  String get opsAddProperty;
+
+  /// No description provided for @opsNoProperties.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما أضفت عقارات بعد.'**
+  String get opsNoProperties;
+
+  /// No description provided for @opsAddUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف وحدة'**
+  String get opsAddUnit;
+
+  /// No description provided for @opsUnitLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم أو اسم الوحدة'**
+  String get opsUnitLabel;
+
+  /// No description provided for @opsTypeStudio.
+  ///
+  /// In ar, this message translates to:
+  /// **'استوديو'**
+  String get opsTypeStudio;
+
+  /// No description provided for @opsTypeApartment.
+  ///
+  /// In ar, this message translates to:
+  /// **'شقة'**
+  String get opsTypeApartment;
+
+  /// No description provided for @opsTypeVilla.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيلا'**
+  String get opsTypeVilla;
+
+  /// No description provided for @opsNoUnits.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد وحدات.'**
+  String get opsNoUnits;
+
+  /// No description provided for @opsAddLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عقداً'**
+  String get opsAddLease;
+
+  /// No description provided for @opsEjarNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم عقد إيجار'**
+  String get opsEjarNo;
+
+  /// No description provided for @opsEjarHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسجّل الرقم للرجوع إليه، والعقد نفسه يبقى في إيجار.'**
+  String get opsEjarHint;
+
+  /// No description provided for @opsTenantName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المستأجر'**
+  String get opsTenantName;
+
+  /// No description provided for @opsTenantEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'بريد المستأجر (للدعوة)'**
+  String get opsTenantEmail;
+
+  /// No description provided for @opsStartDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'بداية العقد'**
+  String get opsStartDate;
+
+  /// No description provided for @opsEndDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'نهاية العقد'**
+  String get opsEndDate;
+
+  /// No description provided for @opsAnnualRent.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإيجار السنوي (ر.س)'**
+  String get opsAnnualRent;
+
+  /// No description provided for @opsCycle.
+  ///
+  /// In ar, this message translates to:
+  /// **'دورة الدفع'**
+  String get opsCycle;
+
+  /// No description provided for @opsMonthly.
+  ///
+  /// In ar, this message translates to:
+  /// **'شهري'**
+  String get opsMonthly;
+
+  /// No description provided for @opsQuarterly.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربع سنوي'**
+  String get opsQuarterly;
+
+  /// No description provided for @opsSemiannual.
+  ///
+  /// In ar, this message translates to:
+  /// **'نصف سنوي'**
+  String get opsSemiannual;
+
+  /// No description provided for @opsAnnual.
+  ///
+  /// In ar, this message translates to:
+  /// **'سنوي'**
+  String get opsAnnual;
+
+  /// No description provided for @opsDeposit.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ الوديعة (للعلم فقط)'**
+  String get opsDeposit;
+
+  /// No description provided for @opsDepositNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوديعة تُحفظ عبر إيجار، ولا نستلم أي مبالغ.'**
+  String get opsDepositNote;
+
+  /// No description provided for @opsPreviousRent.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإيجار السابق (عند التجديد)'**
+  String get opsPreviousRent;
+
+  /// No description provided for @opsFreezeWarn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه: الزيادة في عقود الرياض موقوفة حالياً. الحد المعتاد للتجديد {max} ر.س.'**
+  String opsFreezeWarn(String max);
+
+  /// No description provided for @opsFreezeNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلومة استرشادية وليست رأياً قانونياً. راجع إيجار أو مختصاً مرخّصاً.'**
+  String get opsFreezeNote;
+
+  /// No description provided for @opsSaveLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ العقد وأنشئ الجدول'**
+  String get opsSaveLease;
+
+  /// No description provided for @opsLeaseSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ العقد وجدول الدفعات.'**
+  String get opsLeaseSaved;
+
+  /// No description provided for @opsSchedule.
+  ///
+  /// In ar, this message translates to:
+  /// **'جدول الدفعات'**
+  String get opsSchedule;
+
+  /// No description provided for @opsDueDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاستحقاق'**
+  String get opsDueDate;
+
+  /// No description provided for @opsAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ'**
+  String get opsAmount;
+
+  /// No description provided for @opsStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get opsStatus;
+
+  /// No description provided for @opsStatusDue.
+  ///
+  /// In ar, this message translates to:
+  /// **'مستحقة'**
+  String get opsStatusDue;
+
+  /// No description provided for @opsStatusPaid.
+  ///
+  /// In ar, this message translates to:
+  /// **'مدفوعة'**
+  String get opsStatusPaid;
+
+  /// No description provided for @opsStatusLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأخرة'**
+  String get opsStatusLate;
+
+  /// No description provided for @opsMarkPaid.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدفع'**
+  String get opsMarkPaid;
+
+  /// No description provided for @opsNoLeases.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد عقود.'**
+  String get opsNoLeases;
+
+  /// No description provided for @opsRenewalNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعار التجديد قبل {date}'**
+  String opsRenewalNotice(String date);
+
+  /// No description provided for @opsInviteTenant.
+  ///
+  /// In ar, this message translates to:
+  /// **'ادعُ المستأجر'**
+  String get opsInviteTenant;
+
+  /// No description provided for @opsInviteLinked.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم ربط المستأجر بالعقد.'**
+  String get opsInviteLinked;
+
+  /// No description provided for @opsInvitePending.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسلت الدعوة، وتُفعَّل عند تسجيله بهذا البريد بعد تأكيده.'**
+  String get opsInvitePending;
+
+  /// No description provided for @opsRecordsOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسجّل الدفعات فقط؛ لا نستلم الأموال ولا نموّل الإيجار.'**
+  String get opsRecordsOnly;
+
+  /// No description provided for @opsAddExpense.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف مصروفاً'**
+  String get opsAddExpense;
+
+  /// No description provided for @opsCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف'**
+  String get opsCategory;
+
+  /// No description provided for @opsCatMaintenance.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة'**
+  String get opsCatMaintenance;
+
+  /// No description provided for @opsCatUtilities.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمات'**
+  String get opsCatUtilities;
+
+  /// No description provided for @opsCatInsurance.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأمين'**
+  String get opsCatInsurance;
+
+  /// No description provided for @opsCatFees.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم'**
+  String get opsCatFees;
+
+  /// No description provided for @opsCatOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'أخرى'**
+  String get opsCatOther;
+
+  /// No description provided for @opsDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'التاريخ'**
+  String get opsDate;
+
+  /// No description provided for @opsNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة'**
+  String get opsNote;
+
+  /// No description provided for @opsNoExpenses.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد مصروفات.'**
+  String get opsNoExpenses;
+
+  /// No description provided for @opsProperty.
+  ///
+  /// In ar, this message translates to:
+  /// **'العقار'**
+  String get opsProperty;
+
+  /// No description provided for @opsReportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقرير السنوي للدخل والمصروفات'**
+  String get opsReportTitle;
+
+  /// No description provided for @opsYear.
+  ///
+  /// In ar, this message translates to:
+  /// **'السنة'**
+  String get opsYear;
+
+  /// No description provided for @opsExpected.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتوقع'**
+  String get opsExpected;
+
+  /// No description provided for @opsExpenses.
+  ///
+  /// In ar, this message translates to:
+  /// **'المصروفات'**
+  String get opsExpenses;
+
+  /// No description provided for @opsNet.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصافي'**
+  String get opsNet;
+
+  /// No description provided for @opsReportNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقرير استرشادي من سجلاتك، وليس مستنداً محاسبياً أو قانونياً.'**
+  String get opsReportNote;
+
+  /// No description provided for @opsAddToCalendar.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف للتقويم'**
+  String get opsAddToCalendar;
+
+  /// No description provided for @opsCalPayment.
+  ///
+  /// In ar, this message translates to:
+  /// **'دفعة إيجار'**
+  String get opsCalPayment;
+
+  /// No description provided for @opsCalLeaseEnd.
+  ///
+  /// In ar, this message translates to:
+  /// **'نهاية العقد'**
+  String get opsCalLeaseEnd;
+
+  /// No description provided for @opsCalRenewal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعار التجديد'**
+  String get opsCalRenewal;
+
+  /// No description provided for @opsNUpcoming.
+  ///
+  /// In ar, this message translates to:
+  /// **'دفعة قريبة الاستحقاق'**
+  String get opsNUpcoming;
+
+  /// No description provided for @opsNLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'دفعة متأخرة'**
+  String get opsNLate;
+
+  /// No description provided for @opsNExpiring.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقد ينتهي قريباً'**
+  String get opsNExpiring;
+
+  /// No description provided for @opsNRenewal.
+  ///
+  /// In ar, this message translates to:
+  /// **'حان وقت إشعار التجديد'**
+  String get opsNRenewal;
+
+  /// No description provided for @opsDaysLeft.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} يوماً'**
+  String opsDaysLeft(int count);
+
+  /// No description provided for @opsSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ'**
+  String get opsSave;
+
+  /// No description provided for @opsSaving.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ الحفظ'**
+  String get opsSaving;
+
+  /// No description provided for @opsErrorGeneric.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الحفظ. حاول مرة أخرى.'**
+  String get opsErrorGeneric;
+
+  /// No description provided for @opsRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الحقل مطلوب'**
+  String get opsRequired;
+
+  /// No description provided for @opsSar.
+  ///
+  /// In ar, this message translates to:
+  /// **'ر.س'**
+  String get opsSar;
+
+  /// No description provided for @opsChoose.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر'**
+  String get opsChoose;
+
+  /// No description provided for @opsCalendarNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملف تقويم مجاني: دفعاتك وتواريخ العقد تظهر في تقويم جوالك وتجيك منه إشعارات.'**
+  String get opsCalendarNote;
+
+  /// No description provided for @opsRemindersFree.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيهات تُحسب من سجلاتك وتظهر هنا مجاناً، ويمكنك إضافتها لتقويم جوالك.'**
+  String get opsRemindersFree;
+
+  /// No description provided for @opsBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get opsBack;
+
+  /// No description provided for @opsOpenLease.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح العقد'**
+  String get opsOpenLease;
+
+  /// No description provided for @opsLeaseOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقد {unit}'**
+  String opsLeaseOf(String unit);
+
+  /// No description provided for @opsHomeStaffHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخّص محفظتك وتنبيهاتك.'**
+  String get opsHomeStaffHint;
+
+  /// No description provided for @opsPaidOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'دُفعت في {date}'**
+  String opsPaidOn(String date);
+
+  /// No description provided for @opsChooseUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر وحدة لإضافة عقد'**
+  String get opsChooseUnit;
+
+  /// No description provided for @opsInvalidDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب التاريخ بصيغة 2026-01-31'**
+  String get opsInvalidDate;
+
+  /// No description provided for @opsInvalidEjar.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم عقد إيجار من 6 إلى 30 حرفاً أو رقماً'**
+  String get opsInvalidEjar;
+
+  /// No description provided for @opsInvalidAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب مبلغاً صحيحاً أكبر من صفر'**
+  String get opsInvalidAmount;
+
+  /// No description provided for @opsEndBeforeStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'نهاية العقد لازم تكون بعد بدايته'**
+  String get opsEndBeforeStart;
+
+  /// No description provided for @opsCalendarFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تجهيز ملف التقويم.'**
+  String get opsCalendarFailed;
+
+  /// No description provided for @opsLoadFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحميل البيانات. تأكد من الاتصال وحاول مرة أخرى.'**
+  String get opsLoadFailed;
+
+  /// No description provided for @opsPickDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر التاريخ'**
+  String get opsPickDate;
+
+  /// No description provided for @opsInvitedAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسلت الدعوة.'**
+  String get opsInvitedAgain;
+
+  /// No description provided for @opsTenantLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستأجر'**
+  String get opsTenantLabel;
+
+  /// No description provided for @opsInvalidEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب بريداً إلكترونياً صحيحاً'**
+  String get opsInvalidEmail;
 }
 
 class _AppLocalizationsDelegate
