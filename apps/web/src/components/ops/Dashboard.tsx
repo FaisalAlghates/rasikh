@@ -29,6 +29,7 @@ import { LeasesTab } from './LeasesTab';
 import { Overview } from './Overview';
 import { CalendarButton, Reminders } from './Reminders';
 import { PropertiesTab } from './PropertiesTab';
+import { PrivacyPanel } from './PrivacyPanel';
 import { ReportTab } from './ReportTab';
 import { ScheduleTable } from './ScheduleTable';
 import { VerifyEmailBanner } from './VerifyEmailBanner';
@@ -42,6 +43,7 @@ export function Dashboard() {
   const b = useTranslations('bldg');
   const br = useTranslations('broker');
   const ai = useTranslations('ai');
+  const ac = useTranslations('account');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -152,6 +154,10 @@ export function Dashboard() {
         </div>
         <VerifyEmailBanner />
         <BrokerView orgId={orgId} uid={uid} />
+        <section className="flex flex-col gap-3" aria-label={ac('tab')}>
+          <h2 className="text-h3 font-semibold">{ac('tab')}</h2>
+          <PrivacyPanel user={session.user} />
+        </section>
       </div>
     );
   }
@@ -229,6 +235,10 @@ export function Dashboard() {
           </section>
         )}
         <Reminders reminders={reminders} leases={leases.rows} />
+        <section className="flex flex-col gap-3" aria-label={ac('tab')}>
+          <h2 className="text-h3 font-semibold">{ac('tab')}</h2>
+          <PrivacyPanel user={session.user} />
+        </section>
       </div>
     );
   }
@@ -320,6 +330,11 @@ export function Dashboard() {
             value: 'buildings',
             label: b('tab'),
             content: <BuildingsTab orgId={orgId} />,
+          },
+          {
+            value: 'privacy',
+            label: ac('tab'),
+            content: <PrivacyPanel user={session.user} />,
           },
           {
             value: 'assistant',

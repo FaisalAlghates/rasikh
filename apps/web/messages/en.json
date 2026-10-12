@@ -728,5 +728,141 @@
     "useDescription": "Use this description",
     "suggestedDescription": "Suggested description",
     "fake": "Test mode: the answer comes straight from the facts in your records, without a language model."
+  },
+  "legal": {
+    "draftNotice": "Draft under legal review: a lawyer has not approved this text yet and it is not final. It will be reviewed before launch.",
+    "updated": "Last updated: 12 October 2026",
+    "back": "Home",
+    "footerPrivacy": "Privacy policy",
+    "footerTerms": "Terms and conditions",
+    "footerDisclaimers": "Disclaimers",
+    "privacy": {
+      "title": "Privacy policy",
+      "sections": [
+        {
+          "h": "Who we are",
+          "p": "Rasikh is an app and website for organizing rental property. It complements the Ejar and Mullak platforms and does not replace them. This policy explains how we handle your personal data under the Saudi Personal Data Protection Law."
+        },
+        {
+          "h": "Data we collect",
+          "p": "Account data (name, mobile number or email), the properties, leases and payments you enter, inspection and maintenance photos and files with their capture time, digital fingerprint and, when taken in the app, location, and the technical usage records we need."
+        },
+        {
+          "h": "Why we use it",
+          "p": "Only to run your account and the services you ask for: documenting leases, payments, inspections and maintenance, reminders, buildings and ads. We do not use your data for any other purpose and we do not sell it."
+        },
+        {
+          "h": "Your consent",
+          "p": "We ask for your explicit consent when you create a workspace. You can withdraw it by deleting your account. The consent is needed to run the service."
+        },
+        {
+          "h": "The AI assistant",
+          "p": "The assistant runs on our servers only, on data you are allowed to see. We log metadata (request type, time, size) and do not keep the text of your question or the answer in logs. We do not train models on your data without a separate explicit consent."
+        },
+        {
+          "h": "Where your data is kept",
+          "p": "Your data is kept in data centers inside the Kingdom (Dammam region). It is not moved outside except as the law allows."
+        },
+        {
+          "h": "Who can see it",
+          "p": "You, the parties connected to the lease or property to the extent needed (owner, tenant, assigned technician), and infrastructure providers acting as processors. We do not share it for marketing."
+        },
+        {
+          "h": "Retention",
+          "p": "We keep data while your account exists and as the law requires. After deletion your personal data is removed or anonymized, except what must be kept by law."
+        },
+        {
+          "h": "Your rights",
+          "p": "You may access, correct, get a copy of and ask to delete your data, and withdraw consent. Contact us at the platform address and we will answer within the legal period."
+        },
+        {
+          "h": "Security",
+          "p": "We use encryption in transit and at rest, strict per-role permissions and an audit log of sensitive actions. No system is perfectly secure, and we will report any incident as the law requires."
+        },
+        {
+          "h": "Contact",
+          "p": "Questions or rights requests: privacy@rasikh.sa (a placeholder address to be confirmed before launch)."
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms and conditions",
+      "sections": [
+        {
+          "h": "What the service is",
+          "p": "Rasikh is a tool for documenting and managing rented property. We do not conclude lease contracts, hold deposits or replace the official Ejar forms, we do not process rent payments and we offer no financing. We record what you enter and confirm."
+        },
+        {
+          "h": "Your account",
+          "p": "You are responsible for the accuracy of your data and the secrecy of your sign-in. One account may hold several roles (owner, tenant, building manager, broker, vendor)."
+        },
+        {
+          "h": "Content and evidence",
+          "p": "Photos and files captured in the app are stamped with time and a digital fingerprint and cannot be changed after both parties sign. This evidence is a documentation tool; decisions about it belong to the parties or the competent authorities."
+        },
+        {
+          "h": "Brokers and ads",
+          "p": "The ad checker shows whether the mandatory data is complete as we understand it. It does not publish or approve an ad. The advertiser is responsible for the ad and its license."
+        },
+        {
+          "h": "The AI assistant",
+          "p": "Its outputs are machine-generated suggestions that may be wrong, and they are clearly marked. They change no record without your confirmation and are not legal opinions, official valuations or financial advice."
+        },
+        {
+          "h": "Acceptable use",
+          "p": "Do not use the platform to break the law, impersonate someone, reach data that is not yours or disrupt the service."
+        },
+        {
+          "h": "Limits of liability",
+          "p": "The service is provided as is with ordinary care and, as far as the law allows, we are not liable for indirect damages. This text is a draft awaiting legal review."
+        },
+        {
+          "h": "Law and jurisdiction",
+          "p": "These terms are governed by the laws of the Kingdom of Saudi Arabia and the competent courts there."
+        }
+      ]
+    },
+    "disclaimers": {
+      "title": "Disclaimers",
+      "sections": [
+        {
+          "h": "Not a substitute for the official platforms",
+          "p": "Rasikh complements Ejar and Mullak and does not claim official registration or representation of either. The official contract, the deposit and the official handover form stay on Ejar."
+        },
+        {
+          "h": "No legal opinion",
+          "p": "What we show is a general explanation and guidance, not a legal opinion or ruling. For legal decisions consult a licensed lawyer."
+        },
+        {
+          "h": "No official valuation or financial advice",
+          "p": "Price indicators come from open data and are indicative, not an official valuation. We give no investment or financial advice and we do not finance or lend rent."
+        },
+        {
+          "h": "Riyadh rent freeze",
+          "p": "Help on this topic is informational, based on the announced decision as we know it, and may change. Check Ejar or a licensed professional before any decision."
+        },
+        {
+          "h": "Engineering office (when enabled)",
+          "p": "Any engineering draft stays \"Draft — requires review and approval by a licensed engineer\" until a Saudi Council of Engineers licensed engineer approves it. We do not stamp, sign or submit permit applications on anyone's behalf."
+        }
+      ]
+    }
+  },
+  "account": {
+    "tab": "My privacy",
+    "intro": "Under the Personal Data Protection Law you can get a copy of your data or delete your account.",
+    "export": "Download a copy of my data",
+    "exporting": "Preparing…",
+    "exported": "The file was downloaded.",
+    "deleteTitle": "Delete my account",
+    "deleteWarn": "Your account, personal data and your brokerage records are deleted permanently. Organization records that others rely on (such as a lease an owner signed) stay with the organization. This cannot be undone.",
+    "password": "Password to confirm",
+    "confirm": "I understand the deletion is permanent",
+    "delete": "Delete my account permanently",
+    "phoneNote": "Your account uses a phone number: contact us to delete it so we can verify your identity.",
+    "wrongPassword": "The password is not correct.",
+    "transfer": "You are the only owner of an organization that has members. Transfer ownership first.",
+    "failed": "The request could not be completed. Try again.",
+    "policy": "Privacy policy"
   }
 }

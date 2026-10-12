@@ -6,6 +6,7 @@ import { getStorage } from 'firebase-admin/storage';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onCall, type CallableRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { deleteMyAccount as deleteMyAccountImpl, exportMyData as exportMyDataImpl } from './account.js';
 import { aiAssist as aiAssistImpl } from './ai/assist.js';
 import { importIndicativePrices as importIndicativePricesImpl } from './ai/prices.js';
 import { providerFromEnv } from './ai/provider.js';
@@ -62,6 +63,18 @@ export const createTicket = onCall({ enforceAppCheck }, (req: CallableRequest<un
 
 export const ticketAction = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
   ticketActionImpl({ db: getFirestore(), auth: getAuth() }, req.auth?.uid, req.data),
+);
+
+/** Saudi PDPL: export my data / delete my account. */
+export const exportMyData = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
+  exportMyDataImpl(deps(), req.auth?.uid),
+);
+
+export const deleteMyAccount = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
+  deleteMyAccountImpl(
+    deps(),
+    req.auth ? { uid: req.auth.uid, authTime: req.auth.token.auth_time } : undefined,
+  ),
 );
 
 // AI runs only here, server-side (CLAUDE.md §7). The provider comes from AI_PROVIDER (default: the cost-free fake).

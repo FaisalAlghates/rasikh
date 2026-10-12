@@ -132,9 +132,9 @@ Acceptance: see "Acceptance" in `docs/ENGINEERING_OFFICE.md` (rules isolation, d
 ## Phase 10 — Polish, security, launch
 
 - [ ] Design QA vs Najd Dusk; empty/error/loading states; Arabic errors; web/app consistency
-- [ ] Security: rules review, App Check enforcement, dependency audit, secret scan, rate limits, scheduled Firestore backup
+- [ ] Security: rules review, App Check enforcement, ~~dependency audit~~, ~~secret scan~~, rate limits, scheduled Firestore backup. Done 2026-10-12: dependency audit (grpc-js and uuid pinned to patched versions through `pnpm-workspace.yaml` overrides; 11 advisories remain, all OpenTelemetry packages inside Genkit on the server, unused because telemetry is off; re-check when Genkit updates; forcing newer OpenTelemetry versions broke Genkit's tracing at load time, so it was reverted) and secret scan (no keys in tracked files; the only match is the fake emulator-only API key in `apps/mobile/lib/main.dart`). Still to do: rules review pass, App Check enforcement (needs your Firebase console step), scheduled backup (needs Blaze), AI rate limits already exist.
 - [ ] Performance: Lighthouse, bundle analysis, Flutter profiling
-- [ ] Arabic legal pages: privacy (PDPL), terms, disclaimers
+- [x] Arabic legal pages: privacy (PDPL), terms, disclaimers (web, ar + en, linked from the landing footer; each says it is a DRAFT awaiting lawyer review; contact address `privacy@rasikh.sa` is a placeholder). PDPL rights: `exportMyData` and `deleteMyAccount` functions (recent sign-in required; the sole owner of an organization with members must hand it over first) with a "My privacy" panel on web (email accounts re-enter the password; phone accounts are told to contact us). Not yet in the Flutter app.
 - [ ] Crashlytics + privacy-respecting analytics
 - [ ] Store readiness + web SEO
 - [ ] Staging then production deploy (with confirmation); final report: shipped, gaps, monthly cost drivers
