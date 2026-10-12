@@ -1956,4 +1956,75 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get brkIssueEncumbrancesNotStated =>
       'You have not stated whether there is a mortgage or dispute.';
+
+  @override
+  String get aiTab => 'Assistant';
+
+  @override
+  String get aiIntro =>
+      'An assistant inside Rasikh that answers about your properties, from your own data only. Its answers are suggestions you review; it never changes a record by itself.';
+
+  @override
+  String get aiQuestion => 'Ask about your leases, payments or maintenance';
+
+  @override
+  String get aiSend => 'Ask';
+
+  @override
+  String get aiSending => 'Thinking…';
+
+  @override
+  String get aiExplainLease => 'Explain my lease';
+
+  @override
+  String get aiPickLease => 'Choose the lease';
+
+  @override
+  String get aiExplainSend => 'Explain this lease';
+
+  @override
+  String get aiCitations => 'Sources';
+
+  @override
+  String get aiRefused => 'I cannot help with this request.';
+
+  @override
+  String get aiLimitDaily =>
+      'You reached the daily limit of questions. Try tomorrow.';
+
+  @override
+  String get aiLimitMonthly =>
+      'This workspace used the assistant\'s monthly limit. Contact the administrator.';
+
+  @override
+  String get aiUnavailable =>
+      'The assistant is unavailable right now. Try again later.';
+
+  @override
+  String get aiFailed => 'The request could not be completed. Try again.';
+
+  @override
+  String get aiNotAllowed => 'This request is outside your permissions.';
+
+  @override
+  String get aiSuggestTriage => 'Suggest category and urgency';
+
+  @override
+  String get aiTriageResult => 'Assistant suggestion';
+
+  @override
+  String get aiApplySuggestion => 'Apply the suggestion to the form';
+
+  @override
+  String get aiSuggestDescription => 'Suggest a description';
+
+  @override
+  String get aiUseDescription => 'Use this description';
+
+  @override
+  String get aiSuggestedDescription => 'Suggested description';
+
+  @override
+  String get aiFake =>
+      'Test mode: the answer comes straight from the facts in your records, without a language model.';
 }

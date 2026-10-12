@@ -1927,4 +1927,73 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get brkIssueEncumbrancesNotStated =>
       'لم تذكر هل على العقار رهن أو نزاع.';
+
+  @override
+  String get aiTab => 'المساعد';
+
+  @override
+  String get aiIntro =>
+      'مساعد داخل راسخ يجيب عن عقاراتك ومن بياناتك أنت فقط. إجاباته اقتراحات تراجعها، ولا يغيّر أي سجل بنفسه.';
+
+  @override
+  String get aiQuestion => 'اسأل عن عقودك أو دفعاتك أو صيانتك';
+
+  @override
+  String get aiSend => 'اسأل';
+
+  @override
+  String get aiSending => 'جاري التفكير…';
+
+  @override
+  String get aiExplainLease => 'اشرح عقدي';
+
+  @override
+  String get aiPickLease => 'اختر العقد';
+
+  @override
+  String get aiExplainSend => 'اشرح هذا العقد';
+
+  @override
+  String get aiCitations => 'المصادر';
+
+  @override
+  String get aiRefused => 'لا أستطيع المساعدة في هذا الطلب.';
+
+  @override
+  String get aiLimitDaily => 'وصلت للحد اليومي من الأسئلة. جرّب غداً.';
+
+  @override
+  String get aiLimitMonthly =>
+      'استُهلك الحد الشهري للمساعد في مساحتك. تواصل مع المسؤول.';
+
+  @override
+  String get aiUnavailable => 'المساعد غير متاح الآن. حاول لاحقاً.';
+
+  @override
+  String get aiFailed => 'تعذّر تنفيذ الطلب. حاول مرة أخرى.';
+
+  @override
+  String get aiNotAllowed => 'هذا الطلب ليس من صلاحياتك.';
+
+  @override
+  String get aiSuggestTriage => 'اقترح التصنيف والأولوية';
+
+  @override
+  String get aiTriageResult => 'اقتراح المساعد';
+
+  @override
+  String get aiApplySuggestion => 'طبّق الاقتراح على النموذج';
+
+  @override
+  String get aiSuggestDescription => 'اقترح وصفاً';
+
+  @override
+  String get aiUseDescription => 'استخدم هذا الوصف';
+
+  @override
+  String get aiSuggestedDescription => 'وصف مقترح';
+
+  @override
+  String get aiFake =>
+      'وضع تجريبي: الإجابة من حقائق سجلاتك مباشرة بدون نموذج لغوي.';
 }

@@ -103,6 +103,15 @@ class OpsHome extends ConsumerWidget {
             route: Routes.tickets,
           ),
           const SizedBox(height: 10),
+          if (lease != null) ...[
+            _NavRow(
+              navKey: const Key('nav-assistant'),
+              icon: Icons.auto_awesome_outlined,
+              label: l10n.aiTab,
+              route: Routes.assistant,
+            ),
+            const SizedBox(height: 10),
+          ],
           RemindersCard(reminders: reminders, leases: data.leases),
         ],
       );
@@ -288,6 +297,12 @@ class _StaffOverview extends StatelessWidget {
           icon: Icons.domain_outlined,
           label: l10n.bdTab,
           route: Routes.buildings,
+        ),
+        _NavRow(
+          navKey: const Key('nav-assistant'),
+          icon: Icons.auto_awesome_outlined,
+          label: l10n.aiTab,
+          route: Routes.assistant,
         ),
         if (broker)
           _NavRow(
