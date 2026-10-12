@@ -30,11 +30,19 @@ day to move-out day, in one property record."
 8. Insights — neighborhood rent/sale indicators from official open data (always "indicative"); Riyadh rent-freeze
    helper (no annual increase on Riyadh contracts for 5 years from 2025-09-25; renewal notice 60 days before expiry).
 9. AI assistant restricted to real-estate tasks inside the product (see §7).
+14. AI engineering office (المكتب الهندسي الذكي) — a 24/7 design copilot FOR licensed engineering offices. Each office
+    has its own private AI workspace. A client brief (plot dimensions, area, program, style) becomes concept floor plans,
+    Saudi Building Code checks from a deterministic rule engine, a drawing set (PDF, DXF, IFC, glTF), preliminary
+    structural/MEP schematics, a BOQ range and a Balady permit checklist. Every output is a draft until a verified
+    SCE-licensed engineer of that office approves it; Rasikh never stamps drawings or submits permits. Covers new builds
+    AND renovation/restoration of existing buildings, through five discipline agents working as one office:
+    architectural, civil/structural, mechanical, electrical, industrial. Full spec: `docs/ENGINEERING_OFFICE.md`.
 
 ### Out of scope at launch (feature-flagged OFF; must not ship enabled)
 
 Public listings marketplace or public booking (needs REGA platform / tourism license), lending/BNPL/rent
-financing, legal opinions, official valuations.
+financing, legal opinions, official valuations, stamping or approving drawings in an engineer's name, submitting Balady
+permit applications, and final structural or fire-safety design without a licensed engineer's review.
 
 ## 2. Tech stack
 
@@ -108,6 +116,16 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 - Audit log for sensitive actions. App Check on web and mobile.
 - Saudi PDPL: explicit consent screens, purpose-limited data, export/delete my data, Arabic privacy policy page.
 
+### 5b. Roles & permissions (engineering office; deny by default, emulator test per role)
+
+- Engineering office: own workspace, projects, briefs sent to it and its private precedent library; runs AI concepts and
+  checks, edits plans, manages its team, releases final sets. Can approve nothing until an admin verifies CR, SCE
+  classification and Balady activation.
+- Engineer: projects assigned by their office; edits and reviews; approves only in own discipline; access pauses when
+  SCE membership expires or they leave the office.
+- Design client (owner): own briefs, concept options and released versions; submits briefs, picks options, comments.
+  Never sees drafts under internal review or other clients' projects.
+
 ## 6. Quality bar
 
 - Landing Lighthouse ≥ 90 mobile, LCP < 2.5 s, AVIF images. WCAG 2.2 AA, Arabic screen-reader labels.
@@ -125,6 +143,9 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 - Use only data the requesting user may see (fetch with their permissions).
 - Log metadata, not raw personal data; per-user rate limits; monthly cost cap; a human confirms before any AI suggestion
   changes a record; AI output is visually marked.
+- Engineering AI: only the versioned SBC rule engine decides compliance; the model explains results and never marks an
+  unchecked rule as passed. Drawings stay watermarked drafts until a verified engineer of the right discipline approves
+  them.
 
 ## 8. Working rules
 

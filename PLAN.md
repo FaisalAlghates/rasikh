@@ -87,7 +87,7 @@ Acceptance: tampered-file hash test; offline capture test; Arabic PDF renders co
 
 Acceptance: e2e ticket lifecycle and expense → statement; rules tests.
 
-**Status (2026-10-12): done on web, backend and Flutter; verified on emulators (web) and with widget tests (app).** Done: shared logic (status machine, SLA, suggested responsibility; halala-exact expense split, balances, quote ranking, vote thresholds, monthly statement) with Dart ports using the same fixtures; ticket functions; rules (tickets written only by functions; building ledger append-only with a receipt on every expense; one create-only ballot per unit); web tabs and Flutter screens for tickets (with photos) and buildings. **Accounts for the other parties:** staff link a unit owner to an account by email (invite function; applied at once for a verified account, otherwise after verified sign-up). A linked owner sees their building's ledger, balances and votes, gets a free in-app notice of what they still owe, and casts their own ballot (one per unit); on web and in the app. A vendor can be assigned by email and then signs in, sees only the tickets assigned to them, starts the work and records the repair (cannot open, cancel, assign or close tickets). Ticket photos are readable only by staff, that ticket's tenant and its vendor. Linking now requires a verified email (an unverified account waits), for tenants too. Gaps: the notice of an outstanding balance is shown in the app and on the web, not sent by email, SMS or push (those need a paid provider); the monthly statement is browser print-to-PDF on the web and on-screen totals in the app (a server-side Arabic PDF is a separate piece of work); Flutter screens have not run on a device or emulator (no Android SDK here).
+**Status (2026-10-12): done on web, backend and Flutter; verified on emulators (web) and with widget tests (app).** Done: shared logic (status machine, SLA, suggested responsibility; halala-exact expense split, balances, quote ranking, vote thresholds, monthly statement) with Dart ports using the same fixtures; ticket functions; rules (tickets written only by functions; building ledger append-only with a receipt on every expense; one create-only ballot per unit); web tabs and Flutter screens for tickets (with photos) and buildings. **Accounts for the other parties:** staff link a unit owner to an account by email (invite function; applied at once for a verified account, otherwise after verified sign-up). A linked owner sees their building's ledger, balances and votes, gets a free in-app notice of what they still owe, and casts their own ballot (one per unit); on web and in the app. A vendor can be assigned by email and then signs in, sees only the tickets assigned to them, starts the work and records the repair (cannot open, cancel, assign or close tickets). Ticket photos are readable only by staff, that ticket's tenant and its vendor. Linking now requires a verified email (an unverified account waits), for tenants too. Gaps: the notice of an outstanding balance is shown in the app and on the web, not sent by email, SMS or push (those need a paid provider); the monthly statement is browser print-to-PDF on the web and on-screen totals in the app (a server-side Arabic PDF is a separate piece of work); Flutter on the Android emulator (2026-10-12): sign-up, onboarding (workspace creation) and the properties screen run against the Firebase emulators; fixes found there: cleartext HTTP allowed in debug builds, and a fake API key in the Android SDK's accepted format (39 characters starting with "A"). Still unchecked on a device: leases, inspections (camera, GPS, upload queue), tickets, buildings, and anything on iOS.
 
 ## Phase 7 — Broker CRM + ad compliance checker
 
@@ -106,7 +106,26 @@ Acceptance: checker unit tests (valid + invalid ads); rules tests.
 
 Acceptance: eval suite passes; no model key reachable from clients.
 
-## Phase 9 — Polish, security, launch
+## Phase 9 — AI engineering office (المكتب الهندسي الذكي)
+
+Full spec: `docs/ENGINEERING_OFFICE.md` (CLAUDE.md Module 14, §5b, §7). Not started. Needs your decisions first: Cloud Run/Tasks +
+Python services (stack change), SBC text licence, licensed furniture library, image-generation model for renders. Build in
+slices, each with its own tests and a user check:
+
+- [ ] 9a Offices, engineers, roles: office/engineer profiles, admin verification, discipline-scoped approval, SCE expiry pause; rules tests per role
+- [ ] 9b Brief intake: plot/zoning/program zod schemas, brief agent (asks only for missing items), human confirmation
+- [ ] 9c SBC rule engine: versioned rule packs, checked/passed/failed/NOT CHECKED report, ≥ 1 pass + 1 fail fixture per rule; zoning reported separately
+- [ ] 9d Layout engine (Cloud Run) + 3–6 options + golden tests (5 briefs) + web plan editor with live checks
+- [ ] 9e 3D model (glTF/IFC) per plan, empty/furnished and model/AI-render toggles, sun study, massing on the Rasikh map; web + Flutter viewer
+- [ ] 9f Drawing set and exports (PDF, DXF, IFC4, glTF), draft watermark, title block, Balady permit checklist
+- [ ] 9g Discipline agents (structural, mechanical, electrical, industrial), shared model, clash detection, BOQ and schedule
+- [ ] 9h Workflow: queued jobs, versions/redlines, approval with SHA-256, release to Property Health Record, quotes/invoices (no payments)
+- [ ] 9i Precedent library + RAG with citations, office private library, opt-in only
+- [ ] 9j Renovation/restoration: existing-building intake, condition assessment, existing-structure rule pack, existing/demolish/new set, heritage flag
+
+Acceptance: see "Acceptance" in `docs/ENGINEERING_OFFICE.md` (rules isolation, draft watermark, clash, renovation case, 3D updates within seconds).
+
+## Phase 10 — Polish, security, launch
 
 - [ ] Design QA vs Najd Dusk; empty/error/loading states; Arabic errors; web/app consistency
 - [ ] Security: rules review, App Check enforcement, dependency audit, secret scan, rate limits, scheduled Firestore backup

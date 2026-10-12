@@ -194,6 +194,8 @@ class FirebaseAuthRepository implements AuthRepository {
         true,
       ); // pick up the new custom claims
     } on FirebaseFunctionsException catch (e) {
+      // Codes only (never personal data), so a failure is diagnosable in debug builds.
+      if (kDebugMode) debugPrint('functions error: ${e.code} ${e.message}');
       throw OrgException(
         e.code == 'resource-exhausted'
             ? OrgFailure.tooManyOrgs
