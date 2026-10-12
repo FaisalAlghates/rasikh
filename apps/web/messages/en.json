@@ -704,5 +704,29 @@
     "issue_contact_invalid": "Mobile format is +9665XXXXXXXX.",
     "issue_description_short": "The description is short. Write at least 30 characters.",
     "issue_encumbrances_not_stated": "You have not stated whether there is a mortgage or dispute."
+  },
+  "ai": {
+    "tab": "Assistant",
+    "intro": "An assistant inside Rasikh that answers about your properties, from your own data only. Its answers are suggestions you review; it never changes a record by itself.",
+    "question": "Ask about your leases, payments or maintenance",
+    "send": "Ask",
+    "sending": "Thinking…",
+    "explainLease": "Explain my lease",
+    "pickLease": "Choose the lease",
+    "explainSend": "Explain this lease",
+    "citations": "Sources",
+    "refused": "I cannot help with this request.",
+    "limitDaily": "You reached the daily limit of questions. Try tomorrow.",
+    "limitMonthly": "This workspace used the assistant's monthly limit. Contact the administrator.",
+    "unavailable": "The assistant is unavailable right now. Try again later.",
+    "failed": "The request could not be completed. Try again.",
+    "notAllowed": "This request is outside your permissions.",
+    "suggestTriage": "Suggest category and urgency",
+    "triageResult": "Assistant suggestion",
+    "applySuggestion": "Apply the suggestion to the form",
+    "suggestDescription": "Suggest a description",
+    "useDescription": "Use this description",
+    "suggestedDescription": "Suggested description",
+    "fake": "Test mode: the answer comes straight from the facts in your records, without a language model."
   }
 }
