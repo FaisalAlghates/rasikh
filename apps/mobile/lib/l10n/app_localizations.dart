@@ -3127,6 +3127,678 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'إن أضفته يدخل المنفّذ بحسابه ويرى بلاغه فقط، ويبدأ التنفيذ ويسجّل الإصلاح.'**
   String get mtVendorEmailHint;
+
+  /// No description provided for @brkTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوساطة'**
+  String get brkTab;
+
+  /// No description provided for @brkIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجلّ عملك كوسيط: عملاؤك ومعاينتك وعقودك، وسجل أنشطة لا يُعدَّل. راسخ لا ينشر إعلانات ولا يعتمدها.'**
+  String get brkIntro;
+
+  /// No description provided for @brkProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملف الوسيط'**
+  String get brkProfile;
+
+  /// No description provided for @brkDisplayName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get brkDisplayName;
+
+  /// No description provided for @brkFalNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم رخصة فال'**
+  String get brkFalNo;
+
+  /// No description provided for @brkFalExpiry.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ انتهاء الرخصة'**
+  String get brkFalExpiry;
+
+  /// No description provided for @brkSaveProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ الملف'**
+  String get brkSaveProfile;
+
+  /// No description provided for @brkSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحفظ.'**
+  String get brkSaved;
+
+  /// No description provided for @brkFalValid.
+  ///
+  /// In ar, this message translates to:
+  /// **'رخصتك سارية.'**
+  String get brkFalValid;
+
+  /// No description provided for @brkFalExpiring.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنتهي رخصتك خلال {days} يوماً. جدّدها قبل الانتهاء.'**
+  String brkFalExpiring(int days);
+
+  /// No description provided for @brkFalExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت رخصتك. لا تنشر إعلانات قبل تجديدها.'**
+  String get brkFalExpired;
+
+  /// No description provided for @brkLeads.
+  ///
+  /// In ar, this message translates to:
+  /// **'العملاء المحتملون'**
+  String get brkLeads;
+
+  /// No description provided for @brkAddLead.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عميلاً'**
+  String get brkAddLead;
+
+  /// No description provided for @brkName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get brkName;
+
+  /// No description provided for @brkPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجوال (+9665XXXXXXXX)'**
+  String get brkPhone;
+
+  /// No description provided for @brkInterest.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاهتمام'**
+  String get brkInterest;
+
+  /// No description provided for @brkSource.
+  ///
+  /// In ar, this message translates to:
+  /// **'المصدر'**
+  String get brkSource;
+
+  /// No description provided for @brkBudget.
+  ///
+  /// In ar, this message translates to:
+  /// **'الميزانية (ريال)'**
+  String get brkBudget;
+
+  /// No description provided for @brkNotes.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات'**
+  String get brkNotes;
+
+  /// No description provided for @brkStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get brkStatus;
+
+  /// No description provided for @brkNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد عملاء بعد.'**
+  String get brkNone;
+
+  /// No description provided for @brkInterestRent.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيجار'**
+  String get brkInterestRent;
+
+  /// No description provided for @brkInterestBuy.
+  ///
+  /// In ar, this message translates to:
+  /// **'شراء'**
+  String get brkInterestBuy;
+
+  /// No description provided for @brkInterestLetMyProperty.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأجير عقاره'**
+  String get brkInterestLetMyProperty;
+
+  /// No description provided for @brkInterestSellMyProperty.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيع عقاره'**
+  String get brkInterestSellMyProperty;
+
+  /// No description provided for @brkSourceReferral.
+  ///
+  /// In ar, this message translates to:
+  /// **'ترشيح'**
+  String get brkSourceReferral;
+
+  /// No description provided for @brkSourceWalkIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيارة مباشرة'**
+  String get brkSourceWalkIn;
+
+  /// No description provided for @brkSourceCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال'**
+  String get brkSourceCall;
+
+  /// No description provided for @brkSourceSocial.
+  ///
+  /// In ar, this message translates to:
+  /// **'وسائل التواصل'**
+  String get brkSourceSocial;
+
+  /// No description provided for @brkSourceOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'أخرى'**
+  String get brkSourceOther;
+
+  /// No description provided for @brkStatusNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'جديد'**
+  String get brkStatusNew;
+
+  /// No description provided for @brkStatusContacted.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التواصل'**
+  String get brkStatusContacted;
+
+  /// No description provided for @brkStatusViewing.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة'**
+  String get brkStatusViewing;
+
+  /// No description provided for @brkStatusNegotiating.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاوض'**
+  String get brkStatusNegotiating;
+
+  /// No description provided for @brkStatusWon.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الاتفاق'**
+  String get brkStatusWon;
+
+  /// No description provided for @brkStatusLost.
+  ///
+  /// In ar, this message translates to:
+  /// **'خسرناه'**
+  String get brkStatusLost;
+
+  /// No description provided for @brkMoveTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقله إلى'**
+  String get brkMoveTo;
+
+  /// No description provided for @brkOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح'**
+  String get brkOpen;
+
+  /// No description provided for @brkBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get brkBack;
+
+  /// No description provided for @brkLog.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الأنشطة'**
+  String get brkLog;
+
+  /// No description provided for @brkLogHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل إدخال يُختم بوقت الخادم ولا يمكن تعديله أو حذفه.'**
+  String get brkLogHint;
+
+  /// No description provided for @brkAddNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف ملاحظة'**
+  String get brkAddNote;
+
+  /// No description provided for @brkNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملاحظة'**
+  String get brkNote;
+
+  /// No description provided for @brkViewings.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعاينات'**
+  String get brkViewings;
+
+  /// No description provided for @brkScheduleViewing.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّد معاينة'**
+  String get brkScheduleViewing;
+
+  /// No description provided for @brkPlace.
+  ///
+  /// In ar, this message translates to:
+  /// **'المكان'**
+  String get brkPlace;
+
+  /// No description provided for @brkWhen.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموعد'**
+  String get brkWhen;
+
+  /// No description provided for @brkMarkDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت المعاينة'**
+  String get brkMarkDone;
+
+  /// No description provided for @brkViewingDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت'**
+  String get brkViewingDone;
+
+  /// No description provided for @brkContracts.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقود الوساطة'**
+  String get brkContracts;
+
+  /// No description provided for @brkAddContract.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عقد وساطة'**
+  String get brkAddContract;
+
+  /// No description provided for @brkContractType.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوع'**
+  String get brkContractType;
+
+  /// No description provided for @brkTypeRent.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيجار'**
+  String get brkTypeRent;
+
+  /// No description provided for @brkTypeSale.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيع'**
+  String get brkTypeSale;
+
+  /// No description provided for @brkTypeManagement.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة'**
+  String get brkTypeManagement;
+
+  /// No description provided for @brkContractNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم العقد'**
+  String get brkContractNo;
+
+  /// No description provided for @brkStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'من'**
+  String get brkStart;
+
+  /// No description provided for @brkEnd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلى'**
+  String get brkEnd;
+
+  /// No description provided for @brkCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمولة %'**
+  String get brkCommission;
+
+  /// No description provided for @brkProof.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملف الإثبات'**
+  String get brkProof;
+
+  /// No description provided for @brkProofHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يطبع سجل هذا العميل بكل أنشطته الموقّتة، لتحفظه PDF.'**
+  String get brkProofHint;
+
+  /// No description provided for @brkLogLeadCreated.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُضيف العميل'**
+  String get brkLogLeadCreated;
+
+  /// No description provided for @brkLogStatusChanged.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّرت الحالة'**
+  String get brkLogStatusChanged;
+
+  /// No description provided for @brkLogViewingScheduled.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُدّدت معاينة'**
+  String get brkLogViewingScheduled;
+
+  /// No description provided for @brkLogViewingDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت معاينة'**
+  String get brkLogViewingDone;
+
+  /// No description provided for @brkLogContractAdded.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُضيف عقد وساطة'**
+  String get brkLogContractAdded;
+
+  /// No description provided for @brkLogNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة'**
+  String get brkLogNote;
+
+  /// No description provided for @brkRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل الحقول المطلوبة بشكل صحيح.'**
+  String get brkRequired;
+
+  /// No description provided for @brkFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الحفظ. حاول مرة أخرى.'**
+  String get brkFailed;
+
+  /// No description provided for @brkAdTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'فاحص الإعلان'**
+  String get brkAdTitle;
+
+  /// No description provided for @brkAdIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتحقق من اكتمال بيانات الإعلان الإلزامية قبل نشره في المنصة المعتمدة. لا ينشر ولا يعتمد. تأكد دائماً من متطلبات الهيئة العامة للعقار الحالية.'**
+  String get brkAdIntro;
+
+  /// No description provided for @brkAdPurpose.
+  ///
+  /// In ar, this message translates to:
+  /// **'الغرض'**
+  String get brkAdPurpose;
+
+  /// No description provided for @brkAdPurposeSale.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيع'**
+  String get brkAdPurposeSale;
+
+  /// No description provided for @brkAdPurposeRent.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيجار'**
+  String get brkAdPurposeRent;
+
+  /// No description provided for @brkAdAdvertiser.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المعلن'**
+  String get brkAdAdvertiser;
+
+  /// No description provided for @brkAdCapacity.
+  ///
+  /// In ar, this message translates to:
+  /// **'صفة المعلن'**
+  String get brkAdCapacity;
+
+  /// No description provided for @brkAdCapacityOwner.
+  ///
+  /// In ar, this message translates to:
+  /// **'مالك'**
+  String get brkAdCapacityOwner;
+
+  /// No description provided for @brkAdCapacityBroker.
+  ///
+  /// In ar, this message translates to:
+  /// **'وسيط'**
+  String get brkAdCapacityBroker;
+
+  /// No description provided for @brkAdCapacityAgent.
+  ///
+  /// In ar, this message translates to:
+  /// **'وكيل'**
+  String get brkAdCapacityAgent;
+
+  /// No description provided for @brkAdCapacityDeveloper.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطوّر'**
+  String get brkAdCapacityDeveloper;
+
+  /// No description provided for @brkAdLicenseNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم ترخيص الإعلان'**
+  String get brkAdLicenseNo;
+
+  /// No description provided for @brkAdLicenseExpiry.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهاء الترخيص'**
+  String get brkAdLicenseExpiry;
+
+  /// No description provided for @brkAdCity.
+  ///
+  /// In ar, this message translates to:
+  /// **'المدينة'**
+  String get brkAdCity;
+
+  /// No description provided for @brkAdDistrict.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحي'**
+  String get brkAdDistrict;
+
+  /// No description provided for @brkAdType.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع العقار'**
+  String get brkAdType;
+
+  /// No description provided for @brkAdArea.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساحة (م²)'**
+  String get brkAdArea;
+
+  /// No description provided for @brkAdPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر (ريال)'**
+  String get brkAdPrice;
+
+  /// No description provided for @brkAdPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'جوال التواصل'**
+  String get brkAdPhone;
+
+  /// No description provided for @brkAdDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصف العقار'**
+  String get brkAdDescription;
+
+  /// No description provided for @brkAdEncumbrances.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل يوجد رهن أو نزاع على العقار؟'**
+  String get brkAdEncumbrances;
+
+  /// No description provided for @brkAdEncUnset.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم أحدد'**
+  String get brkAdEncUnset;
+
+  /// No description provided for @brkAdEncNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد'**
+  String get brkAdEncNo;
+
+  /// No description provided for @brkAdEncYes.
+  ///
+  /// In ar, this message translates to:
+  /// **'يوجد (ويُذكر في الإعلان)'**
+  String get brkAdEncYes;
+
+  /// No description provided for @brkAdReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الإعلان مكتملة. راجعها بنفسك قبل النشر.'**
+  String get brkAdReady;
+
+  /// No description provided for @brkAdNotReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'ينقص الإعلان بيانات إلزامية.'**
+  String get brkAdNotReady;
+
+  /// No description provided for @brkAdError.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطلوب'**
+  String get brkAdError;
+
+  /// No description provided for @brkAdWarning.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه'**
+  String get brkAdWarning;
+
+  /// No description provided for @brkIssuePurposeMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّد الغرض: بيع أو إيجار.'**
+  String get brkIssuePurposeMissing;
+
+  /// No description provided for @brkIssueAdvertiserMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب اسم المعلن.'**
+  String get brkIssueAdvertiserMissing;
+
+  /// No description provided for @brkIssueCapacityMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّد صفة المعلن.'**
+  String get brkIssueCapacityMissing;
+
+  /// No description provided for @brkIssueLicenseMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم ترخيص الإعلان.'**
+  String get brkIssueLicenseMissing;
+
+  /// No description provided for @brkIssueLicenseInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الترخيص غير صحيح (أرقام فقط، 8 إلى 12 خانة).'**
+  String get brkIssueLicenseInvalid;
+
+  /// No description provided for @brkIssueLicenseExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهى ترخيص الإعلان. جدّده قبل النشر.'**
+  String get brkIssueLicenseExpired;
+
+  /// No description provided for @brkIssueLicenseExpiring.
+  ///
+  /// In ar, this message translates to:
+  /// **'ترخيص الإعلان قريب الانتهاء.'**
+  String get brkIssueLicenseExpiring;
+
+  /// No description provided for @brkIssueLocationMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب المدينة والحي.'**
+  String get brkIssueLocationMissing;
+
+  /// No description provided for @brkIssuePropertyTypeMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّد نوع العقار.'**
+  String get brkIssuePropertyTypeMissing;
+
+  /// No description provided for @brkIssueAreaMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب المساحة.'**
+  String get brkIssueAreaMissing;
+
+  /// No description provided for @brkIssuePriceMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب السعر.'**
+  String get brkIssuePriceMissing;
+
+  /// No description provided for @brkIssueContactMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل جوال التواصل.'**
+  String get brkIssueContactMissing;
+
+  /// No description provided for @brkIssueContactInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجوال بصيغة +9665XXXXXXXX.'**
+  String get brkIssueContactInvalid;
+
+  /// No description provided for @brkIssueDescriptionShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوصف قصير. اكتب 30 حرفاً على الأقل.'**
+  String get brkIssueDescriptionShort;
+
+  /// No description provided for @brkIssueEncumbrancesNotStated.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تذكر هل على العقار رهن أو نزاع.'**
+  String get brkIssueEncumbrancesNotStated;
 }
 
 class _AppLocalizationsDelegate

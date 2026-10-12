@@ -22,12 +22,14 @@ class OpsScope {
     this.staff, {
     this.vendor = false,
     this.unitOwner = false,
+    this.broker = false,
   });
   final String orgId, uid;
   final bool staff;
 
-  /// A vendor with their own login (sees only tickets assigned to them) / an owner of a unit in an association.
-  final bool vendor, unitOwner;
+  /// A vendor with their own login (sees only tickets assigned to them) / an owner of a unit in an association /
+  /// a licensed broker (has the CRM; a broker without other roles sees only that).
+  final bool vendor, unitOwner, broker;
 
   @override
   bool operator ==(Object other) =>
@@ -36,9 +38,10 @@ class OpsScope {
       other.uid == uid &&
       other.staff == staff &&
       other.vendor == vendor &&
-      other.unitOwner == unitOwner;
+      other.unitOwner == unitOwner &&
+      other.broker == broker;
   @override
-  int get hashCode => Object.hash(orgId, uid, staff, vendor, unitOwner);
+  int get hashCode => Object.hash(orgId, uid, staff, vendor, unitOwner, broker);
 }
 
 final opsScopeProvider = Provider<OpsScope?>((ref) {
@@ -52,6 +55,7 @@ final opsScopeProvider = Provider<OpsScope?>((ref) {
     vendor:
         !s.isStaff && s.roles.contains('vendor') && !s.roles.contains('tenant'),
     unitOwner: !s.isStaff && s.roles.contains('building_owner'),
+    broker: s.roles.contains('broker'),
   );
 });
 

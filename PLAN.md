@@ -91,11 +91,13 @@ Acceptance: e2e ticket lifecycle and expense → statement; rules tests.
 
 ## Phase 7 — Broker CRM + ad compliance checker
 
-- [ ] Broker profile: FAL no. + expiry reminders
-- [ ] Leads, contacts, brokerage contracts, viewings, immutable server-timestamped log, proof-file PDF
-- [ ] Ad compliance checker (no publishing): purpose, advertiser + capacity, ad license no./expiry, location, contact, description, price, disclosures; near-expiry warning
+- [x] Broker profile: FAL no. + expiry reminders (60/30/7 days, in-app, free)
+- [x] Leads, brokerage contracts, viewings, immutable server-timestamped log; proof file = browser print-to-PDF of one lead's log on the web (the app shows the log on screen)
+- [x] Ad compliance checker (no publishing): purpose, advertiser + capacity, ad license no./expiry, location, property type, area, price, contact, description, encumbrance statement; near-expiry warning
 
 Acceptance: checker unit tests (valid + invalid ads); rules tests.
+
+**Status (2026-10-12): done on web, backend and Flutter.** Shared logic (`broker.ts`, Dart port with the same fixtures), rules (a broker's leads, viewings, contracts and log are private to that broker; owners and admins of the organization can read them; the log is create-only with the server's time and can never be edited or deleted; lead status only moves forward or to lost), web workspace (a broker-only account lands on it; an owner who is also a broker gets a tab) with Playwright e2e, Flutter screens with widget tests. Gaps: the proof file is not a server-generated PDF; the ad checker follows the mandatory ad data as we understand it and must be re-checked against REGA's current published requirements before launch; leads and viewings cannot be edited (only status/notes on a lead); no import of contacts; Flutter broker screens have not run on a device yet.
 
 ## Phase 8 — Real-estate AI
 

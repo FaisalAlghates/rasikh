@@ -16,3 +16,5 @@
 - Fix: tenant schedule widened the page on phones (hidden receipt input escaped its scroll box); the schedule is now a list.
 - Fix: Flutter app now connects the Firestore and Storage emulators.
 - Fix: RTL input handling (only the input is LTR), Arabic display line-height, layered hairline utility.
+- Phase 7: broker CRM and ad compliance checker (FAL profile with 60/30/7-day reminders, leads with a forward-only funnel, viewings, brokerage contracts, a create-only server-timestamped activity log private to each broker, and a live ad checklist) on web, backend rules and Flutter, with shared logic ported to Dart using the same fixtures.
+- Fix (Android emulator): the Firebase Android SDK rejects a fake API key that is not 39 characters starting with A; debug builds now allow cleartext to the emulator host.
