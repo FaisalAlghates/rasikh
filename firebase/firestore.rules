@@ -389,8 +389,13 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Public site: anonymous "was this page helpful?" answers (no personal data). Create-only;
-    // nobody reads them from a client (the team reviews them in the console).
+    // The Rasikh team (not an organization role): set only with the Admin SDK (scripts/set-platform-admin.mjs).
+    function isPlatformAdmin() {
+      return signedIn() && request.auth.token.platformAdmin == true;
+    }
+
+    // Public site: anonymous "was this page helpful?" answers (no personal data). Anyone may add one;
+    // only the Rasikh team reads them, and nobody edits them.
     match /siteFeedback/{id} {
       allow create: if request.resource.data.keys().hasOnly(['page', 'helpful', 'reasons', 'comment', 'locale', 'createdAt'])
         && request.resource.data.keys().hasAll(['page', 'helpful', 'reasons', 'comment', 'locale', 'createdAt'])
@@ -402,10 +407,12 @@ service cloud.firestore {
         && request.resource.data.comment is string && request.resource.data.comment.size() <= 500
         && request.resource.data.locale in ['ar', 'en']
         && request.resource.data.createdAt == request.time;
-      allow read, update, delete: if false;
+      allow read: if isPlatformAdmin();
+      allow update, delete: if false;
     }
 
-    // Public site: contact messages, sent with explicit consent to reply. Create-only; read in the console.
+    // Public site: contact messages, sent with explicit consent to reply. Anyone may send one; only the Rasikh
+    // team reads them, marks them handled, and deletes them once answered (data minimisation, PDPL).
     match /siteMessages/{id} {
       allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'topic', 'message', 'consent', 'locale', 'createdAt'])
         && request.resource.data.keys().hasAll(['name', 'email', 'topic', 'message', 'consent', 'locale', 'createdAt'])
@@ -419,7 +426,11 @@ service cloud.firestore {
         && request.resource.data.consent == true
         && request.resource.data.locale in ['ar', 'en']
         && request.resource.data.createdAt == request.time;
-      allow read, update, delete: if false;
+      allow read, delete: if isPlatformAdmin();
+      allow update: if isPlatformAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'handledAt'])
+        && request.resource.data.status in ['new', 'handled']
+        && request.resource.data.handledAt == request.time;
     }
 
     // Everything else is denied.

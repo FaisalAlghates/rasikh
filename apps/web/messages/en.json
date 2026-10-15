@@ -1038,7 +1038,8 @@
       "body": "Rasikh uses only essential cookies and storage to keep you signed in and remember your preferences, such as theme and text size. We use no tracking and no advertising.",
       "accept": "Got it",
       "more": "Details in the privacy policy"
-    }
+    },
+    "adminInbox": "Rasikh team inbox"
   },
   "pages": {
     "about": {
@@ -1362,5 +1363,48 @@
     "sakaka": "Sakaka",
     "alula": "AlUla",
     "yanbu": "Yanbu"
+  },
+  "admin": {
+    "title": "Rasikh team inbox",
+    "lead": "Contact messages and page ratings from site visitors. Visible to the Rasikh team only.",
+    "noAccess": "This page is for the Rasikh team only.",
+    "noAccessBody": "Your account cannot view visitor messages and ratings.",
+    "tabMessages": "Contact messages",
+    "tabFeedback": "Page ratings",
+    "filter": {
+      "new": "New",
+      "handled": "Answered",
+      "all": "All"
+    },
+    "status": {
+      "new": "New",
+      "handled": "Answered"
+    },
+    "topics": {
+      "question": "Question",
+      "problem": "Technical problem",
+      "idea": "Suggestion",
+      "privacy": "Privacy and data",
+      "accessibility": "Accessibility barrier"
+    },
+    "privacyNote": "Use this data only to reply to the sender, and delete the message once answered.",
+    "reply": "Reply by email",
+    "replySubject": "Reply from the Rasikh team",
+    "markHandled": "Mark as answered",
+    "delete": "Delete",
+    "deleteTitle": "Delete this message?",
+    "deleteBody": "The name, email and message are deleted permanently and cannot be recovered.",
+    "deleteConfirm": "Delete permanently",
+    "cancel": "Cancel",
+    "noMessages": "No messages here.",
+    "noFeedback": "No ratings yet.",
+    "page": "Page",
+    "responses": "Responses",
+    "helpful": "Helpful",
+    "reasonsCol": "Top reasons",
+    "recentComments": "Latest notes",
+    "helpfulYes": "Helpful",
+    "helpfulNo": "Not helpful",
+    "failed": "That did not work. Please try again."
   }
 }

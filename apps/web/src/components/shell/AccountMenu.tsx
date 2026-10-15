@@ -5,6 +5,7 @@ import {
   ChevronDown,
   CircleUserRound,
   HelpCircle,
+  Inbox,
   LayoutGrid,
   LogOut,
   Map,
@@ -25,6 +26,7 @@ export function AccountMenu() {
   const router = useRouter();
   const user = useUser();
   const [roles, setRoles] = useState<string[]>([]);
+  const [team, setTeam] = useState(false);
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   const id = useId();
@@ -33,7 +35,9 @@ export function AccountMenu() {
     if (!user) return;
     let on = true;
     void readClaims(user).then((c) => {
-      if (on) setRoles(Object.values(c.orgs)[0] ?? []);
+      if (!on) return;
+      setRoles(Object.values(c.orgs)[0] ?? []);
+      setTeam(c.platformAdmin);
     });
     return () => {
       on = false;
@@ -131,6 +135,14 @@ export function AccountMenu() {
                 {t('section.privacy')}
               </Link>
             </li>
+            {team && (
+              <li>
+                <Link href="/admin" className={item} onClick={() => setOpen(false)}>
+                  <Inbox size={16} aria-hidden="true" className="text-brand-text" />
+                  {t('adminInbox')}
+                </Link>
+              </li>
+            )}
             <li>
               <Link href={ROUTES.help} className={item} onClick={() => setOpen(false)}>
                 <HelpCircle size={16} aria-hidden="true" className="text-brand-text" />

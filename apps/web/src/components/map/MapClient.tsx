@@ -343,35 +343,42 @@ export function MapClient() {
                 <X size={18} aria-hidden="true" />
               </IconButton>
             </div>
-            <dl className="mt-4 grid grid-cols-2 gap-3 text-small">
-              <div>
-                <dt className="text-text-muted">{t('rent')}</dt>
-                <dd className="tabular text-body font-medium">
-                  {fmt.format(current.rentSar)} {t('sar')}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-text-muted">{cityName(current.cityId)}</dt>
-                <dd className="text-body font-medium">{t('units', { count: current.units })}</dd>
-              </div>
-            </dl>
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <StatusDot status={current.status} label={statusLabel(current.status)} />
-              {source === 'mine' && (
-                <Link
-                  href="/workspace?s=properties"
-                  className="inline-flex min-h-10 items-center gap-1.5 text-small font-semibold text-brand-text underline-offset-4 hover:underline"
-                >
-                  {t('openWorkspace')}
-                  <ArrowLeft size={14} aria-hidden="true" className="ltr:rotate-180" />
-                </Link>
-              )}
-            </div>
-            {source === 'mine' && (
-              <p className="mt-2 flex items-center gap-1 text-caption text-text-muted">
-                <MapPin size={12} aria-hidden="true" />
-                {current.approximate ? t('approx') : t('exact')}
-              </p>
+            {/* while placing, the card shrinks to its title and the hint so the map stays free to click */}
+            {!placing && (
+              <>
+                <dl className="mt-4 grid grid-cols-2 gap-3 text-small">
+                  <div>
+                    <dt className="text-text-muted">{t('rent')}</dt>
+                    <dd className="tabular text-body font-medium">
+                      {fmt.format(current.rentSar)} {t('sar')}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-muted">{cityName(current.cityId)}</dt>
+                    <dd className="text-body font-medium">
+                      {t('units', { count: current.units })}
+                    </dd>
+                  </div>
+                </dl>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                  <StatusDot status={current.status} label={statusLabel(current.status)} />
+                  {source === 'mine' && (
+                    <Link
+                      href="/workspace?s=properties"
+                      className="inline-flex min-h-10 items-center gap-1.5 text-small font-semibold text-brand-text underline-offset-4 hover:underline"
+                    >
+                      {t('openWorkspace')}
+                      <ArrowLeft size={14} aria-hidden="true" className="ltr:rotate-180" />
+                    </Link>
+                  )}
+                </div>
+                {source === 'mine' && (
+                  <p className="mt-2 flex items-center gap-1 text-caption text-text-muted">
+                    <MapPin size={12} aria-hidden="true" />
+                    {current.approximate ? t('approx') : t('exact')}
+                  </p>
+                )}
+              </>
             )}
             {placing && (
               <div
