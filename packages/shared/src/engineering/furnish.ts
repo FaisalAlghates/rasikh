@@ -30,6 +30,15 @@ const KIT: Partial<Record<RoomType, Array<[Piece['kind'], number, number, number
     ['bed', 1.2, 2.0, 0.5],
     ['wardrobe', 1.6, 0.6, 2.2],
   ],
+  guest_room: [
+    ['bed', 1.2, 2.0, 0.5],
+    ['wardrobe', 1.2, 0.6, 2.2],
+  ],
+  office: [
+    ['table', 1.6, 0.8, 0.75],
+    ['chair', 0.6, 0.6, 0.9],
+  ],
+  prep_kitchen: [['counter', 2.4, 0.6, 0.9]],
   maid_room: [['bed', 0.9, 1.9, 0.5]],
   driver_room: [['bed', 0.9, 1.9, 0.5]],
   majlis_men: [

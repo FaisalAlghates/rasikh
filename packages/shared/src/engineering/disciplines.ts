@@ -85,6 +85,11 @@ export const COOLING_W_PER_M2: Partial<Record<RoomType, number>> = {
   master_bedroom: 170,
   maid_room: 170,
   driver_room: 170,
+  guest_room: 170,
+  office: 180,
+  prayer_room: 200,
+  gym: 220,
+  prep_kitchen: 240,
   apartment: 180,
   shop: 260,
 };
@@ -126,6 +131,7 @@ export function plumbingFixtures(plan: DesignPlan) {
     bathroom: { wc: 1, basin: 1, shower: 1 },
     guest_wc: { wc: 1, basin: 1 },
     kitchen: { sink: 1 },
+    prep_kitchen: { sink: 1 },
     laundry: { washer: 1, floorDrain: 1 },
   };
   const totals: Record<string, number> = {};
@@ -248,81 +254,197 @@ export function detectClashes(
 
 /** Unit rates in SAR (min/max) maintained by the office; these defaults are placeholders, never a quote. */
 export interface Rates {
+  excavationPerM3: [number, number];
   concretePerM3: [number, number];
+  rebarPerTon: [number, number];
   blockworkPerM2: [number, number];
   plasterPerM2: [number, number];
+  waterproofingPerM2: [number, number];
+  insulationPerM2: [number, number];
   tilingPerM2: [number, number];
+  ceilingPerM2: [number, number];
   paintPerM2: [number, number];
+  facadePerM2: [number, number];
   doorEach: [number, number];
   windowPerM2: [number, number];
   mepPerM2: [number, number];
 }
 export const DEFAULT_RATES: Rates = {
+  excavationPerM3: [25, 45],
   concretePerM3: [650, 900],
+  rebarPerTon: [3000, 4000],
   blockworkPerM2: [55, 80],
   plasterPerM2: [25, 40],
+  waterproofingPerM2: [40, 85],
+  insulationPerM2: [35, 80],
   tilingPerM2: [90, 220],
+  ceilingPerM2: [45, 95],
   paintPerM2: [18, 35],
+  facadePerM2: [90, 400],
   doorEach: [900, 2500],
   windowPerM2: [450, 1100],
   mepPerM2: [250, 450],
 };
 
+/** Rebar per m³ of concrete by element (kg): rule-of-thumb starting values for the structural engineer. */
+export const REBAR_KG_PER_M3 = { foundations: 80, columns: 160, beams: 130, slabs: 90 };
+
+export const BOQ_SECTIONS = [
+  'earthworks',
+  'concrete',
+  'masonry',
+  'insulation',
+  'finishes',
+  'openings',
+  'mep',
+] as const;
+export type BoqSection = (typeof BOQ_SECTIONS)[number];
+
+export type BoqItem =
+  | 'excavation'
+  | 'concreteFoundations'
+  | 'concreteColumns'
+  | 'concreteBeams'
+  | 'concreteSlabs'
+  | 'rebar'
+  | 'blockwork'
+  | 'plaster'
+  | 'waterproofing'
+  | 'insulation'
+  | 'tiling'
+  | 'ceiling'
+  | 'paint'
+  | 'facade'
+  | 'doors'
+  | 'windows'
+  | 'mep';
+
 export interface BoqLine {
-  item: keyof Rates;
+  /** Item number in the bill (1.1, 2.3 ...). */
+  no: string;
+  section: BoqSection;
+  item: BoqItem;
+  /** The rate the line is priced with. */
+  rate: keyof Rates;
   qty: number;
-  unit: 'm3' | 'm2' | 'each';
+  unit: 'm3' | 'm2' | 't' | 'each';
   min: number;
   max: number;
 }
 
+/**
+ * A preliminary bill of quantities from the plan and the structural scheme, priced with the office's rates as a
+ * min–max range. Quantities are measured from the concept geometry; never a quote or a tender document.
+ */
 export function boq(
   plan: DesignPlan,
   scheme = structuralScheme(plan),
-  rates: Rates = DEFAULT_RATES,
+  rates: Partial<Rates> = DEFAULT_RATES,
 ) {
+  const r: Rates = { ...DEFAULT_RATES, ...rates };
   const fp = plan.footprint;
-  const floorArea = plan.rooms.reduce((s, r) => s + area(r), 0);
-  const slabs = area(fp) * scheme.slabThickness * (plan.floors + 1);
-  const cols = scheme.columns.length * plan.floors * plan.floorHeight * 0.3 * 0.6;
+  const floorArea = plan.rooms.reduce((s, x) => s + area(x), 0);
+  const roof = area(fp);
+  // structure
+  const footings = scheme.columns.length * 2.0 * 2.0 * 0.6;
+  const tieBeams = (scheme.gridX.length * fp.h + scheme.gridY.length * fp.w) * 0.3 * 0.6;
+  const foundations = footings + tieBeams;
+  const columns = scheme.columns.length * plan.floors * plan.floorHeight * 0.3 * 0.6;
   const beams =
     (scheme.gridX.length * fp.h + scheme.gridY.length * fp.w) *
-    (plan.floors + 1) *
+    plan.floors *
     0.3 *
-    scheme.beamDepth;
+    Math.max(0, scheme.beamDepth - scheme.slabThickness);
+  // the ground slab on grade plus one suspended slab per floor (the last one is the roof)
+  const slabs = roof * scheme.slabThickness * (plan.floors + 1);
+  const rebarT =
+    (foundations * REBAR_KG_PER_M3.foundations +
+      columns * REBAR_KG_PER_M3.columns +
+      beams * REBAR_KG_PER_M3.beams +
+      slabs * REBAR_KG_PER_M3.slabs) /
+    1000;
+  const excavation = (fp.w + 2) * (fp.h + 2) * 1.5;
+  // openings
   const ops = openingsOf(plan);
   const winArea = ops
     .filter((o) => o.kind === 'window')
     .reduce((s, o) => s + openingWidth(o) * (o.head - o.sill), 0);
   const doors = ops.filter((o) => o.kind !== 'window').length;
-  // wall length per floor: every room's perimeter, shared walls counted once (≈ half the sum + half the outside)
-  const outside = 2 * (fp.w + fp.h);
-  const inner =
-    plan.rooms.reduce((s, r) => s + 2 * (r.w + r.h), 0) / 2 - (outside * plan.floors) / 2;
-  const wallArea = (outside * plan.floors + Math.max(0, inner)) * plan.floorHeight - winArea;
-  const q = (item: keyof Rates, qty: number, unit: BoqLine['unit']): BoqLine => ({
+  // walls: the outside skin, and inner walls (every room's perimeter, shared walls counted once)
+  const outsideLen = 2 * (fp.w + fp.h) * plan.floors;
+  const innerLen = Math.max(
+    0,
+    plan.rooms.reduce((s, x) => s + 2 * (x.w + x.h), 0) / 2 - outsideLen / 2,
+  );
+  const outsideWall = Math.max(0, outsideLen * plan.floorHeight - winArea);
+  const innerWall = innerLen * plan.floorHeight;
+  const wetFloors = plan.rooms.filter((x) => WET.includes(x.type)).reduce((s, x) => s + area(x), 0);
+
+  const q = (
+    no: string,
+    section: BoqSection,
+    item: BoqItem,
+    rate: keyof Rates,
+    qty: number,
+    unit: BoqLine['unit'],
+  ): BoqLine => ({
+    no,
+    section,
     item,
+    rate,
     qty: Math.round(qty * 10) / 10,
     unit,
-    min: Math.round(qty * rates[item][0]),
-    max: Math.round(qty * rates[item][1]),
+    min: Math.round(qty * r[rate][0]),
+    max: Math.round(qty * r[rate][1]),
   });
-  const lines = [
-    q('concretePerM3', slabs + cols + beams, 'm3'),
-    q('blockworkPerM2', wallArea, 'm2'),
-    q('plasterPerM2', wallArea * 2, 'm2'),
-    q('tilingPerM2', floorArea, 'm2'),
-    q('paintPerM2', wallArea * 2 + floorArea, 'm2'),
-    q('doorEach', doors, 'each'),
-    q('windowPerM2', winArea, 'm2'),
-    q('mepPerM2', floorArea, 'm2'),
+  const lines: BoqLine[] = [
+    q('1.1', 'earthworks', 'excavation', 'excavationPerM3', excavation, 'm3'),
+    q('2.1', 'concrete', 'concreteFoundations', 'concretePerM3', foundations, 'm3'),
+    q('2.2', 'concrete', 'concreteColumns', 'concretePerM3', columns, 'm3'),
+    q('2.3', 'concrete', 'concreteBeams', 'concretePerM3', beams, 'm3'),
+    q('2.4', 'concrete', 'concreteSlabs', 'concretePerM3', slabs, 'm3'),
+    q('2.5', 'concrete', 'rebar', 'rebarPerTon', rebarT, 't'),
+    q('3.1', 'masonry', 'blockwork', 'blockworkPerM2', outsideWall + innerWall, 'm2'),
+    q('4.1', 'insulation', 'waterproofing', 'waterproofingPerM2', roof + wetFloors, 'm2'),
+    q('4.2', 'insulation', 'insulation', 'insulationPerM2', roof + outsideWall, 'm2'),
+    q('5.1', 'finishes', 'plaster', 'plasterPerM2', outsideWall + innerWall * 2, 'm2'),
+    q('5.2', 'finishes', 'tiling', 'tilingPerM2', floorArea, 'm2'),
+    q('5.3', 'finishes', 'ceiling', 'ceilingPerM2', floorArea, 'm2'),
+    q('5.4', 'finishes', 'paint', 'paintPerM2', outsideWall + innerWall * 2 + floorArea, 'm2'),
+    q('5.5', 'finishes', 'facade', 'facadePerM2', outsideWall, 'm2'),
+    q('6.1', 'openings', 'doors', 'doorEach', doors, 'each'),
+    q('6.2', 'openings', 'windows', 'windowPerM2', winArea, 'm2'),
+    q('7.1', 'mep', 'mep', 'mepPerM2', floorArea, 'm2'),
   ];
+  const min = lines.reduce((s, l) => s + l.min, 0);
+  const max = lines.reduce((s, l) => s + l.max, 0);
   return {
     lines,
-    min: lines.reduce((s, l) => s + l.min, 0),
-    max: lines.reduce((s, l) => s + l.max, 0),
+    min,
+    max,
     floorArea: Math.round(floorArea),
+    /** Cost per m² of floor (min–max). */
+    perM2: floorArea > 0 ? [Math.round(min / floorArea), Math.round(max / floorArea)] : [0, 0],
   };
+}
+
+export type Boq = ReturnType<typeof boq>;
+
+/** The bill as CSV (UTF-8 with a BOM so spreadsheet apps read Arabic), labelled by the caller. */
+export function boqCsv(
+  b: Boq,
+  label: { item: (i: BoqItem) => string; unit: (u: BoqLine['unit']) => string; head: string[] },
+): string {
+  const cell = (v: string | number) => {
+    const s = String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const rows: Array<Array<string | number>> = [
+    label.head,
+    ...b.lines.map((l) => [l.no, label.item(l.item), l.qty, label.unit(l.unit), l.min, l.max]),
+    ['', '', '', '', b.min, b.max],
+  ];
+  return '﻿' + rows.map((r) => r.map(cell).join(',')).join('\r\n') + '\r\n';
 }
 
 export const PHASES = [

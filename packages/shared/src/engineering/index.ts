@@ -1,6 +1,7 @@
 export * from './schemas.js';
 export * from './brief.js';
 export * from './layout.js';
+export * from './options.js';
 export * from './rules.js';
 export * from './openings.js';
 export * from './disciplines.js';
