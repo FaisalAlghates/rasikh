@@ -14,7 +14,6 @@ Last updated: 2026-10-15. References: `PLAN.md` (phases and gaps), `CLAUDE.md` (
 ## 1. Work I can still do (free)
 
 - Run the production web build against the real Firebase project to check sign-in and Firestore reads.
-- An admin view for the anonymous page feedback and contact messages (today they are read in the Firebase console).
 - Phase 10: shorten the simulated LCP on the landing page (3.0 s against a 2.5 s target; real measured time is about 0.3 s), measure the workspace and map pages, final design review of the older screens, a rules review pass.
 - Gaps from finished phases: server-side Arabic PDF reports (account statement, inspection comparison); ownership transfer with the new owner's consent; switching between several organizations; an admin screen for the indicative-prices import.
 - Device testing: the rest of the Flutter screens on the Android emulator (properties, leases, inspections, tickets, buildings, broker, assistant, privacy); camera, GPS and the evidence upload queue on a real phone and on iOS.
@@ -40,6 +39,7 @@ Spec: `docs/ENGINEERING_OFFICE.md`; ten slices (9a to 9j) in `PLAN.md`. Needs yo
 - **Trademark and names:** SAIP search, rasikh.sa / .com / .app, store names, social handles.
 - **Deploy the updated Firestore rules** (new create-only `siteFeedback` and `siteMessages`, and the property pin check), with your confirmation, so the contact form and page rating work on the real project. Free on Spark.
 - **A real support address** for the contact page and privacy policy.
+- **Give yourself the team inbox** on the real project: with a service-account key, run `node scripts/set-platform-admin.mjs --project rasikh-eca19 <your email>` in `firebase/functions` (after the rules deploy).
 - **Deploy** to production, with your confirmation.
 
 ## 4. Standing constraints

@@ -6,7 +6,16 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
-import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { afterAll, beforeAll, describe, it } from 'vitest';
 
 let env: RulesTestEnvironment;
@@ -89,5 +98,45 @@ describe('public contact messages', () => {
   it('messages are never readable from a client', async () => {
     await assertFails(getDoc(doc(anon(), 'siteMessages/m1')));
     await assertFails(getDoc(doc(admin(), 'siteMessages/m1')));
+  });
+});
+
+describe('the Rasikh team inbox (platform admins only)', () => {
+  const team = () => env.authenticatedContext('team1', { platformAdmin: true }).firestore();
+
+  it('a platform admin reads feedback and messages; an organization admin still cannot', async () => {
+    await assertSucceeds(getDoc(doc(team(), 'siteFeedback/f1')));
+    await assertSucceeds(getDoc(doc(team(), 'siteMessages/m1')));
+    await assertFails(getDoc(doc(admin(), 'siteMessages/m1')));
+    const fake = env.authenticatedContext('x', { platformAdmin: 'yes' }).firestore();
+    await assertFails(getDoc(doc(fake, 'siteMessages/m1')));
+  });
+
+  it('marks a message handled with the server time, and nothing else', async () => {
+    await assertSucceeds(
+      updateDoc(doc(team(), 'siteMessages/m1'), {
+        status: 'handled',
+        handledAt: serverTimestamp(),
+      }),
+    );
+    await assertFails(
+      updateDoc(doc(team(), 'siteMessages/m1'), { status: 'handled', handledAt: new Date() }),
+    );
+    await assertFails(
+      updateDoc(doc(team(), 'siteMessages/m1'), {
+        message: 'edited',
+        handledAt: serverTimestamp(),
+      }),
+    );
+    await assertFails(updateDoc(doc(team(), 'siteFeedback/f1'), { helpful: false }));
+  });
+
+  it('deletes an answered message (data minimisation); feedback is never deleted from a client', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'siteMessages/m2'), { name: 'y', email: 'y@z.sa' });
+    });
+    await assertFails(deleteDoc(doc(anon(), 'siteMessages/m2')));
+    await assertSucceeds(deleteDoc(doc(team(), 'siteMessages/m2')));
+    await assertFails(deleteDoc(doc(team(), 'siteFeedback/f1')));
   });
 });

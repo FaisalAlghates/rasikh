@@ -128,6 +128,9 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 ## 5. Data & security
 
 - Auth: Firebase Auth phone OTP (+966) and email. Roles in custom claims, set only by Functions.
+- The Rasikh team is not an organization role: a `platformAdmin` custom claim set only with the Admin SDK
+  (`firebase/functions/scripts/set-platform-admin.mjs`) opens `/admin`, the inbox of public contact messages and page
+  ratings (read, mark answered, delete after answering). Functions that write claims keep the existing ones.
 - Multi-tenant by organization: orgs/{orgId}/...
 - Firestore rules deny by default; every read/write checks org membership + role; emulator unit tests.
 - Inspection media write-once after sign-off; SHA-256 + capture metadata in Firestore.
