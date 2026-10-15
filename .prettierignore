@@ -4,3 +4,4 @@ dist
 pnpm-lock.yaml
 apps/mobile
 **/generated
+docs/PROJECT-OVERVIEW.html
