@@ -92,7 +92,11 @@ unsupported or reduce-transparency is on. One glass layer per screen.
 
 Signature elements: (a) Najdi arch mask on hero property images; (b) shurfa crenellation as thin dividers + loading
 indicator; (c) Property Health Record vertical timeline with clay nodes; (d) landing hero = full-bleed 3D Riyadh at dusk,
-slow orbit, one headline, scroll moves the camera; (e) brand mark.
+slow orbit, one headline, scroll moves the camera; (e) brand mark; (f) portfolio twin on the workspace overview: the
+owner's own properties as Najdi mud-brick buildings at dusk (three.js, `lib/scene/PortfolioTwin.ts`), one floor cell
+per unit with its window lit in the payment status (ok / soon / late / vacant), drag to orbit, click a unit for its card;
+a flat block fallback without WebGL or in automated browsers, and a screen-reader list of the same data.
+Radix primitives must get `dir` from the locale (Tabs and Select default to ltr).
 
 Modes: dark default on map screens; light "sand" editorial on content pages; user override.
 RTL first: logical CSS properties only, mirrored directional icons, Hijri + Gregorian dates, SAR formatting.

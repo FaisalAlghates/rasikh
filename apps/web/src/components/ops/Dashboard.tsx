@@ -258,6 +258,7 @@ export function Dashboard() {
             label: t('tabOverview'),
             content: (
               <Overview
+                properties={properties.rows}
                 units={units.rows}
                 leases={leases.rows}
                 payments={payments.rows}

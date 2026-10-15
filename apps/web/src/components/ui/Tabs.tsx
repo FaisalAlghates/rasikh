@@ -1,6 +1,7 @@
 'use client';
 
 import * as RTabs from '@radix-ui/react-tabs';
+import { useLocale } from 'next-intl';
 import type { ReactNode } from 'react';
 import { cn } from './cn';
 
@@ -23,19 +24,30 @@ export function Tabs({
   onValueChange?: (v: string) => void;
   label: string;
 }) {
+  // Radix defaults to ltr; Arabic tabs must start on the right and arrow keys must follow reading order.
+  const dir = useLocale() === 'ar' ? 'rtl' : 'ltr';
   return (
     <RTabs.Root
+      dir={dir}
       {...(value === undefined ? { defaultValue: defaultValue ?? items[0]?.value } : { value })}
       onValueChange={onValueChange}
     >
-      <RTabs.List aria-label={label} className="hairline flex overflow-x-auto rounded-md p-1">
+      {/* Scrolls sideways on narrow screens without a visible scrollbar; edges fade to hint there is more. */}
+      <RTabs.List
+        aria-label={label}
+        className={cn(
+          'hairline flex gap-1 overflow-x-auto rounded-full p-1.5',
+          '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+          '[mask-image:linear-gradient(to_left,transparent,black_24px,black_calc(100%-24px),transparent)]',
+        )}
+      >
         {items.map((i) => (
           <RTabs.Trigger
             key={i.value}
             value={i.value}
             className={cn(
-              'min-h-10 flex-1 whitespace-nowrap rounded-sm px-3 text-small text-text-muted transition-colors duration-200 ease-rk',
-              'data-[state=active]:bg-surface data-[state=active]:text-text',
+              'min-h-10 shrink-0 whitespace-nowrap rounded-full px-4 text-small text-text-muted transition-colors duration-200 ease-rk hover:text-text',
+              'data-[state=active]:bg-brand data-[state=active]:text-on-brand data-[state=active]:font-semibold',
             )}
           >
             {i.label}
