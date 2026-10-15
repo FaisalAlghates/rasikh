@@ -69,7 +69,8 @@ export async function attachVendor(deps: LinkDeps, orgId: string, ticketId: stri
 export type InviteItem =
   | { kind?: 'lease'; orgId: string; leaseId: string }
   | { kind: 'building'; orgId: string; buildingId: string; memberId: string }
-  | { kind: 'vendor'; orgId: string; ticketId: string };
+  | { kind: 'vendor'; orgId: string; ticketId: string }
+  | { kind: 'engineer'; orgId: string };
 
 export async function addInvite(deps: LinkDeps, email: string, item: InviteItem) {
   await deps.db
@@ -142,5 +143,31 @@ export async function applyInvite(deps: LinkDeps, item: InviteItem, uid: string)
   if (item.kind === 'building')
     return attachBuildingOwner(deps, item.orgId, item.buildingId, item.memberId, uid);
   if (item.kind === 'vendor') return attachVendor(deps, item.orgId, item.ticketId, uid);
+  if (item.kind === 'engineer') return grantRole(deps, item.orgId, uid, 'engineer');
   return undefined;
+}
+
+const EngineerInvite = z.object({
+  officeId: z.string().min(1),
+  email: z.string().trim().toLowerCase().email(),
+});
+
+/**
+ * The office lead adds an engineer to the office by email (linked at once when the address is verified, otherwise on
+ * their first verified sign-in). The engineer then fills their SCE profile; the Rasikh team verifies it.
+ */
+export async function inviteEngineer(deps: LinkDeps, callerUid: string | undefined, raw: unknown) {
+  if (!callerUid) throw new HttpsError('unauthenticated', 'auth_required');
+  const parsed = EngineerInvite.safeParse(raw);
+  if (!parsed.success) throw new HttpsError('invalid-argument', 'invalid_input');
+  const { officeId, email } = parsed.data;
+  const lead = await deps.db.doc(`orgs/${officeId}/members/${callerUid}`).get();
+  if (!((lead.data()?.roles ?? []) as string[]).includes('office_lead'))
+    throw new HttpsError('permission-denied', 'office_lead_only');
+  const linked = await linkByEmail(deps, email, (uid) =>
+    grantRole(deps, officeId, uid, 'engineer'),
+  );
+  if (linked) return { status: 'linked' as const };
+  await addInvite(deps, email, { kind: 'engineer', orgId: officeId });
+  return { status: 'pending' as const };
 }

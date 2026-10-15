@@ -433,6 +433,192 @@ service cloud.firestore {
         && request.resource.data.handledAt == request.time;
     }
 
+    // ---------------------------------------------------------------- AI engineering office (docs/ENGINEERING_OFFICE.md)
+    // Rasikh never stamps or submits anything: approvals are made only by a verified engineer of the right discipline,
+    // of a verified office, with a current SCE membership, and they sign the SHA-256 of the exact version.
+    function isOfficeMember(officeId) {
+      return hasAnyRole(officeId, ['office_lead', 'engineer']);
+    }
+    function isOfficeLead(officeId) {
+      return hasAnyRole(officeId, ['office_lead']);
+    }
+    function officeDoc(officeId) {
+      return get(/databases/$(database)/documents/offices/$(officeId)).data;
+    }
+    function engineerPath(officeId) {
+      return /databases/$(database)/documents/offices/$(officeId)/engineers/$(request.auth.uid);
+    }
+    function isCurrentEngineer(officeId) {
+      return isOfficeMember(officeId) && exists(engineerPath(officeId))
+        && get(engineerPath(officeId)).data.verified == true
+        && get(engineerPath(officeId)).data.active == true
+        && get(engineerPath(officeId)).data.expiresAt > request.time;
+    }
+    function changed() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+    function strList(v, max) {
+      return v is list && v.size() <= max;
+    }
+
+    match /offices/{officeId} {
+      allow read: if signedIn();
+      allow create, delete: if false; // created with the organization by Functions
+      // the lead edits the profile; identity fields lock once verified (ask the Rasikh team to re-check)
+      allow update: if (isOfficeLead(officeId)
+          && !changed().hasAny(['verified', 'verifiedAt'])
+          && (resource.data.verified == false || !changed().hasAny(['name', 'crNo', 'sceClass', 'baladyActive']))
+          && request.resource.data.name is string && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 100
+          && request.resource.data.crNo is string && request.resource.data.crNo.size() <= 10
+          && request.resource.data.sceClass is string && request.resource.data.sceClass.size() <= 40
+          && request.resource.data.baladyActive is bool && request.resource.data.accepting is bool
+          && strList(request.resource.data.disciplines, 5) && strList(request.resource.data.cities, 20))
+        || (isPlatformAdmin() && changed().hasOnly(['verified', 'verifiedAt'])
+          && request.resource.data.verified is bool && request.resource.data.verifiedAt == request.time);
+
+      match /engineers/{uid} {
+        allow read: if isOfficeMember(officeId) || isPlatformAdmin();
+        allow create: if request.auth.uid == uid && isOfficeMember(officeId)
+          && request.resource.data.keys().hasOnly(['name', 'sceNo', 'grade', 'discipline', 'expiresAt', 'verified', 'active'])
+          && request.resource.data.verified == false && request.resource.data.active == true
+          && request.resource.data.discipline in ['architectural', 'structural', 'mechanical', 'electrical', 'industrial']
+          && request.resource.data.sceNo is string && request.resource.data.expiresAt is timestamp;
+        // the engineer edits their own details (identity fields lock once verified); the lead may pause or resume them
+        allow update: if (request.auth.uid == uid && isOfficeMember(officeId)
+            && !changed().hasAny(['verified', 'verifiedAt', 'active'])
+            && (resource.data.verified == false || !changed().hasAny(['sceNo', 'grade', 'discipline', 'expiresAt'])))
+          || (isOfficeLead(officeId) && changed().hasOnly(['active']) && request.resource.data.active is bool)
+          || (isPlatformAdmin() && changed().hasOnly(['verified', 'verifiedAt'])
+            && request.resource.data.verified is bool && request.resource.data.verifiedAt == request.time);
+        allow delete: if false;
+      }
+
+      // rule parameters confirmed from the licensed code text: only current, verified engineers write them
+      match /rulePacks/{packId} {
+        allow read: if isOfficeMember(officeId);
+        allow write: if isCurrentEngineer(officeId);
+      }
+      // the office's unit rates and factors (never a quote)
+      match /settings/{doc} {
+        allow read: if isOfficeMember(officeId);
+        allow write: if isOfficeLead(officeId);
+      }
+      // the office's private precedent library: only entries shared with the client's consent
+      match /precedents/{pid} {
+        allow read: if isOfficeMember(officeId);
+        allow create, update: if isOfficeLead(officeId) && request.resource.data.consent == true;
+        allow delete: if isOfficeLead(officeId);
+      }
+    }
+
+    match /designProjects/{pid} {
+      allow read: if signedIn()
+        && (resource.data.clientUid == request.auth.uid || isOfficeMember(resource.data.officeId));
+      // a client sends a brief to an office that accepts briefs
+      allow create: if signedIn() && request.resource.data.clientUid == request.auth.uid
+        && request.resource.data.status == 'brief'
+        && officeDoc(request.resource.data.officeId).accepting == true
+        && request.resource.data.keys().hasOnly(['officeId', 'clientUid', 'clientName', 'title', 'kind', 'status', 'brief', 'program', 'plot', 'createdAt', 'updatedAt'])
+        && request.resource.data.kind in ['new', 'renovation']
+        && request.resource.data.title is string && request.resource.data.title.size() <= 100
+        && request.resource.data.createdAt == request.time;
+      allow update: if signedIn() && request.resource.data.officeId == resource.data.officeId
+        && request.resource.data.clientUid == resource.data.clientUid
+        && (
+          // the office: zoning, required disciplines and its own status moves (only the client picks a concept)
+          (isOfficeMember(resource.data.officeId)
+            && request.resource.data.status in ['brief', 'accepted', 'declined', 'concepts', 'picked', 'development', 'review', 'released']
+            && (request.resource.data.status == resource.data.status || request.resource.data.status != 'picked'))
+          // the client: edits the brief while it is a brief, and picks a shared concept
+          || (resource.data.clientUid == request.auth.uid
+            && ((resource.data.status == 'brief' && request.resource.data.status == 'brief'
+                && changed().hasOnly(['title', 'brief', 'program', 'plot', 'updatedAt']))
+              || (resource.data.status == 'concepts' && request.resource.data.status == 'picked'
+                && changed().hasOnly(['status', 'pickedVersionId', 'updatedAt']))))
+        );
+      allow delete: if false;
+
+      function project() {
+        return get(/databases/$(database)/documents/designProjects/$(pid)).data;
+      }
+
+      match /versions/{vid} {
+        function version() {
+          return get(/databases/$(database)/documents/designProjects/$(pid)/versions/$(vid)).data;
+        }
+        function approved(d, sha) {
+          return exists(/databases/$(database)/documents/designProjects/$(pid)/versions/$(vid)/approvals/$(d))
+            && get(/databases/$(database)/documents/designProjects/$(pid)/versions/$(vid)/approvals/$(d)).data.sha256 == sha;
+        }
+        function allApproved(req, sha) {
+          return (!('architectural' in req) || approved('architectural', sha))
+            && (!('structural' in req) || approved('structural', sha))
+            && (!('mechanical' in req) || approved('mechanical', sha))
+            && (!('electrical' in req) || approved('electrical', sha))
+            && (!('industrial' in req) || approved('industrial', sha));
+        }
+        // clients see concepts shared with them and released sets, never drafts under internal review
+        allow read: if isOfficeMember(project().officeId)
+          || (project().clientUid == request.auth.uid && resource.data.status in ['shared', 'released']);
+        allow create: if isOfficeMember(project().officeId)
+          && request.resource.data.status in ['draft', 'shared']
+          && request.resource.data.sha256 is string && request.resource.data.sha256.size() == 64
+          && request.resource.data.required is list;
+        allow update: if isOfficeMember(project().officeId) && resource.data.status != 'released'
+          && (
+            // work on it: a changed plan always comes with its new fingerprint (old approvals stop matching)
+            (request.resource.data.status in ['draft', 'shared', 'review']
+              && !changed().hasAny(['releasedAt', 'releasedBy'])
+              && (!changed().hasAny(['plan']) || (changed().hasAll(['sha256']) && request.resource.data.sha256.size() == 64)))
+            // release: the lead, once every required discipline approved this exact fingerprint
+            || (isOfficeLead(project().officeId) && resource.data.status == 'review'
+              && request.resource.data.status == 'released'
+              && changed().hasOnly(['status', 'releasedAt', 'releasedBy'])
+              && request.resource.data.releasedAt == request.time
+              && request.resource.data.releasedBy == request.auth.uid
+              && allApproved(resource.data.required, resource.data.sha256))
+          );
+        allow delete: if false;
+
+        match /approvals/{discipline} {
+          allow read: if isOfficeMember(project().officeId) || project().clientUid == request.auth.uid;
+          allow create: if isCurrentEngineer(project().officeId)
+            && officeDoc(project().officeId).verified == true
+            && get(engineerPath(project().officeId)).data.discipline == discipline
+            && version().status == 'review'
+            && request.resource.data.keys().hasOnly(['uid', 'name', 'sceNo', 'discipline', 'sha256', 'at'])
+            && request.resource.data.uid == request.auth.uid
+            && request.resource.data.discipline == discipline
+            && request.resource.data.sceNo == get(engineerPath(project().officeId)).data.sceNo
+            && request.resource.data.sha256 == version().sha256
+            && request.resource.data.at == request.time;
+          allow update, delete: if false;
+        }
+      }
+
+      // comments and redlines per sheet: internal ones stay inside the office
+      match /comments/{cid} {
+        allow read: if isOfficeMember(project().officeId)
+          || (project().clientUid == request.auth.uid && resource.data.visibility == 'client');
+        allow create: if request.resource.data.uid == request.auth.uid
+          && request.resource.data.at == request.time
+          && request.resource.data.text is string && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 1000
+          && ((isOfficeMember(project().officeId) && request.resource.data.visibility in ['internal', 'client'])
+            || (project().clientUid == request.auth.uid && request.resource.data.visibility == 'client'));
+        allow update, delete: if false;
+      }
+      // renovation condition findings, quotes and invoices (recorded only, no payments)
+      match /findings/{fid} {
+        allow read: if isOfficeMember(project().officeId) || project().clientUid == request.auth.uid;
+        allow write: if isOfficeMember(project().officeId);
+      }
+      match /quotes/{qid} {
+        allow read: if isOfficeMember(project().officeId) || project().clientUid == request.auth.uid;
+        allow create, update: if isOfficeLead(project().officeId);
+        allow delete: if false;
+      }
+    }
+
     // Everything else is denied.
     match /{document=**} {
       allow read, write: if false;
