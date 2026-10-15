@@ -39,7 +39,7 @@ test('broker: FAL reminder, lead funnel, viewing, contract, immutable log and th
   await p.getByRole('button', { name: 'أضف عميلاً' }).click();
   await expect(p.getByTestId('lead-row')).toHaveCount(1, { timeout: 20_000 });
 
-  await p.getByRole('button', { name: 'افتح' }).click();
+  await p.getByRole('button', { name: 'افتح', exact: true }).click();
   await expect(p.getByTestId('lead-detail')).toBeVisible();
   await expect(p.getByTestId('lead-status')).toContainText('جديد');
 

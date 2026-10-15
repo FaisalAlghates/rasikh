@@ -1,7 +1,8 @@
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { use } from 'react';
-import { Header } from '@/components/Header';
+import { SiteFooter } from '@/components/shell/SiteFooter';
+import { SiteHeader } from '@/components/shell/SiteHeader';
 import { LabSections } from '@/components/lab/LabSections';
 
 export const metadata = { robots: { index: false, follow: false } };
@@ -13,8 +14,8 @@ export default function DesignLabPage({ params }: { params: Promise<{ locale: st
 
   return (
     <>
-      <Header />
-      <main className="mx-auto max-w-6xl px-6 pb-24">
+      <SiteHeader />
+      <main id="main" tabIndex={-1} className="outline-none mx-auto max-w-6xl px-6 pb-24">
         <h1 className="display-font text-h1">{t('title')}</h1>
         <p className="mt-2 max-w-xl text-text-muted">{t('intro')}</p>
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
@@ -25,6 +26,7 @@ export default function DesignLabPage({ params }: { params: Promise<{ locale: st
           ))}
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

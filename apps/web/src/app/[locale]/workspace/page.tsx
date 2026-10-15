@@ -1,13 +1,16 @@
-import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/ops/Dashboard';
+import { AccountMenu } from '@/components/shell/AccountMenu';
+import { SiteFooter } from '@/components/shell/SiteFooter';
+import { SiteHeader } from '@/components/shell/SiteHeader';
 
 export default function WorkspacePage() {
   return (
     <>
-      <Header />
-      <main className="mx-auto max-w-6xl px-6 pb-24 pt-6">
+      <SiteHeader account={<AccountMenu />} />
+      <main id="main" tabIndex={-1} className="rk-container pb-24 outline-none">
         <Dashboard />
       </main>
+      <SiteFooter />
     </>
   );
 }

@@ -13,6 +13,13 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'retain-on-failure',
+    // The cookie notice is dismissed up front so it never covers controls; shell.spec checks it on its own.
+    storageState: {
+      cookies: [],
+      origins: [
+        { origin: 'http://localhost:3000', localStorage: [{ name: 'rk-cookie-ok', value: '1' }] },
+      ],
+    },
     // Software WebGL so the 3D scene can run in headless/CI browsers.
     launchOptions: {
       args: [

@@ -68,9 +68,11 @@ test.describe('design lab', () => {
     await expect(dialog).toBeHidden();
   });
 
-  test('theme toggle flips the page theme and persists it', async ({ page }) => {
+  test('theme toggle flips the page theme and persists it', async ({ page, isMobile }) => {
     await page.goto('/ar/design-lab', { waitUntil: 'networkidle' }); // wait for hydration
-    await page.getByRole('button', { name: 'تبديل المظهر' }).click();
+    // on phones the theme toggle lives in the header drawer
+    if (isMobile) await page.getByRole('button', { name: 'افتح القائمة' }).click();
+    await page.getByRole('button', { name: 'تبديل المظهر' }).first().click();
     const html = page.locator('html');
     await expect(html).toHaveAttribute('data-theme', /^(light|dark)$/);
     const first = (await html.getAttribute('data-theme'))!;

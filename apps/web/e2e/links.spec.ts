@@ -97,7 +97,9 @@ test('a vendor with their own login sees only their ticket, starts it and record
 
   // the vendor signs in to the same organization and sees only that ticket
   await vendor.page.goto('/ar/workspace');
-  await expect(vendor.page.getByText('البلاغات المسندة إليّ')).toBeVisible({ timeout: 30_000 });
+  await expect(vendor.page.getByRole('heading', { name: 'البلاغات المسندة إليّ' })).toBeVisible({
+    timeout: 30_000,
+  });
   await expect(vendor.page.getByTestId('ticket-row')).toHaveCount(1);
   await expect(vendor.page.getByLabel('عنوان البلاغ')).toHaveCount(0); // a vendor cannot open new requests
   await vendor.page.getByTestId('ticket-row').click();

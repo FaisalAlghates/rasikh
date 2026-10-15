@@ -10,7 +10,7 @@ for (const [path, title] of [
   }) => {
     await page.goto('/ar');
     const link = page
-      .getByRole('navigation', { name: 'سياسة الخصوصية' })
+      .getByRole('navigation', { name: 'القانونية' })
       .getByRole('link', { name: title });
     await expect(link).toHaveAttribute('href', `/ar/${path}`);
     await link.click();
