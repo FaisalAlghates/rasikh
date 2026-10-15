@@ -1039,7 +1039,9 @@
       "accept": "Got it",
       "more": "Details in the privacy policy"
     },
-    "adminInbox": "Rasikh team inbox"
+    "adminInbox": "Rasikh team inbox",
+    "orgs": "My organizations",
+    "orgNew": "Create a new workspace"
   },
   "pages": {
     "about": {

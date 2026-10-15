@@ -131,6 +131,8 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 - The Rasikh team is not an organization role: a `platformAdmin` custom claim set only with the Admin SDK
   (`firebase/functions/scripts/set-platform-admin.mjs`) opens `/admin`, the inbox of public contact messages and page
   ratings (read, mark answered, delete after answering). Functions that write claims keep the existing ones.
+- One account may belong to up to five organizations; the web works in one at a time (`pickOrg` in `lib/roles.ts`, the
+  choice remembered per device and switched from the account menu).
 - Multi-tenant by organization: orgs/{orgId}/...
 - Firestore rules deny by default; every read/write checks org membership + role; emulator unit tests.
 - Inspection media write-once after sign-off; SHA-256 + capture metadata in Firestore.

@@ -8,7 +8,7 @@ import {
   normalize,
   searchDocs,
 } from './nav';
-import { accessFor, pickSection } from './roles';
+import { accessFor, pickOrg, pickSection } from './roles';
 
 describe('navigation map', () => {
   it('every linked page has a route', () => {
@@ -91,5 +91,15 @@ describe('role-based access', () => {
     expect(pickSection(accessFor(['owner']), 'leases')).toBe('leases');
     expect(pickSection(accessFor(['tenant']), 'expenses')).toBe('myLease');
     expect(pickSection(accessFor([]), null)).toBe('reminders');
+  });
+});
+
+describe('several organizations', () => {
+  const orgs = { a: ['tenant'], b: ['owner'] };
+  it('opens the one chosen last, while the person still belongs to it', () => {
+    expect(pickOrg(orgs, 'b')).toEqual({ orgId: 'b', roles: ['owner'] });
+    expect(pickOrg(orgs, 'gone')).toEqual({ orgId: 'a', roles: ['tenant'] });
+    expect(pickOrg(orgs, null)).toEqual({ orgId: 'a', roles: ['tenant'] });
+    expect(pickOrg({}, 'b')).toBeNull();
   });
 });

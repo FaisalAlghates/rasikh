@@ -14,8 +14,8 @@ Last updated: 2026-10-15. References: `PLAN.md` (phases and gaps), `CLAUDE.md` (
 ## 1. Work I can still do (free)
 
 - Run the production web build against the real Firebase project to check sign-in and Firestore reads.
-- Phase 10: shorten the simulated LCP on the landing page (3.0 s against a 2.5 s target; real measured time is about 0.3 s), measure the workspace and map pages, final design review of the older screens, a rules review pass.
-- Gaps from finished phases: server-side Arabic PDF reports (account statement, inspection comparison); ownership transfer with the new owner's consent; switching between several organizations; an admin screen for the indicative-prices import.
+- Phase 10: a Lighthouse run of the production build (the Lighthouse launcher cannot start Chrome on this machine; measured instead with Playwright under mobile throttling on 2026-10-15: landing LCP 2.0 s, content pages and map 0.7-0.8 s, CLS about 0, TBT 120-200 ms), final design review of the older screens, a rules review pass.
+- Gaps from finished phases: server-side Arabic PDF reports (account statement, inspection comparison); ownership transfer with the new owner's consent; switching organizations in the Flutter app (done on the web); an admin screen for the indicative-prices import.
 - Device testing: the rest of the Flutter screens on the Android emulator (properties, leases, inspections, tickets, buildings, broker, assistant, privacy); camera, GPS and the evidence upload queue on a real phone and on iOS.
 
 ## 2. Phase 9 — AI engineering office (not started)

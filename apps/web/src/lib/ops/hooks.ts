@@ -11,6 +11,8 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { firebaseDb } from '@/lib/firebase';
+import { PREF, readPref } from '@/lib/prefs';
+import { pickOrg } from '@/lib/roles';
 import { readClaims, useUser } from '@/lib/use-user';
 
 export interface Row<T> {
@@ -24,9 +26,11 @@ export interface Session {
   roles: string[];
   isStaff: boolean;
   isTenant: boolean;
+  /** Every organization this person belongs to, with their roles in each. */
+  orgs: Record<string, string[]>;
 }
 
-/** The signed-in user plus their (first) organization and roles from the server-set claims. */
+/** The signed-in user plus the organization they work in now (see pickOrg) and its roles. */
 export function useSession(): {
   session?: Session;
   loading: boolean;
@@ -34,17 +38,17 @@ export function useSession(): {
   noOrg: boolean;
 } {
   const user = useUser();
-  const [state, setState] = useState<{ orgId: string; roles: string[] } | null | undefined>(
-    undefined,
-  );
+  const [state, setState] = useState<
+    { orgId: string; roles: string[]; orgs: Record<string, string[]> } | null | undefined
+  >(undefined);
 
   useEffect(() => {
     if (!user) return;
     let on = true;
     void readClaims(user, true).then((c) => {
       if (!on) return;
-      const first = Object.entries(c.orgs)[0];
-      setState(first ? { orgId: first[0], roles: first[1] } : null);
+      const picked = pickOrg(c.orgs, readPref(PREF.org));
+      setState(picked ? { ...picked, orgs: c.orgs } : null);
     });
     return () => {
       on = false;
@@ -66,6 +70,7 @@ export function useSession(): {
       roles: state.roles,
       isStaff,
       isTenant: state.roles.includes('tenant'),
+      orgs: state.orgs,
     },
   };
 }

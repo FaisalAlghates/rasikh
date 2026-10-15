@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { onboardOwner } from './helpers';
+import { addPropertyUnitLease, onboardOwner, tenantJoins } from './helpers';
 
 const SHOTS = '../../docs/screenshots/shell';
 const PUBLIC = [
@@ -252,4 +252,57 @@ test('roles: an owner sees role badges, every workspace section has its own addr
     .getByRole('link', { name: 'خريطة المملكة' })
     .click();
   await expect(page).toHaveURL(/\/ar\/map$/, { timeout: 45_000 });
+});
+
+test('roles: one account in two organizations (tenant in one, owner of another) switches between them', async ({
+  browser,
+  request,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'long desktop flow');
+  test.setTimeout(240_000);
+  const stamp = Date.now();
+  const tenantEmail = `two-orgs-${stamp}@rasikh.test`;
+
+  // an owner rents a unit to this person
+  const octx = await browser.newContext();
+  const o = await octx.newPage();
+  await onboardOwner(o, `two-orgs-owner-${stamp}@rasikh.test`);
+  await addPropertyUnitLease(o, {
+    tenantEmail,
+    property: 'برج الجوهرة',
+    unit: 'شقة 4',
+    ejarNo: 'TWO-2026-01',
+  });
+  await octx.close();
+
+  // the tenant joins, then opens a workspace of their own as an owner
+  const ctx = await browser.newContext();
+  const p = await ctx.newPage();
+  await tenantJoins(p, request, tenantEmail);
+  await p.getByTestId('account-menu').click();
+  await p.getByRole('link', { name: 'أنشئ مساحة عمل جديدة' }).click();
+  await expect(p).toHaveURL(/\/ar\/onboarding\?new=1/, { timeout: 45_000 });
+  await p.getByText('مالك', { exact: true }).click();
+  await p.locator('#displayName').fill('نورة');
+  await p.locator('#orgName').fill('أملاك نورة');
+  await p.locator('input[type=checkbox]').last().check();
+  await p.locator('main button').last().click();
+  await expect(p).toHaveURL(/\/ar\/workspace/, { timeout: 45_000 });
+  await expect(p.getByRole('tab', { name: 'العقارات والوحدات' })).toBeVisible({ timeout: 30_000 });
+  await expect(p.getByRole('list', { name: 'أدوارك' })).toContainText('مالك');
+
+  // both organizations are in the menu, each with this person's role there
+  await p.getByTestId('account-menu').click();
+  const list = p.getByTestId('org-list');
+  await expect(list.getByRole('button')).toHaveCount(2);
+  await expect(list.getByRole('button', { name: /أملاك نورة/ })).toHaveAttribute(
+    'aria-current',
+    'true',
+  );
+  await list.getByRole('button', { name: /عقارات الاختبار/ }).click();
+  await expect(p.getByTestId('my-lease')).toContainText('برج الجوهرة', { timeout: 30_000 });
+  await expect(p.getByRole('tab', { name: 'العقارات والوحدات' })).toHaveCount(0);
+  await expect(p.getByRole('list', { name: 'أدوارك' })).toContainText('مستأجر');
+  await ctx.close();
 });

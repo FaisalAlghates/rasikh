@@ -4,6 +4,8 @@ export const PREF = {
   contrast: 'rk-contrast',
   cookie: 'rk-cookie-ok',
   signedIn: 'rk-signed-in',
+  /** The organization last chosen in the account menu (one account may belong to several). */
+  org: 'rk-org',
 } as const;
 
 export function readPref(key: string): string | null {
