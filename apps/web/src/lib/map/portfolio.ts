@@ -8,6 +8,7 @@ interface P {
   city?: string;
   district?: string;
   kind?: string;
+  location?: { lat: number; lng: number };
 }
 interface U {
   id: string;
@@ -31,8 +32,8 @@ interface Pay {
 }
 
 /**
- * The owner's own records as map pins: one per property, placed near its city (approximate until an
- * exact pin exists), with its unit count, active annual rent and the worst payment status of its units.
+ * The owner's own records as map pins: one per property, at its exact pin when set, otherwise near
+ * its city (approximate), with its unit count, active annual rent and the worst payment status of its units.
  */
 export function portfolioToMap(
   properties: P[],
@@ -70,11 +71,11 @@ export function portfolioToMap(
       name: p.name,
       place: [p.city, p.district].filter(Boolean).join('، '),
       cityId,
-      coords: approxCoords(cityId, p.id),
+      coords: p.location ? [p.location.lng, p.location.lat] : approxCoords(cityId, p.id),
       units: unitIds.size,
       rentSar,
       status,
-      approximate: true,
+      approximate: !p.location,
     });
   }
   return { items, unplaced };

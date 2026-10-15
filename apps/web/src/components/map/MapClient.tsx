@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, MapPin, Search, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowLeft, Crosshair, MapPin, Search, SlidersHorizontal, X } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -24,6 +24,7 @@ type Source = 'mine' | 'samples';
 
 export function MapClient() {
   const t = useTranslations('portfolio');
+  const c = useTranslations('cities');
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -33,6 +34,8 @@ export function MapClient() {
   const [mine, setMine] = useState<MyPortfolioData | null>(null);
   const [source, setSource] = useState<Source>('samples');
   const [preset, setPreset] = useState<'dawn' | 'day' | 'dusk' | 'night'>();
+  const [placing, setPlacing] = useState(false);
+  const [pinNote, setPinNote] = useState<{ ok: boolean; text: string }>();
 
   // ?city=jeddah, ?property=<id> and ?preset=dusk deep links
   useEffect(() => {
@@ -61,7 +64,26 @@ export function MapClient() {
     [t],
   );
   const all = source === 'mine' && mine ? mine.items : samples;
-  const cityName = useCallback((id: string) => t(`cities.${id}`), [t]);
+  const cityName = useCallback((id: string) => c(id), [c]);
+  const canPin = source === 'mine' && !!mine;
+
+  /** Saves the exact pin of the selected property (owners and managers; the rules check the same). */
+  const savePin = async ([lng, lat]: [number, number]) => {
+    setPlacing(false);
+    if (!mine || !selected) return;
+    try {
+      const [{ doc, updateDoc }, { firebaseDb }] = await Promise.all([
+        import('firebase/firestore'),
+        import('@/lib/firebase'),
+      ]);
+      await updateDoc(doc(firebaseDb(), `orgs/${mine.orgId}/properties/${selected}`), {
+        location: { lat: Number(lat.toFixed(6)), lng: Number(lng.toFixed(6)), source: 'map' },
+      });
+      setPinNote({ ok: true, text: t('pinSaved') });
+    } catch {
+      setPinNote({ ok: false, text: t('pinFailed') });
+    }
+  };
 
   // a deep-linked property opens its city
   useEffect(() => {
@@ -108,7 +130,13 @@ export function MapClient() {
   const chooseCity = useCallback((id: string | undefined) => {
     setCityId(id);
     setSelected(undefined);
+    setPlacing(false);
   }, []);
+  // a new selection drops any half-finished placing and old notes
+  useEffect(() => {
+    setPlacing(false);
+    setPinNote(undefined);
+  }, [selected]);
 
   return (
     <div className="relative flex flex-col lg:grid lg:h-[calc(100dvh-4.5rem)] lg:min-h-[620px] lg:grid-cols-[24rem_1fr]">
@@ -244,6 +272,9 @@ export function MapClient() {
           mapLabel={t('mapLabel')}
           cityLabel={cityLabel}
           flatNote={t('flatNote')}
+          placing={placing}
+          onPick={(ll) => void savePin(ll)}
+          placingLabel={current ? t('placingHint', { name: current.name }) : undefined}
         />
 
         {/* the one glass layer: search + filters, floating over the map */}
@@ -336,8 +367,52 @@ export function MapClient() {
                 </Link>
               )}
             </div>
-            {current.approximate && (
-              <p className="mt-2 text-caption text-text-muted">{t('approx')}</p>
+            {source === 'mine' && (
+              <p className="mt-2 flex items-center gap-1 text-caption text-text-muted">
+                <MapPin size={12} aria-hidden="true" />
+                {current.approximate ? t('approx') : t('exact')}
+              </p>
+            )}
+            {placing && (
+              <div
+                role="status"
+                data-testid="placing-hint"
+                className="mt-3 flex items-center justify-between gap-3 rounded-md bg-bg p-3 text-small"
+              >
+                <span className="flex items-center gap-2">
+                  <Crosshair size={16} aria-hidden="true" className="shrink-0 text-brand-text" />
+                  {t('placingHint', { name: current.name })}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPlacing(false)}
+                  className="hairline inline-flex min-h-10 shrink-0 items-center rounded-md px-3 text-text hover:bg-surface"
+                >
+                  {t('placingCancel')}
+                </button>
+              </div>
+            )}
+            {canPin && !placing && (
+              <button
+                type="button"
+                data-testid="set-pin"
+                onClick={() => {
+                  setPinNote(undefined);
+                  setPlacing(true);
+                }}
+                className="hairline mt-3 inline-flex min-h-10 items-center gap-2 rounded-md px-3 text-small text-text hover:bg-bg"
+              >
+                <Crosshair size={16} aria-hidden="true" className="text-brand-text" />
+                {current.approximate ? t('setPin') : t('movePin')}
+              </button>
+            )}
+            {pinNote && (
+              <p
+                role={pinNote.ok ? 'status' : 'alert'}
+                className={cn('mt-2 text-small', pinNote.ok ? 'text-success' : 'text-danger')}
+              >
+                {pinNote.text}
+              </p>
             )}
           </div>
         )}

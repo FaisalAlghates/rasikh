@@ -65,7 +65,7 @@ Verify latest stable versions in official docs before installing; never guess AP
 
 - App Hosting region: _UNVERIFIED._ The official locations page could not be fetched; the region list is shown by `firebase apphosting:backends:create`. Decide at first deploy, then record here. Web server stays stateless, no personal data logged.
 - Local dev: Firebase emulators run against demo project `demo-rasikh`. Real dev project: `rasikh-eca19` (Spark; needs Blaze before Functions deploy). Console state (2026-10-12): Firestore database `(default)` created in **me-central2 (Dammam)**, Standard edition, production mode (deny all until rules are deployed); Authentication started with **Email/Password** enabled (Phone needs Blaze); web app "Rasikh Web" registered, its public config kept in the gitignored `apps/web/.env.production.local`; Storage not set up (needs Blaze); Firestore rules and indexes deployed on 2026-10-12 (free, Spark); Functions and Storage are not deployed (they need Blaze).
-- Windows dev quirks: Java emulators need an ASCII project path (use the `C:\dev\rasikh` junction); `@swc/core` needs `SWC_NATIVE_BINDING_CACHE` pointing to a user-only directory.
+- Windows dev quirks: Java emulators need an ASCII project path (use the `C:\dev\rasikh` junction); `@swc/core` needs `SWC_NATIVE_BINDING_CACHE` pointing to a user-only directory; start the emulators with `FUNCTIONS_DISCOVERY_TIMEOUT=90` (a cold load of the functions bundle can exceed the default 10 s and then no function is served).
 - Stack versions verified 2026-10-11: Next 16.4 (uses `proxy.ts`, not `middleware.ts`), React 19.3, Tailwind 4.3, next-intl 4.14, zod 4.6, firebase JS 13, firebase-functions 7.4, Flutter 3.47.7 / Dart 3.13.5.
 
 ## 3. Design system — "Najd Dusk" (quiet luxury)
@@ -115,7 +115,8 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 
 - The map covers the whole Kingdom (`/map`): it arrives from the globe onto Saudi Arabia, shows a pin per city (all 13
   region capitals plus the main cities, `lib/map/kingdom.ts`), and flies into a city at ~58°. Owners see their own
-  properties placed near their city (approximate until exact pins exist); everyone else sees labelled samples.
+  properties: at the exact pin when set (from the phone while at the property, or by clicking on the map), otherwise
+  near their city; everyone else sees labelled samples. Pins must fall inside a box around the Kingdom (schema + rules).
 - Mapbox Standard (web + app). lightPreset follows Riyadh local time (dawn/day/dusk/night); marketing pages fixed to dusk.
   Hide most POI labels. Neighborhood indicators in the "middle" slot (under 3D buildings). User properties = clay
   extrusions/markers with soft glow. Select property → flyTo, pitch ~60°.

@@ -13,12 +13,25 @@ export const EXPENSE_CATEGORIES = [
   'other',
 ] as const;
 
+/** A box around the Kingdom; a property pin outside it is rejected (also enforced in the Firestore rules). */
+export const KSA_LAT = [16, 32.5] as const;
+export const KSA_LNG = [34, 56] as const;
+
+/** Exact pin of a property: picked on the map or from the owner's phone location while at the property. */
+export const PropertyLocationSchema = z.object({
+  lat: z.number().min(KSA_LAT[0]).max(KSA_LAT[1]),
+  lng: z.number().min(KSA_LNG[0]).max(KSA_LNG[1]),
+  source: z.enum(['map', 'gps']),
+});
+export type PropertyLocation = z.infer<typeof PropertyLocationSchema>;
+
 export const PropertySchema = z.object({
   name: z.string().trim().min(2).max(80),
   city: z.string().trim().min(2).max(60),
   district: z.string().trim().max(60).default(''),
   address: z.string().trim().max(160).default(''),
   kind: z.enum(['building', 'villa']).default('building'),
+  location: PropertyLocationSchema.optional(),
 });
 export type PropertyInput = z.infer<typeof PropertySchema>;
 

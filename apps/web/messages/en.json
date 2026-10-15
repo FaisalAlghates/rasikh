@@ -234,28 +234,13 @@
     "regionsNote": "The map covers all thirteen regions of the Kingdom.",
     "flatNote": "Simplified schematic of the Kingdom (borders approximate).",
     "indicatorsNote": "Neighbourhood shading is indicative, not an official valuation.",
-    "cities": {
-      "riyadh": "Riyadh",
-      "jeddah": "Jeddah",
-      "makkah": "Makkah",
-      "madinah": "Madinah",
-      "dammam": "Dammam",
-      "khobar": "Al Khobar",
-      "ahsa": "Al Ahsa",
-      "jubail": "Jubail",
-      "taif": "Taif",
-      "abha": "Abha",
-      "tabuk": "Tabuk",
-      "buraydah": "Buraydah",
-      "hail": "Hail",
-      "jazan": "Jazan",
-      "najran": "Najran",
-      "albaha": "Al Baha",
-      "arar": "Arar",
-      "sakaka": "Sakaka",
-      "alula": "AlUla",
-      "yanbu": "Yanbu"
-    }
+    "setPin": "Set the exact location",
+    "movePin": "Move the pin",
+    "placingHint": "Click where “{name}” is on the map.",
+    "placingCancel": "Cancel",
+    "pinSaved": "Exact location saved.",
+    "pinFailed": "Could not save the location. Please try again.",
+    "exact": "Exact location"
   },
   "ops": {
     "tabOverview": "Overview",
@@ -376,7 +361,19 @@
     "twinTenant": "Tenant",
     "twinNextDue": "Next payment",
     "twinClose": "Close",
-    "twinNoUnits": "No units yet"
+    "twinNoUnits": "No units yet",
+    "cityOther": "Another city",
+    "cityOtherLabel": "City name",
+    "useMyLocation": "Use my current location",
+    "useMyLocationHint": "If you are at the property now, its exact spot is saved for the map. You can also set it later on the map.",
+    "locating": "Finding your location",
+    "locationSet": "Location set",
+    "locationClear": "Remove location",
+    "locationOutside": "That location is outside the Kingdom. Set it on the map instead.",
+    "locationDenied": "We could not get your location. Allow location access in the browser or set it on the map.",
+    "showOnMap": "Show on the map",
+    "pinExact": "Exact location",
+    "pinApprox": "Approximate location by city"
   },
   "workspace": {
     "title": "Workspace",
@@ -1343,5 +1340,27 @@
       "search": "Search Rasikh",
       "popular": "Pages that may help"
     }
+  },
+  "cities": {
+    "riyadh": "Riyadh",
+    "jeddah": "Jeddah",
+    "makkah": "Makkah",
+    "madinah": "Madinah",
+    "dammam": "Dammam",
+    "khobar": "Al Khobar",
+    "ahsa": "Al Ahsa",
+    "jubail": "Jubail",
+    "taif": "Taif",
+    "abha": "Abha",
+    "tabuk": "Tabuk",
+    "buraydah": "Buraydah",
+    "hail": "Hail",
+    "jazan": "Jazan",
+    "najran": "Najran",
+    "albaha": "Al Baha",
+    "arar": "Arar",
+    "sakaka": "Sakaka",
+    "alula": "AlUla",
+    "yanbu": "Yanbu"
   }
 }

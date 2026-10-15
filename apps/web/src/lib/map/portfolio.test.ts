@@ -52,4 +52,10 @@ describe('portfolio on the Kingdom map', () => {
     expect(a).toMatchObject({ units: 2, rentSar: 40000, status: 'late' });
     expect(b).toMatchObject({ units: 1, rentSar: 90000, status: 'ok' });
   });
+
+  it('uses the exact pin when the owner has set one', () => {
+    const pinned = [{ ...properties[0]!, location: { lat: 21.55, lng: 39.16 } }];
+    const [a] = portfolioToMap(pinned, units, leases, payments, today).items;
+    expect(a).toMatchObject({ coords: [39.16, 21.55], approximate: false });
+  });
 });

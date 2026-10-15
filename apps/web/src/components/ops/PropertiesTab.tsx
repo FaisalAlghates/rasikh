@@ -1,6 +1,12 @@
 'use client';
 
-import { PropertySchema, UnitSchema } from '@rasikh/shared';
+import {
+  PropertyLocationSchema,
+  PropertySchema,
+  UnitSchema,
+  type PropertyLocation,
+} from '@rasikh/shared';
+import { Crosshair, MapPin, X } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -8,7 +14,9 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Field, NativeSelect } from '@/components/ui/Input';
+import { Link } from '@/i18n/navigation';
 import { firebaseDb } from '@/lib/firebase';
+import { CITIES, cityIdFor } from '@/lib/map/kingdom';
 import type { Row } from '@/lib/ops/hooks';
 import type { PropertyDoc, UnitDoc } from '@/lib/ops/types';
 import { LeaseForm } from './LeaseForm';
@@ -25,23 +33,64 @@ export function PropertiesTab({
   onLeaseCreated: (leaseId: string, invite?: 'linked' | 'pending') => void;
 }) {
   const t = useTranslations('ops');
-  const [p, setP] = useState({ name: '', city: 'الرياض', district: '', kind: 'building' });
+  const cityName = useTranslations('cities');
+  const [p, setP] = useState({
+    name: '',
+    city: cityName('riyadh'),
+    district: '',
+    kind: 'building',
+  });
+  // the city comes from the Kingdom list (so the map can place it); "other" opens a free-text field
+  const [cityId, setCityId] = useState<string>('riyadh');
+  const [location, setLocation] = useState<PropertyLocation>();
+  const [locating, setLocating] = useState(false);
+  const [locError, setLocError] = useState<string>();
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
   const [leaseFor, setLeaseFor] = useState<string>();
 
+  const useMyLocation = () => {
+    setLocError(undefined);
+    if (!('geolocation' in navigator)) return setLocError(t('locationDenied'));
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        const loc = PropertyLocationSchema.safeParse({
+          lat: Number(pos.coords.latitude.toFixed(6)),
+          lng: Number(pos.coords.longitude.toFixed(6)),
+          source: 'gps',
+        });
+        if (!loc.success) return setLocError(t('locationOutside'));
+        setLocation(loc.data);
+      },
+      () => {
+        setLocating(false);
+        setLocError(t('locationDenied'));
+      },
+      { enableHighAccuracy: true, timeout: 15_000 },
+    );
+  };
+
   const addProperty = async () => {
     setError(undefined);
-    const parsed = PropertySchema.safeParse(p);
+    const parsed = PropertySchema.safeParse({ ...p, ...(location ? { location } : {}) });
     if (!parsed.success) return setError(t('required'));
     setBusy(true);
+    // Clear the form now: the new card appears at once (local write), and someone may start typing the
+    // next property before the server confirms. Put the input back if the save fails.
+    const typed = p;
+    const pinned = location;
+    setP((s) => ({ ...s, name: '', district: '' }));
+    setLocation(undefined);
     try {
       await addDoc(collection(firebaseDb(), `orgs/${orgId}/properties`), {
         ...parsed.data,
         createdAt: serverTimestamp(),
       });
-      setP((s) => ({ ...s, name: '', district: '' }));
     } catch {
+      setP(typed);
+      setLocation(pinned);
       setError(t('errorGeneric'));
     } finally {
       setBusy(false);
@@ -64,12 +113,28 @@ export function PropertiesTab({
           value={p.name}
           onChange={(e) => setP({ ...p, name: e.target.value })}
         />
-        <Field
+        <NativeSelect
           id="pc"
           label={t('city')}
-          value={p.city}
-          onChange={(e) => setP({ ...p, city: e.target.value })}
+          value={cityId}
+          onChange={(e) => {
+            const v = e.target.value;
+            setCityId(v);
+            setP({ ...p, city: v === 'other' ? '' : cityName(v) });
+          }}
+          options={[
+            ...CITIES.map((c) => ({ value: c.id, label: cityName(c.id) })),
+            { value: 'other', label: t('cityOther') },
+          ]}
         />
+        {cityId === 'other' && (
+          <Field
+            id="pco"
+            label={t('cityOtherLabel')}
+            value={p.city}
+            onChange={(e) => setP({ ...p, city: e.target.value })}
+          />
+        )}
         <Field
           id="pd"
           label={t('district')}
@@ -86,6 +151,41 @@ export function PropertiesTab({
             { value: 'villa', label: t('kindVilla') },
           ]}
         />
+        <div className="flex flex-col gap-2 sm:col-span-2">
+          {location ? (
+            <p
+              data-testid="new-property-location"
+              className="flex flex-wrap items-center gap-2 text-small text-success"
+            >
+              <MapPin size={16} aria-hidden="true" />
+              {t('locationSet')}
+              <span dir="ltr" className="tabular text-text-muted">
+                {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+              </span>
+              <button
+                type="button"
+                onClick={() => setLocation(undefined)}
+                className="inline-flex min-h-10 items-center gap-1 rounded-md px-2 text-text-muted hover:text-text"
+              >
+                <X size={14} aria-hidden="true" />
+                {t('locationClear')}
+              </button>
+            </p>
+          ) : (
+            <div className="flex flex-col items-start gap-1">
+              <Button type="button" variant="quiet" loading={locating} onClick={useMyLocation}>
+                <Crosshair size={16} aria-hidden="true" />
+                {t('useMyLocation')}
+              </Button>
+              <p className="text-caption text-text-muted">{t('useMyLocationHint')}</p>
+            </div>
+          )}
+          {locError && (
+            <p role="alert" className="text-small text-danger">
+              {locError}
+            </p>
+          )}
+        </div>
         {error && (
           <p role="alert" className="text-small text-danger sm:col-span-2">
             {error}
@@ -166,6 +266,20 @@ function PropertyCard({
           {property.city}
           {property.district ? `، ${property.district}` : ''}
         </p>
+        {cityIdFor(property.city) && (
+          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption">
+            <span className="flex items-center gap-1 text-text-muted">
+              <MapPin size={14} aria-hidden="true" />
+              {property.location ? t('pinExact') : t('pinApprox')}
+            </span>
+            <Link
+              href={`/map?property=${id}`}
+              className="font-semibold text-brand-text underline-offset-4 hover:underline"
+            >
+              {t('showOnMap')}
+            </Link>
+          </p>
+        )}
       </div>
       {units.length === 0 ? (
         <p className="text-small text-text-muted">{t('noUnits')}</p>

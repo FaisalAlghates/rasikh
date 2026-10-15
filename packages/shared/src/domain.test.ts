@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   LeaseSchema,
+  PropertySchema,
   addDays,
   addMonths,
   buildSchedule,
@@ -142,5 +143,25 @@ describe('LeaseSchema + yearTotals', () => {
       expenses: 500,
       net: 3000,
     });
+  });
+});
+
+describe('property location', () => {
+  const base = { name: 'برج جدة', city: 'جدة' };
+  it('is optional, and accepts a pin inside the Kingdom', () => {
+    expect(PropertySchema.safeParse(base).success).toBe(true);
+    expect(
+      PropertySchema.safeParse({ ...base, location: { lat: 21.54, lng: 39.17, source: 'map' } })
+        .success,
+    ).toBe(true);
+  });
+  it('rejects a pin outside the Kingdom or without a source', () => {
+    expect(
+      PropertySchema.safeParse({ ...base, location: { lat: 51.5, lng: -0.12, source: 'gps' } })
+        .success,
+    ).toBe(false);
+    expect(PropertySchema.safeParse({ ...base, location: { lat: 21.5, lng: 39.2 } }).success).toBe(
+      false,
+    );
   });
 });
