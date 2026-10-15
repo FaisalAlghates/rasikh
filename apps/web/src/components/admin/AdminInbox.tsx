@@ -5,6 +5,7 @@ import { CheckCircle2, Mail, ShieldAlert, Trash2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { Breadcrumbs } from '@/components/shell/Breadcrumbs';
+import { OfficeVerification } from './OfficeVerification';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { ShurfaLoader } from '@/components/ui/Shurfa';
@@ -44,6 +45,7 @@ export function AdminInbox() {
   const t = useTranslations('admin');
   const nav = useTranslations('nav');
   const c = useTranslations('common');
+  const eng = useTranslations('eng');
   const router = useRouter();
   const user = useUser();
   const [allowed, setAllowed] = useState<boolean>();
@@ -118,6 +120,7 @@ export function AdminInbox() {
             label: t('tabFeedback'),
             content: <Feedback rows={feedback.rows} loading={feedback.loading} />,
           },
+          { value: 'offices', label: eng('admin.tab'), content: <OfficeVerification /> },
         ]}
       />
     </>

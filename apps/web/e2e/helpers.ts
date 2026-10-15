@@ -78,3 +78,27 @@ export async function tenantJoins(page: Page, request: APIRequestContext, email:
   await page.getByRole('button', { name: 'تحققت' }).click();
   await expect(page.getByTestId('my-lease')).toBeVisible({ timeout: 30_000 });
 }
+
+const AUTH_ADMIN = 'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/projects/demo-rasikh';
+
+/** Emulator stand-in for scripts/set-platform-admin.mjs (the Admin SDK sets the same claim in production). */
+export async function grantPlatformAdmin(request: APIRequestContext, email: string) {
+  const headers = { Authorization: 'Bearer owner' };
+  const found = await request.post(`${AUTH_ADMIN}/accounts:lookup`, {
+    headers,
+    data: { email: [email] },
+  });
+  const { users } = (await found.json()) as {
+    users: Array<{ localId: string; customAttributes?: string }>;
+  };
+  const user = users[0]!;
+  const claims = {
+    ...(user.customAttributes ? JSON.parse(user.customAttributes) : {}),
+    platformAdmin: true,
+  };
+  const res = await request.post(`${AUTH_ADMIN}/accounts:update`, {
+    headers,
+    data: { localId: user.localId, customAttributes: JSON.stringify(claims) },
+  });
+  expect(res.ok()).toBe(true);
+}

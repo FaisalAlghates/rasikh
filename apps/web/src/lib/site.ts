@@ -8,6 +8,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rasikh.sa'
 export const PUBLIC_PATHS = [
   '',
   '/map',
+  '/engineering',
   '/about',
   '/help',
   '/contact',

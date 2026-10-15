@@ -6,6 +6,7 @@ const SHOTS = '../../docs/screenshots/shell';
 const PUBLIC = [
   '/ar',
   '/ar/map',
+  '/ar/engineering',
   '/ar/about',
   '/ar/help',
   '/ar/contact',
@@ -209,7 +210,16 @@ test('404: unknown addresses get a friendly page with a way home', async ({ page
 
 test('a11y + screenshots: the new public pages', async ({ page }, info) => {
   test.setTimeout(240_000);
-  for (const path of ['about', 'help', 'contact', 'sitemap', 'search', 'accessibility', 'map']) {
+  for (const path of [
+    'about',
+    'help',
+    'contact',
+    'sitemap',
+    'search',
+    'accessibility',
+    'map',
+    'engineering',
+  ]) {
     await page.goto(`/ar/${path}`, { timeout: 60_000 });
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await page.screenshot({ path: `${SHOTS}/${info.project.name}-${path}.png`, fullPage: true });

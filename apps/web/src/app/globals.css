@@ -762,3 +762,29 @@ html[dir='rtl'] .drawer[data-state='open'] {
 .city-pin[data-label='off']:focus-visible .city-pin__label {
   display: block;
 }
+
+/* Engineering office: drawing sheets print as A3 landscape (browser print to PDF) */
+@media print {
+  @page {
+    size: A3 landscape;
+    margin: 10mm;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .eng-print,
+  .eng-print * {
+    visibility: visible;
+  }
+  .eng-print {
+    position: absolute;
+    inset: 0;
+  }
+  .eng-sheet {
+    break-after: page;
+    border: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
