@@ -12,6 +12,7 @@ import {
   diffRenovation,
   ductRuns,
   envelopeOf,
+  exteriorEdges,
   findPrecedents,
   furnish,
   generateOptions,
@@ -209,7 +210,23 @@ describe('rule engine', () => {
     'C-ROOM-DIM': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'bedroom', 1.8, 6) })],
     'C-CEILING': [(c) => c, (c) => ({ ...c, plan: { ...c.plan, clearHeight: 2.3 } })],
     'C-DAYLIGHT': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'majlis_men', 3, 3, 1) })],
-    'C-WET-VENT': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'guest_wc', 1.5, 1.5, 1) })],
+    'C-WET-VENT': [
+      // pass: every bathroom has an outside wall; fail: a WC moved inside the building
+      (c) => ({
+        ...c,
+        plan: {
+          ...c.plan,
+          rooms: c.plan.rooms.filter(
+            (r) =>
+              !(
+                (r.type === 'bathroom' || r.type === 'guest_wc') &&
+                exteriorEdges(r, c.plan.footprint).length === 0
+              ),
+          ),
+        },
+      }),
+      (c) => ({ ...c, plan: shrink(c.plan, 'guest_wc', 1.5, 1.5, 1) }),
+    ],
     'C-CORRIDOR': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'corridor', 20, 0.8) })],
     'C-STAIR': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'stair', 1.6, 5) })],
     'C-EGRESS': [

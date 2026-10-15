@@ -94,6 +94,21 @@ describe('role-based access', () => {
   });
 });
 
+describe('engineering office access', () => {
+  it('an office lead or engineer gets the office workspace, not property management', () => {
+    const lead = accessFor(['office_lead']);
+    expect(lead).toMatchObject({
+      office: true,
+      officeLead: true,
+      staff: false,
+      seesPortfolioOnMap: false,
+    });
+    expect(lead.sections).toEqual(['officeProjects', 'privacy']);
+    expect(accessFor(['engineer'])).toMatchObject({ office: true, officeLead: false });
+    expect(accessFor(['owner']).office).toBe(false);
+  });
+});
+
 describe('several organizations', () => {
   const orgs = { a: ['tenant'], b: ['owner'] };
   it('opens the one chosen last, while the person still belongs to it', () => {

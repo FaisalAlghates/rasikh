@@ -1,23 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type APIRequestContext } from '@playwright/test';
-import { signUpEmail } from './helpers';
-
-const AUTH = 'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/projects/demo-rasikh';
-
-/** Emulator stand-in for scripts/set-platform-admin.mjs (the Admin SDK sets the same claim in production). */
-async function grantPlatformAdmin(request: APIRequestContext, email: string) {
-  const headers = { Authorization: 'Bearer owner' };
-  const found = await request.post(`${AUTH}/accounts:lookup`, {
-    headers,
-    data: { email: [email] },
-  });
-  const { users } = (await found.json()) as { users: Array<{ localId: string }> };
-  const res = await request.post(`${AUTH}/accounts:update`, {
-    headers,
-    data: { localId: users[0]!.localId, customAttributes: JSON.stringify({ platformAdmin: true }) },
-  });
-  expect(res.ok()).toBe(true);
-}
+import { expect, test } from '@playwright/test';
+import { grantPlatformAdmin, signUpEmail } from './helpers';
 
 test('team inbox: only a platform admin reads visitor messages, answers and deletes them', async ({
   browser,

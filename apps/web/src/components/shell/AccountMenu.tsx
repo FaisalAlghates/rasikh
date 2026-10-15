@@ -9,6 +9,7 @@ import {
   Check,
   HelpCircle,
   Inbox,
+  PencilRuler,
   LayoutGrid,
   LogOut,
   Map,
@@ -196,6 +197,12 @@ export function AccountMenu() {
               >
                 <ShieldCheck size={16} aria-hidden="true" className="text-brand-text" />
                 {t('section.privacy')}
+              </Link>
+            </li>
+            <li>
+              <Link href="/design" className={item} onClick={() => setOpen(false)}>
+                <PencilRuler size={16} aria-hidden="true" className="text-brand-text" />
+                {t('designProjects')}
               </Link>
             </li>
             <li>

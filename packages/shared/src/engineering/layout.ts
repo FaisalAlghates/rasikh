@@ -1,6 +1,7 @@
 import { programRooms, type RoomSpec } from './brief.js';
 import {
   HABITABLE,
+  WET,
   type DesignPlan,
   type PlanRoom,
   type Plot,
@@ -18,6 +19,8 @@ import {
 export const CORRIDOR = 1.4;
 export const STAIR_W = 3.0;
 export const ELEVATOR_W = 2.2;
+/** Narrowest column a room (or a stack of small rooms) may get in a band (m). */
+export const MIN_COLUMN = 2.2;
 
 export interface Variant {
   id: string;
@@ -56,7 +59,10 @@ interface Segment {
   w: number;
 }
 
-/** Lays rooms left to right in a band; widths follow the target areas and exactly fill the segments. */
+/**
+ * Lays rooms left to right in a band; widths follow the target areas and exactly fill the segments. Small rooms are
+ * stacked front-to-back in a shared column so none becomes a sliver.
+ */
 function fillBand(
   specs: RoomSpec[],
   segments: Segment[],
@@ -64,6 +70,8 @@ function fillBand(
   depth: number,
   floor: number,
   ids: Map<string, number>,
+  /** Which edge of the band is an outside wall: wet rooms in a stack go there (daylight and ventilation). */
+  outside: 'start' | 'end' = 'start',
 ): PlanRoom[] {
   if (specs.length === 0 || depth <= 0) return [];
   const total = segments.reduce((s, g) => s + g.w, 0);
@@ -86,26 +94,54 @@ function fillBand(
       if (!last && acc >= share * areaSum) break;
     }
     const sum = mine.reduce((s, r) => s + r.area, 0) || 1;
+    // Small rooms (a WC, a laundry) would become slivers across the whole band depth: stack them in one
+    // column until the column is at least MIN_COLUMN wide; big rooms take a column of their own.
+    const width = (rooms: RoomSpec[]) => (rooms.reduce((t, r) => t + r.area, 0) / sum) * seg.w;
+    const columns: RoomSpec[][] = [];
+    let cur: RoomSpec[] = [];
+    for (const r of mine) {
+      cur.push(r);
+      if (width(cur) >= MIN_COLUMN) {
+        columns.push(cur);
+        cur = [];
+      }
+    }
+    if (cur.length) {
+      if (columns.length && width(cur) < MIN_COLUMN) columns[columns.length - 1]!.push(...cur);
+      else columns.push(cur);
+    }
     // boundaries are rounded once, so neighbours share an exact edge (no slivers, no overlaps)
-    const edges = [round(seg.x)];
-    let acc2 = 0;
-    mine.forEach((r, k) => {
-      acc2 += r.area;
-      edges.push(
-        k === mine.length - 1 ? round(seg.x + seg.w) : round(seg.x + (acc2 / sum) * seg.w),
+    const xs = [round(seg.x)];
+    let accX = 0;
+    columns.forEach((col, k) => {
+      accX += col.reduce((t, r) => t + r.area, 0);
+      xs.push(
+        k === columns.length - 1 ? round(seg.x + seg.w) : round(seg.x + (accX / sum) * seg.w),
       );
     });
-    mine.forEach((r, k) => {
-      const n = (ids.get(r.type) ?? 0) + 1;
-      ids.set(r.type, n);
-      out.push({
-        id: `${floor}-${r.type}-${n}`,
-        type: r.type,
-        floor,
-        x: edges[k]!,
-        y: round(y),
-        w: round(edges[k + 1]! - edges[k]!),
-        h: round(depth),
+    const wetFirst = (a: RoomSpec, b: RoomSpec) =>
+      Number(WET.includes(b.type)) - Number(WET.includes(a.type));
+    for (const col of columns) col.sort(outside === 'start' ? wetFirst : (a, b) => wetFirst(b, a));
+    columns.forEach((col, k) => {
+      const colArea = col.reduce((t, r) => t + r.area, 0) || 1;
+      const ys = [round(y)];
+      let accY = 0;
+      col.forEach((r, j) => {
+        accY += r.area;
+        ys.push(j === col.length - 1 ? round(y + depth) : round(y + (accY / colArea) * depth));
+      });
+      col.forEach((r, j) => {
+        const n = (ids.get(r.type) ?? 0) + 1;
+        ids.set(r.type, n);
+        out.push({
+          id: `${floor}-${r.type}-${n}`,
+          type: r.type,
+          floor,
+          x: xs[k]!,
+          y: ys[j]!,
+          w: round(xs[k + 1]! - xs[k]!),
+          h: round(ys[j + 1]! - ys[j]!),
+        });
       });
     });
   });
@@ -189,7 +225,7 @@ export function generatePlan(plot: Plot, zoning: Zoning, program: Program, v: Va
     const ids = new Map<string, number>();
     const [front, back] = splitBands(perFloor[f]!, v.front, f === 0);
     rooms.push(...fillBand(front, [{ x: footprint.x, w: width }], footprint.y, frontDepth, f, ids));
-    rooms.push(...fillBand(back, backSegments, backY, backDepth, f, ids));
+    rooms.push(...fillBand(back, backSegments, backY, backDepth, f, ids, 'end'));
     rooms.push({
       id: `${f}-corridor-1`,
       type: 'corridor',

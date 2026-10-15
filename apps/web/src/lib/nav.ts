@@ -6,6 +6,8 @@
 export const ROUTES = {
   home: '/',
   map: '/map',
+  engineering: '/engineering',
+  design: '/design',
   about: '/about',
   help: '/help',
   contact: '/contact',
@@ -22,18 +24,21 @@ export const ROUTES = {
 export type PageKey = keyof typeof ROUTES;
 
 /** Top navigation (DGA navigation header: few, clear destinations). */
-export const HEADER_NAV: PageKey[] = ['home', 'map', 'about', 'help', 'contact'];
+export const HEADER_NAV: PageKey[] = ['home', 'map', 'engineering', 'about', 'help', 'contact'];
 
 /** Footer groups (DGA footer: group labels, links, accessibility tools, legal text). */
 export const FOOTER_GROUPS: Array<{ label: string; items: PageKey[] }> = [
-  { label: 'groupPlatform', items: ['home', 'map', 'about', 'workspace'] },
+  { label: 'groupPlatform', items: ['home', 'map', 'engineering', 'about', 'workspace'] },
   { label: 'groupSupport', items: ['help', 'contact', 'search', 'sitemap'] },
   { label: 'groupLegal', items: ['privacy', 'terms', 'disclaimers', 'accessibility'] },
 ];
 
 /** The sitemap page lists every public destination, grouped like the footer. */
 export const SITEMAP_GROUPS: Array<{ label: string; items: PageKey[] }> = [
-  { label: 'groupPlatform', items: ['home', 'map', 'about', 'auth', 'workspace'] },
+  {
+    label: 'groupPlatform',
+    items: ['home', 'map', 'engineering', 'design', 'about', 'auth', 'workspace'],
+  },
   { label: 'groupSupport', items: ['help', 'contact', 'search', 'sitemap'] },
   { label: 'groupLegal', items: ['privacy', 'terms', 'disclaimers', 'accessibility'] },
 ];
@@ -42,6 +47,7 @@ export const SITEMAP_GROUPS: Array<{ label: string; items: PageKey[] }> = [
 export const SEARCHABLE: PageKey[] = [
   'home',
   'map',
+  'engineering',
   'about',
   'help',
   'contact',

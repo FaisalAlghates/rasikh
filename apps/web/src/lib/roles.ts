@@ -3,7 +3,15 @@
  * The Firestore rules enforce the same boundaries; this only decides what the UI offers.
  */
 export type Role =
-  'owner' | 'manager' | 'admin' | 'tenant' | 'vendor' | 'building_owner' | 'broker';
+  | 'owner'
+  | 'manager'
+  | 'admin'
+  | 'tenant'
+  | 'vendor'
+  | 'building_owner'
+  | 'broker'
+  | 'office_lead'
+  | 'engineer';
 
 export type Section =
   | 'overview'
@@ -21,7 +29,8 @@ export type Section =
   | 'myLease'
   | 'assigned'
   | 'myBuildings'
-  | 'reminders';
+  | 'reminders'
+  | 'officeProjects';
 
 export interface Access {
   /** Owner, manager or admin of the organization: the full management workspace. */
@@ -35,6 +44,9 @@ export interface Access {
   sections: Section[];
   /** May see the organization's own properties on the Kingdom map. */
   seesPortfolioOnMap: boolean;
+  /** An engineering office (its lead or one of its engineers): the office workspace instead of property management. */
+  office: boolean;
+  officeLead: boolean;
 }
 
 const STAFF_SECTIONS: Section[] = [
@@ -59,9 +71,13 @@ export function accessFor(roles: readonly string[]): Access {
   const vendorOnly = !staff && has('vendor') && !tenant;
   const unitOwner = !staff && has('building_owner');
   const brokerOnly = !staff && broker && !tenant;
+  const officeLead = has('office_lead');
+  const office = officeLead || has('engineer');
 
   let sections: Section[];
-  if (staff) {
+  if (office) {
+    sections = ['officeProjects', 'privacy'];
+  } else if (staff) {
     sections = [...STAFF_SECTIONS];
     if (broker) sections.splice(sections.indexOf('assistant') + 1, 0, 'broker');
   } else if (brokerOnly) {
@@ -81,7 +97,9 @@ export function accessFor(roles: readonly string[]): Access {
     broker,
     brokerOnly,
     sections,
-    seesPortfolioOnMap: staff,
+    seesPortfolioOnMap: staff && !office,
+    office,
+    officeLead,
   };
 }
 
@@ -93,6 +111,8 @@ export function pickSection(access: Access, requested: string | null | undefined
 
 /** Role names shown on the account badge, in a stable order. */
 export const ROLE_ORDER: Role[] = [
+  'office_lead',
+  'engineer',
   'owner',
   'manager',
   'admin',

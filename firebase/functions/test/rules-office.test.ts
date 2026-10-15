@@ -20,7 +20,8 @@ const team = { platformAdmin: true };
 const future = Timestamp.fromDate(new Date('2030-01-01'));
 const past = Timestamp.fromDate(new Date('2020-01-01'));
 
-const db = (uid: string, claims: Record<string, unknown>) => env.authenticatedContext(uid, claims).firestore();
+const db = (uid: string, claims: Record<string, unknown>) =>
+  env.authenticatedContext(uid, claims).firestore();
 
 beforeAll(async () => {
   env = await initializeTestEnvironment({

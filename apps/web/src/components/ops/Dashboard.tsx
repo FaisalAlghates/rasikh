@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { InspectionsTab } from '@/components/inspect/InspectionsTab';
 import { AssistantPanel } from '@/components/ai/AssistantPanel';
 import { BrokerView } from '@/components/broker/BrokerView';
+import { OfficeWorkspace } from '@/components/eng/OfficeWorkspace';
 import { BuildingsTab } from '@/components/building/BuildingsTab';
 import { MyBuildings } from '@/components/building/MyBuildings';
 import { TicketsTab, type TicketDoc } from '@/components/maint/TicketsTab';
@@ -46,6 +47,7 @@ export function Dashboard() {
   const ai = useTranslations('ai');
   const ac = useTranslations('account');
   const nav = useTranslations('nav');
+  const eng = useTranslations('eng');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -176,6 +178,25 @@ export function Dashboard() {
     </div>
   );
   const header = pageHead(staff ? t('tabOverview') : t('tabMyLease'));
+
+  // ----------------------------------------------------------- engineering office
+  if (access.office) {
+    return (
+      <div className="flex flex-col gap-6">
+        {pageHead(eng('title'))}
+        <VerifyEmailBanner />
+        <OfficeWorkspace officeId={orgId} uid={uid} isLead={access.officeLead} />
+        <section
+          id="sec-privacy"
+          className="flex scroll-mt-24 flex-col gap-3"
+          aria-label={ac('tab')}
+        >
+          <h2 className="text-h3 font-semibold">{ac('tab')}</h2>
+          <PrivacyPanel user={session.user} />
+        </section>
+      </div>
+    );
+  }
 
   // ----------------------------------------------------------- broker-only view
   if (brokerOnly) {

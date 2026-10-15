@@ -11,6 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         'common',
         'nav',
         'cities',
+        'eng',
         'workspace',
         'onboarding',
         'ops',
