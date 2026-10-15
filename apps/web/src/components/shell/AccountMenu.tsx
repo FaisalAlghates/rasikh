@@ -1,32 +1,41 @@
 'use client';
 
 import { signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import {
   ChevronDown,
   CircleUserRound,
+  Building2,
+  Check,
   HelpCircle,
   Inbox,
   LayoutGrid,
   LogOut,
   Map,
+  Plus,
   ShieldCheck,
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState } from 'react';
 import { cn } from '@/components/ui/cn';
 import { Link, useRouter } from '@/i18n/navigation';
-import { firebaseAuth } from '@/lib/firebase';
+import { firebaseAuth, firebaseDb } from '@/lib/firebase';
 import { ROUTES } from '@/lib/nav';
-import { ROLE_ORDER, accessFor } from '@/lib/roles';
+import { PREF, readPref, writePref } from '@/lib/prefs';
+import { ROLE_ORDER, accessFor, pickOrg } from '@/lib/roles';
 import { readClaims, useUser } from '@/lib/use-user';
 
 /** Signed-in account menu: who you are, your roles, and the places your roles may go. */
 export function AccountMenu() {
   const t = useTranslations('nav');
+  const locale = useLocale();
   const router = useRouter();
   const user = useUser();
   const [roles, setRoles] = useState<string[]>([]);
   const [team, setTeam] = useState(false);
+  // every organization this account belongs to (tenant in one, owner of another...), with its name
+  const [orgs, setOrgs] = useState<Array<{ id: string; name: string; roles: string[] }>>([]);
+  const [current, setCurrent] = useState<string>();
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   const id = useId();
@@ -36,8 +45,19 @@ export function AccountMenu() {
     let on = true;
     void readClaims(user).then((c) => {
       if (!on) return;
-      setRoles(Object.values(c.orgs)[0] ?? []);
+      const picked = pickOrg(c.orgs, readPref(PREF.org));
+      setRoles(picked?.roles ?? []);
+      setCurrent(picked?.orgId);
       setTeam(c.platformAdmin);
+      const ids = Object.keys(c.orgs);
+      if (ids.length < 2) return setOrgs([]);
+      void Promise.all(
+        ids.map(async (id) => {
+          const snap = await getDoc(doc(firebaseDb(), 'orgs', id)).catch(() => null);
+          const name = (snap?.data()?.name as string | undefined) ?? id.slice(0, 6);
+          return { id, name, roles: c.orgs[id] ?? [] };
+        }),
+      ).then((list) => on && setOrgs(list));
     });
     return () => {
       on = false;
@@ -58,6 +78,12 @@ export function AccountMenu() {
       document.removeEventListener('keydown', onKey);
     };
   }, [open]);
+
+  /** Opens another organization: remembered on this device, then the workspace starts fresh in it. */
+  const switchTo = (orgId: string) => {
+    writePref(PREF.org, orgId);
+    window.location.assign(`/${locale}/workspace`);
+  };
 
   if (!user) return null;
   const access = accessFor(roles);
@@ -110,6 +136,43 @@ export function AccountMenu() {
               </>
             )}
           </div>
+          {orgs.length > 1 && (
+            <div className="border-b border-border/20 py-2">
+              <p className="px-3 pb-1 text-caption text-text-muted">{t('orgs')}</p>
+              <ul className="flex flex-col gap-0.5" data-testid="org-list">
+                {orgs.map((o) => {
+                  const on = o.id === current;
+                  return (
+                    <li key={o.id}>
+                      <button
+                        type="button"
+                        aria-current={on ? 'true' : undefined}
+                        onClick={() => (on ? setOpen(false) : switchTo(o.id))}
+                        className={cn(item, 'h-auto py-2 text-start', on && 'bg-brand/10')}
+                      >
+                        <Building2
+                          size={16}
+                          aria-hidden="true"
+                          className="shrink-0 text-brand-text"
+                        />
+                        <span className="flex min-w-0 flex-1 flex-col">
+                          <span className="truncate font-semibold">{o.name}</span>
+                          <span className="truncate text-caption text-text-muted">
+                            {ROLE_ORDER.filter((r) => o.roles.includes(r))
+                              .map((r) => t(`role.${r}`))
+                              .join('، ')}
+                          </span>
+                        </span>
+                        {on && (
+                          <Check size={16} aria-hidden="true" className="shrink-0 text-success" />
+                        )}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
           <ul className="flex flex-col gap-0.5 pt-2">
             <li>
               <Link href={ROUTES.workspace} className={item} onClick={() => setOpen(false)}>
@@ -133,6 +196,12 @@ export function AccountMenu() {
               >
                 <ShieldCheck size={16} aria-hidden="true" className="text-brand-text" />
                 {t('section.privacy')}
+              </Link>
+            </li>
+            <li>
+              <Link href="/onboarding?new=1" className={item} onClick={() => setOpen(false)}>
+                <Plus size={16} aria-hidden="true" className="text-brand-text" />
+                {t('orgNew')}
               </Link>
             </li>
             {team && (

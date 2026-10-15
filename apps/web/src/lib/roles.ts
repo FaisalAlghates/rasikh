@@ -101,3 +101,16 @@ export const ROLE_ORDER: Role[] = [
   'building_owner',
   'vendor',
 ];
+
+/**
+ * The organization a person works in now: the one they last chose (if they still belong to it),
+ * otherwise their first. One account may hold up to five (e.g. tenant in one, owner of another).
+ */
+export function pickOrg(
+  orgs: Record<string, string[]>,
+  preferred: string | null | undefined,
+): { orgId: string; roles: string[] } | null {
+  const ids = Object.keys(orgs);
+  const id = preferred && ids.includes(preferred) ? preferred : ids[0];
+  return id ? { orgId: id, roles: orgs[id] ?? [] } : null;
+}

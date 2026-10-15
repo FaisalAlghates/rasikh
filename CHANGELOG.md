@@ -25,6 +25,8 @@
 - Fix: the landing page no longer scrolls sideways on phones (decorative arch layers are clipped).
 - Exact property pins: the city is chosen from the Kingdom list, the owner can use the phone location while at the property, and owners and managers can set or move a pin by clicking on the map; pins are validated inside the Kingdom by the shared schema and the Firestore rules. Each property card shows whether its pin is exact and links to it on the map.
 - Rasikh team inbox (/admin): contact messages (reply by email, mark answered, delete after answering) and page ratings summarised per page with the latest notes; only a `platformAdmin` claim set with the Admin SDK opens it (script included), enforced by the rules; linked from the account menu for the team only.
+- Several organizations in one account (e.g. tenant in one, owner of another): the account menu lists each with the person's roles there and switches between them (remembered on the device); "create a new workspace" opens onboarding for an existing account, and the new workspace opens. The map and workspace follow the chosen organization.
+- Measured on the production build under mobile throttling: landing LCP 2.0 s, content pages and map about 0.75 s, CLS about 0.
 - Map: while placing a pin the property card shrinks to its title and the hint, so the map stays free to tap on phones.
 - Film: split-screen recordings redone for the new design, with chapters for the linked site and the Kingdom map.
 - Fix: the add-property form clears as soon as it is sent, so typing the next property right away is no longer wiped by the late reset.

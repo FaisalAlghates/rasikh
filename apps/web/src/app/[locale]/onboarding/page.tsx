@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Input';
 import { useRouter } from '@/i18n/navigation';
 import { firebaseFunctions } from '@/lib/firebase';
+import { PREF, writePref } from '@/lib/prefs';
 import { readClaims, useUser } from '@/lib/use-user';
 
 export default function OnboardingPage() {
@@ -29,7 +30,8 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (user === null) router.replace('/auth');
-    else if (user)
+    // ?new=1 (account menu): someone already in a workspace creates another one
+    else if (user && new URLSearchParams(location.search).get('new') !== '1')
       void readClaims(user).then((c) => Object.keys(c.orgs).length && router.replace('/workspace'));
   }, [user, router]);
 
@@ -42,7 +44,7 @@ export default function OnboardingPage() {
     if (!consent) return setError(t('errors.needConsent'));
     setBusy(true);
     try {
-      await httpsCallable(
+      const res = await httpsCallable<unknown, { orgId: string }>(
         firebaseFunctions(),
         'createOrganization',
       )({
@@ -52,6 +54,7 @@ export default function OnboardingPage() {
         consentPdpl: true,
         locale,
       });
+      writePref(PREF.org, res.data.orgId); // open the workspace just created
       if (user) await readClaims(user, true); // pick up the new custom claims
       router.push('/workspace');
     } catch (e) {
