@@ -6,3 +6,4 @@ export * from './inspection.js';
 export * from './maintenance.js';
 export * from './building.js';
 export * from './broker.js';
+export * from './engineering/index.js';
