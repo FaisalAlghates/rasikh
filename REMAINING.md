@@ -18,9 +18,9 @@ Last updated: 2026-10-15. References: `PLAN.md` (phases and gaps), `CLAUDE.md` (
 - Gaps from finished phases: server-side Arabic PDF reports (account statement, inspection comparison); ownership transfer with the new owner's consent; switching organizations in the Flutter app (done on the web); an admin screen for the indicative-prices import.
 - Device testing: the rest of the Flutter screens on the Android emulator (properties, leases, inspections, tickets, buildings, broker, assistant, privacy); camera, GPS and the evidence upload queue on a real phone and on iOS.
 
-## 2. Phase 9 — AI engineering office (not started)
+## 2. Phase 9 — AI engineering office (built on the free stack; paid parts pending)
 
-Spec: `docs/ENGINEERING_OFFICE.md`; ten slices (9a to 9j) in `PLAN.md`. Needs your decisions first:
+Built 2026-10-16: offices and engineers with verification, briefs, options, rule engine, plan editor, 3D, drawings and exports, disciplines, approvals and release, renovation, precedents (details in `docs/ENGINEERING_OFFICE.md`, "Implementation status"). Still needs your decisions:
 
 - Stack additions: Cloud Run, Cloud Tasks, Python services (ezdxf, IfcOpenShell), three.js, a glTF viewer in Flutter.
 - Licenses: Saudi Building Code text, a 3D furniture library, a precedent library.

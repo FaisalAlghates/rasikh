@@ -36,7 +36,8 @@ day to move-out day, in one property record."
     structural/MEP schematics, a BOQ range and a Balady permit checklist. Every output is a draft until a verified
     SCE-licensed engineer of that office approves it; Rasikh never stamps drawings or submits permits. Covers new builds
     AND renovation/restoration of existing buildings, through five discipline agents working as one office:
-    architectural, civil/structural, mechanical, electrical, industrial. Full spec: `docs/ENGINEERING_OFFICE.md`.
+    architectural, civil/structural, mechanical, electrical, industrial. Full spec: `docs/ENGINEERING_OFFICE.md` (built on the free stack
+    on 2026-10-16; see "Implementation status" there for what still needs paid inputs).
 
 ### Out of scope at launch (feature-flagged OFF; must not ship enabled)
 

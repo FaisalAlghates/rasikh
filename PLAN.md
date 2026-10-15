@@ -112,20 +112,20 @@ Acceptance: eval suite passes; no model key reachable from clients.
 
 ## Phase 9 — AI engineering office (المكتب الهندسي الذكي)
 
-Full spec: `docs/ENGINEERING_OFFICE.md` (CLAUDE.md Module 14, §5b, §7). Not started. Needs your decisions first: Cloud Run/Tasks +
-Python services (stack change), SBC text licence, licensed furniture library, image-generation model for renders. Build in
-slices, each with its own tests and a user check:
+Full spec: `docs/ENGINEERING_OFFICE.md` (CLAUDE.md Module 14, §5b, §7). Built 2026-10-16 on the existing free stack (shared
+TypeScript, Firestore rules, three.js; no Cloud Run, no Python, no paid model). What still needs your decisions or paid inputs
+is listed per slice and in "Implementation status" in the spec:
 
-- [ ] 9a Offices, engineers, roles: office/engineer profiles, admin verification, discipline-scoped approval, SCE expiry pause; rules tests per role
-- [ ] 9b Brief intake: plot/zoning/program zod schemas, brief agent (asks only for missing items), human confirmation
-- [ ] 9c SBC rule engine: versioned rule packs, checked/passed/failed/NOT CHECKED report, ≥ 1 pass + 1 fail fixture per rule; zoning reported separately
-- [ ] 9d Layout engine (Cloud Run) + 3–6 options + golden tests (5 briefs) + web plan editor with live checks
-- [ ] 9e 3D model (glTF/IFC) per plan, empty/furnished and model/AI-render toggles, sun study, massing on the Rasikh map; web + Flutter viewer
-- [ ] 9f Drawing set and exports (PDF, DXF, IFC4, glTF), draft watermark, title block, Balady permit checklist
-- [ ] 9g Discipline agents (structural, mechanical, electrical, industrial), shared model, clash detection, BOQ and schedule
-- [ ] 9h Workflow: queued jobs, versions/redlines, approval with SHA-256, release to Property Health Record, quotes/invoices (no payments)
-- [ ] 9i Precedent library + RAG with citations, office private library, opt-in only
-- [ ] 9j Renovation/restoration: existing-building intake, condition assessment, existing-structure rule pack, existing/demolish/new set, heritage flag
+- [x] 9a Offices, engineers, roles: office/engineer profiles, admin verification, discipline-scoped approval, SCE expiry pause; rules tests per role (roles office_lead/engineer, inviteEngineer, Rasikh-team verification in /admin, 9 rules tests)
+- [x] 9b Brief intake: plot/zoning/program zod schemas, brief agent (asks only for missing items), human confirmation (deterministic Arabic/English reader; voice notes, sketch photos and deed OCR not done: need a model)
+- [x] 9c SBC rule engine: versioned rule packs, checked/passed/failed/NOT CHECKED report, ≥ 1 pass + 1 fail fixture per rule; zoning reported separately (code rules stay "not checked" until an office engineer confirms parameters from the licensed text; the SBC licence is yours to obtain)
+- [x] 9d Layout engine + 3–6 options + golden tests (5 briefs) + web plan editor with live checks (in shared TypeScript instead of Cloud Run; rectangular plots and rooms; an irregular plot is approximated by a narrow deep one)
+- [~] 9e 3D model (glTF/IFC) per plan, empty/furnished and model/AI-render toggles, sun study, massing on the Rasikh map; web + Flutter viewer (web done with a deterministic placeholder furniture set; AI render needs a paid image model; licensed furniture library, walk-through, massing on the map and the Flutter viewer not done)
+- [x] 9f Drawing set and exports (PDF via A3 print, DXF R12, IFC4, glTF), draft watermark, title block, Balady permit checklist
+- [x] 9g Discipline agents (structural, mechanical, electrical, industrial), shared model, clash detection, BOQ and schedule (deterministic preliminary calculators; no AI explanations yet)
+- [~] 9h Workflow: queued jobs, versions/redlines, approval with SHA-256, release to Property Health Record, quotes/invoices (no payments) (versions, comments, approvals, release and quotes done; queued jobs not needed (generation runs instantly in the browser); push notifications and the hand-off to the Property Health Record not done)
+- [~] 9i Precedent library + RAG with citations, office private library, opt-in only (private library with consent and tag search with citations; RAG needs a model; licensed libraries are yours to buy)
+- [~] 9j Renovation/restoration: existing-building intake, condition assessment, existing-structure rule pack, existing/demolish/new set, heritage flag (findings, options with cost ranges, existing/demolish/new view with structural flags, heritage note; OCR of old drawings and RoomPlan scans not done)
 
 Acceptance: see "Acceptance" in `docs/ENGINEERING_OFFICE.md` (rules isolation, draft watermark, clash, renovation case, 3D updates within seconds).
 
