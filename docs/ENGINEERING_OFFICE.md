@@ -171,3 +171,13 @@ this file holds the detail. Follow CLAUDE.md §7 strictly.
   image-generation model for AI renders, precedent library licences, Vertex AI usage. None are bought by Claude.
 - Legal: lawyer review of the draft-watermark wording, office/engineer terms, and client-consent for private precedents.
 - Data: engineer/office verification documents are sensitive (PDPL): purpose-limited, in me-central2, admin-only access.
+
+## Implementation status (2026-10-16)
+
+Built on the existing free stack, without the stack additions or paid inputs listed above.
+
+- **Where the code lives:** `packages/shared/src/engineering/` (schemas, brief reader, layout engine, rule engine, openings, discipline calculators, DXF/IFC writers, furniture placer, permit checklist, renovation, sun, precedents, workflow; 36 tests), `firebase/firestore.rules` (offices, engineers, rule packs, projects, versions, approvals, comments, findings, quotes; `firebase/functions/test/rules-office.test.ts`), `firebase/functions/src/links.ts` (`inviteEngineer`), `apps/web/src/components/eng/` and the pages `/engineering`, `/design`, `/design/[id]`, the office workspace inside `/workspace`, and office verification in `/admin`. End-to-end: `apps/web/e2e/engineering.spec.ts`.
+- **Layout engine:** deterministic TypeScript in the browser instead of Cloud Run; rectangular plots and rooms (front band, corridor, back band, stair core; small rooms stack). Irregular plots and courtyard typologies are not handled yet.
+- **Rule engine:** zoning checks pass/fail on the office's municipal values; building-code rules keep starting parameters that are NOT from the code text and stay "not checked" until a verified engineer of the office enters the clause and parameters from the licensed code and confirms them (per office, per rule pack version). Fire, energy, structure, electrical and plumbing are always "needs engineer".
+- **Exports:** DXF R12 and IFC4 written as text (structure validated by tests; not yet opened in a CAD/BIM viewer here), glTF from the 3D model (furniture removed), PDF through the browser's A3 print.
+- **Not done (needs your decisions or paid inputs):** AI explanations and ranking text (a real model), voice/photo briefs and deed OCR, AI renders (image model), licensed furniture library (placeholder boxes today), SBC text licence, licensed precedent libraries and RAG, Cloud Run/Tasks jobs, push notifications, hand-off of released sets to the client's Property Health Record, the Flutter viewer, walk-through mode, massing on the Rasikh map, Apple RoomPlan scans, Python ezdxf/IfcOpenShell. Lawyer review of the watermark wording and office terms.
