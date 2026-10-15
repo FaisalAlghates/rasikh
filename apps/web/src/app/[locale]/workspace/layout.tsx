@@ -9,6 +9,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <ClientMessages
       namespaces={[
         'common',
+        'nav',
         'workspace',
         'onboarding',
         'ops',

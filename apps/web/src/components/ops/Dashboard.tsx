@@ -1,11 +1,10 @@
 'use client';
 
 import { computeReminders } from '@rasikh/shared';
-import { signOut } from 'firebase/auth';
 import { where } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { InspectionsTab } from '@/components/inspect/InspectionsTab';
 import { AssistantPanel } from '@/components/ai/AssistantPanel';
 import { BrokerView } from '@/components/broker/BrokerView';
@@ -13,16 +12,18 @@ import { BuildingsTab } from '@/components/building/BuildingsTab';
 import { MyBuildings } from '@/components/building/MyBuildings';
 import { TicketsTab, type TicketDoc } from '@/components/maint/TicketsTab';
 import { RecordTab } from '@/components/inspect/RecordTab';
-import { Button } from '@/components/ui/Button';
+import { Breadcrumbs } from '@/components/shell/Breadcrumbs';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ShurfaLoader } from '@/components/ui/Shurfa';
-import { Tabs } from '@/components/ui/Tabs';
+import { Tabs, type TabItem } from '@/components/ui/Tabs';
 import { useRouter } from '@/i18n/navigation';
 import type { InspectionDoc } from '@/lib/inspect/types';
-import { firebaseAuth, firebaseFunctions } from '@/lib/firebase';
+import { firebaseFunctions } from '@/lib/firebase';
 import { tenantScope, today, useOrgCollection, useSession } from '@/lib/ops/hooks';
 import type { ExpenseDoc, LeaseDoc, PaymentDoc, PropertyDoc, UnitDoc } from '@/lib/ops/types';
+import { ROUTES } from '@/lib/nav';
+import { accessFor, pickSection, type Section } from '@/lib/roles';
 import { useUser } from '@/lib/use-user';
 import { ExpensesTab } from './ExpensesTab';
 import { LeasesTab } from './LeasesTab';
@@ -44,6 +45,7 @@ export function Dashboard() {
   const br = useTranslations('broker');
   const ai = useTranslations('ai');
   const ac = useTranslations('account');
+  const nav = useTranslations('nav');
   const router = useRouter();
   const user = useUser();
   const { session, loading, signedOut, noOrg } = useSession();
@@ -51,7 +53,13 @@ export function Dashboard() {
   const staff = !!session?.isStaff;
   const uid = session?.user.uid ?? '';
 
-  const [tab, setTab] = useState('overview');
+  const [tab, setTabState] = useState<string>('overview');
+  const setTab = useCallback((v: string) => {
+    setTabState(v);
+    const url = new URL(location.href);
+    url.searchParams.set('s', v);
+    if (url.href !== location.href) history.pushState(history.state, '', url);
+  }, []);
   const [selectedLease, setSelectedLease] = useState<string>();
   const [banner, setBanner] = useState<string>();
 
@@ -92,11 +100,9 @@ export function Dashboard() {
   const leases = useOrgCollection<LeaseDoc>(orgId, 'leases', scope, !!session);
   const payments = useOrgCollection<PaymentDoc>(orgId, 'payments', scope, !!session);
   const inspections = useOrgCollection<InspectionDoc>(orgId, 'inspections', scope, !!session);
-  const roles = session?.roles ?? [];
-  const vendorOnly = !staff && roles.includes('vendor') && !session?.isTenant;
-  const unitOwner = !staff && roles.includes('building_owner');
-  const isBroker = roles.includes('broker');
-  const brokerOnly = !staff && isBroker && !session?.isTenant;
+  const roles = session?.roles;
+  const access = useMemo(() => accessFor(roles ?? []), [roles]);
+  const { vendorOnly, unitOwner, brokerOnly } = access;
   const ticketScope = useMemo(
     () => (staff ? [] : vendorOnly ? [where('vendorUid', '==', uid)] : tenantScope(uid)),
     [staff, vendorOnly, uid],
@@ -118,6 +124,22 @@ export function Dashboard() {
     [leases.rows, payments.rows],
   );
 
+  // Open the section named in the address (?s=) once the roles are known. Only sections the role
+  // allows can open; anything else falls back to the role's first section.
+  const sessionReady = !!session;
+  useEffect(() => {
+    if (!sessionReady) return;
+    const apply = () => {
+      const want = new URLSearchParams(location.search).get('s');
+      setTabState(pickSection(access, want));
+      if (want && !access.staff)
+        requestAnimationFrame(() => document.getElementById(`sec-${want}`)?.scrollIntoView());
+    };
+    apply();
+    window.addEventListener('popstate', apply);
+    return () => window.removeEventListener('popstate', apply);
+  }, [sessionReady, access]);
+
   if (loading || noOrg || signedOut) {
     return (
       <div className="flex justify-center py-24">
@@ -127,31 +149,39 @@ export function Dashboard() {
   }
   if (!session || !orgId) return null;
 
-  const header = (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <h1 className="text-h2 font-semibold">{staff ? t('tabOverview') : t('tabMyLease')}</h1>
-      <Button
-        variant="quiet"
-        onClick={() => void signOut(firebaseAuth()).then(() => router.replace('/'))}
-      >
-        {c('signOut')}
-      </Button>
+  const roleBadges = (
+    <ul className="flex flex-wrap gap-1.5" aria-label={nav('rolesLabel')}>
+      {(roles ?? []).map((r) => (
+        <li
+          key={r}
+          className="rounded-full bg-brand/15 px-3 py-1 text-caption font-semibold text-brand-text"
+        >
+          {nav.has(`role.${r}`) ? nav(`role.${r}`) : r}
+        </li>
+      ))}
+    </ul>
+  );
+  const pageHead = (title: string, current?: string) => (
+    <div className="flex flex-col gap-2">
+      <Breadcrumbs
+        items={[
+          { label: nav('workspace'), href: current ? ROUTES.workspace : undefined },
+          ...(current ? [{ label: current }] : []),
+        ]}
+      />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-h2 font-semibold">{title}</h1>
+        {roleBadges}
+      </div>
     </div>
   );
+  const header = pageHead(staff ? t('tabOverview') : t('tabMyLease'));
 
   // ----------------------------------------------------------- broker-only view
   if (brokerOnly) {
     return (
       <div className="flex flex-col gap-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-h2 font-semibold">{br('tab')}</h1>
-          <Button
-            variant="quiet"
-            onClick={() => void signOut(firebaseAuth()).then(() => router.replace('/'))}
-          >
-            {c('signOut')}
-          </Button>
-        </div>
+        {pageHead(br('tab'))}
         <VerifyEmailBanner />
         <BrokerView orgId={orgId} uid={uid} />
         <section className="flex flex-col gap-3" aria-label={ac('tab')}>
@@ -165,14 +195,36 @@ export function Dashboard() {
   // ----------------------------------------------------------- tenant view
   if (!staff) {
     const lease = leases.rows[0];
+    const needsLease: Section[] = ['myLease', 'inspections', 'maintenance', 'assistant'];
+    const quick = access.sections.filter((x) => lease || !needsLease.includes(x));
     return (
       <div className="flex flex-col gap-6">
         {header}
         <VerifyEmailBanner />
+        {quick.length > 1 && (
+          <nav aria-label={nav('sections')} data-testid="role-sections">
+            <ul className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
+              {quick.map((x) => (
+                <li key={x} className="shrink-0">
+                  <a
+                    href={`#sec-${x}`}
+                    className="hairline inline-flex min-h-10 items-center rounded-full px-4 text-small text-text hover:bg-surface"
+                  >
+                    {nav(`section.${x}`)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
         {!lease && !vendorOnly && !unitOwner ? (
           <EmptyState title={t('noLeases')} />
         ) : !lease ? null : (
-          <Card className="flex flex-col gap-4" data-testid="my-lease">
+          <Card
+            id="sec-myLease"
+            className="flex scroll-mt-24 flex-col gap-4"
+            data-testid="my-lease"
+          >
             <div>
               <h2 className="text-h3 font-semibold">
                 {lease.data.propertyName} · {lease.data.unitLabel}
@@ -198,7 +250,11 @@ export function Dashboard() {
           </Card>
         )}
         {lease && (
-          <section className="flex flex-col gap-3" aria-label={i('tab')}>
+          <section
+            id="sec-inspections"
+            className="flex scroll-mt-24 flex-col gap-3"
+            aria-label={i('tab')}
+          >
             <h2 className="text-h3 font-semibold">{i('tab')}</h2>
             <InspectionsTab
               orgId={orgId}
@@ -211,31 +267,53 @@ export function Dashboard() {
           </section>
         )}
         {lease && (
-          <section className="flex flex-col gap-3" aria-label={m('tab')}>
+          <section
+            id="sec-maintenance"
+            className="flex scroll-mt-24 flex-col gap-3"
+            aria-label={m('tab')}
+          >
             <h2 className="text-h3 font-semibold">{m('tab')}</h2>
             <TicketsTab orgId={orgId} staff={false} tickets={tickets.rows} leases={leases.rows} />
           </section>
         )}
         {lease && (
-          <section className="flex flex-col gap-3" aria-label={ai('tab')}>
+          <section
+            id="sec-assistant"
+            className="flex scroll-mt-24 flex-col gap-3"
+            aria-label={ai('tab')}
+          >
             <h2 className="text-h3 font-semibold">{ai('tab')}</h2>
             <AssistantPanel orgId={orgId} leases={leases.rows} />
           </section>
         )}
         {vendorOnly && (
-          <section className="flex flex-col gap-3" aria-label={m('tab')}>
+          <section
+            id="sec-assigned"
+            className="flex scroll-mt-24 flex-col gap-3"
+            aria-label={m('tab')}
+          >
             <h2 className="text-h3 font-semibold">{m('assignedToMe')}</h2>
             <TicketsTab orgId={orgId} staff={false} vendor tickets={tickets.rows} leases={[]} />
           </section>
         )}
         {unitOwner && (
-          <section className="flex flex-col gap-3" aria-label={b('tab')}>
+          <section
+            id="sec-myBuildings"
+            className="flex scroll-mt-24 flex-col gap-3"
+            aria-label={b('tab')}
+          >
             <h2 className="text-h3 font-semibold">{b('myBuildings')}</h2>
             <MyBuildings orgId={orgId} uid={uid} />
           </section>
         )}
-        <Reminders reminders={reminders} leases={leases.rows} />
-        <section className="flex flex-col gap-3" aria-label={ac('tab')}>
+        <div id="sec-reminders" className="scroll-mt-24">
+          <Reminders reminders={reminders} leases={leases.rows} />
+        </div>
+        <section
+          id="sec-privacy"
+          className="flex scroll-mt-24 flex-col gap-3"
+          aria-label={ac('tab')}
+        >
           <h2 className="text-h3 font-semibold">{ac('tab')}</h2>
           <PrivacyPanel user={session.user} />
         </section>
@@ -244,15 +322,19 @@ export function Dashboard() {
   }
 
   // ----------------------------------------------------------- owner / manager view
+  const allowed = (list: TabItem[]) =>
+    access.sections
+      .map((x) => list.find((it) => it.value === x))
+      .filter((it): it is TabItem => !!it);
   return (
     <div className="flex flex-col gap-6">
-      {header}
+      {pageHead(t('tabOverview'), tab === 'overview' ? undefined : nav(`section.${tab}`))}
       <VerifyEmailBanner />
       <Tabs
         label={t('tabOverview')}
         value={tab}
         onValueChange={setTab}
-        items={[
+        items={allowed([
           {
             value: 'overview',
             label: t('tabOverview'),
@@ -342,7 +424,7 @@ export function Dashboard() {
             label: ai('tab'),
             content: <AssistantPanel orgId={orgId} leases={leases.rows} />,
           },
-          ...(isBroker
+          ...(access.broker
             ? [
                 {
                   value: 'broker',
@@ -375,7 +457,7 @@ export function Dashboard() {
             label: t('tabReport'),
             content: <ReportTab payments={payments.rows} expenses={expenses.rows} />,
           },
-        ]}
+        ])}
       />
     </div>
   );

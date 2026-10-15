@@ -1,22 +1,7 @@
-import { setRequestLocale } from 'next-intl/server';
-import { use } from 'react';
-import { ClientMessages } from '@/components/ClientMessages';
-import { Header } from '@/components/Header';
-import { PortfolioClient } from '@/components/map/PortfolioClient';
+import { redirect } from '@/i18n/navigation';
 
-export const metadata = { robots: { index: false, follow: false } };
-
-export default function PortfolioPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = use(params);
-  setRequestLocale(locale);
-  return (
-    <ClientMessages namespaces={['common', 'portfolio']}>
-      <div data-theme="dark" className="min-h-dvh">
-        <Header />
-        <main>
-          <PortfolioClient />
-        </main>
-      </div>
-    </ClientMessages>
-  );
+// The Riyadh-only portfolio map became the Kingdom map; old links keep working.
+export default async function PortfolioPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  redirect({ href: '/map', locale });
 }

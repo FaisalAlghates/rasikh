@@ -176,9 +176,9 @@
     "dir": "Direction"
   },
   "portfolio": {
-    "title": "My portfolio",
+    "title": "Kingdom map",
     "sampleBadge": "Sample data",
-    "sampleNote": "The properties and indicators shown are illustrative samples and will be replaced by your data in the next phase.",
+    "sampleNote": "The properties and indicators shown are illustrative samples. Sign in as an owner to see your own properties on the map.",
     "search": "Search a property or district",
     "filters": "Filter",
     "all": "All",
@@ -189,7 +189,7 @@
     "rent": "Annual rent",
     "sar": "SAR",
     "noResults": "No property matches this search.",
-    "mapLabel": "Map of your properties",
+    "mapLabel": "3D map of the Kingdom",
     "listLabel": "Property list",
     "close": "Close card",
     "name": {
@@ -197,16 +197,64 @@
       "p2": "Al Waha Complex",
       "p3": "Al Nakheel Tower",
       "p4": "Al Rabie Villa",
-      "p5": "Al Safa Building",
-      "p6": "Al Ghadeer Complex"
+      "p5": "Al Hamra Building",
+      "p6": "Corniche Tower",
+      "p7": "Al Aziziyah Building",
+      "p8": "Quba Complex",
+      "p9": "Al Mansak Villa",
+      "p10": "Al Muruj Building",
+      "p11": "Al Rayyan Complex",
+      "p12": "Al Faisaliyah Building"
     },
     "place": {
       "p1": "Riyadh, Al Yasmin",
       "p2": "Riyadh, Al Narjis",
       "p3": "Riyadh, Al Olaya",
       "p4": "Riyadh, Al Rawdah",
-      "p5": "Riyadh, Al Suwaidi",
-      "p6": "Riyadh, Al Malqa"
+      "p5": "Jeddah, Al Hamra",
+      "p6": "Al Khobar, Corniche",
+      "p7": "Makkah, Al Aziziyah",
+      "p8": "Madinah, Quba",
+      "p9": "Abha, Al Mansak",
+      "p10": "Tabuk, Al Muruj",
+      "p11": "Buraydah, Al Rayyan",
+      "p12": "Dammam, Al Faisaliyah"
+    },
+    "lead": "From Riyadh to Jeddah, Dammam, Abha and Tabuk: properties and neighbourhood indicators on one 3D map.",
+    "kingdom": "Whole Kingdom",
+    "citiesLabel": "Cities",
+    "cityCount": "{count, plural, =0 {No properties} one {One property} other {# properties}}",
+    "cityGo": "Go to {city}",
+    "source": "Properties shown",
+    "mine": "My properties",
+    "samples": "Samples",
+    "approx": "Approximate location by city",
+    "unplaced": "{count, plural, one {One property} other {# properties}} without a known city is not on the map.",
+    "openWorkspace": "Open in workspace",
+    "regionsNote": "The map covers all thirteen regions of the Kingdom.",
+    "flatNote": "Simplified schematic of the Kingdom (borders approximate).",
+    "indicatorsNote": "Neighbourhood shading is indicative, not an official valuation.",
+    "cities": {
+      "riyadh": "Riyadh",
+      "jeddah": "Jeddah",
+      "makkah": "Makkah",
+      "madinah": "Madinah",
+      "dammam": "Dammam",
+      "khobar": "Al Khobar",
+      "ahsa": "Al Ahsa",
+      "jubail": "Jubail",
+      "taif": "Taif",
+      "abha": "Abha",
+      "tabuk": "Tabuk",
+      "buraydah": "Buraydah",
+      "hail": "Hail",
+      "jazan": "Jazan",
+      "najran": "Najran",
+      "albaha": "Al Baha",
+      "arar": "Arar",
+      "sakaka": "Sakaka",
+      "alula": "AlUla",
+      "yanbu": "Yanbu"
     }
   },
   "ops": {
@@ -784,6 +832,11 @@
           "p": "We keep data while your account exists and as the law requires. After deletion your personal data is removed or anonymized, except what must be kept by law."
         },
         {
+          "id": "cookies",
+          "h": "Cookies and local storage",
+          "p": "We use essential storage only: your sign-in session (Firebase Authentication) and your theme, text-size and cookie-notice preferences in your browser. We use no analytics, advertising or third-party tracking cookies. The map page shows maps through Mapbox, which may store technical data it needs to run. If you clear this storage you will need to sign in again and your preferences return to their defaults."
+        },
+        {
           "h": "Your rights",
           "p": "You may access, correct, get a copy of and ask to delete your data, and withdraw consent. Contact us at the platform address and we will answer within the legal period."
         },
@@ -876,5 +929,419 @@
     "transfer": "You are the only owner of an organization that has members. Transfer ownership first.",
     "failed": "The request could not be completed. Try again.",
     "policy": "Privacy policy"
+  },
+  "nav": {
+    "skip": "Skip to content",
+    "primary": "Main navigation",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "home": "Home",
+    "map": "Kingdom map",
+    "about": "About Rasikh",
+    "help": "Help centre",
+    "contact": "Contact us",
+    "search": "Search",
+    "sitemap": "Sitemap",
+    "accessibility": "Accessibility",
+    "privacy": "Privacy policy",
+    "terms": "Terms and conditions",
+    "disclaimers": "Disclaimers",
+    "auth": "Sign in",
+    "workspace": "Workspace",
+    "signIn": "Sign in",
+    "start": "Start free",
+    "breadcrumb": "Breadcrumb",
+    "groupPlatform": "Platform",
+    "groupSupport": "Support",
+    "groupLegal": "Legal",
+    "groupA11y": "Accessibility tools",
+    "textSmaller": "Smaller text",
+    "textReset": "Default text size",
+    "textLarger": "Larger text",
+    "contrast": "Higher contrast",
+    "footerAbout": "Rasikh is a private platform for rental documentation and property operations. It complements Ejar and Mullak and does not replace them. It is not a government entity.",
+    "rights": "© {year} Rasikh. All rights reserved.",
+    "searchOpen": "Open search",
+    "searchPlaceholder": "Search Rasikh: a page or a question",
+    "searchClear": "Clear search",
+    "searchNone": "No matches. Try another word or browse the sitemap.",
+    "searchAll": "Show all results",
+    "searchKey": "Press / to search",
+    "account": "My account",
+    "rolesLabel": "Your roles",
+    "signOut": "Sign out",
+    "sections": "Workspace sections",
+    "role": {
+      "owner": "Owner",
+      "manager": "Manager",
+      "admin": "Admin",
+      "tenant": "Tenant",
+      "vendor": "Service provider",
+      "building_owner": "Unit owner",
+      "broker": "Broker"
+    },
+    "desc": {
+      "home": "Rasikh documents a rental from move-in day to move-out day and runs the property around it.",
+      "map": "A 3D map of all thirteen regions of the Kingdom, with your properties and indicative neighbourhood figures.",
+      "about": "Who we are, the problems Rasikh solves, and how we handle privacy and compliance.",
+      "help": "Answers about leases, payments, inspections, maintenance, buildings, brokers and your account.",
+      "contact": "Send the Rasikh team a question, a problem report or a suggestion.",
+      "search": "Search Rasikh pages and help centre questions.",
+      "sitemap": "Every Rasikh page in one place.",
+      "accessibility": "Our WCAG 2.2 AA commitment, the accessibility tools, and how to report a barrier.",
+      "privacy": "How we collect, use and protect your data under the Personal Data Protection Law.",
+      "terms": "The terms for using Rasikh.",
+      "disclaimers": "What Rasikh does not do: no legal rulings, no official valuations, no financing.",
+      "auth": "Sign in or create an account with your email.",
+      "workspace": "Your workspace for your role: owner, tenant, building manager, broker or service provider."
+    },
+    "section": {
+      "overview": "Overview",
+      "properties": "Properties",
+      "leases": "Leases",
+      "inspections": "Inspections",
+      "maintenance": "Maintenance",
+      "buildings": "Buildings & associations",
+      "assistant": "Assistant",
+      "broker": "Broker desk",
+      "record": "Property record",
+      "expenses": "Expenses",
+      "report": "Reports",
+      "privacy": "My account & data",
+      "myLease": "My lease",
+      "assigned": "Assigned to me",
+      "myBuildings": "My buildings",
+      "reminders": "Reminders"
+    },
+    "feedback": {
+      "question": "Was this page helpful?",
+      "yes": "Yes",
+      "no": "No",
+      "whyYes": "What did you like? (optional)",
+      "whyNo": "What could be better? (optional)",
+      "reason": {
+        "clear": "The content is clear",
+        "found": "I found what I needed",
+        "easy": "The page is easy to use",
+        "unclear": "The content is unclear",
+        "missing": "I could not find what I needed",
+        "technical": "I hit a technical problem",
+        "other": "Something else"
+      },
+      "comment": "Your note (optional)",
+      "commentHint": "Do not include personal data such as an ID or phone number.",
+      "submit": "Send",
+      "cancel": "Cancel",
+      "sending": "Sending",
+      "thanks": "Thank you. Your feedback reached us and will help us improve.",
+      "error": "We could not send this right now. Please try again shortly."
+    },
+    "cookie": {
+      "title": "Cookies",
+      "body": "Rasikh uses only essential cookies and storage to keep you signed in and remember your preferences, such as theme and text size. We use no tracking and no advertising.",
+      "accept": "Got it",
+      "more": "Details in the privacy policy"
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "About Rasikh",
+      "lead": "Rasikh is a private Saudi platform that keeps everything that happens in a rented property in one record, from move-in day to move-out day, so disputes are rarer and both sides can rely on the facts.",
+      "problemsTitle": "Problems we solve",
+      "problems": [
+        {
+          "h": "Move-out disputes",
+          "p": "Move-in and move-out photos carry a capture time, a digital fingerprint and a location, and a comparison report is ready to attach in Ejar, so damage disputes are settled by evidence."
+        },
+        {
+          "h": "Scattered receipts",
+          "p": "A payment ledger for every lease, with receipt uploads and reminders before each due date. We record payments; we never handle the money."
+        },
+        {
+          "h": "Maintenance with no history",
+          "p": "Requests with photos, a category, suggested responsibility based on Ejar guidance and a response timer. Every repair is kept in the property record."
+        },
+        {
+          "h": "Opaque building expenses",
+          "p": "Shared expenses with their receipts, balances every owner can see, and one vote per unit."
+        },
+        {
+          "h": "Incomplete listings",
+          "p": "The broker's ad checker verifies the mandatory REGA ad data before anything is published."
+        }
+      ],
+      "whoTitle": "Who is Rasikh for?",
+      "who": [
+        {
+          "h": "Owners",
+          "p": "From one unit to fifty: leases, payments, inspections, maintenance and reports."
+        },
+        {
+          "h": "Tenants",
+          "p": "Your lease, your payment schedule, your inspections and your requests in one place."
+        },
+        {
+          "h": "Building managers and owners associations",
+          "p": "Shared expenses, balances, votes and contractor quotes."
+        },
+        {
+          "h": "Licensed brokers",
+          "p": "Leads, viewings, a tamper-proof activity log and the ad checker."
+        },
+        {
+          "h": "Service providers",
+          "p": "Only the requests assigned to you, with status updates and a repair record."
+        }
+      ],
+      "principlesTitle": "Our principles",
+      "principles": [
+        {
+          "h": "We complement, never replace",
+          "p": "The official contract, deposit holding and handover form live in Ejar, and associations are registered in Mullak. Rasikh adds the day-to-day documentation."
+        },
+        {
+          "h": "Your data stays in the Kingdom",
+          "p": "Data is stored in the Dammam cloud region (me-central2) under the Personal Data Protection Law, and you can export or delete it at any time."
+        },
+        {
+          "h": "Clear permissions",
+          "p": "Everyone sees only what is theirs: a tenant their lease, a service provider their requests, an owner their portfolio."
+        },
+        {
+          "h": "Not a government entity",
+          "p": "Rasikh is a private platform. It does not represent any government entity and gives no legal rulings, official valuations or financing."
+        }
+      ],
+      "ctaTitle": "Ready to start?",
+      "ctaBody": "Create your free account and add your first property in minutes.",
+      "ctaMap": "Explore the Kingdom map"
+    },
+    "help": {
+      "title": "Help centre",
+      "lead": "Quick answers to the most common questions. Can't find yours? Contact us.",
+      "filterLabel": "Search the questions",
+      "filterPlaceholder": "For example: receipt, inspection, vote",
+      "matches": "{count, plural, =0 {No matching questions} one {One matching question} other {# matching questions}}",
+      "noMatch": "No matching question. Try another word or write to us.",
+      "topics": "Topics",
+      "stillNeed": "Still need help?",
+      "stillNeedBody": "The Rasikh team reads every message.",
+      "categories": [
+        {
+          "id": "start",
+          "title": "Getting started",
+          "items": [
+            {
+              "q": "What is Rasikh?",
+              "a": "A platform for rental documentation and property operations: leases, payments, inspections, maintenance and buildings in one record. It complements Ejar and does not replace it."
+            },
+            {
+              "q": "How do I create an account?",
+              "a": "Choose “Start free”, sign up with your email, then pick your role and a workspace name. Tenants do not create a workspace; they sign up with the email the owner added to the lease."
+            },
+            {
+              "q": "Is Rasikh free?",
+              "a": "It is free to use at this stage. We will announce any paid plans clearly before they apply."
+            }
+          ]
+        },
+        {
+          "id": "leases",
+          "title": "Leases & payments",
+          "items": [
+            {
+              "q": "Does Rasikh replace an Ejar contract?",
+              "a": "No. The official contract is registered in Ejar. In Rasikh you record the Ejar contract number and follow the schedule, payments and reminders."
+            },
+            {
+              "q": "How do I record a payment or upload a receipt?",
+              "a": "Open the lease under “Leases”, choose the instalment, then mark it paid or upload the receipt. Tenants can upload their receipt for the owner to see."
+            },
+            {
+              "q": "Does Rasikh collect rent or offer financing?",
+              "a": "No. Rasikh only records payments. It never handles money and offers no financing or instalment plans."
+            },
+            {
+              "q": "What is the Riyadh rent freeze?",
+              "a": "No annual increase on Riyadh leases for five years from 25 September 2025, and Rasikh reminds you of the renewal notice 60 days before expiry. This is indicative; check the competent authority for details."
+            }
+          ]
+        },
+        {
+          "id": "inspections",
+          "title": "Inspections & evidence",
+          "items": [
+            {
+              "q": "How do I document the unit at move-in?",
+              "a": "Start a move-in inspection under “Inspections” and photograph each room. Each photo is saved with its capture time, its SHA-256 fingerprint and, if you allow it, the location."
+            },
+            {
+              "q": "Why do both parties sign?",
+              "a": "The owner's and tenant's signatures lock the inspection so its photos can no longer change, which makes it reliable evidence at move-out."
+            },
+            {
+              "q": "How do I use the comparison report in Ejar?",
+              "a": "After the move-out inspection Rasikh produces a move-in vs move-out comparison that you download and attach in Ejar."
+            }
+          ]
+        },
+        {
+          "id": "maintenance",
+          "title": "Maintenance",
+          "items": [
+            {
+              "q": "Who pays for a repair?",
+              "a": "Rasikh suggests responsibility based on Ejar guidance: consumables fall on the tenant, basic and structural items on the owner. The suggestion is indicative and the parties decide."
+            },
+            {
+              "q": "How does a request reach a service provider?",
+              "a": "The owner assigns the request to a provider. If their email is added, the provider sees it in their own account and updates it until the repair is done."
+            }
+          ]
+        },
+        {
+          "id": "buildings",
+          "title": "Buildings & associations",
+          "items": [
+            {
+              "q": "Does Rasikh register an owners association?",
+              "a": "No. Official registration is in Mullak. Rasikh helps with day-to-day running: expenses with receipts, balances and votes."
+            },
+            {
+              "q": "How does voting work?",
+              "a": "Each unit has one vote, and every owner sees the same result live."
+            }
+          ]
+        },
+        {
+          "id": "brokers",
+          "title": "Brokers",
+          "items": [
+            {
+              "q": "What does the ad checker check?",
+              "a": "It verifies the mandatory data of a property ad, such as the FAL licence number and the ad number, and shows what is missing before you publish."
+            },
+            {
+              "q": "Can the activity log be edited?",
+              "a": "No. The broker activity log is append-only with a server timestamp, so it stays a reliable reference."
+            }
+          ]
+        },
+        {
+          "id": "account",
+          "title": "Account & privacy",
+          "items": [
+            {
+              "q": "How do I export or delete my data?",
+              "a": "In the workspace, open “My account & data” and choose export or delete. This is your right under the Personal Data Protection Law."
+            },
+            {
+              "q": "Where is my data stored?",
+              "a": "In the Dammam cloud region (me-central2), inside the Kingdom."
+            },
+            {
+              "q": "What are the AI assistant's limits?",
+              "a": "It answers property tasks inside Rasikh only. It gives no legal ruling, official valuation or financial advice, and it changes no record without your confirmation."
+            }
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "title": "Contact us",
+      "lead": "Send us a question, a problem you hit, or a suggestion. We review messages on working days.",
+      "formTitle": "Send a message",
+      "required": "Fields marked * are required.",
+      "name": "Name",
+      "email": "Email",
+      "topic": "Message type",
+      "topics": {
+        "question": "Question",
+        "problem": "Technical problem",
+        "idea": "Suggestion",
+        "privacy": "Privacy and data",
+        "accessibility": "Accessibility barrier"
+      },
+      "message": "Your message",
+      "messageHint": "Up to 2,000 characters. Do not include ID or card numbers.",
+      "consent": "I agree to my name and email being used only to reply to this message.",
+      "errName": "Enter your name.",
+      "errEmail": "Enter a valid email such as name@example.com.",
+      "errMessage": "Write your message (at least 10 characters).",
+      "errConsent": "We need your consent to be able to reply.",
+      "errorSummary": "Please fix the following:",
+      "send": "Send message",
+      "sending": "Sending",
+      "sent": "Message received",
+      "sentBody": "Reference {ref}. We will reply by email.",
+      "another": "Send another message",
+      "failed": "We could not send your message right now. Check your connection and try again.",
+      "beforeTitle": "Before you write",
+      "beforeHelp": "Your answer may already be in the help centre.",
+      "beforeEjar": "Official contract and deposit matters are handled in Ejar.",
+      "beforePrivacy": "For personal data requests you can also use “My account & data” in the workspace."
+    },
+    "accessibility": {
+      "title": "Accessibility statement",
+      "lead": "We want everyone to use Rasikh with ease, including people with disabilities and older users.",
+      "sections": [
+        {
+          "h": "The standard we follow",
+          "p": "Rasikh is designed to meet WCAG 2.2 level AA and the Digital Government Authority's Platforms Code for layout, type, contrast and mobile use."
+        },
+        {
+          "h": "What Rasikh provides",
+          "p": "An Arabic-first right-to-left interface, full keyboard navigation with a visible focus indicator, a skip link, Arabic screen-reader labels, colour contrast of at least 4.5:1, respect for reduced motion, and text-size and contrast tools in every page footer."
+        },
+        {
+          "h": "Alternatives to visual content",
+          "p": "The 3D map and the portfolio model each have an equivalent text list with the same information, and the map falls back to a flat schematic without WebGL."
+        },
+        {
+          "h": "Known limitations",
+          "p": "Some PDF files uploaded by users may not be screen-reader ready, and we are improving image descriptions in inspection reports."
+        },
+        {
+          "h": "Report a barrier",
+          "p": "If any page is hard to use, write to us from “Contact us” and choose “Accessibility barrier”. We will work on it."
+        }
+      ],
+      "reviewed": "Last reviewed: October 2026"
+    },
+    "sitemap": {
+      "title": "Sitemap",
+      "lead": "Every Rasikh page, grouped by section.",
+      "rolesTitle": "The workspace by role",
+      "rolesNote": "These sections appear after sign-in, and each person sees only what their role allows.",
+      "roleDesc": {
+        "owner": "Overview, properties, leases, inspections, maintenance, buildings, record, expenses, reports, assistant, and your properties on the Kingdom map.",
+        "tenant": "My lease and payment schedule, inspections, maintenance requests, assistant.",
+        "building_owner": "My buildings, my balance and votes.",
+        "broker": "Broker desk: leads, viewings and the ad checker.",
+        "vendor": "Only the requests assigned to me."
+      }
+    },
+    "search": {
+      "title": "Search",
+      "lead": "Search Rasikh pages and help centre questions.",
+      "label": "Search term",
+      "placeholder": "For example: inspection, receipt, privacy",
+      "clear": "Clear search",
+      "submit": "Search",
+      "results": "{count, plural, =0 {No results} one {One result} other {# results}}",
+      "none": "No results for “{q}”. Try another word or browse the sitemap.",
+      "suggestions": "Suggestions",
+      "popular": "Popular searches",
+      "popularTerms": ["inspection", "receipt", "maintenance", "privacy", "vote"],
+      "start": "Type a word to begin."
+    },
+    "notFound": {
+      "code": "Error 404",
+      "title": "Sorry! We couldn't find the page you're looking for.",
+      "body": "The link may have changed or the page may have been removed. Go back to the home page or search for what you need.",
+      "home": "Back to home",
+      "search": "Search Rasikh",
+      "popular": "Pages that may help"
+    }
   }
 }

@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ClientMessages } from '@/components/ClientMessages';
 import { SceneBackdrop } from '@/components/immersive/SceneBackdrop';
 import { ScrollEffects } from '@/components/immersive/ScrollEffects';
+import { CookieNotice } from '@/components/shell/CookieNotice';
 import { LOCALES, SITE_URL, localeUrl } from '@/lib/site';
 import { themeInitScript } from '@/lib/theme-script';
 import { routing } from '@/i18n/routing';
@@ -15,7 +16,7 @@ import '../globals.css';
 const reem = Reem_Kufi({ subsets: ['arabic'], variable: '--font-reem-kufi', display: 'swap' });
 const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ['arabic'],
-  weight: ['400', '600'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-plex-arabic',
   display: 'swap',
   preload: false,
@@ -28,7 +29,7 @@ const fraunces = Fraunces({
 });
 const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
-  weight: ['400', '600'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-plex-sans',
   display: 'swap',
   preload: false,
@@ -76,6 +77,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const nav = await getTranslations({ locale, namespace: 'nav' });
 
   return (
     <html
@@ -88,10 +90,14 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
-        <ClientMessages namespaces={['common']}>
+        <a href="#main" className="skip-link">
+          {nav('skip')}
+        </a>
+        <ClientMessages namespaces={['common', 'nav']}>
           <SceneBackdrop />
           <ScrollEffects />
           {children}
+          <CookieNotice />
         </ClientMessages>
       </body>
     </html>

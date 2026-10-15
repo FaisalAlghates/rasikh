@@ -12,7 +12,8 @@ import { FirebaseError } from 'firebase/app';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { SaudiPhoneSchema } from '@rasikh/shared';
-import { Header } from '@/components/Header';
+import { SiteFooter } from '@/components/shell/SiteFooter';
+import { SiteHeader } from '@/components/shell/SiteHeader';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Input';
 import { useRouter } from '@/i18n/navigation';
@@ -105,8 +106,12 @@ export default function AuthPage() {
 
   return (
     <div data-theme="dark" className="clear min-h-dvh">
-      <Header />
-      <main className="panel mx-auto my-10 flex max-w-md flex-col gap-6 p-6 md:p-8">
+      <SiteHeader />
+      <main
+        id="main"
+        tabIndex={-1}
+        className="outline-none panel mx-auto my-10 flex max-w-md flex-col gap-6 p-6 md:p-8"
+      >
         <div>
           <h1 className="text-h2 font-semibold">{t('title')}</h1>
           <p className="mt-2 text-text-muted">{t('subtitle')}</p>
@@ -225,6 +230,7 @@ export default function AuthPage() {
           </form>
         )}
       </main>
+      <SiteFooter />
     </div>
   );
 }

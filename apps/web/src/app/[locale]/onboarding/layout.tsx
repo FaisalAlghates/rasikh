@@ -5,5 +5,7 @@ import { ClientMessages } from '@/components/ClientMessages';
 export const metadata = { robots: { index: false, follow: false } };
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return <ClientMessages namespaces={['common', 'onboarding', 'ops']}>{children}</ClientMessages>;
+  return (
+    <ClientMessages namespaces={['common', 'nav', 'onboarding', 'ops']}>{children}</ClientMessages>
+  );
 }

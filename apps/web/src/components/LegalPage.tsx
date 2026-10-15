@@ -1,6 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Header } from '@/components/Header';
-import { Link } from '@/i18n/navigation';
+import { ContentPage } from '@/components/shell/ContentPage';
 
 export type LegalKind = 'privacy' | 'terms' | 'disclaimers';
 
@@ -8,12 +7,10 @@ export type LegalKind = 'privacy' | 'terms' | 'disclaimers';
 export async function LegalPage({ locale, kind }: { locale: string; kind: LegalKind }) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'legal' });
-  const sections = t.raw(`${kind}.sections`) as Array<{ h: string; p: string }>;
+  const sections = t.raw(`${kind}.sections`) as Array<{ h: string; p: string; id?: string }>;
   return (
-    <>
-      <Header showTheme={false} />
-      <main className="mx-auto flex max-w-3xl flex-col gap-6 px-6 pb-24 pt-6" id="main">
-        <h1 className="text-h2 font-semibold">{t(`${kind}.title`)}</h1>
+    <ContentPage title={t(`${kind}.title`)}>
+      <div className="flex max-w-[45rem] flex-col gap-6">
         <p
           role="note"
           data-testid="legal-draft"
@@ -23,15 +20,12 @@ export async function LegalPage({ locale, kind }: { locale: string; kind: LegalK
         </p>
         <p className="text-small text-text-muted">{t('updated')}</p>
         {sections.map((s) => (
-          <section key={s.h} className="flex flex-col gap-2">
+          <section key={s.h} id={s.id} className="flex scroll-mt-24 flex-col gap-2">
             <h2 className="text-h3 font-semibold">{s.h}</h2>
             <p className="text-body leading-relaxed">{s.p}</p>
           </section>
         ))}
-        <Link href="/" className="text-brand-text underline">
-          {t('back')}
-        </Link>
-      </main>
-    </>
+      </div>
+    </ContentPage>
   );
 }

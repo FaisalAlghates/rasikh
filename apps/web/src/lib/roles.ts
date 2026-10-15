@@ -1,0 +1,103 @@
+/**
+ * What a signed-in person may see, from the roles the server put in their claims.
+ * The Firestore rules enforce the same boundaries; this only decides what the UI offers.
+ */
+export type Role =
+  'owner' | 'manager' | 'admin' | 'tenant' | 'vendor' | 'building_owner' | 'broker';
+
+export type Section =
+  | 'overview'
+  | 'properties'
+  | 'leases'
+  | 'inspections'
+  | 'maintenance'
+  | 'buildings'
+  | 'assistant'
+  | 'broker'
+  | 'record'
+  | 'expenses'
+  | 'report'
+  | 'privacy'
+  | 'myLease'
+  | 'assigned'
+  | 'myBuildings'
+  | 'reminders';
+
+export interface Access {
+  /** Owner, manager or admin of the organization: the full management workspace. */
+  staff: boolean;
+  tenant: boolean;
+  vendorOnly: boolean;
+  unitOwner: boolean;
+  broker: boolean;
+  brokerOnly: boolean;
+  /** Workspace sections this person may open, in display order. */
+  sections: Section[];
+  /** May see the organization's own properties on the Kingdom map. */
+  seesPortfolioOnMap: boolean;
+}
+
+const STAFF_SECTIONS: Section[] = [
+  'overview',
+  'properties',
+  'leases',
+  'inspections',
+  'maintenance',
+  'buildings',
+  'privacy',
+  'assistant',
+  'record',
+  'expenses',
+  'report',
+];
+
+export function accessFor(roles: readonly string[]): Access {
+  const has = (r: Role) => roles.includes(r);
+  const staff = has('owner') || has('manager') || has('admin');
+  const tenant = has('tenant');
+  const broker = has('broker');
+  const vendorOnly = !staff && has('vendor') && !tenant;
+  const unitOwner = !staff && has('building_owner');
+  const brokerOnly = !staff && broker && !tenant;
+
+  let sections: Section[];
+  if (staff) {
+    sections = [...STAFF_SECTIONS];
+    if (broker) sections.splice(sections.indexOf('assistant') + 1, 0, 'broker');
+  } else if (brokerOnly) {
+    sections = ['broker', 'privacy'];
+  } else {
+    sections = [];
+    if (tenant) sections.push('myLease', 'inspections', 'maintenance', 'assistant');
+    if (vendorOnly) sections.push('assigned');
+    if (unitOwner) sections.push('myBuildings');
+    sections.push('reminders', 'privacy');
+  }
+  return {
+    staff,
+    tenant,
+    vendorOnly,
+    unitOwner,
+    broker,
+    brokerOnly,
+    sections,
+    seesPortfolioOnMap: staff,
+  };
+}
+
+/** The section to open: the requested one when allowed, otherwise the first allowed one. */
+export function pickSection(access: Access, requested: string | null | undefined): Section {
+  const s = access.sections.find((x) => x === requested);
+  return s ?? access.sections[0] ?? 'privacy';
+}
+
+/** Role names shown on the account badge, in a stable order. */
+export const ROLE_ORDER: Role[] = [
+  'owner',
+  'manager',
+  'admin',
+  'broker',
+  'tenant',
+  'building_owner',
+  'vendor',
+];
