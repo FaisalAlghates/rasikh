@@ -15,7 +15,10 @@ import { importIndicativePrices as importIndicativePricesImpl } from './ai/price
 import { providerFromEnv } from './ai/provider.js';
 import { createRuntime, type Runtime } from './ai/runtime.js';
 import { signInspection as signInspectionImpl } from './inspections.js';
-import { inviteBuildingMember as inviteBuildingMemberImpl } from './links.js';
+import {
+  inviteBuildingMember as inviteBuildingMemberImpl,
+  inviteEngineer as inviteEngineerImpl,
+} from './links.js';
 import { createTicket as createTicketImpl, ticketAction as ticketActionImpl } from './tickets.js';
 import { createOrganization as createOrganizationImpl } from './organizations.js';
 import { runReminders } from './reminders.js';
@@ -58,6 +61,10 @@ export const signInspection = onCall({ enforceAppCheck }, (req: CallableRequest<
 
 export const inviteBuildingMember = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
   inviteBuildingMemberImpl(deps(), req.auth?.uid, req.data),
+);
+
+export const inviteEngineer = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>
+  inviteEngineerImpl(deps(), req.auth?.uid, req.data),
 );
 
 export const createTicket = onCall({ enforceAppCheck }, (req: CallableRequest<unknown>) =>

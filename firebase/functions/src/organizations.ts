@@ -32,6 +32,20 @@ export async function createOrganization(deps: Deps, uid: string | undefined, ra
 
   const batch = deps.db.batch();
   batch.set(orgRef, { name: input.name, createdBy: uid, createdAt: FieldValue.serverTimestamp() });
+  if (roles.includes('office_lead')) {
+    // public profile of an engineering office; only the Rasikh team can mark it verified
+    batch.set(deps.db.doc(`offices/${orgRef.id}`), {
+      name: input.name,
+      crNo: '',
+      sceClass: '',
+      baladyActive: false,
+      disciplines: [],
+      cities: [],
+      accepting: false,
+      verified: false,
+      createdAt: FieldValue.serverTimestamp(),
+    });
+  }
   batch.set(orgRef.collection('members').doc(uid), {
     uid,
     roles,
