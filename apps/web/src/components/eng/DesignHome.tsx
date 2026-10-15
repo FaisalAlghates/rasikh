@@ -6,6 +6,7 @@ import {
   confirmProgram,
   missingItems,
   parseBrief,
+  parsePlotSize,
   type Program,
 } from '@rasikh/shared';
 import { addDoc, collection, serverTimestamp, where } from 'firebase/firestore';
@@ -32,7 +33,13 @@ type Toggle =
   | 'basement'
   | 'pool'
   | 'elevator'
-  | 'separateGuestEntry';
+  | 'separateGuestEntry'
+  | 'guestRoom'
+  | 'office'
+  | 'prayerRoom'
+  | 'gym'
+  | 'storage'
+  | 'prepKitchen';
 const TOGGLES: Toggle[] = [
   'majlisMen',
   'majlisWomen',
@@ -40,6 +47,12 @@ const TOGGLES: Toggle[] = [
   'maidRoom',
   'driverRoom',
   'familyLiving',
+  'guestRoom',
+  'office',
+  'prayerRoom',
+  'gym',
+  'storage',
+  'prepKitchen',
   'roofAnnex',
   'basement',
   'pool',
@@ -85,10 +98,19 @@ export function DesignHome() {
   const read = () => {
     const parsed = parseBrief(brief);
     setProgram({ floors: undefined, bedrooms: undefined, ...parsed });
+    // the plot size, when the brief states it ("أرض 20 × 30")
+    const size = parsePlotSize(brief);
+    if (size) setPlot((p) => ({ ...p, ...size }));
   };
   const send = async () => {
     setError(undefined);
-    const confirmed = program && confirmProgram(program);
+    // a budget with only a lower bound reads as that amount
+    const b = program?.budgetSar;
+    const confirmed =
+      program &&
+      confirmProgram(
+        b && b.max < b.min ? { ...program, budgetSar: { min: b.min, max: b.min } } : program,
+      );
     if (!officeId || !title.trim() || !confirmed?.success) return setError(t('failed'));
     setBusy(true);
     const cityAt = CITIES.find((c) => c.id === plot.cityId);
@@ -354,23 +376,48 @@ export function DesignHome() {
                       ))}
                     </select>
                   </label>
-                  {(['floors', 'bedrooms', 'parking'] as const).map((k) => (
-                    <label key={k} className="flex flex-col gap-1 text-small">
-                      {t(k)}
+                  {(['floors', 'bedrooms', 'bathrooms', 'parking', 'targetAreaM2'] as const).map(
+                    (k) => (
+                      <label key={k} className="flex flex-col gap-1 text-small">
+                        {t(k)}
+                        <input
+                          type="number"
+                          min={0}
+                          value={program[k] ?? ''}
+                          onChange={(e) =>
+                            setProgram({
+                              ...program,
+                              [k]: e.target.value === '' ? undefined : Number(e.target.value),
+                            })
+                          }
+                          placeholder={k === 'bathrooms' ? t('bathroomsAuto') : undefined}
+                          className={cn(
+                            'hairline min-h-11 rounded-md bg-bg px-3 tabular',
+                            program[k] === undefined &&
+                              (k === 'floors' || k === 'bedrooms') &&
+                              'border-warning',
+                          )}
+                        />
+                      </label>
+                    ),
+                  )}
+                  {(['min', 'max'] as const).map((side) => (
+                    <label key={side} className="flex flex-col gap-1 text-small">
+                      {side === 'min' ? t('budgetMin') : t('budgetMax')}
                       <input
                         type="number"
                         min={0}
-                        value={program[k] ?? ''}
-                        onChange={(e) =>
+                        step={10000}
+                        value={program.budgetSar?.[side] ?? ''}
+                        onChange={(e) => {
+                          const v = e.target.value === '' ? undefined : Number(e.target.value);
+                          const b = { min: 0, max: 0, ...program.budgetSar, [side]: v ?? 0 };
                           setProgram({
                             ...program,
-                            [k]: e.target.value === '' ? undefined : Number(e.target.value),
-                          })
-                        }
-                        className={cn(
-                          'hairline min-h-11 rounded-md bg-bg px-3 tabular',
-                          program[k] === undefined && k !== 'parking' && 'border-warning',
-                        )}
+                            budgetSar: b.min === 0 && b.max === 0 ? undefined : b,
+                          });
+                        }}
+                        className="hairline min-h-11 rounded-md bg-bg px-3 tabular"
                       />
                     </label>
                   ))}

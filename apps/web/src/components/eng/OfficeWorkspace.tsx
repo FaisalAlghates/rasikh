@@ -702,7 +702,8 @@ function RatesPanel({ officeId, isLead }: { officeId: string; isLead: boolean })
   const [rates, setRates] = useState<Rates>(DEFAULT_RATES);
   const [msg, setMsg] = useState<string>();
   useEffect(() => {
-    if (saved?.rates) setRates(saved.rates);
+    // rates saved before new BOQ items existed keep the defaults for those items
+    if (saved?.rates) setRates({ ...DEFAULT_RATES, ...saved.rates });
   }, [saved]);
   const save = async () => {
     await setDoc(doc(firebaseDb(), `offices/${officeId}/settings/rates`), { rates });

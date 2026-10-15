@@ -20,13 +20,21 @@ const FILL: Record<string, string> = {
   circulation: '#faf6ef',
 };
 const family = (t: PlanRoom['type']) =>
-  t === 'majlis_men' || t === 'majlis_women' || t === 'dining' || t === 'entrance' || t === 'shop'
+  t === 'majlis_men' ||
+  t === 'majlis_women' ||
+  t === 'dining' ||
+  t === 'entrance' ||
+  t === 'shop' ||
+  t === 'guest_room' ||
+  t === 'prayer_room'
     ? 'public'
     : t === 'kitchen' ||
         t === 'maid_room' ||
         t === 'driver_room' ||
         t === 'laundry' ||
-        t === 'storage'
+        t === 'storage' ||
+        t === 'closet' ||
+        t === 'prep_kitchen'
       ? 'service'
       : t === 'bathroom' || t === 'guest_wc'
         ? 'wet'

@@ -1474,7 +1474,13 @@
       "corridor": "Corridor",
       "entrance": "Entrance",
       "shop": "Shop",
-      "apartment": "Apartment"
+      "apartment": "Apartment",
+      "guest_room": "Guest room",
+      "office": "Study",
+      "prayer_room": "Prayer room",
+      "gym": "Gym",
+      "prep_kitchen": "Prep kitchen",
+      "closet": "Closet"
     },
     "type": {
       "villa": "Villa",
@@ -1584,7 +1590,13 @@
       "pool": "Pool",
       "elevator": "Lift",
       "separateGuestEntry": "Separate guest entrance",
-      "kitchenOpen": "Open kitchen"
+      "kitchenOpen": "Open kitchen",
+      "guestRoom": "Guest room",
+      "office": "Study / office",
+      "prayerRoom": "Prayer room",
+      "gym": "Gym",
+      "storage": "Storage",
+      "prepKitchen": "Prep kitchen"
     },
     "confirmSend": "Confirm the programme and send to the office",
     "sent": "Your brief was sent to the office.",
@@ -1616,7 +1628,7 @@
     "saveZoning": "Save zoning",
     "accept": "Accept the brief",
     "decline": "Decline",
-    "generate": "Generate options",
+    "generate": "Design the options",
     "generating": "Generating",
     "option": "Option {id}",
     "score": "Score {score}",
@@ -1785,20 +1797,11 @@
       "total": "Estimated cost {min} – {max} SAR — not a quote",
       "weeks": "Estimated build time {w} weeks"
     },
-    "boq": {
-      "concretePerM3": "Concrete",
-      "blockworkPerM2": "Blockwork",
-      "plasterPerM2": "Plaster",
-      "tilingPerM2": "Tiling and flooring",
-      "paintPerM2": "Paint",
-      "doorEach": "Doors",
-      "windowPerM2": "Windows",
-      "mepPerM2": "MEP works"
-    },
     "unit": {
       "m3": "m³",
       "m2": "m²",
-      "each": "each"
+      "each": "each",
+      "t": "t"
     },
     "phase": {
       "mobilisation": "Mobilisation",
@@ -1980,6 +1983,120 @@
       "unverify": "Remove verification",
       "engineers": "Engineers",
       "noOffices": "No offices registered."
+    },
+    "bathrooms": "Bathrooms (guest WC included)",
+    "bathroomsAuto": "Designer decides",
+    "targetAreaM2": "Target built-up area (m²)",
+    "budgetLabel": "Budget",
+    "boq": {
+      "excavationPerM3": "Excavation",
+      "concretePerM3": "Concrete",
+      "rebarPerTon": "Reinforcement steel",
+      "blockworkPerM2": "Blockwork",
+      "plasterPerM2": "Plaster",
+      "waterproofingPerM2": "Waterproofing",
+      "insulationPerM2": "Thermal insulation",
+      "tilingPerM2": "Tiling and floors",
+      "ceilingPerM2": "Suspended ceilings",
+      "paintPerM2": "Paint",
+      "facadePerM2": "Facade finish",
+      "doorEach": "Doors",
+      "windowPerM2": "Windows",
+      "mepPerM2": "MEP works"
+    },
+    "boqItem": {
+      "excavation": "Excavation and backfill for foundations",
+      "concreteFoundations": "Concrete: footings and tie beams",
+      "concreteColumns": "Concrete: columns",
+      "concreteBeams": "Concrete: beams",
+      "concreteSlabs": "Concrete: slabs (ground and floors)",
+      "rebar": "Reinforcement steel",
+      "blockwork": "Blockwork",
+      "waterproofing": "Waterproofing (roof and wet areas)",
+      "insulation": "Thermal insulation (roof and outside walls)",
+      "plaster": "Plaster",
+      "tiling": "Tiling and floors",
+      "ceiling": "Suspended ceilings",
+      "paint": "Paint",
+      "facade": "Facade finish",
+      "doors": "Doors",
+      "windows": "Windows",
+      "mep": "MEP works (electrical, plumbing, HVAC)"
+    },
+    "boqSection": {
+      "earthworks": "Earthworks",
+      "concrete": "Concrete and steel",
+      "masonry": "Masonry",
+      "insulation": "Insulation",
+      "finishes": "Finishes",
+      "openings": "Doors and windows",
+      "mep": "MEP"
+    },
+    "boqCol": {
+      "no": "No.",
+      "item": "Item",
+      "qty": "Quantity",
+      "unit": "Unit",
+      "min": "From (SAR)",
+      "max": "To (SAR)"
+    },
+    "boqTitle": "Bill of quantities",
+    "boqShow": "Bill of quantities ({n} items)",
+    "boqNote": "Quantities measured from the concept design and priced with the office’s unit rates. An estimate, not a quote or a tender document; it excludes land, fees, furniture, landscaping and boundary walls.",
+    "boqTotal": "Estimated total",
+    "boqCsv": "Download BOQ (CSV)",
+    "perM2": "SAR {min} – {max} per m²",
+    "designs": {
+      "lead": "The assistant reads the client’s brief, searches hundreds of variants and offers only designs that hold everything the client asked for and pass every zoning check and every automatic code check, choosing the ones that differ most. Each design comes with a bill of quantities and a cost range.",
+      "count": "Number of designs",
+      "generate": "Design {n} options",
+      "more": "More, different options",
+      "result": "{tried} variants checked: {compliant} hold the whole brief and pass every automatic check; {chosen} different designs chosen.",
+      "fewer": "Only {n} genuinely different designs pass every check for this programme and plot.",
+      "none": "No design holds everything asked for and passes every check. Most frequent reasons: {reasons}. Adjust the programme or the zoning and try again.",
+      "floorsReduced": "The zoning allows only {n} floors; every requested room was placed on them.",
+      "block": {
+        "PROGRAM": "the plot cannot hold every requested room",
+        "ACCESS": "not every room could be reached from the corridor",
+        "CLASH": "ducts clash with beams"
+      },
+      "compare": "Compare designs",
+      "colOption": "Design",
+      "colArea": "Built-up (m²)",
+      "colCoverage": "Coverage",
+      "colCost": "Cost range (SAR)",
+      "colWeeks": "Duration (weeks)",
+      "colBudget": "Budget",
+      "budget": {
+        "within": "Within",
+        "near": "Close",
+        "over": "Above"
+      },
+      "fitTitle": "Why it fits the brief",
+      "fit": {
+        "program": "Holds everything in the brief: {rooms}",
+        "core": "Stair {side, select, left {on the left} right {on the right} other {in the middle}}",
+        "entry": "Entrance {side, select, middle {in the middle of the facade} left {on the left of the facade} other {on the right of the facade}}",
+        "yard": "{where, select, back {Back yard} other {Front yard}} {m} m deep",
+        "passage": "Side passage on the {side, select, left {left} other {right}}, {m} m wide",
+        "dining": "Dining {where, select, front {next to the majlis, for guests} other {with the family, by the kitchen}}",
+        "master": "Master bedroom on the {where, select, front {front} other {back}} facade",
+        "area": "Built-up {m2} m²{target, plural, =0 {} other { (you asked for about # m²)}} · coverage {coverage}%",
+        "plumbing": "{stacked} of {wet} upper bathrooms stacked (shorter pipe runs)"
+      },
+      "deferred": "Added in design development: {items}",
+      "deferredItem": {
+        "pool": "pool",
+        "basement": "basement",
+        "roofAnnex": "roof annex",
+        "separateGuestEntry": "separate guest entrance"
+      },
+      "checksZoning": "Zoning: {passed} of {total} pass",
+      "checksCode": "Automatic code checks: {passed} of {total} pass",
+      "codeVerified": "with values the office engineer verified",
+      "codeStarting": "with starting values; they read “passed” once the office engineer verifies them from the licensed code",
+      "checksManual": "{n} items always reviewed by the engineer: fire, energy, structure, electrical, plumbing",
+      "floors": "Design floors"
     }
   }
 }
