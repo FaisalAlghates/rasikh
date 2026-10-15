@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CITIES, KSA_BOUNDS, approxCoords, cityIdFor, project } from './kingdom';
+import { CITIES, KSA_BOUNDS, approxCoords, cityIdFor, project, unproject } from './kingdom';
 
 describe('kingdom map', () => {
   it('covers all 13 regions with a capital each, inside the Kingdom bounds', () => {
@@ -37,5 +37,6 @@ describe('kingdom map', () => {
     const v = { west: 0, east: 10, south: 0, north: 10 };
     expect(project([5, 5], v)).toEqual([50, 50]);
     expect(project([0, 10], v)).toEqual([0, 0]);
+    expect(unproject(project([3.5, 7.25], v), v)).toEqual([3.5, 7.25]);
   });
 });

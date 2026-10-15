@@ -37,6 +37,17 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // An optional exact pin on a property: numbers inside a box around the Kingdom, and how it was set.
+    function validPropertyLocation(d) {
+      return !('location' in d) || (
+        d.location is map
+        && d.location.keys().hasOnly(['lat', 'lng', 'source'])
+        && d.location.keys().hasAll(['lat', 'lng', 'source'])
+        && d.location.lat is number && d.location.lat >= 16 && d.location.lat <= 32.5
+        && d.location.lng is number && d.location.lng >= 34 && d.location.lng <= 56
+        && d.location.source in ['map', 'gps']);
+    }
+
     // Organization root and member list: readable by members, written only by Functions.
     match /orgs/{orgId} {
       allow read: if isMember(orgId);
@@ -56,7 +67,8 @@ service cloud.firestore {
       // Example collection used to prove the pattern; later phases add their own blocks.
       match /properties/{propertyId} {
         allow read: if hasAnyRole(orgId, ['owner', 'manager', 'admin', 'broker']);
-        allow create, update: if hasAnyRole(orgId, ['owner', 'manager', 'admin']);
+        allow create, update: if hasAnyRole(orgId, ['owner', 'manager', 'admin'])
+          && validPropertyLocation(request.resource.data);
         allow delete: if hasAnyRole(orgId, ['owner', 'admin']);
       }
 

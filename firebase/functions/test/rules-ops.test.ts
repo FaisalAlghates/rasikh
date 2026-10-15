@@ -136,3 +136,42 @@ describe('invites are server-only', () => {
     await assertFails(setDoc(doc(as('o', owner), 'invites/abc'), { x: 1 }));
   });
 });
+
+describe('property pins', () => {
+  const pin = (lat: number, lng: number, source = 'map') => ({
+    name: 'برج جدة',
+    city: 'جدة',
+    location: { lat, lng, source },
+  });
+
+  it('staff may set a pin inside the Kingdom; anything else is refused', async () => {
+    const o = env.authenticatedContext('o1', owner).firestore();
+    await assertSucceeds(setDoc(doc(o, 'orgs/org1/properties/p9'), pin(21.54, 39.17)));
+    await assertSucceeds(
+      updateDoc(doc(o, 'orgs/org1/properties/p9'), {
+        location: { lat: 21.5, lng: 39.2, source: 'gps' },
+      }),
+    );
+    await assertFails(setDoc(doc(o, 'orgs/org1/properties/p9'), pin(51.5, -0.12)));
+    await assertFails(setDoc(doc(o, 'orgs/org1/properties/p9'), pin(21.54, 39.17, 'guess')));
+    await assertFails(
+      updateDoc(doc(o, 'orgs/org1/properties/p9'), {
+        location: { lat: '21', lng: 39.2, source: 'map' },
+      }),
+    );
+  });
+
+  it('a broker or tenant cannot move a pin', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'orgs/org1/properties/p9'), pin(21.54, 39.17));
+    });
+    for (const who of [broker, tenantA]) {
+      const db = env.authenticatedContext('x', who).firestore();
+      await assertFails(
+        updateDoc(doc(db, 'orgs/org1/properties/p9'), {
+          location: { lat: 21.6, lng: 39.2, source: 'map' },
+        }),
+      );
+    }
+  });
+});

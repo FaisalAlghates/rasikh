@@ -17,7 +17,7 @@ export default async function MapPage({ params }: { params: Promise<{ locale: st
     <div data-theme="dark" className="min-h-dvh">
       <SiteHeader />
       <main id="main" tabIndex={-1} className="outline-none">
-        <ClientMessages namespaces={['common', 'nav', 'portfolio']}>
+        <ClientMessages namespaces={['common', 'nav', 'portfolio', 'cities']}>
           <MapClient />
         </ClientMessages>
       </main>

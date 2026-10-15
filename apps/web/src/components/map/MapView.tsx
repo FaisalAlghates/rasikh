@@ -12,6 +12,7 @@ import {
   cityById,
   kingdomIndicators,
   project,
+  unproject,
 } from '@/lib/map/kingdom';
 import { lightPresetFor, type LightPreset } from '@/lib/map/riyadh';
 import type { MapProperty } from '@/lib/map/sample-data';
@@ -36,6 +37,11 @@ export interface MapViewProps {
   /** Accessible name for a city pin, e.g. "Go to Jeddah: 3 properties". */
   cityLabel: (pin: CityPin) => string;
   flatNote: string;
+  /** While true, the next click on the map is reported through `onPick` (setting a property's exact pin). */
+  placing?: boolean;
+  onPick?: (lngLat: [number, number]) => void;
+  /** Accessible name of the "place here" surface on the flat schematic. */
+  placingLabel?: string;
 }
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -80,8 +86,8 @@ export function MapView(props: MapViewProps) {
   const markers = useRef(new Map<string, { marker: Marker; el: HTMLButtonElement }>());
   const [mode, setMode] = useState<'loading' | 'map' | 'flat'>('loading');
   const [zoomedIn, setZoomedIn] = useState(false);
-  const cb = useRef({ onSelect: props.onSelect, onCity: props.onCity });
-  cb.current = { onSelect: props.onSelect, onCity: props.onCity };
+  const cb = useRef({ onSelect: props.onSelect, onCity: props.onCity, onPick: props.onPick });
+  cb.current = { onSelect: props.onSelect, onCity: props.onCity, onPick: props.onPick };
   const pinsRef = useRef(cities);
   pinsRef.current = cities;
 
@@ -312,6 +318,21 @@ export function MapView(props: MapViewProps) {
     declutter();
   }, [cities, cityId, zoomedIn, mode, cityLabel]);
 
+  // placing a pin: crosshair cursor, and the next click on the map reports its coordinates
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || mode !== 'map' || !props.placing) return;
+    const canvas = map.getCanvas();
+    canvas.style.cursor = 'crosshair';
+    const pick = (e: { lngLat: { lng: number; lat: number } }) =>
+      cb.current.onPick?.([e.lngLat.lng, e.lngLat.lat]);
+    map.once('click', pick);
+    return () => {
+      map.off('click', pick);
+      canvas.style.cursor = '';
+    };
+  }, [props.placing, mode]);
+
   // data → map
   useEffect(() => {
     if (mode !== 'map') return;
@@ -442,6 +463,9 @@ function FlatKingdom({
   mapLabel,
   cityLabel,
   flatNote,
+  placing,
+  onPick,
+  placingLabel,
 }: MapViewProps) {
   const city = cityById(cityId);
   let view = KSA_VIEW;
@@ -567,6 +591,7 @@ function FlatKingdom({
           })}
 
         {city &&
+          !placing &&
           properties.filter(inView).map((p) => {
             const [x, y] = project(p.coords, view);
             const on = p.id === selectedId;
@@ -596,6 +621,26 @@ function FlatKingdom({
               </button>
             );
           })}
+        {placing && city && (
+          <button
+            type="button"
+            data-testid="place-surface"
+            aria-label={placingLabel}
+            onClick={(e) => {
+              // pointer: where it was clicked; keyboard (no pointer position): the centre of the city
+              const r = e.currentTarget.getBoundingClientRect();
+              const pt: [number, number] =
+                e.detail === 0
+                  ? [50, 50]
+                  : [
+                      ((e.clientX - r.left) / r.width) * 100,
+                      ((e.clientY - r.top) / r.height) * 100,
+                    ];
+              onPick?.(unproject(pt, view));
+            }}
+            className="absolute inset-0 cursor-crosshair rounded-lg outline-dashed outline-2 outline-clay-light/70"
+          />
+        )}
       </div>
       <p className="absolute bottom-3 end-3 rounded-full bg-night/70 px-3 py-1 text-caption text-sand/80">
         {flatNote}

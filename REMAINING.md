@@ -14,7 +14,6 @@ Last updated: 2026-10-15. References: `PLAN.md` (phases and gaps), `CLAUDE.md` (
 ## 1. Work I can still do (free)
 
 - Run the production web build against the real Firebase project to check sign-in and Firestore reads.
-- Exact property pins on the map (today a property is placed near its city centre) and city in the property form as a list.
 - An admin view for the anonymous page feedback and contact messages (today they are read in the Firebase console).
 - Phase 10: shorten the simulated LCP on the landing page (3.0 s against a 2.5 s target; real measured time is about 0.3 s), measure the workspace and map pages, final design review of the older screens, a rules review pass.
 - Gaps from finished phases: server-side Arabic PDF reports (account statement, inspection comparison); ownership transfer with the new owner's consent; switching between several organizations; an admin screen for the indicative-prices import.
@@ -39,7 +38,7 @@ Spec: `docs/ENGINEERING_OFFICE.md`; ten slices (9a to 9j) in `PLAN.md`. Needs yo
 - **Apple and Google Play accounts**, signing keys, store screenshots and the Android feature graphic.
 - **Decisions:** reminders by email, SMS or push (paid provider); analytics (none, or consent-based); App Hosting region.
 - **Trademark and names:** SAIP search, rasikh.sa / .com / .app, store names, social handles.
-- **Deploy the updated Firestore rules** (new create-only `siteFeedback` and `siteMessages`), with your confirmation, so the contact form and page rating work on the real project. Free on Spark.
+- **Deploy the updated Firestore rules** (new create-only `siteFeedback` and `siteMessages`, and the property pin check), with your confirmation, so the contact form and page rating work on the real project. Free on Spark.
 - **A real support address** for the contact page and privacy policy.
 - **Deploy** to production, with your confirmation.
 

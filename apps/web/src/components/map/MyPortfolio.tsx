@@ -10,6 +10,8 @@ import { accessFor } from '@/lib/roles';
 export interface MyPortfolioData {
   items: MapProperty[];
   unplaced: number;
+  /** The organization the pins belong to (owners and managers may move them). */
+  orgId: string;
 }
 
 /**
@@ -33,14 +35,17 @@ export default function MyPortfolio({ onData }: { onData: (d: MyPortfolioData | 
 
   useEffect(() => {
     if (!ready) return;
-    onData(
-      portfolioToMap(
+    if (!orgId) return;
+    onData({
+      orgId,
+      ...portfolioToMap(
         properties.rows.map((p) => ({
           id: p.id,
           name: p.data.name,
           city: p.data.city,
           district: p.data.district,
           kind: p.data.kind,
+          location: p.data.location,
         })),
         units.rows.map((u) => ({ id: u.id, propertyId: u.data.propertyId, label: u.data.label })),
         leases.rows.map((l) => ({
@@ -60,8 +65,8 @@ export default function MyPortfolio({ onData }: { onData: (d: MyPortfolioData | 
         })),
         today(),
       ),
-    );
-  }, [ready, properties.rows, units.rows, leases.rows, payments.rows, onData]);
+    });
+  }, [ready, orgId, properties.rows, units.rows, leases.rows, payments.rows, onData]);
 
   return null;
 }

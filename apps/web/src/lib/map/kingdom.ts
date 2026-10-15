@@ -248,3 +248,14 @@ export function project(
     (1 - (lat - view.south) / (view.north - view.south)) * 100,
   ];
 }
+
+/** The inverse of `project`: a point in the view box (percentages) back to [lng, lat]. */
+export function unproject(
+  [x, y]: [number, number],
+  view: { west: number; east: number; south: number; north: number },
+): [number, number] {
+  return [
+    view.west + (x / 100) * (view.east - view.west),
+    view.south + (1 - y / 100) * (view.north - view.south),
+  ];
+}

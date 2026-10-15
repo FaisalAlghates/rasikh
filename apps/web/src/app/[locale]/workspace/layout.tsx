@@ -10,6 +10,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       namespaces={[
         'common',
         'nav',
+        'cities',
         'workspace',
         'onboarding',
         'ops',
