@@ -117,6 +117,17 @@ export const ProgramSchema = z.object({
   elevator: z.boolean().default(false),
   parking: z.number().int().min(0).max(20).default(2),
   separateGuestEntry: z.boolean().default(false),
+  /** Extra rooms a Saudi family brief often asks for. */
+  guestRoom: z.boolean().default(false),
+  office: z.boolean().default(false),
+  prayerRoom: z.boolean().default(false),
+  gym: z.boolean().default(false),
+  storage: z.boolean().default(false),
+  prepKitchen: z.boolean().default(false),
+  /** Bathrooms and WCs in the house, the guest WC included (the maid's bathroom not). Absent: the engine decides. */
+  bathrooms: z.number().int().min(1).max(20).optional(),
+  /** Built-up area the client has in mind (m², all floors). */
+  targetAreaM2: z.number().min(40).max(20000).optional(),
   style: z.enum(STYLES).default('modern_najdi'),
   budgetSar: z
     .object({ min: z.number().min(0), max: z.number().min(0) })
@@ -139,6 +150,12 @@ export const ROOM_TYPES = [
   'driver_room',
   'laundry',
   'storage',
+  'guest_room',
+  'office',
+  'prayer_room',
+  'gym',
+  'prep_kitchen',
+  'closet',
   'stair',
   'elevator',
   'corridor',
@@ -158,8 +175,18 @@ export const HABITABLE: readonly RoomType[] = [
   'master_bedroom',
   'maid_room',
   'driver_room',
+  'guest_room',
+  'office',
+  'prayer_room',
+  'gym',
 ];
-export const WET: readonly RoomType[] = ['bathroom', 'guest_wc', 'kitchen', 'laundry'];
+export const WET: readonly RoomType[] = [
+  'bathroom',
+  'guest_wc',
+  'kitchen',
+  'laundry',
+  'prep_kitchen',
+];
 
 /** A rectangle in plot coordinates (metres). */
 export const RectSchema = z.object({

@@ -51,6 +51,19 @@ function sharedEdge(r: PlanRoom, o: PlanRoom): Edge | null {
  * Doors open onto the corridor (or the entrance hall, or the largest neighbour); windows sit centred on each
  * outside wall of habitable and wet rooms; the entrance gets the front door. Deterministic.
  */
+/**
+ * The room a room's door opens into: the corridor, else the entrance hall, else its largest neighbour. The drawings,
+ * the 3D model and the access check all use this one rule.
+ */
+export function doorTarget(r: PlanRoom, sameFloor: PlanRoom[]): PlanRoom | undefined {
+  const same = sameFloor.filter((o) => o.id !== r.id);
+  return (
+    same.find((o) => o.type === 'corridor' && sharedEdge(r, o)) ??
+    same.find((o) => o.type === 'entrance' && sharedEdge(r, o)) ??
+    [...same].sort((a, b) => b.w * b.h - a.w * a.h).find((o) => sharedEdge(r, o))
+  );
+}
+
 export function openingsOf(plan: DesignPlan): Opening[] {
   const out: Opening[] = [];
   let n = 0;
@@ -81,10 +94,7 @@ export function openingsOf(plan: DesignPlan): Opening[] {
       push('entry', r, segment(r, 'front', 1.4), 0, 2.4);
     }
     if (r.type !== 'stair' || r.floor >= 0) {
-      const target =
-        same.find((o) => o.type === 'corridor' && sharedEdge(r, o)) ??
-        same.find((o) => o.type === 'entrance' && sharedEdge(r, o)) ??
-        [...same].sort((a, b) => b.w * b.h - a.w * a.h).find((o) => sharedEdge(r, o));
+      const target = doorTarget(r, same);
       const edge = target ? sharedEdge(r, target) : null;
       if (edge && r.type !== 'entrance')
         push('door', r, segment(r, edge, r.type === 'stair' ? 1.2 : 0.9, 0.3), 0, 2.2);

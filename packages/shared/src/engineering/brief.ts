@@ -34,12 +34,14 @@ const WORD_NUMBERS: Record<string, number> = {
   eight: 8,
 };
 
-/** Arabic-Indic digits to Latin, alef variants unified, diacritics dropped, lower-cased. */
+/** Arabic-Indic digits to Latin, thousands separators dropped, alef variants unified, diacritics dropped, lower-cased. */
 export function normalizeBrief(text: string): string {
   return text
     .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
     .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
-    .replace(/[ً-ٰٟـ]/g, '')
+    .replace(/(\d)[,٬](?=\d{3}\b)/g, '$1')
+    .replace(/٫/g, '.')
+    .replace(/[ً-ٰٟـ]/g, '')
     .replace(/[آأإ]/g, 'ا')
     .toLowerCase();
 }
@@ -55,6 +57,11 @@ function count(text: string, nouns: string): number | undefined {
 
 const has = (text: string, ...words: string[]) => words.some((w) => text.includes(w));
 
+/** "دور" but not "دورات/دورة مياه". */
+const FLOOR_NOUNS = 'ادوار|دور(?![اهةي])|طوابق|طابق|floors?|storeys?|stories';
+const BATH_NOUNS =
+  'دورات مياه|دورات المياه|دوره مياه|دورة مياه|حمامات|حمام|bathrooms?|baths?|wcs?|toilets?|restrooms?';
+
 export function parseBrief(raw: string): Partial<Program> {
   const t = normalizeBrief(raw);
   const out: Partial<Program> = {};
@@ -64,14 +71,18 @@ export function parseBrief(raw: string): Partial<Program> {
   else if (has(t, 'محل', 'تجاري', 'commercial', 'shop')) out.type = 'commercial';
   else if (has(t, 'فيلا', 'فله', 'villa')) out.type = 'villa';
 
-  const floors = count(t, 'ادوار|دور|طوابق|طابق|floors?|storeys?|stories');
+  const floors = count(t, FLOOR_NOUNS);
   if (floors) out.floors = floors;
   else if (has(t, 'دورين', 'طابقين')) out.floors = 2;
   else if (has(t, 'دور واحد', 'دور ارضي', 'طابق واحد', 'one floor', 'single storey'))
     out.floors = 1;
-  const bedrooms = count(t, 'غرف نوم|غرفه نوم|غرفة نوم|غرف|bedrooms?|beds?');
+  // "غرف نوم" first, so "2 غرف خدمة" never reads as bedrooms when bedrooms are stated
+  const bedrooms = count(t, 'غرف نوم|غرفه نوم|غرفة نوم|bedrooms?') ?? count(t, 'غرف(?! خدم)|beds?');
   if (bedrooms !== undefined) out.bedrooms = bedrooms;
   else if (has(t, 'غرفتين نوم', 'غرفتين')) out.bedrooms = 2;
+  const baths = count(t, BATH_NOUNS);
+  if (baths) out.bathrooms = baths;
+  else if (has(t, 'دورتين مياه', 'دورتين', 'حمامين')) out.bathrooms = 2;
   const parking = count(t, 'مواقف|موقف|سيارات|parking|cars?');
   if (parking !== undefined) out.parking = parking;
   const units = count(t, 'شقق في الدور|شقق بالدور|شقه في الدور|units? per floor');
@@ -81,8 +92,33 @@ export function parseBrief(raw: string): Partial<Program> {
   if (has(t, 'مجلس نساء', 'مجلس حريم', 'مجلس النساء', "women's majlis")) out.majlisWomen = true;
   if (has(t, 'مطبخ مفتوح', 'open kitchen')) out.kitchen = 'open';
   if (has(t, 'مطبخ مغلق', 'closed kitchen')) out.kitchen = 'closed';
+  if (has(t, 'مطبخ تحضيري', 'مطبخ تحضير', 'مطبخ خارجي', 'prep kitchen', 'outdoor kitchen'))
+    out.prepKitchen = true;
   if (has(t, 'خادمه', 'خادمة', 'عامله', 'عاملة', 'maid')) out.maidRoom = true;
   if (has(t, 'سائق', 'driver')) out.driverRoom = true;
+  if (has(t, 'غرفه ضيوف', 'غرفة ضيوف', 'غرفه للضيوف', 'غرفة للضيوف', 'guest room', 'guest bed'))
+    out.guestRoom = true;
+  if (
+    has(
+      t,
+      'غرفه مكتب',
+      'غرفة مكتب',
+      'مكتب خاص',
+      'مكتب منزلي',
+      'غرفه دراسه',
+      'غرفة دراسة',
+      'غرفه مذاكره',
+      'غرفة مذاكرة',
+      'home office',
+      'study room',
+      'a study',
+    )
+  )
+    out.office = true;
+  if (has(t, 'مصلى', 'مصلي', 'غرفه صلاه', 'غرفة صلاة', 'prayer room')) out.prayerRoom = true;
+  if (has(t, 'نادي رياضي', 'صاله رياضه', 'صالة رياضة', 'جيم', 'gym', 'fitness')) out.gym = true;
+  if (has(t, 'مستودع', 'مخزن', 'غرفه تخزين', 'غرفة تخزين', 'storage', 'store room', 'storeroom'))
+    out.storage = true;
   if (has(t, 'ملحق', 'روف', 'roof annex')) out.roofAnnex = true;
   if (has(t, 'قبو', 'بدروم', 'basement')) out.basement = true;
   if (has(t, 'مسبح', 'pool')) out.pool = true;
@@ -92,7 +128,48 @@ export function parseBrief(raw: string): Partial<Program> {
   else if (has(t, 'نجدي', 'najdi')) out.style = 'modern_najdi';
   else if (has(t, 'كلاسيك', 'classic')) out.style = 'classic';
   else if (has(t, 'حديث', 'معاصر', 'contemporary', 'modern')) out.style = 'contemporary';
+
+  const area =
+    /(?:مسطح(?:ات)?(?: البناء)?|مساحه البناء|مساحة البناء|built[- ]?up(?: area)?)\D{0,12}(\d{2,5})/.exec(
+      t,
+    )?.[1] ?? /(\d{2,5})\s*(?:م2|م²|متر مربع|m2|m²|sqm)\s*(?:مسطح|مسطحات|بناء|built)/.exec(t)?.[1];
+  if (area && Number(area) >= 40) out.targetAreaM2 = Number(area);
+
+  const budget =
+    /(?:ميزانيه|ميزانية|budget)\D{0,15}(\d+(?:\.\d+)?)(?:\s*(?:-|الى|to|و)\s*(\d+(?:\.\d+)?))?\s*(الف|k|مليون|million|m)?(?![a-z])/.exec(
+      t,
+    );
+  if (budget) {
+    const mult =
+      budget[3] === 'الف' || budget[3] === 'k'
+        ? 1000
+        : budget[3] === 'مليون' || budget[3] === 'million' || budget[3] === 'm'
+          ? 1_000_000
+          : 1;
+    const a = Number(budget[1]) * mult;
+    const b = budget[2] ? Number(budget[2]) * mult : undefined;
+    if (a >= 10_000)
+      out.budgetSar = b && b >= a ? { min: a, max: b } : { min: Math.round(a * 0.85), max: a };
+  }
   return out;
+}
+
+/** Plot size from the brief ("أرض 20 × 30", "عرض 20 وعمق 30", "20x30 plot"), width (street side) first. */
+export function parsePlotSize(raw: string): { width: number; depth: number } | undefined {
+  const t = normalizeBrief(raw);
+  const ok = (n: number) => n >= 6 && n <= 200;
+  const pair = /(\d{1,3}(?:\.\d+)?)\s*(?:[x×*]|في)\s*(\d{1,3}(?:\.\d+)?)(?!\s*(?:م2|م²|m2))/.exec(
+    t,
+  );
+  if (pair) {
+    const width = Number(pair[1]);
+    const depth = Number(pair[2]);
+    if (ok(width) && ok(depth)) return { width, depth };
+  }
+  const w = /(?:عرض|واجهه|واجهة|width|frontage)\D{0,12}(\d{1,3}(?:\.\d+)?)/.exec(t)?.[1];
+  const d = /(?:عمق|طول|depth)\D{0,12}(\d{1,3}(?:\.\d+)?)/.exec(t)?.[1];
+  if (w && d && ok(Number(w)) && ok(Number(d))) return { width: Number(w), depth: Number(d) };
+  return undefined;
 }
 
 /** The programme fields the brief must state; everything else has a sensible default the client can change. */
@@ -134,7 +211,16 @@ export const TARGET_AREA: Partial<Record<RoomType, number>> = {
   laundry: 5,
   storage: 4,
   entrance: 8,
+  guest_room: 16,
+  office: 12,
+  prayer_room: 10,
+  gym: 18,
+  prep_kitchen: 9,
 };
+
+/** Private bathrooms when the brief gives no count: one for the master and one for every two other bedrooms. */
+export const autoBathrooms = (bedrooms: number) =>
+  bedrooms === 0 ? 0 : 1 + Math.floor((bedrooms - 1) / 2);
 
 /** The rooms a programme asks for, with zone and floor preference. */
 export function programRooms(p: Program): RoomSpec[] {
@@ -159,8 +245,15 @@ export function programRooms(p: Program): RoomSpec[] {
   if (p.majlisWomen)
     rooms.push({ type: 'majlis_women', area: a('majlis_women'), zone: 'public', floor: 0 });
   rooms.push({ type: 'guest_wc', area: a('guest_wc'), zone: 'public', floor: 0 });
+  if (p.guestRoom)
+    rooms.push({ type: 'guest_room', area: a('guest_room'), zone: 'public', floor: 0 });
+  if (p.prayerRoom)
+    rooms.push({ type: 'prayer_room', area: a('prayer_room'), zone: 'public', floor: 0 });
   if (p.dining) rooms.push({ type: 'dining', area: a('dining'), zone: 'service', floor: 0 });
   rooms.push({ type: 'kitchen', area: a('kitchen'), zone: 'service', floor: 0 });
+  if (p.prepKitchen)
+    rooms.push({ type: 'prep_kitchen', area: a('prep_kitchen'), zone: 'service', floor: 0 });
+  if (p.storage) rooms.push({ type: 'storage', area: a('storage'), zone: 'service', floor: 0 });
   if (p.maidRoom) {
     rooms.push({ type: 'maid_room', area: a('maid_room'), zone: 'service', floor: 0 });
     rooms.push({ type: 'bathroom', area: 4, zone: 'service', floor: 0 });
@@ -171,22 +264,28 @@ export function programRooms(p: Program): RoomSpec[] {
   const single = p.floors === 1;
   if (p.familyLiving)
     rooms.push({ type: 'living', area: a('living'), zone: 'private', floor: single ? 0 : 'upper' });
+  const where = single ? 0 : ('upper' as const);
+  if (p.office) rooms.push({ type: 'office', area: a('office'), zone: 'private', floor: where });
+  if (p.gym) rooms.push({ type: 'gym', area: a('gym'), zone: 'private', floor: where });
+  // the client's count includes the guest WC; without a count: the master's and one per two other bedrooms
+  const baths =
+    p.bathrooms !== undefined
+      ? Math.max(p.bedrooms > 0 ? 1 : 0, p.bathrooms - 1)
+      : autoBathrooms(p.bedrooms);
+  const bathAfter = (i: number) => (p.bathrooms !== undefined ? i < baths : i === 0 || i % 2 === 0);
   for (let i = 0; i < p.bedrooms; i++) {
     const master = i === 0;
     rooms.push({
       type: master ? 'master_bedroom' : 'bedroom',
       area: a(master ? 'master_bedroom' : 'bedroom'),
       zone: 'private',
-      floor: single ? 0 : 'upper',
+      floor: where,
     });
-    // a bathroom for the master and one for every two other bedrooms
-    if (master || i % 2 === 0)
-      rooms.push({
-        type: 'bathroom',
-        area: a('bathroom'),
-        zone: 'private',
-        floor: single ? 0 : 'upper',
-      });
+    if (bathAfter(i))
+      rooms.push({ type: 'bathroom', area: a('bathroom'), zone: 'private', floor: where });
   }
+  // more bathrooms than bedrooms: the rest serve the family hall
+  for (let i = p.bedrooms; i < baths; i++)
+    rooms.push({ type: 'bathroom', area: 4.5, zone: 'private', floor: where });
   return rooms;
 }
