@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/Button';
 import { firebaseDb } from '@/lib/firebase';
 import type { ProjectDoc } from '@/lib/eng/data';
 
+const fmt = new Intl.NumberFormat('en-US');
+
 const DEFAULT_ZONING: Zoning = {
   use: 'residential',
   setbacks: { front: 0, back: 0, left: 0, right: 0 },
@@ -101,6 +103,8 @@ export function BriefPanel({
           <dd>{p.floors}</dd>
           <dt className="text-text-muted">{t('bedrooms')}</dt>
           <dd>{p.bedrooms}</dd>
+          <dt className="text-text-muted">{t('bathrooms')}</dt>
+          <dd>{p.bathrooms ?? t('bathroomsAuto')}</dd>
           <dt className="text-text-muted">{t('styleLabel')}</dt>
           <dd>{t(`style.${p.style}`)}</dd>
           <dt className="text-text-muted">{t('plotTitle')}</dt>
@@ -109,6 +113,20 @@ export function BriefPanel({
           </dd>
           <dt className="text-text-muted">{t('parking')}</dt>
           <dd>{p.parking}</dd>
+          {p.targetAreaM2 !== undefined && (
+            <>
+              <dt className="text-text-muted">{t('targetAreaM2')}</dt>
+              <dd className="tabular">{fmt.format(p.targetAreaM2)}</dd>
+            </>
+          )}
+          {p.budgetSar && (
+            <>
+              <dt className="text-text-muted">{t('budgetLabel')}</dt>
+              <dd className="tabular">
+                {fmt.format(p.budgetSar.min)} – {fmt.format(p.budgetSar.max)} {t('sar')}
+              </dd>
+            </>
+          )}
         </dl>
         <p className="text-small">
           {(
@@ -119,6 +137,12 @@ export function BriefPanel({
               'maidRoom',
               'driverRoom',
               'familyLiving',
+              'guestRoom',
+              'office',
+              'prayerRoom',
+              'gym',
+              'storage',
+              'prepKitchen',
               'roofAnnex',
               'basement',
               'pool',

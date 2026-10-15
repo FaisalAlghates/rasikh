@@ -14,6 +14,7 @@ import {
 } from '@rasikh/shared';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+import { BoqTable } from './BoqTable';
 import { PlanView } from './PlanView';
 
 const fmt = new Intl.NumberFormat('en-US');
@@ -25,7 +26,7 @@ export function DisciplinesPanel({
   roomLabel,
 }: {
   plan: DesignPlan;
-  rates?: Rates;
+  rates?: Partial<Rates>;
   roomLabel: (r: PlanRoom) => string;
 }) {
   const t = useTranslations('eng');
@@ -160,23 +161,7 @@ export function DisciplinesPanel({
         <p className="text-small font-semibold" data-testid="cost-range">
           {t('industrial.total', { min: fmt.format(cost.min), max: fmt.format(cost.max) })}
         </p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-caption">
-            <tbody>
-              {cost.lines.map((l) => (
-                <tr key={l.item} className="border-b border-border/10">
-                  <td className="p-1">{t(`boq.${l.item}`)}</td>
-                  <td className="tabular p-1">
-                    {fmt.format(l.qty)} {t(`unit.${l.unit}`)}
-                  </td>
-                  <td className="tabular p-1">
-                    {fmt.format(l.min)} – {fmt.format(l.max)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <BoqTable bill={cost} fileName="rasikh-boq.csv" />
         <p className="text-small font-semibold">{t('industrial.weeks', { w: sched.totalWeeks })}</p>
         <ol
           className="flex flex-col gap-1"

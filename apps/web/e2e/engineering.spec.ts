@@ -96,10 +96,17 @@ test('engineering office: brief → options → client picks → development →
   await form.getByLabel('اسم المشروع').fill('فيلا النرجس');
   await form
     .getByLabel('صف ما تريد')
-    .fill('فيلا دورين، ٤ غرف نوم، مجلس رجال ومجلس نساء، غرفة خادمة، طراز نجدي');
+    .fill(
+      'فيلا دورين على أرض ٢٢×٣٢، ٤ غرف نوم و٤ دورات مياه، مجلس رجال ومجلس نساء، غرفة خادمة، مصلى، طراز نجدي، الميزانية ١٫٥ مليون',
+    );
   await form.getByRole('button', { name: 'اقرأ الوصف' }).click();
   await expect(form.getByTestId('program')).toBeVisible();
   await expect(form.getByTestId('missing')).toHaveCount(0);
+  // the brief reader filled the plot, the bathrooms, the extra rooms and the budget
+  await expect(form.getByLabel('عرض الواجهة (م)')).toHaveValue('22');
+  await expect(form.getByLabel('دورات المياه (مع دورة مياه الضيوف)')).toHaveValue('4');
+  await expect(form.getByLabel('مصلى')).toBeChecked();
+  await expect(form.getByLabel('إلى (ر.س)')).toHaveValue('1500000');
   await shot(client.page, 'client-brief');
   await form.getByRole('button', { name: 'أكّد البرنامج وأرسل للمكتب' }).click();
   await expect(form.getByText('أُرسل طلبك إلى المكتب.')).toBeVisible({ timeout: 20_000 });
@@ -124,10 +131,27 @@ test('engineering office: brief → options → client picks → development →
   await z.getByRole('button', { name: 'اقبل الطلب' }).click();
   await expect(lead.page.getByTestId('project-status')).toHaveText('مقبول', { timeout: 20_000 });
   await lead.page.getByRole('tab', { name: 'الخيارات' }).click();
-  await lead.page.getByRole('button', { name: 'ولّد الخيارات' }).click();
-  await expect(lead.page.locator('[data-testid^="concept-"]')).toHaveCount(4, { timeout: 30_000 });
+  // the assistant designs 8 different options, each holding the whole brief and passing every automatic check
+  await lead.page.getByRole('button', { name: 'صمّم 8 خيارات' }).click();
+  await expect(lead.page.locator('[data-testid^="concept-"]')).toHaveCount(8, { timeout: 30_000 });
+  await expect(lead.page.getByTestId('search-summary')).toContainText('اختير منها 8 تصاميم مختلفة');
   await expect(lead.page.getByTestId('draft-watermark').first()).toBeVisible();
+  await expect(lead.page.getByTestId('compare').locator('tbody tr')).toHaveCount(8);
+  const optionA = lead.page.getByTestId('concept-A');
+  await expect(optionA.getByTestId('fit-notes')).toContainText('يحتوي كل ما في الوصف');
+  await expect(optionA.getByTestId('fit-notes')).toContainText('مصلى');
+  await expect(optionA.getByTestId('option-checks')).toContainText(
+    'الاشتراطات البلدية: 6 من 6 مطابقة',
+  );
+  await expect(optionA.getByTestId('option-checks')).toContainText(
+    'فحوص الكود الآلية: 9 من 9 تجتاز',
+  );
   await shot(lead.page, 'concepts');
+  await optionA.locator('summary').click();
+  await expect(optionA.getByTestId('boq-table')).toContainText('حديد التسليح');
+  await expect(optionA.getByTestId('boq-table')).toContainText('العزل الحراري');
+  await optionA.scrollIntoViewIfNeeded();
+  await shot(lead.page, 'concept-boq');
   await lead.page.getByRole('button', { name: 'شارك الخيارات مع العميل' }).click();
   await expect(lead.page.getByTestId('project-status')).toHaveText('خيارات مع العميل', {
     timeout: 20_000,
@@ -136,9 +160,35 @@ test('engineering office: brief → options → client picks → development →
   // 6) the client picks an option (they never see internal drafts)
   await client.page.goto(projectUrl);
   await client.page.getByRole('tab', { name: 'الخيارات' }).click();
-  await expect(client.page.locator('[data-testid^="concept-"]')).toHaveCount(4, {
+  await expect(client.page.locator('[data-testid^="concept-"]')).toHaveCount(8, {
     timeout: 30_000,
   });
+  // the client compares the options, with the same checks and costs the office saw
+  await expect(client.page.getByTestId('compare')).toContainText('الميزانية');
+  await expect(client.page.getByTestId('concept-A').getByTestId('option-checks')).toContainText(
+    'الاشتراطات البلدية: 6 من 6 مطابقة',
+  );
+  await expect(client.page.getByTestId('concept-A').getByTestId('option-cost')).toContainText(
+    'ليست عرض سعر',
+  );
+  await shot(client.page, 'client-options');
+  // the options page is accessible, and at phone width nothing scrolls sideways
+  await client.page.getByTestId('concept-A').locator('summary').click();
+  const optionsAxe = await new AxeBuilder({ page: client.page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+  expect(
+    optionsAxe.violations.map(
+      (v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(' | ')}`,
+    ),
+    'client options',
+  ).toEqual([]);
+  await client.page.setViewportSize({ width: 390, height: 844 });
+  await expect
+    .poll(() => client.page.evaluate(() => document.documentElement.scrollWidth))
+    .toBeLessThanOrEqual(390);
+  await client.page.screenshot({ path: `${SHOTS}/mobile-client-options.png`, fullPage: true });
+  await client.page.setViewportSize({ width: 1280, height: 720 });
   await client.page.getByRole('button', { name: 'اختر هذا الخيار' }).first().click();
   await expect(client.page.getByTestId('project-status')).toHaveText('اختار العميل', {
     timeout: 20_000,

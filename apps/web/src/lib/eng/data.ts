@@ -3,6 +3,7 @@
 import {
   RULE_PACK_VERSION,
   canonicalPlan,
+  type Boq,
   type DesignPlan,
   type Discipline,
   type PermitItem,
@@ -63,6 +64,13 @@ export interface ProjectDoc {
   updatedAt?: Timestamp;
 }
 
+/** What the checks say about an option, in words a client can read. */
+export interface CheckSummary {
+  zoning: { passed: number; total: number };
+  code: { passed: number; total: number; verified: boolean };
+  manual: number;
+}
+
 /** designProjects/{pid}/versions/{vid} */
 export interface VersionDoc {
   label: string;
@@ -71,6 +79,10 @@ export interface VersionDoc {
   plan: DesignPlan;
   sha256: string;
   required: Discipline[];
+  /** Concepts: the bill of quantities priced with the office's rates when the option was made (the client sees it). */
+  boq?: Boq;
+  /** Concepts: the check summary recorded when the option was made. */
+  checks?: CheckSummary;
   createdBy: string;
   createdAt?: Timestamp;
   releasedAt?: Timestamp;
@@ -92,7 +104,8 @@ export interface RulePackDoc {
 }
 
 export interface SettingsRatesDoc {
-  rates: Rates;
+  /** May predate newer BOQ items: merge with DEFAULT_RATES. */
+  rates: Partial<Rates>;
 }
 
 /** SHA-256 (hex) of a string, in the browser. */

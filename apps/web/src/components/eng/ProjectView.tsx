@@ -135,6 +135,7 @@ export function ProjectView({ pid }: { pid: string }) {
           isClient={isClient}
           uid={user.uid}
           overrides={overrides}
+          rates={rates?.rates}
           roomLabel={roomLabel}
         />
       ),
