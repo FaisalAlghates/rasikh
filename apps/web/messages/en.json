@@ -316,7 +316,19 @@
     "errorGeneric": "Could not save. Please try again.",
     "required": "This field is required",
     "sar": "SAR",
-    "choose": "Choose"
+    "choose": "Choose",
+    "twinTitle": "Your portfolio",
+    "twinSub": "A digital twin of your properties: each floor is a unit, its window lit in its payment status.",
+    "twinEmpty": "Add your first property and its units to see it here in 3D.",
+    "twinHint": "Drag to orbit, click a unit for its details",
+    "twinOk": "On track",
+    "twinSoon": "Payment soon",
+    "twinLate": "Late",
+    "twinVacant": "Vacant",
+    "twinTenant": "Tenant",
+    "twinNextDue": "Next payment",
+    "twinClose": "Close",
+    "twinNoUnits": "No units yet"
   },
   "workspace": {
     "title": "Workspace",

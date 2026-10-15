@@ -2,6 +2,7 @@
 
 import * as RSelect from '@radix-ui/react-select';
 import { Check, ChevronDown } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { cn } from './cn';
 
 export interface SelectOption {
@@ -24,8 +25,9 @@ export function Select({
   label: string;
   className?: string;
 }) {
+  const dir = useLocale() === 'ar' ? 'rtl' : 'ltr';
   return (
-    <RSelect.Root value={value} onValueChange={onValueChange}>
+    <RSelect.Root dir={dir} value={value} onValueChange={onValueChange}>
       <RSelect.Trigger
         aria-label={label}
         className={cn(

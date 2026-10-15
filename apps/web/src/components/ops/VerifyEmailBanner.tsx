@@ -37,7 +37,8 @@ export function VerifyEmailBanner() {
       data-testid="verify-banner"
       className="hairline flex flex-wrap items-center gap-3 rounded-lg bg-surface p-4 text-small"
     >
-      <span className="flex-1">{t('verifyEmail')}</span>
+      {/* Full width on phones (buttons wrap below); beside the buttons from the sm breakpoint. */}
+      <span className="basis-full sm:basis-auto sm:flex-1">{t('verifyEmail')}</span>
       <Button variant="quiet" onClick={() => void sendEmailVerification(user)}>
         {t('resend')}
       </Button>
