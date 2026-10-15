@@ -80,7 +80,8 @@ Check WCAG 2.2 AA for every text/background pair; adjust lightness if needed; re
 (Note: stone on sand and clay on night/sand need explicit checks — likely fail for small text.)
 
 Type: Arabic display Reem Kufi (large only); Arabic UI/body IBM Plex Sans Arabic; Latin display Fraunces;
-Latin body IBM Plex Sans. Scale px: 72/56/40/28/20/17/15/13. Arabic line-height 1.6–1.8. Tabular numerals in tables.
+Latin body IBM Plex Sans. Scale px (DGA Platforms Code): 72/60/36/30/20/16/14/12 (d1/d2/h1/h2/h3/body/small/caption);
+UI face weights 400/500/600/700. Arabic line-height 1.6–1.8. Tabular numerals in tables.
 Latin digits by default, setting for Arabic-Indic digits.
 
 Spacing 4-pt grid. Radius 4/8/16/28. Hairline borders (1px stone @ 20–30%). Almost no shadows.
@@ -98,11 +99,23 @@ per unit with its window lit in the payment status (ok / soon / late / vacant), 
 a flat block fallback without WebGL or in automated browsers, and a screen-reader list of the same data.
 Radix primitives must get `dir` from the locale (Tabs and Select default to ltr).
 
+DGA conformance (design.dga.gov.sa Platforms Code, followed with our own brand): container max 1280px with 16/32px
+gutters (`.rk-container`), breakpoints 600/960/1280, 44px touch targets, one site shell for every page
+(`components/shell`: header with current-page state, search dialog, language, theme, sign-in or account menu, mobile
+drawer; footer with grouped links, accessibility tools for text size and contrast, legal line; skip link; breadcrumbs),
+and the DGA templates: about, help + FAQ, contact form with an error summary, sitemap, search, accessibility statement,
+404, cookie notice (essential storage only), and "was this page helpful?" on content pages. The information
+architecture lives in `lib/nav.ts`; workspace access by role in `lib/roles.ts`. Rasikh is private: never show the
+government digital stamp or an "official government site" banner.
+
 Modes: dark default on map screens; light "sand" editorial on content pages; user override.
 RTL first: logical CSS properties only, mirrored directional icons, Hijri + Gregorian dates, SAR formatting.
 
 ## 4. Maps
 
+- The map covers the whole Kingdom (`/map`): it arrives from the globe onto Saudi Arabia, shows a pin per city (all 13
+  region capitals plus the main cities, `lib/map/kingdom.ts`), and flies into a city at ~58°. Owners see their own
+  properties placed near their city (approximate until exact pins exist); everyone else sees labelled samples.
 - Mapbox Standard (web + app). lightPreset follows Riyadh local time (dawn/day/dusk/night); marketing pages fixed to dusk.
   Hide most POI labels. Neighborhood indicators in the "middle" slot (under 3D buildings). User properties = clay
   extrusions/markers with soft glow. Select property → flyTo, pitch ~60°.
