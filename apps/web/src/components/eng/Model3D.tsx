@@ -54,7 +54,8 @@ export function Model3D({ plan, plot, name }: { plan: DesignPlan; plot: Plot; na
     void Promise.all([
       import('three'),
       import('three/examples/jsm/controls/OrbitControls.js'),
-    ]).then(([THREE, { OrbitControls }]) => {
+      import('three/examples/jsm/environments/RoomEnvironment.js'),
+    ]).then(([THREE, { OrbitControls }, { RoomEnvironment }]) => {
       if (disposed || !canvas.current || !box.current) return;
       const renderer = new THREE.WebGLRenderer({
         canvas: canvas.current,
@@ -65,6 +66,9 @@ export function Model3D({ plan, plot, name }: { plan: DesignPlan; plot: Plot; na
       renderer.shadowMap.enabled = true;
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0xf4eee4);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
       const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 800);
       const cx = plan.plot.width / 2;
       const cz = -plan.plot.depth / 2;
@@ -122,6 +126,7 @@ export function Model3D({ plan, plot, name }: { plan: DesignPlan; plot: Plot; na
         cancelAnimationFrame(raf);
         ro.disconnect();
         controls.dispose();
+        pmrem.dispose();
         renderer.dispose();
       };
     });
@@ -148,7 +153,7 @@ export function Model3D({ plan, plot, name }: { plan: DesignPlan; plot: Plot; na
           m.geometry?.dispose();
         });
       }
-      a.model = buildModel(plan, { floorsShown: floors, furniture });
+      a.model = buildModel(plan, { floorsShown: floors, furniture, realistic: true });
       a.scene.add(a.model);
     });
     return () => {

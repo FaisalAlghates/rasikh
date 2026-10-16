@@ -32,6 +32,7 @@ import { SheetFrame, type FrameInfo } from './sheets/Frame';
 import { merge, minus, type Span } from './sheets/spans';
 import { StCalcBody, StColumnsBody, StNotesBody, SlabLayer } from './sheets/Structural';
 import { MepLayer, SYMBOL_GROUPS, SymbolLegend } from './sheets/symbols';
+import { LevelsBody } from './sheets/Levels';
 import { ThermalBody } from './sheets/Thermal';
 
 /**
@@ -199,7 +200,7 @@ export function Sheets(p: SheetsProps) {
             title={t('set.legend')}
             countLabel={t('set.count')}
           />
-          <p className="max-w-md text-caption text-stone">{note}</p>
+          <p className="max-w-md text-caption text-[#5f594f]">{note}</p>
         </div>
       </div>
     );
@@ -265,8 +266,68 @@ export function Sheets(p: SheetsProps) {
             </figure>
           </div>
         );
+      case 'levels':
+        return <LevelsBody plan={p.plan} lang={lang} />;
       case 'thermal':
         return <ThermalBody />;
+      case 'access': {
+        const wc = p.plan.rooms.find((r) => r.floor === 0 && r.type === 'guest_wc');
+        const entry = ops.find((o) => o.floor === 0 && o.kind === 'entry');
+        return (
+          <div className="flex flex-col gap-2">
+            <PlanView
+              plan={p.plan}
+              floor={0}
+              label={p.roomLabel}
+              watermark={wm}
+              title={spec.en}
+              northDeg={p.plot.northDeg}
+              mute
+              overlay={(Y) => (
+                <g data-testid="access-layer">
+                  {entry && (
+                    <path
+                      d={`M ${(entry.x1 + entry.x2) / 2} ${Y(0)} L ${(entry.x1 + entry.x2) / 2} ${Y((entry.y1 + entry.y2) / 2)}`}
+                      stroke="#2f7d4f"
+                      strokeWidth={0.2}
+                      strokeDasharray="0.5 0.3"
+                      fill="none"
+                    />
+                  )}
+                  {wc && (
+                    <circle
+                      cx={wc.x + wc.w / 2}
+                      cy={Y(wc.y + wc.h / 2)}
+                      r={Math.max(0.3, Math.min(0.75, wc.w / 2 - 0.05, wc.h / 2 - 0.05))}
+                      fill="#2f7d4f"
+                      fillOpacity={0.2}
+                      stroke="#2f7d4f"
+                      strokeWidth={0.05}
+                    />
+                  )}
+                </g>
+              )}
+            />
+            <ul className="flex flex-col gap-1 text-caption">
+              <li className="flex items-center gap-2">
+                <span
+                  className="inline-block h-0.5 w-6 border-t-2 border-dashed border-[#2f7d4f]"
+                  aria-hidden="true"
+                />
+                {t('set.access.route')}
+              </li>
+              <li className="flex items-center gap-2">
+                <span
+                  className="inline-block size-3 rounded-full border border-[#2f7d4f] bg-[#2f7d4f]/20"
+                  aria-hidden="true"
+                />
+                {wc ? t('set.access.wc') : t('set.access.none')}
+              </li>
+              <li className="text-[#5f594f]">{t('set.access.note')}</li>
+            </ul>
+          </div>
+        );
+      }
       case 'schedules':
         return (
           <div className="overflow-x-auto">

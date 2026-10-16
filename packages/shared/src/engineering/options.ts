@@ -6,6 +6,7 @@ import { knobPrior, libraryVariants, type LibraryItem } from './library.js';
 import { doorTarget, hasOwnEntry } from './openings.js';
 import { runRules, type RuleOverrides, type RuleResult } from './rules.js';
 import { siteShortfall, yards } from './site.js';
+import { styleFit } from './styles.js';
 import {
   WET,
   type DesignPlan,
@@ -323,6 +324,8 @@ export function rankOption(plan: DesignPlan, program: Program): number {
   if (program.targetAreaM2)
     s -= (Math.abs(builtUpArea(plan) - program.targetAreaM2) / program.targetAreaM2) * 30;
   s -= unstackedWetRooms(plan).length * 1.5;
+  // the design language the client chose: a layout that suits it ranks higher (up to 4 points)
+  s += styleFit(plan, program.style) * 4;
   return Math.round(s * 10) / 10;
 }
 
@@ -489,6 +492,7 @@ export function optionLabel(i: number): string {
 export interface FitNote {
   key:
     | 'program'
+    | 'style'
     | 'typology'
     | 'core'
     | 'entry'
@@ -547,6 +551,7 @@ export function explainOption(plan: DesignPlan, program: Program, plot: Plot, zo
   const env = envelopeOf(plot, zoning);
   const notes: FitNote[] = [
     { key: 'program', values: { n: programCounts(program, plan.floors).length } },
+    { key: 'style', values: { style: program.style ?? 'contemporary' } },
     ...typologyNote(plan),
     { key: 'core', values: { side: t.coreSide } },
   ];

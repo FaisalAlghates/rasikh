@@ -28,23 +28,18 @@ describe('thermal build-ups', () => {
 describe('the sheet set', () => {
   it('numbers sheets per discipline and follows the required disciplines', () => {
     const arch = sheetSet({ floors: 2 }, ['architectural']);
-    expect(arch.map((s) => s.code)).toEqual([
-      'AR-01',
-      'AR-02',
-      'AR-03',
-      'AR-04',
-      'AR-05',
-      'AR-06',
-      'AR-07',
-      'AR-08',
-    ]);
+    expect(arch.map((s) => s.code)).toEqual(
+      Array.from({ length: 10 }, (_, i) => 'AR-' + String(i + 1).padStart(2, '0')),
+    );
     expect(arch.map((s) => s.id)).toEqual([
       'site',
       'plan-0',
       'plan-1',
       'elevations',
       'sections',
+      'levels',
       'thermal',
+      'access',
       'schedules',
       'areas',
     ]);

@@ -20,4 +20,5 @@ export * from './workflow.js';
 export * from './envelope.js';
 export * from './mep.js';
 export * from './sheetset.js';
+export * from './styles.js';
 export * from './structcalc.js';

@@ -118,7 +118,14 @@ export const BUILDING_TYPES = [
   'commercial',
   'hall',
 ] as const;
-export const STYLES = ['modern_najdi', 'salmani', 'contemporary', 'classic'] as const;
+export const STYLES = [
+  'modern_najdi',
+  'salmani',
+  'contemporary',
+  'classic',
+  'swiss',
+  'palace',
+] as const;
 
 /** The client's programme, validated before any concept is generated. */
 export const ProgramSchema = z.object({

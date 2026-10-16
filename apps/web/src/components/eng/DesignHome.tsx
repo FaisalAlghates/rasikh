@@ -10,7 +10,7 @@ import {
   landUseFromBrief,
   normalizeBrief,
   type LandUse,
-  STYLES,
+  DESIGN_STYLES,
   confirmProgram,
   missingItems,
   parseBrief,
@@ -465,7 +465,12 @@ export function DesignHome() {
                       }
                       className="hairline min-h-11 rounded-md bg-bg px-2"
                     >
-                      {STYLES.map((s) => (
+                      {[
+                        ...(program.style && !DESIGN_STYLES.includes(program.style as never)
+                          ? [program.style]
+                          : []),
+                        ...DESIGN_STYLES,
+                      ].map((s) => (
                         <option key={s} value={s}>
                           {t(`style.${s}`)}
                         </option>

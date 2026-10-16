@@ -44,6 +44,7 @@ import { floorLabel } from '@/lib/eng/labels';
 import { officePatterns, useDesignLibrary } from '@/lib/eng/library';
 import type { Row } from '@/lib/ops/hooks';
 import { BoqTable } from './BoqTable';
+import { HoverModel } from './HoverModel';
 import { PlanView } from './PlanView';
 
 const fmt = new Intl.NumberFormat('en-US');
@@ -588,14 +589,16 @@ function OptionCard({
           ))}
         </div>
       )}
-      <PlanView
-        plan={plan}
-        floor={floor}
-        label={roomLabel}
-        watermark={t('watermark')}
-        title={`${title} · ${floorName(floor)}`}
-        compact
-      />
+      <HoverModel plan={plan}>
+        <PlanView
+          plan={plan}
+          floor={floor}
+          label={roomLabel}
+          watermark={t('watermark')}
+          title={`${title} · ${floorName(floor)}`}
+          compact
+        />
+      </HoverModel>
       <section className="flex flex-col gap-1">
         <h4 className="text-small font-semibold">{t('designs.fitTitle')}</h4>
         <ul className="flex flex-col gap-1 text-small" data-testid="fit-notes">

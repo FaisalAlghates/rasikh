@@ -4,7 +4,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <ClientMessages namespaces={['common', 'nav', 'lab']}>
+    <ClientMessages namespaces={['common', 'nav', 'lab', 'eng']}>
       <ToastProvider>{children}</ToastProvider>
     </ClientMessages>
   );

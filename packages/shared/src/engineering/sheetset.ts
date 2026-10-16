@@ -12,7 +12,9 @@ export type SheetKind =
   | 'sections'
   | 'schedules'
   | 'areas'
+  | 'levels'
   | 'thermal'
+  | 'access'
   | 'st-notes'
   | 'st-grid'
   | 'st-slab'
@@ -131,12 +133,28 @@ export function sheetSet(
       scale: '1:100',
     },
     {
+      id: 'levels',
+      kind: 'levels',
+      group: 'architectural',
+      ar: 'المناسيب',
+      en: 'LEVELS',
+      scale: 'N.T.S.',
+    },
+    {
       id: 'thermal',
       kind: 'thermal',
       group: 'architectural',
       ar: 'العزل الحراري',
       en: 'THERMAL INSULATION',
       scale: 'N.T.S.',
+    },
+    {
+      id: 'access',
+      kind: 'access',
+      group: 'architectural',
+      ar: 'إمكانية الوصول',
+      en: 'ACCESSIBILITY',
+      scale: '1:100',
     },
     {
       id: 'schedules',

@@ -12,12 +12,31 @@ import { merge, minus, type Span } from './spans';
 
 export type Side = 'front' | 'back' | 'left' | 'right';
 
+/** The four looks: Najdi crenellation, modern clad volume, Swiss pitched roof and timber, palace dome and columns. */
+type Look = 'najdi' | 'modern' | 'swiss' | 'palace';
+const lookOf = (style: Program['style']): Look =>
+  style === 'modern_najdi' || style === 'salmani'
+    ? 'najdi'
+    : style === 'swiss'
+      ? 'swiss'
+      : style === 'palace' || style === 'classic'
+        ? 'palace'
+        : 'modern';
+
+const WALL: Record<Look, string> = {
+  najdi: '#efe1cc',
+  modern: '#e6e3dc',
+  swiss: '#f3efe8',
+  palace: '#eadfc8',
+};
+
 /**
  * A façade as seen from one side: each floor's own silhouette (a floor set back, a roof annex, a guest pavilion),
- * its roof edge where nothing is built above (the Najdi crenellation for Najdi styles, a plain coping for modern
- * ones), floor lines, and the openings on the walls facing that way that nothing in front hides. Modern styles get
- * a clad upper volume, framed glazing and fins. Axis bubbles on top and level marks on the right, as on a consultant's
- * sheet.
+ * its roof edge where nothing is built above, floor lines, and the openings on the walls facing that way that
+ * nothing in front hides. The look follows the style: Najdi crenellation; a modern clad upper volume with framed
+ * glazing and a plain coping; a Swiss pitched roof with timber cladding, shuttered windows and balconies; a palace's
+ * arched windows, corner pilasters, cornices, a portico at the entrance and a central dome. Axis bubbles on top and
+ * level marks on the right, as on a consultant's sheet.
  */
 export function Elevation({
   plan,
@@ -33,6 +52,7 @@ export function Elevation({
   lang: 'ar' | 'en';
 }) {
   const uid = useId().replace(/:/g, '');
+  const look = lookOf(style);
   const fp = plan.footprint;
   const across = side === 'front' || side === 'back';
   const width = across ? fp.w : fp.h;
@@ -84,11 +104,14 @@ export function Elevation({
   }));
   const R = 5; // room on the right for the level marks
   const M = 1.5;
-  const top = 2.2; // room above for the axis bubbles
-  const najdi = style === 'modern_najdi' || style === 'salmani';
+  const top = look === 'swiss' || look === 'palace' ? 4.2 : 2.2; // room above for roofs and axis bubbles
   const Y = (z: number) => height - z;
-  const wall = najdi ? '#efe1cc' : '#e6e3dc';
+  const wall = WALL[look];
   const topFloor = plan.floors - 1;
+  const rise = (w: number) => Math.min(2.8, w * 0.28);
+  // the highest, widest roof gets the palace dome
+  const topRoofs = minus(extent(topFloor), []);
+  const domeAt = topRoofs.sort((p, q) => q[1] - q[0] - (p[1] - p[0]))[0];
   return (
     <svg
       viewBox={`${-M} ${-top} ${width + M + R} ${height + top + 1.6}`}
@@ -96,15 +119,16 @@ export function Elevation({
       aria-label={title}
       className="h-auto w-full"
       style={{ direction: 'ltr' }}
+      data-look={look}
     >
       <defs>
-        <pattern id={`brick-${uid}`} width={0.9} height={0.4} patternUnits="userSpaceOnUse">
-          <rect width={0.9} height={0.4} fill="#b88a6a" />
-          <path
-            d="M 0 0.2 H 0.9 M 0.45 0 V 0.2 M 0 0.2 V 0.4 M 0.9 0.2 V 0.4"
-            stroke="#8a6248"
-            strokeWidth={0.03}
-          />
+        <pattern id={`slat-${uid}`} width={1} height={0.22} patternUnits="userSpaceOnUse">
+          <rect width={1} height={0.22} fill="#52585e" />
+          <path d="M 0 0.2 H 1" stroke="#2c3035" strokeWidth={0.05} />
+        </pattern>
+        <pattern id={`wood-${uid}`} width={0.28} height={1} patternUnits="userSpaceOnUse">
+          <rect width={0.28} height={1} fill="#b98a58" />
+          <path d="M 0.28 0 V 1" stroke="#7d5a36" strokeWidth={0.03} />
         </pattern>
       </defs>
       <rect x={-M} y={-top} width={width + M + R} height={height + top + 1.6} fill="#fffdf9" />
@@ -139,11 +163,17 @@ export function Elevation({
                   y={Y((f + 1) * fh)}
                   width={b - a}
                   height={fh}
-                  fill={!najdi && f === topFloor ? `url(#brick-${uid})` : wall}
+                  fill={
+                    look === 'modern' && f === topFloor
+                      ? `url(#slat-${uid})`
+                      : look === 'swiss' && f > 0
+                        ? `url(#wood-${uid})`
+                        : wall
+                  }
                   stroke="#1A1815"
                   strokeWidth={0.06}
                 />
-                {!najdi && f === 0 && (
+                {look === 'modern' && f === 0 && (
                   <rect
                     x={a}
                     y={Y(0.9)}
@@ -153,11 +183,46 @@ export function Elevation({
                     fillOpacity={0.35}
                   />
                 )}
+                {look === 'swiss' && f === 0 && (
+                  <rect
+                    x={a}
+                    y={Y(0.7)}
+                    width={b - a}
+                    height={0.7}
+                    fill="#8f8a80"
+                    fillOpacity={0.5}
+                  />
+                )}
+                {look === 'palace' && (
+                  <>
+                    {[a, b - 0.4].map((x) => (
+                      <rect
+                        key={x}
+                        x={x}
+                        y={Y((f + 1) * fh)}
+                        width={0.4}
+                        height={fh}
+                        fill="#d8c9a9"
+                        stroke="#1A1815"
+                        strokeWidth={0.03}
+                      />
+                    ))}
+                    <rect
+                      x={a}
+                      y={Y(f * fh + 0.3)}
+                      width={b - a}
+                      height={0.3}
+                      fill="#d8c9a9"
+                      stroke="#1A1815"
+                      strokeWidth={0.03}
+                    />
+                  </>
+                )}
               </g>
             ))}
             {roof.map(([a, b]) => (
               <g key={`p${a}`}>
-                {najdi ? (
+                {look === 'najdi' && (
                   <>
                     <rect
                       x={a}
@@ -176,25 +241,77 @@ export function Elevation({
                       />
                     ))}
                   </>
-                ) : (
+                )}
+                {look === 'modern' && (
                   <>
                     <rect
-                      x={a - 0.1}
-                      y={Y((f + 1) * fh + 0.45)}
-                      width={b - a + 0.2}
-                      height={0.45}
-                      fill="#4a4741"
+                      x={a - 0.55}
+                      y={Y((f + 1) * fh + 0.38)}
+                      width={b - a + 1.1}
+                      height={0.38}
+                      fill="#fbfaf7"
+                      stroke="#1A1815"
+                      strokeWidth={0.05}
+                    />
+                    <rect
+                      x={a - 0.55}
+                      y={Y((f + 1) * fh)}
+                      width={b - a + 1.1}
+                      height={0.08}
+                      fill="#2c3035"
+                    />
+                  </>
+                )}
+                {look === 'swiss' && (
+                  <>
+                    <path
+                      d={`M ${a - 0.6} ${Y((f + 1) * fh)} L ${(a + b) / 2} ${Y((f + 1) * fh + rise(b - a + 1.2))} L ${b + 0.6} ${Y((f + 1) * fh)} Z`}
+                      fill="#6b4a36"
+                      stroke="#1A1815"
+                      strokeWidth={0.06}
+                    />
+                    <path
+                      d={`M ${a - 0.6} ${Y((f + 1) * fh)} H ${b + 0.6}`}
+                      stroke="#3f2b1f"
+                      strokeWidth={0.14}
+                    />
+                    <path
+                      d={`M ${(a + b) / 2 - 0.5} ${Y((f + 1) * fh + rise(b - a + 1.2) * 0.45)} h 1 v 0.6 h -1 z`}
+                      fill="#cfe0ec"
+                      stroke="#3f2b1f"
+                      strokeWidth={0.05}
+                    />
+                  </>
+                )}
+                {look === 'palace' && (
+                  <>
+                    <rect
+                      x={a - 0.15}
+                      y={Y((f + 1) * fh + 0.4)}
+                      width={b - a + 0.3}
+                      height={0.4}
+                      fill="#d8c9a9"
                       stroke="#1A1815"
                       strokeWidth={0.04}
                     />
+                    {Array.from({ length: Math.max(0, Math.floor((b - a) / 0.5)) }, (_, i) => (
+                      <rect
+                        key={i}
+                        x={a + 0.1 + i * 0.5}
+                        y={Y((f + 1) * fh + 1.1)}
+                        width={0.18}
+                        height={0.7}
+                        fill="#e9dcc3"
+                        stroke="#1A1815"
+                        strokeWidth={0.02}
+                      />
+                    ))}
                     <rect
                       x={a}
-                      y={Y((f + 1) * fh + 0.95)}
+                      y={Y((f + 1) * fh + 1.2)}
                       width={b - a}
-                      height={0.5}
-                      fill={wall}
-                      stroke="#1A1815"
-                      strokeWidth={0.04}
+                      height={0.12}
+                      fill="#d8c9a9"
                     />
                   </>
                 )}
@@ -203,6 +320,42 @@ export function Elevation({
           </g>
         );
       })}
+      {look === 'palace' && domeAt && (
+        <g data-testid="dome">
+          {(() => {
+            const cx = (domeAt[0] + domeAt[1]) / 2;
+            const r = Math.max(0.9, Math.min(2.4, (domeAt[1] - domeAt[0]) * 0.28));
+            const base = Y(plan.floors * fh + 1.35);
+            return (
+              <>
+                <rect
+                  x={cx - r * 1.15}
+                  y={base - 0.9}
+                  width={r * 2.3}
+                  height={0.9}
+                  fill="#d8c9a9"
+                  stroke="#1A1815"
+                  strokeWidth={0.05}
+                />
+                <path
+                  d={`M ${cx - r} ${base - 0.9} A ${r} ${r} 0 0 1 ${cx + r} ${base - 0.9} Z`}
+                  fill="#b7c4c7"
+                  stroke="#1A1815"
+                  strokeWidth={0.06}
+                />
+                <line
+                  x1={cx}
+                  x2={cx}
+                  y1={base - 0.9 - r}
+                  y2={base - 0.9 - r - 0.7}
+                  stroke="#1A1815"
+                  strokeWidth={0.08}
+                />
+              </>
+            );
+          })()}
+        </g>
+      )}
       {ops.map((o) => {
         const [a, b] = across
           ? span(Math.min(o.x1, o.x2), Math.max(o.x1, o.x2))
@@ -210,29 +363,113 @@ export function Elevation({
         const y = Y(o.floor * fh + 0.25 + o.head);
         const h = o.head - o.sill;
         const win = o.kind === 'window';
+        const arch = look === 'palace' && b - a > 0.7;
+        const r = (b - a) / 2;
+        const fill = win
+          ? look === 'najdi'
+            ? '#cfe0ec'
+            : look === 'modern'
+              ? '#b4d0dc'
+              : '#9fc0d2'
+          : '#8C6A4E';
+        const stroke =
+          look === 'najdi'
+            ? '#1A1815'
+            : look === 'swiss'
+              ? '#5a3d28'
+              : look === 'modern'
+                ? '#23303a'
+                : '#2b3a42';
         return (
           <g key={o.id}>
-            <rect
-              x={a}
-              y={y}
-              width={b - a}
-              height={h}
-              fill={win ? (najdi ? '#cfe0ec' : '#9fc0d2') : '#8C6A4E'}
-              stroke={najdi ? '#1A1815' : '#2b3a42'}
-              strokeWidth={najdi ? 0.04 : 0.08}
-            />
-            {!najdi && win && b - a > 1.3 && (
+            {arch ? (
+              <path
+                d={`M ${a} ${y + h} L ${a} ${y + r} A ${r} ${r} 0 0 1 ${b} ${y + r} L ${b} ${y + h} Z`}
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={0.08}
+              />
+            ) : (
+              <rect
+                x={a}
+                y={y}
+                width={b - a}
+                height={h}
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={look === 'najdi' ? 0.04 : 0.08}
+              />
+            )}
+            {look !== 'najdi' && win && b - a > 1.3 && !arch && (
               <line
                 x1={(a + b) / 2}
                 x2={(a + b) / 2}
                 y1={y}
                 y2={y + h}
-                stroke="#2b3a42"
+                stroke={stroke}
                 strokeWidth={0.05}
               />
             )}
-            {!najdi && win && (
-              <rect x={a - 0.08} y={y - 0.06} width={b - a + 0.16} height={0.08} fill="#4a4741" />
+            {look === 'modern' && o.kind === 'entry' && (
+              <rect x={a - 0.6} y={y - 0.35} width={b - a + 1.2} height={0.2} fill="#2c3035" />
+            )}
+            {look === 'swiss' && win && (
+              <>
+                {[a - 0.4, b + 0.05].map((x) => (
+                  <rect
+                    key={x}
+                    x={x}
+                    y={y}
+                    width={0.35}
+                    height={h}
+                    fill="#5d7a4a"
+                    stroke="#3f4f33"
+                    strokeWidth={0.03}
+                  />
+                ))}
+                {o.floor > 0 && b - a > 1.2 && (
+                  <>
+                    <rect x={a - 0.4} y={y + h} width={b - a + 0.8} height={0.14} fill="#6b4a36" />
+                    <path
+                      d={`M ${a - 0.4} ${y + h} v -0.9 M ${b + 0.4} ${y + h} v -0.9 M ${a - 0.4} ${y + h - 0.9} H ${b + 0.4}`}
+                      stroke="#3f2b1f"
+                      strokeWidth={0.05}
+                      fill="none"
+                    />
+                  </>
+                )}
+              </>
+            )}
+            {o.kind === 'entry' && look === 'palace' && (
+              <g data-testid="portico">
+                {[a - 0.9, a - 0.2, b + 0.2, b + 0.9].map((x) => (
+                  <rect
+                    key={x}
+                    x={x - 0.15}
+                    y={y - 0.2}
+                    width={0.3}
+                    height={h + 0.2}
+                    fill="#eadfc8"
+                    stroke="#1A1815"
+                    strokeWidth={0.03}
+                  />
+                ))}
+                <rect
+                  x={a - 1.2}
+                  y={y - 0.5}
+                  width={b - a + 2.4}
+                  height={0.3}
+                  fill="#d8c9a9"
+                  stroke="#1A1815"
+                  strokeWidth={0.04}
+                />
+                <path
+                  d={`M ${a - 1.2} ${y - 0.5} L ${(a + b) / 2} ${y - 1.4} L ${b + 1.2} ${y - 0.5} Z`}
+                  fill="#eadfc8"
+                  stroke="#1A1815"
+                  strokeWidth={0.04}
+                />
+              </g>
             )}
           </g>
         );

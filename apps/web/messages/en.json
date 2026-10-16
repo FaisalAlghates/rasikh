@@ -1681,9 +1681,11 @@
       "hall": "Hall building"
     },
     "style": {
-      "modern_najdi": "Modern Najdi",
+      "modern_najdi": "Najdi",
+      "contemporary": "Modern",
+      "swiss": "Swiss",
+      "palace": "Palace (luxurious)",
       "salmani": "Salmani",
-      "contemporary": "Contemporary",
       "classic": "Classic"
     },
     "kind": {
@@ -2380,7 +2382,8 @@
         "typology": "{kind, select, court {A courtyard house: a {w}×{h} m court ringed by shaded galleries, the dining room and family hall look onto it} sidecourt {A U-shaped house around a {w}×{h} m side court open to the garden} terrace {The upper floor steps back behind a {w}×{h} m terrace over the majlis} other {The men’s majlis in its own pavilion by the gate, a {w}×{h} m garden between it and the house}}",
         "annex": "A {m2} m² roof annex ({pct}% of the floor below) with a roof terrace before it",
         "inspired": "Inspired by a design of {office} ({city}) in the Rasikh library, re-laid on this plot and checked against the code and requirements",
-        "inspiredOwn": "After one of your office’s earlier projects, re-laid on this plot and checked against the code and requirements"
+        "inspiredOwn": "After one of your office’s earlier projects, re-laid on this plot and checked against the code and requirements",
+        "style": "In the {style, select, modern_najdi {Najdi style: an inner courtyard, small high openings and triangular crenellations} contemporary {modern style: wide glazing, cladding and a flat roof with a plain coping} swiss {Swiss style: a compact block, a pitched roof with wide eaves, timber cladding and shutters} palace {palace style: symmetry, a columned entrance, a dome and arched windows} other {classic style: symmetry and a cornice}}"
       },
       "deferred": "Added in design development: {items}",
       "deferredItem": {
@@ -2647,7 +2650,22 @@
           "bearingNote": "An example value: replace it with the soil report’s figure.",
           "unit": "kN/m²"
         }
+      },
+      "levels": {
+        "title": "Levels diagram",
+        "street": "Street level",
+        "roof": "Roof",
+        "parapet": "Parapet top",
+        "clear": "Clear height"
+      },
+      "access": {
+        "route": "Accessible route from the street",
+        "wc": "Accessible WC (1.5 m turning circle)",
+        "none": "No suitable WC on the ground floor.",
+        "note": "Indicative drawing: the office confirms the ramp, door and WC dimensions against the accessibility code before approval."
       }
-    }
+    },
+    "view3d": "3D model",
+    "view3dHint": "Move the pointer onto a design to see it in 3D; move it to turn the model."
   }
 }
