@@ -36,6 +36,13 @@ export async function generateMetadata({
 
 type Step = { h: string; p: string };
 
+/** Short separate videos, one per feature, shown on the page of the section they belong to. */
+const MORE: Record<ProductSection, readonly string[]> = {
+  property: ['leases', 'inspections', 'maintenance', 'buildings', 'assistant', 'map'],
+  office: ['styles'],
+  broker: [],
+};
+
 /** One product section explained on its own page: a walkthrough video, the steps, and what it never does. */
 export default function SectionPage({
   params,
@@ -101,6 +108,31 @@ export default function SectionPage({
               </li>
             ))}
           </ol>
+        </section>
+      )}
+
+      {MORE[section].length > 0 && (
+        <section aria-labelledby="sec-more" className="mt-12 flex flex-col gap-4">
+          <h2 id="sec-more" className="text-h2 font-semibold">
+            {t('page.moreTitle')}
+          </h2>
+          <ul className="grid gap-6 md:grid-cols-2" data-testid="more-videos">
+            {MORE[section].map((v) => (
+              <li key={v} className="flex flex-col gap-2">
+                <h3 className="text-h3 font-semibold">{t(`more.${v}`)}</h3>
+                <video
+                  controls
+                  preload="none"
+                  playsInline
+                  aria-label={t(`more.${v}`)}
+                  className="hairline aspect-video w-full rounded-xl bg-night"
+                  data-video={v}
+                >
+                  <source src={`/videos/${v}.webm`} type="video/webm" />
+                </video>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 

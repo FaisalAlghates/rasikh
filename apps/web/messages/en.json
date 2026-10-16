@@ -1398,7 +1398,8 @@
         "neverTitle": "What it never does",
         "start": "Start free",
         "others": "The other sections",
-        "printTitle": "How the drawings print"
+        "printTitle": "How the drawings print",
+        "moreTitle": "A separate video for each feature"
       },
       "property": {
         "lead": "One record for your properties from move-in day to move-out day: leases, payments, inspections, maintenance and buildings.",
@@ -1531,6 +1532,15 @@
           "It does not publish public listings or sell properties",
           "It gives no legal opinion or official valuation"
         ]
+      },
+      "more": {
+        "leases": "Leases and payments",
+        "inspections": "Move-in and move-out inspections",
+        "maintenance": "Maintenance",
+        "buildings": "Buildings and owners associations",
+        "assistant": "The real estate assistant",
+        "map": "The Kingdom map",
+        "styles": "The four design styles in 3D"
       }
     }
   },
