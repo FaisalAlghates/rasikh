@@ -93,6 +93,14 @@ export function openingsOf(plan: DesignPlan): Opening[] {
     if (r.type === 'entrance' && r.floor === 0) {
       push('entry', r, segment(r, 'front', 1.4), 0, 2.4);
     }
+    // the separate guest entrance: straight from outside into the men's majlis, on the street facade
+    if (
+      plan.guestEntry &&
+      r.type === 'majlis_men' &&
+      r.floor === 0 &&
+      Math.abs(r.y - plan.footprint.y) < 0.05
+    )
+      push('entry', r, segment(r, 'front', 1.2), 0, 2.4);
     if (r.type !== 'stair' || r.floor >= 0) {
       const target = doorTarget(r, same);
       const edge = target ? sharedEdge(r, target) : null;

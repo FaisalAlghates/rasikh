@@ -2,12 +2,14 @@
 
 import {
   openingsOf,
+  walkways,
   type Clash,
   type DesignPlan,
   type Piece,
   type PlanRoom,
   type StructuralScheme,
 } from '@rasikh/shared';
+import { useTranslations } from 'next-intl';
 import { useMemo, type KeyboardEvent } from 'react';
 
 /** Fill per room family (the Najd Dusk palette, quiet). */
@@ -80,6 +82,9 @@ export function PlanView(p: PlanViewProps) {
   const fp = plan.footprint;
   const env = plan.envelope;
   const fs = p.compact ? 0.55 : 0.42;
+  const t = useTranslations('eng');
+  const site = floor === 0 ? (plan.site ?? []) : [];
+  const walks = useMemo(() => (floor === 0 ? walkways(plan) : []), [plan, floor]);
 
   const key = (id: string) => (e: KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -125,6 +130,35 @@ export function PlanView(p: PlanViewProps) {
         strokeWidth={0.05}
         strokeDasharray="0.15 0.15"
       />
+
+      {/* site: walkways to the entrances, parking bays and the pool (ground floor only) */}
+      {walks.map((w, i) => (
+        <rect key={`walk-${i}`} x={w.x} y={Y(w.y + w.h)} width={w.w} height={w.h} fill="#efe8dc" />
+      ))}
+      {site.map((s) => (
+        <g key={s.id} data-site={s.type}>
+          <rect
+            x={s.x}
+            y={Y(s.y + s.h)}
+            width={s.w}
+            height={s.h}
+            fill={s.type === 'pool' ? '#cfe3ea' : 'none'}
+            stroke={s.type === 'pool' ? '#5f8fa6' : '#8C8478'}
+            strokeWidth={0.06}
+            strokeDasharray={s.type === 'parking' ? '0.25 0.15' : undefined}
+          />
+          <text
+            x={s.x + s.w / 2}
+            y={Y(s.y + s.h / 2) + (s.type === 'parking' ? 0.3 : fs * 0.35)}
+            fontSize={s.type === 'parking' ? 0.9 : fs}
+            textAnchor="middle"
+            fill={s.type === 'pool' ? '#3f6f86' : '#8C8478'}
+            style={{ direction: 'rtl', unicodeBidi: 'plaintext' }}
+          >
+            {s.type === 'parking' ? 'P' : t('site.pool')}
+          </text>
+        </g>
+      ))}
 
       {/* rooms */}
       {rooms.map((r) => {

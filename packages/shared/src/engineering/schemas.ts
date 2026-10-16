@@ -206,6 +206,15 @@ export const PlanRoomSchema = RectSchema.extend({
 });
 export type PlanRoom = z.infer<typeof PlanRoomSchema>;
 
+/** Site elements in the yards, never roofed: parking bays and a pool. */
+export const SITE_TYPES = ['parking', 'pool'] as const;
+export type SiteType = (typeof SITE_TYPES)[number];
+export const SiteItemSchema = RectSchema.extend({
+  id: z.string().min(1).max(40),
+  type: z.enum(SITE_TYPES),
+});
+export type SiteItem = z.infer<typeof SiteItemSchema>;
+
 /** One design option: rectangular rooms tiling a rectangular footprint on each floor. Same geometry for 2D and 3D. */
 export const DesignPlanSchema = z.object({
   plot: z.object({ width: z.number(), depth: z.number() }),
@@ -216,6 +225,10 @@ export const DesignPlanSchema = z.object({
   /** Clear height under the false ceiling. */
   clearHeight: z.number().min(2.2).max(5.5),
   rooms: z.array(PlanRoomSchema).max(400),
+  /** Parking bays and pool in the yards (absent on plans made before site elements existed). */
+  site: z.array(SiteItemSchema).max(60).optional(),
+  /** A separate guest entrance from outside straight into the men's majlis. */
+  guestEntry: z.boolean().optional(),
   /** The variant knobs that produced this option (for explanation and regeneration). */
   variant: z.record(z.string(), z.union([z.string(), z.number()])).default({}),
 });

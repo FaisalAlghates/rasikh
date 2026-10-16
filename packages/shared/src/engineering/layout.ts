@@ -1,4 +1,5 @@
 import { programRooms, type RoomSpec } from './brief.js';
+import { placeSite } from './site.js';
 import {
   HABITABLE,
   WET,
@@ -392,7 +393,7 @@ export function generatePlan(plot: Plot, zoning: Zoning, program: Program, v: Va
     ? rooms.map((r) => ({ ...r, x: round(2 * footprint.x + width - r.x - r.w) }))
     : rooms;
 
-  return {
+  const plan: DesignPlan = {
     plot: { width: plot.width, depth: plot.depth },
     envelope: env,
     footprint,
@@ -400,6 +401,8 @@ export function generatePlan(plot: Plot, zoning: Zoning, program: Program, v: Va
     floorHeight,
     clearHeight: 2.9,
     rooms: placed,
+    // Firestore stores no undefined values: the flag is present only when asked for
+    ...(program.separateGuestEntry ? { guestEntry: true } : {}),
     variant: {
       id: v.id,
       code: variantCode(v),
@@ -415,6 +418,8 @@ export function generatePlan(plot: Plot, zoning: Zoning, program: Program, v: Va
       master: v.master ?? 'front',
     },
   };
+  // parking bays and the pool go in the yards once the building is placed
+  return { ...plan, site: placeSite(plan, program) };
 }
 
 // ------------------------------------------------------------------------------------------- geometry helpers

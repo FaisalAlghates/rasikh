@@ -2002,7 +2002,9 @@
       "facadePerM2": "Facade finish",
       "doorEach": "Doors",
       "windowPerM2": "Windows",
-      "mepPerM2": "MEP works"
+      "mepPerM2": "MEP works",
+      "pavingPerM2": "External paving",
+      "poolPerM2": "Pool (per m² of water)"
     },
     "boqItem": {
       "excavation": "Excavation and backfill for foundations",
@@ -2021,7 +2023,9 @@
       "facade": "Facade finish",
       "doors": "Doors",
       "windows": "Windows",
-      "mep": "MEP works (electrical, plumbing, HVAC)"
+      "mep": "MEP works (electrical, plumbing, HVAC)",
+      "paving": "Paving: parking bays and walkways",
+      "pool": "Pool (shell, waterproofing and equipment, per m² of water)"
     },
     "boqSection": {
       "earthworks": "Earthworks",
@@ -2030,7 +2034,8 @@
       "insulation": "Insulation",
       "finishes": "Finishes",
       "openings": "Doors and windows",
-      "mep": "MEP"
+      "mep": "MEP",
+      "external": "External works"
     },
     "boqCol": {
       "no": "No.",
@@ -2058,7 +2063,8 @@
       "block": {
         "PROGRAM": "the plot cannot hold every requested room",
         "ACCESS": "not every room could be reached from the corridor",
-        "CLASH": "ducts clash with beams"
+        "CLASH": "ducts clash with beams",
+        "SITE": "the yards cannot hold the parking or pool asked for"
       },
       "compare": "Compare designs",
       "colOption": "Design",
@@ -2078,18 +2084,19 @@
         "core": "Stair {side, select, left {on the left} right {on the right} other {in the middle}}",
         "entry": "Entrance {side, select, middle {in the middle of the facade} left {on the left of the facade} other {on the right of the facade}}",
         "yard": "{where, select, back {Back yard} other {Front yard}} {m} m deep",
-        "passage": "Side passage on the {side, select, left {left} other {right}}, {m} m wide",
+        "passage": "{side, select, both {Side passages on both sides, {m} m wide each} left {Side passage on the left, {m} m wide} other {Side passage on the right, {m} m wide}}",
         "dining": "Dining {where, select, front {next to the majlis, for guests} other {with the family, by the kitchen}}",
         "master": "Master bedroom on the {where, select, front {front} other {back}} facade",
         "area": "Built-up {m2} m²{target, plural, =0 {} other { (you asked for about # m²)}} · coverage {coverage}%",
-        "plumbing": "{stacked} of {wet} upper bathrooms stacked (shorter pipe runs)"
+        "plumbing": "{stacked} of {wet} upper bathrooms stacked (shorter pipe runs)",
+        "guestEntry": "Separate guest entrance into the men’s majlis from the facade",
+        "parking": "{n, plural, one {# parking bay} other {# parking bays}} {layout, select, perpendicular {perpendicular to the street} other {parallel to the street}} in the {where, select, front {front yard} front_side {front yard and side passage} other {side passage}}, with a walkway to the entrance",
+        "pool": "{size} m pool in the {where, select, back {back yard} front {front yard} other {side passage}}, 1.2 m clear around it"
       },
       "deferred": "Added in design development: {items}",
       "deferredItem": {
-        "pool": "pool",
         "basement": "basement",
-        "roofAnnex": "roof annex",
-        "separateGuestEntry": "separate guest entrance"
+        "roofAnnex": "roof annex"
       },
       "checksZoning": "Zoning: {passed} of {total} pass",
       "checksCode": "Automatic code checks: {passed} of {total} pass",
@@ -2097,6 +2104,10 @@
       "codeStarting": "with starting values; they read “passed” once the office engineer verifies them from the licensed code",
       "checksManual": "{n} items always reviewed by the engineer: fire, energy, structure, electrical, plumbing",
       "floors": "Design floors"
+    },
+    "site": {
+      "parking": "Parking",
+      "pool": "Pool"
     }
   }
 }
