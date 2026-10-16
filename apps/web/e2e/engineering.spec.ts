@@ -175,7 +175,7 @@ test('engineering office: brief → options → client picks → development →
   await expect(lead.page.getByTestId('compare')).toContainText('فناء داخلي');
   await expect(lead.page.getByTestId('compare')).toContainText('مجلس مستقل');
   await expect(optionA.getByTestId('option-checks')).toContainText(
-    'الاشتراطات البلدية: 7 من 7 مطابقة',
+    'الاشتراطات البلدية: 8 من 8 مطابقة',
   );
   await expect(optionA.getByTestId('option-checks')).toContainText(
     'فحوص الكود الآلية: 12 من 12 تجتاز',
@@ -201,7 +201,7 @@ test('engineering office: brief → options → client picks → development →
   // the client compares the options, with the same checks and costs the office saw
   await expect(client.page.getByTestId('compare')).toContainText('الميزانية');
   await expect(client.page.getByTestId('concept-A').getByTestId('option-checks')).toContainText(
-    'الاشتراطات البلدية: 7 من 7 مطابقة',
+    'الاشتراطات البلدية: 8 من 8 مطابقة',
   );
   await expect(client.page.getByTestId('concept-A').getByTestId('option-cost')).toContainText(
     'ليست عرض سعر',

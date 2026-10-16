@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { LAND_USES } from './catalog.js';
 
 /**
  * AI engineering office (docs/ENGINEERING_OFFICE.md). Everything here is a DRAFT aid for a licensed
@@ -69,6 +70,8 @@ export const PlotSchema = z.object({
   district: z.string().trim().max(60).default(''),
   /** Optional real location for the sun study and the massing on the Rasikh map. */
   location: z.object({ lat: z.number(), lng: z.number() }).optional(),
+  /** The land use in the plot's approved local plan (residential, commercial, agricultural ...). */
+  landUse: z.enum(LAND_USES).default('residential'),
 });
 export type Plot = z.infer<typeof PlotSchema>;
 
@@ -93,6 +96,8 @@ export const ZoningSchema = z.object({
   parkingPerUnit: z.number().min(0).max(5),
   /** A roof annex: at most this share of the floor below (absent: the plot's requirements were not entered). */
   roofAnnexShare: z.number().min(0).max(1).optional(),
+  /** The building types the plot's planning allows, when the Amanah narrows the land use's default list. */
+  allowedTypes: z.array(z.string().max(40)).max(120).optional(),
   /** The municipal requirements the values were taken from (regulations.ts), when one was applied. */
   source: z
     .object({
@@ -105,7 +110,14 @@ export const ZoningSchema = z.object({
 });
 export type Zoning = z.infer<typeof ZoningSchema>;
 
-export const BUILDING_TYPES = ['villa', 'duplex', 'townhouse', 'apartments', 'commercial'] as const;
+export const BUILDING_TYPES = [
+  'villa',
+  'duplex',
+  'townhouse',
+  'apartments',
+  'commercial',
+  'hall',
+] as const;
 export const STYLES = ['modern_najdi', 'salmani', 'contemporary', 'classic'] as const;
 
 /** The client's programme, validated before any concept is generated. */
@@ -126,7 +138,7 @@ export const ProgramSchema = z.object({
   basement: z.boolean().default(false),
   pool: z.boolean().default(false),
   elevator: z.boolean().default(false),
-  parking: z.number().int().min(0).max(20).default(2),
+  parking: z.number().int().min(0).max(2000).default(2),
   separateGuestEntry: z.boolean().default(false),
   /** Extra rooms a Saudi family brief often asks for. */
   guestRoom: z.boolean().default(false),
@@ -140,6 +152,10 @@ export const ProgramSchema = z.object({
   /** Built-up area the client has in mind (m², all floors). */
   targetAreaM2: z.number().min(40).max(20000).optional(),
   style: z.enum(STYLES).default('modern_najdi'),
+  /** The building type from the catalogue (palace, hotel, mosque, warehouse ...); the engine family follows it. */
+  buildingType: z.string().max(40).optional(),
+  /** Market and condition labels (for sale, off plan, heritage, furnished ...). */
+  tags: z.array(z.string().max(30)).max(20).default([]),
   budgetSar: z
     .object({ min: z.number().min(0), max: z.number().min(0) })
     .refine((b) => b.max >= b.min, 'budget_range')
@@ -168,6 +184,13 @@ export const ROOM_TYPES = [
   'prep_kitchen',
   'closet',
   'annex_room',
+  'hall',
+  'reception',
+  'wc_men',
+  'wc_women',
+  'ablution',
+  'loading',
+  'hotel_room',
   'courtyard',
   'terrace',
   'stair',
@@ -194,6 +217,7 @@ export const HABITABLE: readonly RoomType[] = [
   'prayer_room',
   'gym',
   'annex_room',
+  'hotel_room',
 ];
 export const WET: readonly RoomType[] = [
   'bathroom',
@@ -201,6 +225,9 @@ export const WET: readonly RoomType[] = [
   'kitchen',
   'laundry',
   'prep_kitchen',
+  'wc_men',
+  'wc_women',
+  'ablution',
 ];
 
 /** A rectangle in plot coordinates (metres). */

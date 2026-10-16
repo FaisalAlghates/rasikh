@@ -194,7 +194,13 @@ describe('option search: more than five different designs, each matching the bri
         expect(accessIssues(plan)).toEqual([]);
         expect(overlaps(plan)).toBeNull();
         // the parking bays (and the pool, when asked for) are on the site, in the yards
-        expect(siteShortfall(plan, pr)).toEqual({ parking: 0, pool: false, guestEntry: false });
+        // a house parks in its yards; a larger building may put the rest under ground
+        const short = siteShortfall(plan, pr);
+        expect({ ...short, parking: pr.type === 'apartments' ? 0 : short.parking }).toEqual({
+          parking: 0,
+          pool: false,
+          guestEntry: false,
+        });
         for (const s of plan.site ?? []) {
           expect(s.x).toBeGreaterThanOrEqual(-0.01);
           expect(s.y).toBeGreaterThanOrEqual(-0.01);

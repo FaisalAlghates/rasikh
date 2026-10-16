@@ -4,6 +4,7 @@ import {
   MAX_OPTIONS,
   MIN_OPTIONS,
   boq,
+  catalogEntry,
   coveredArea,
   builtUpArea,
   deferredItems,
@@ -285,7 +286,11 @@ export function ConceptsPanel({
       {officeMember && (
         <section className="flex flex-col gap-3" aria-label={t('tabs.concepts')}>
           <p className="max-w-3xl text-small text-text-muted">{t('designs.lead')}</p>
-          {!project.zoning ? (
+          {catalogEntry(project.program.buildingType)?.family === 'specialist' ? (
+            <p className="text-small text-warning" data-testid="specialist">
+              {t('uses.specialistOffice')}
+            </p>
+          ) : !project.zoning ? (
             <p className="text-small text-warning">{t('zoningRequired')}</p>
           ) : (
             <div className="flex flex-wrap items-end gap-2">

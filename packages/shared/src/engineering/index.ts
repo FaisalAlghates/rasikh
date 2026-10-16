@@ -1,4 +1,5 @@
 export * from './schemas.js';
+export * from './catalog.js';
 export * from './brief.js';
 export * from './geometry.js';
 export * from './layout.js';

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { LAND_USES, type LandUse } from './catalog.js';
 import { BUILDING_TYPES, type Plot, type Program, type Zoning } from './schemas.js';
 
 /**
@@ -27,6 +28,10 @@ export const RegulationSchema = z.object({
   scope: z.enum(['national', 'amanah']),
   cities: z.array(z.string().trim().min(2).max(40)).max(40).default([]),
   buildingTypes: z.array(z.enum(BUILDING_TYPES)).min(1),
+  /** The land uses it covers (absent: any). */
+  landUses: z.array(z.enum(LAND_USES)).max(6).optional(),
+  /** Building types the Amanah's planning allows here (narrows the land use's default list). */
+  allowedTypes: z.array(z.string().max(40)).max(120).optional(),
   source: z.object({
     issuer: z.string().trim().min(2).max(160),
     document: z.string().trim().min(3).max(240),
@@ -85,6 +90,7 @@ export const NATIONAL_REGULATIONS: RegulationEntry[] = [
     scope: 'national',
     cities: [],
     buildingTypes: ['villa', 'duplex', 'townhouse'],
+    landUses: ['residential'],
     source: MOMAH,
     setbacks: {
       front: { fraction: 0.2, min: 3, wide: { from: 30, setback: 6 } },
@@ -120,6 +126,7 @@ export const NATIONAL_REGULATIONS: RegulationEntry[] = [
     scope: 'national',
     cities: [],
     buildingTypes: ['apartments', 'commercial'],
+    landUses: ['residential', 'commercial', 'investment'],
     source: MOMAH,
     setbacks: {
       front: { fraction: 0.2, min: 3 },
@@ -157,9 +164,13 @@ export function applicableRegulations(
   entries: readonly RegulationEntry[],
   type: Program['type'],
   city: string,
+  landUse?: LandUse,
 ): RegulationEntry[] {
   return entries.filter(
-    (r) => r.buildingTypes.includes(type) && (r.scope === 'national' || r.cities.includes(city)),
+    (r) =>
+      r.buildingTypes.includes(type) &&
+      (r.scope === 'national' || r.cities.includes(city)) &&
+      (!landUse || !r.landUses || r.landUses.includes(landUse)),
   );
 }
 
@@ -211,6 +222,7 @@ export function zoningFromRegulation(
             100,
         ) / 100,
       ...(reg.roofAnnexShare !== undefined ? { roofAnnexShare: reg.roofAnnexShare } : {}),
+      ...(reg.allowedTypes?.length ? { allowedTypes: reg.allowedTypes } : {}),
       maxFloors: floors,
       maxHeightM: reg.maxHeightM ?? current?.maxHeightM ?? 12,
       parkingPerUnit: byArea ?? reg.parking.perUnit ?? current?.parkingPerUnit ?? 1,

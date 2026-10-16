@@ -54,7 +54,11 @@ export function maxWidth(t: RoomType): number {
 /** The narrowest a room's column may get (m): a habitable room keeps clear of the code's minimum dimension. */
 export function minWidth(t: RoomType): number {
   if (HABITABLE.includes(t)) return 2.6;
-  if (t === 'apartment' || t === 'shop') return 4;
+  if (t === 'apartment' || t === 'shop' || t === 'hall') return t === 'hall' ? 8 : 4;
+  if (t === 'reception') return 3;
+  if (t === 'ablution') return 2;
+  if (t === 'loading') return 3;
+  if (t === 'wc_men' || t === 'wc_women') return 1.6;
   if (t === 'kitchen') return 2.4;
   if (t === 'entrance') return 2;
   if (t === 'bathroom') return 1.6;

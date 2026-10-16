@@ -164,7 +164,9 @@ export function openingsOf(plan: DesignPlan): Opening[] {
       HABITABLE.includes(r.type) ||
       WET.includes(r.type) ||
       r.type === 'apartment' ||
-      r.type === 'shop'
+      r.type === 'shop' ||
+      r.type === 'hall' ||
+      r.type === 'reception'
     ) {
       const wet = WET.includes(r.type);
       // one window per outside side, in its longest stretch
@@ -178,7 +180,9 @@ export function openingsOf(plan: DesignPlan): Opening[] {
         // a long wall gets a row of windows, about one every 2.6 m (a WC or a shop front keeps one)
         const len = run.to - run.from;
         const n = wet || r.type === 'shop' ? 1 : Math.max(1, Math.round(len / 2.6));
-        const w = wet ? 0.6 : r.type === 'shop' ? 3 : Math.min(winW, len / n - 0.4);
+        // a habitable room's windows reach a tenth of its floor in glass where the wall allows (wider windows)
+        const need = HABITABLE.includes(r.type) ? (0.1 * r.w * r.h) / (best.size * n * 1.4) : 0;
+        const w = wet ? 0.6 : r.type === 'shop' ? 3 : Math.min(Math.max(winW, need), len / n - 0.4);
         for (let k = 0; k < n; k++) {
           const from = run.from + (len * k) / n;
           push(

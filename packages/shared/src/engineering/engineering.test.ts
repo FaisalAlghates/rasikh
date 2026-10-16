@@ -222,6 +222,11 @@ describe('rule engine', () => {
         return { ...c, plan, zoning: { ...z, roofAnnexShare: 0.1 } };
       },
     ],
+    // pass: no building type, or one the land use allows; fail: a factory on residential land
+    'Z-USE': [
+      (c) => ({ ...c, program: { ...c.program, buildingType: 'villa' } }),
+      (c) => ({ ...c, program: { ...c.program, buildingType: 'factory' } }),
+    ],
     'C-ROOM-AREA': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'bedroom', 2.5, 2.5) })],
     'C-ROOM-DIM': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'bedroom', 1.8, 6) })],
     'C-CEILING': [(c) => c, (c) => ({ ...c, plan: { ...c.plan, clearHeight: 2.3 } })],

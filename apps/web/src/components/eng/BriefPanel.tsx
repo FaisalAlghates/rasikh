@@ -4,6 +4,7 @@ import {
   DISCIPLINES,
   ZoningSchema,
   requiredDisciplines,
+  allowedOn,
   zoningFromRegulation,
   type Discipline,
   type Zoning,
@@ -128,8 +129,24 @@ export function BriefPanel({
           {project.brief}
         </blockquote>
         <dl className="grid grid-cols-2 gap-2 text-small">
-          <dt className="text-text-muted">{t('typeLabel')}</dt>
-          <dd>{t(`type.${p.type}`)}</dd>
+          <dt className="text-text-muted">{t('uses.kind')}</dt>
+          <dd>{p.buildingType ? t(`kind.${p.buildingType}`) : t(`type.${p.type}`)}</dd>
+          <dt className="text-text-muted">{t('uses.landUse')}</dt>
+          <dd data-testid="land-use">
+            {t(`uses.land.${project.plot.landUse ?? 'residential'}`)}
+            {p.buildingType &&
+              (allowedOn(p.buildingType, project.plot.landUse ?? 'residential', z.allowedTypes) ? (
+                <span className="text-success"> · {t('uses.allowed')}</span>
+              ) : (
+                <span className="text-danger"> · {t('uses.notAllowed')}</span>
+              ))}
+          </dd>
+          {(p.tags ?? []).length > 0 && (
+            <>
+              <dt className="text-text-muted">{t('uses.tags')}</dt>
+              <dd>{(p.tags ?? []).map((x) => t(`tag.${x}`)).join(' · ')}</dd>
+            </>
+          )}
           <dt className="text-text-muted">{t('floors')}</dt>
           <dd>{p.floors}</dd>
           <dt className="text-text-muted">{t('bedrooms')}</dt>

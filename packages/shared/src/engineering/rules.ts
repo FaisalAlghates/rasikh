@@ -8,6 +8,7 @@ import {
   onFloor,
   outsideSides,
 } from './geometry.js';
+import { allowedOn } from './catalog.js';
 import { envelopeOf } from './layout.js';
 import { openingsOf, openingWidth } from './openings.js';
 import {
@@ -35,7 +36,7 @@ export type RulePack = 'zoning' | 'code';
 
 export interface RuleContext {
   plan: DesignPlan;
-  plot: Pick<Plot, 'width' | 'depth'> & Partial<Pick<Plot, 'streets'>>;
+  plot: Pick<Plot, 'width' | 'depth'> & Partial<Pick<Plot, 'streets' | 'landUse'>>;
   zoning: Zoning;
   program: Program;
 }
@@ -89,6 +90,19 @@ const units = (p: Program) => (p.type === 'apartments' ? p.unitsPerFloor * p.flo
 
 export const RULES: RuleDef[] = [
   // ------------------------------------------------------------------ zoning (municipal values entered per plot)
+  {
+    // the land use: the building type must be one the plot's planning allows
+    id: 'Z-USE',
+    pack: 'zoning',
+    discipline: 'architectural',
+    ref: 'zoning',
+    params: {},
+    check: ({ plot, program, zoning }) => ({
+      ok:
+        !program.buildingType ||
+        allowedOn(program.buildingType, plot.landUse ?? 'residential', zoning.allowedTypes),
+    }),
+  },
   {
     id: 'Z-SETBACK',
     pack: 'zoning',
@@ -309,7 +323,12 @@ export const RULES: RuleDef[] = [
           (r.type === 'guest_wc' ||
             r.type === 'bathroom' ||
             r.type === 'apartment' ||
-            r.type === 'shop'),
+            r.type === 'shop' ||
+            r.type === 'hotel_room' ||
+            r.type === 'office' ||
+            r.type === 'wc_men' ||
+            r.type === 'wc_women' ||
+            r.type === 'ablution'),
       ),
     }),
   },
