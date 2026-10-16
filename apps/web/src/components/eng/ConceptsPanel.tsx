@@ -39,6 +39,7 @@ import { cn } from '@/components/ui/cn';
 import { firebaseDb } from '@/lib/firebase';
 import { planSha, type CheckSummary, type ProjectDoc, type VersionDoc } from '@/lib/eng/data';
 import { floorLabel } from '@/lib/eng/labels';
+import { officePatterns, useDesignLibrary } from '@/lib/eng/library';
 import type { Row } from '@/lib/ops/hooks';
 import { BoqTable } from './BoqTable';
 import { PlanView } from './PlanView';
@@ -71,6 +72,8 @@ type Summary = {
   chosen: number;
   blocking: Array<{ id: string; count: number }>;
   floorsReduced: boolean;
+  libraryMatches: number;
+  inspired: number;
 };
 
 /**
@@ -88,7 +91,9 @@ export function ConceptsPanel({
   overrides,
   rates,
   roomLabel,
+  officeName,
 }: {
+  officeName: string;
   pid: string;
   project: ProjectDoc;
   versions: Row<VersionDoc>[];
@@ -105,6 +110,7 @@ export function ConceptsPanel({
   const [count, setCount] = useState(8);
   const [summary, setSummary] = useState<Summary>();
   // A, B, ... Z, AA: options made in one batch share a timestamp, so the label gives the order
+  const shared = useDesignLibrary(project.program.type, officeMember);
   const concepts = useMemo(
     () =>
       versions
@@ -134,12 +140,21 @@ export function ConceptsPanel({
     act(more ? 'more' : 'gen', async () => {
       const zoning = project.zoning;
       if (!zoning) throw new Error('zoning');
+      // what the engine learns from: designs offices shared (with their clients' consent) and this office's own
+      // released projects (they never leave the office)
+      const own = await officePatterns(
+        project.officeId,
+        officeName,
+        project.program.type,
+        pid,
+      ).catch(() => []);
       // let the busy state paint before the search runs on this thread
       await new Promise((r) => setTimeout(r, 30));
       const r = searchOptions(project.plot, zoning, project.program, {
         count,
         overrides,
         existing: more ? concepts.map((v) => v.data.plan) : [],
+        library: [...shared.items, ...own],
       });
       setSummary({
         tried: r.tried,
@@ -147,6 +162,8 @@ export function ConceptsPanel({
         chosen: r.options.length,
         blocking: r.blocking,
         floorsReduced: r.floorsReduced,
+        libraryMatches: r.libraryMatches,
+        inspired: r.inspired,
       });
       if (r.options.length === 0) return;
       const db = firebaseDb();
@@ -343,6 +360,14 @@ export function ConceptsPanel({
               {summary.chosen > 0 && summary.chosen < Math.min(count, MIN_OPTIONS) && (
                 <p className="text-warning">{t('designs.fewer', { n: summary.chosen })}</p>
               )}
+              <p className="text-text-muted" data-testid="library-summary">
+                {summary.libraryMatches > 0
+                  ? t('designs.fromLibrary', {
+                      matches: summary.libraryMatches,
+                      inspired: summary.inspired,
+                    })
+                  : t('designs.libraryEmpty')}
+              </p>
               {summary.floorsReduced && project.zoning && (
                 <p className="text-warning">
                   {t('designs.floorsReduced', { n: project.zoning.maxFloors })}
@@ -446,7 +471,9 @@ export function ConceptsPanel({
             notes={notes.map((n) =>
               n.key === 'program'
                 ? t('designs.fit.program', { rooms: roomsText })
-                : t(`designs.fit.${n.key}`, n.values),
+                : n.key === 'inspired' && String(plan.variant.inspiredBy).startsWith('own-')
+                  ? t('designs.fit.inspiredOwn')
+                  : t(`designs.fit.${n.key}`, n.values),
             )}
             deferred={deferredText(plan)}
             chosen={project.pickedVersionId === v.id}

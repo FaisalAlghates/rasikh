@@ -327,6 +327,53 @@ test('engineering office: brief → options → client picks → development →
   await client.page.goto(projectUrl);
   await expect(client.page.getByTestId('handoff-done')).toBeVisible({ timeout: 30_000 });
 
+  // 11) the design library: the client agrees to share the design without their data; the office lead adds it,
+  // credited to the office; it shows in the offices' library
+  const lib = client.page.getByTestId('library-panel');
+  await lib.getByLabel('أوافق على مشاركة تصميمي في مكتبة راسخ دون بياناتي').click();
+  await expect(lib.getByLabel('أوافق على مشاركة تصميمي في مكتبة راسخ دون بياناتي')).toBeChecked();
+  await lead.page.goto(projectUrl);
+  const leadLib = lead.page.getByTestId('library-panel');
+  await leadLib.getByLabel('النمط مع المخطط').check({ timeout: 45_000 });
+  await leadLib.getByRole('button', { name: 'أضف إلى المكتبة' }).click();
+  await expect(leadLib.getByTestId('library-added')).toBeVisible({ timeout: 20_000 });
+  await lead.page.goto('/ar/workspace');
+  await lead.page.getByRole('tab', { name: 'مكتبة التصاميم' }).click();
+  await expect(
+    lead.page.getByTestId('library-entry').filter({ hasText: officeName }).first(),
+  ).toBeVisible({ timeout: 30_000 });
+  await shot(lead.page, 'design-library');
+
+  // 12) a second, similar brief: the engine learns from the office's released design and says so
+  await client.page.goto('/ar/design');
+  const form2 = client.page.getByTestId('brief-form');
+  await form2.getByLabel(new RegExp(officeName)).check();
+  await form2.getByLabel('اسم المشروع').fill('فيلا الياسمين');
+  await form2
+    .getByLabel('صف ما تريد')
+    .fill('فيلا دورين على أرض ٢٢×٣٢، ٤ غرف نوم، مجلس رجال ومجلس نساء، غرفة خادمة، طراز نجدي');
+  await form2.getByRole('button', { name: 'اقرأ الوصف' }).click();
+  await form2.getByRole('button', { name: 'أكّد البرنامج وأرسل للمكتب' }).click();
+  await expect(form2.getByText('أُرسل طلبك إلى المكتب.')).toBeVisible({ timeout: 20_000 });
+  await lead.page.getByRole('tab', { name: 'المشاريع' }).click();
+  await lead.page.getByTestId('office-project').filter({ hasText: 'فيلا الياسمين' }).click();
+  const z2 = lead.page.getByTestId('zoning-form');
+  await z2.getByTestId('regulations').getByRole('button', { name: 'طبّق على القطعة' }).click({
+    timeout: 45_000,
+  });
+  await z2.getByLabel(/أقصى ارتفاع/).fill('14');
+  await z2.getByRole('button', { name: 'اقبل الطلب' }).click();
+  await expect(lead.page.getByTestId('project-status')).toHaveText('مقبول', { timeout: 20_000 });
+  await lead.page.getByRole('tab', { name: 'الخيارات' }).click();
+  await lead.page.getByRole('button', { name: 'صمّم 8 خيارات' }).click();
+  await expect(lead.page.locator('[data-testid^="concept-"]')).toHaveCount(8, { timeout: 30_000 });
+  await expect(lead.page.getByTestId('library-summary')).toContainText('تعلّم المساعد من');
+  await expect(
+    lead.page.getByTestId('fit-notes').filter({ hasText: 'أُعيد رسمه على هذه الأرض' }).first(),
+  ).toBeVisible();
+  await shot(lead.page, 'concepts-learned');
+  await client.page.goto(projectUrl);
+
   // accessibility of the office and client screens
   const axe = async (p: Page) =>
     (
@@ -338,7 +385,7 @@ test('engineering office: brief → options → client picks → development →
   await lead.page.getByRole('tab', { name: 'المخطط والفحص' }).click();
   expect(await axe(lead.page), 'office plan editor').toEqual([]);
   await client.page.goto('/ar/design');
-  await expect(client.page.getByTestId('my-project')).toHaveCount(1, { timeout: 30_000 });
+  await expect(client.page.getByTestId('my-project')).toHaveCount(2, { timeout: 30_000 });
   expect(await axe(client.page), 'client design page').toEqual([]);
   await lead.page.goto('/ar/workspace');
   await expect(lead.page.getByTestId('office-workspace')).toBeVisible({ timeout: 30_000 });

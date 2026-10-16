@@ -560,6 +560,32 @@ service cloud.firestore {
       }
     }
 
+    // The design library the engine learns from: a released design, shared by its office only with the client's
+    // consent, without personal data, credited to the office. One entry per project (id = the project).
+    match /designLibrary/{pid} {
+      function libProject() {
+        return get(/databases/$(database)/documents/designProjects/$(pid)).data;
+      }
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && isOfficeLead(request.resource.data.officeId)
+        && libProject().officeId == request.resource.data.officeId
+        && libProject().status == 'released'
+        && libProject().get('libraryConsent', false) == true
+        && request.resource.data.keys().hasOnly(['officeId', 'officeName', 'title', 'city', 'type', 'style', 'floors', 'bedrooms', 'plot', 'builtUpM2', 'pattern', 'share', 'plan', 'contributedBy', 'createdAt'])
+        && request.resource.data.share in ['pattern', 'plan']
+        && (request.resource.data.share == 'plan' || !('plan' in request.resource.data))
+        && request.resource.data.title is string && request.resource.data.title.size() <= 120
+        && request.resource.data.contributedBy == request.auth.uid
+        && request.resource.data.createdAt == request.time;
+      allow update: if false;
+      // the office withdraws it, the client withdraws consent, or the Rasikh team takes it down
+      allow delete: if signedIn()
+        && (libProject().clientUid == request.auth.uid
+          || isOfficeLead(libProject().officeId)
+          || isPlatformAdmin());
+    }
+
     match /designProjects/{pid} {
       allow read: if signedIn()
         && (resource.data.clientUid == request.auth.uid || isOfficeMember(resource.data.officeId));
@@ -583,7 +609,11 @@ service cloud.firestore {
             && ((resource.data.status == 'brief' && request.resource.data.status == 'brief'
                 && changed().hasOnly(['title', 'brief', 'program', 'plot', 'updatedAt']))
               || (resource.data.status == 'concepts' && request.resource.data.status == 'picked'
-                && changed().hasOnly(['status', 'pickedVersionId', 'updatedAt']))))
+                && changed().hasOnly(['status', 'pickedVersionId', 'updatedAt']))
+              // once released: the client agrees (or no longer agrees) to share the design, without their data
+              || (resource.data.status == 'released' && request.resource.data.status == 'released'
+                && changed().hasOnly(['libraryConsent', 'libraryConsentAt', 'updatedAt'])
+                && request.resource.data.libraryConsent is bool)))
         );
       allow delete: if false;
 

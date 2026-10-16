@@ -1919,7 +1919,8 @@
         "profile": "Office profile",
         "rules": "Code parameters",
         "rates": "Unit rates",
-        "precedents": "Precedent library"
+        "precedents": "Precedent library",
+        "library": "Design library"
       },
       "projectsLead": "Incoming briefs and the office’s projects.",
       "noProjects": "No briefs yet. Turn on “taking briefs” in the office profile so clients can find you.",
@@ -2102,7 +2103,9 @@
         "parking": "{n, plural, one {# parking bay} other {# parking bays}} {layout, select, perpendicular {perpendicular to the street} other {parallel to the street}} in the {where, select, front {front yard} front_side {front yard and side passage} other {side passage}}, with a walkway to the entrance",
         "pool": "{size} m pool in the {where, select, back {back yard} front {front yard} other {side passage}}, 1.2 m clear around it",
         "typology": "{kind, select, court {A courtyard house: a {w}×{h} m court ringed by shaded galleries, the dining room and family hall look onto it} sidecourt {A U-shaped house around a {w}×{h} m side court open to the garden} terrace {The upper floor steps back behind a {w}×{h} m terrace over the majlis} other {The men’s majlis in its own pavilion by the gate, a {w}×{h} m garden between it and the house}}",
-        "annex": "A {m2} m² roof annex ({pct}% of the floor below) with a roof terrace before it"
+        "annex": "A {m2} m² roof annex ({pct}% of the floor below) with a roof terrace before it",
+        "inspired": "Inspired by a design of {office} ({city}) in the Rasikh library, re-laid on this plot and checked against the code and requirements",
+        "inspiredOwn": "After one of your office’s earlier projects, re-laid on this plot and checked against the code and requirements"
       },
       "deferred": "Added in design development: {items}",
       "deferredItem": {
@@ -2122,7 +2125,9 @@
         "sidecourt": "Side courtyard",
         "terrace": "Upper terrace",
         "pavilion": "Guest pavilion"
-      }
+      },
+      "fromLibrary": "The assistant learnt from {matches, plural, one {# similar design} other {# similar designs}} in the library and your office’s projects; {inspired, plural, =0 {no option draws on them yet} one {# option draws on them} other {# options draw on them}}.",
+      "libraryEmpty": "No similar designs in the library or your office’s released projects yet; every design added makes the assistant richer."
     },
     "site": {
       "parking": "Parking",
@@ -2215,6 +2220,26 @@
         "failed": "Could not save.",
         "invalid": "Fill in the title, cities, issuer and document."
       }
+    },
+    "library": {
+      "title": "Rasikh design library",
+      "clientLead": "The design assistant learns from licensed offices’ designs when their owners agree. If you agree, the office adds your design to the library without your name or exact location, credited to the office; you can withdraw at any time.",
+      "consent": "I agree to share my design in the Rasikh library without my data",
+      "leadLead": "The client agreed to share the design. Add it to the library so the assistant learns from it on similar briefs at other offices, credited to your office.",
+      "waiting": "Designs join the library only with the client’s consent; the client has not agreed yet.",
+      "shareLegend": "What is shared",
+      "share": {
+        "pattern": "The pattern only (how the spaces are arranged, the design type)",
+        "plan": "The pattern and the plan"
+      },
+      "add": "Add to the library",
+      "added": "The design is in the library: {share}.",
+      "remove": "Withdraw it",
+      "failed": "Could not save.",
+      "listLead": "Designs offices added with their clients’ consent, without their data, credited to each office. The assistant learns from them: it re-lays their patterns on the new plot and checks them against the code and the requirements; it never copies a plan.",
+      "count": "{n, plural, one {# design} other {# designs}} from {offices, plural, one {# office} other {# offices}}",
+      "allTypes": "All types",
+      "empty": "No designs in the library yet."
     }
   }
 }
