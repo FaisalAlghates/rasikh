@@ -3,6 +3,7 @@ export * from './brief.js';
 export * from './geometry.js';
 export * from './layout.js';
 export * from './options.js';
+export * from './library.js';
 export * from './site.js';
 export * from './rules.js';
 export * from './regulations.js';
