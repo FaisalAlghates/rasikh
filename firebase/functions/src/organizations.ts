@@ -1,4 +1,9 @@
-import { CreateOrganizationInputSchema, type Role } from '@rasikh/shared';
+import {
+  CreateOrganizationInputSchema,
+  LAUNCH_FREE,
+  SECTION_ROLES,
+  type Role,
+} from '@rasikh/shared';
 import type { Auth } from 'firebase-admin/auth';
 import { FieldValue, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError } from 'firebase-functions/v2/https';
@@ -27,11 +32,21 @@ export async function createOrganization(deps: Deps, uid: string | undefined, ra
     throw new HttpsError('resource-exhausted', 'too_many_organizations');
   }
 
+  const section = input.section;
+  if (section && !input.roles.every((r) => SECTION_ROLES[section].includes(r))) {
+    throw new HttpsError('invalid-argument', 'role_not_in_section');
+  }
+
   const orgRef = deps.db.collection('orgs').doc();
   const roles = Array.from(new Set(input.roles)) as Role[];
 
   const batch = deps.db.batch();
-  batch.set(orgRef, { name: input.name, createdBy: uid, createdAt: FieldValue.serverTimestamp() });
+  batch.set(orgRef, {
+    name: input.name,
+    createdBy: uid,
+    createdAt: FieldValue.serverTimestamp(),
+    ...(section ? { section, plan: LAUNCH_FREE ? 'free' : 'trial' } : {}),
+  });
   if (roles.includes('office_lead')) {
     // public profile of an engineering office; only the Rasikh team can mark it verified
     batch.set(deps.db.doc(`offices/${orgRef.id}`), {

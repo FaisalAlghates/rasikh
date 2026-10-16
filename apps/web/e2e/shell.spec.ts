@@ -293,6 +293,7 @@ test('roles: one account in two organizations (tenant in one, owner of another) 
   await p.getByTestId('account-menu').click();
   await p.getByRole('link', { name: 'أنشئ مساحة عمل جديدة' }).click();
   await expect(p).toHaveURL(/\/ar\/onboarding\?new=1/, { timeout: 45_000 });
+  await p.getByRole('button', { name: /إدارة الأملاك/ }).click();
   await p.getByText('مالك', { exact: true }).click();
   await p.locator('#displayName').fill('نورة');
   await p.locator('#orgName').fill('أملاك نورة');

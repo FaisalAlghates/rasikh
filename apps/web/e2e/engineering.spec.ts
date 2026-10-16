@@ -40,7 +40,7 @@ test('engineering office: brief → options → client picks → development →
   const leadEmail = `lead-${stamp}@rasikh.test`;
   const lead = await person(browser, leadEmail);
   await verifyEmail(request, leadEmail);
-  await lead.page.getByText('مكتب هندسي', { exact: true }).click();
+  await lead.page.getByRole('button', { name: /المكتب الهندسي/ }).click();
   await lead.page.locator('#displayName').fill('م. فيصل');
   await lead.page.locator('#orgName').fill(officeName);
   await lead.page.locator('input[type=checkbox]').last().check();
@@ -300,6 +300,7 @@ test('engineering office: brief → options → client picks → development →
   const handoff = client.page.getByTestId('handoff');
   await handoff.getByRole('link', { name: 'أنشئ مساحة عمل وأضف عقارك' }).click();
   await expect(client.page).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
+  await client.page.getByRole('button', { name: /إدارة الأملاك/ }).click();
   await client.page.getByText('مالك', { exact: true }).click();
   await client.page.locator('#displayName').fill('عميل التصميم');
   await client.page.locator('#orgName').fill('أملاكي');

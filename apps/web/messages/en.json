@@ -74,7 +74,17 @@
       "pickRole": "Pick at least one role.",
       "needConsent": "Consent is required to continue.",
       "tooMany": "You have reached the maximum number of workspaces.",
-      "generic": "Could not create the workspace. Please try again."
+      "generic": "Could not create the workspace. Please try again.",
+      "role": "That role does not belong to this section."
+    },
+    "pickSection": "Choose a section",
+    "pickSectionHint": "Each section is its own subscription, and all are free for now. You can add another later from the account menu.",
+    "free": "Free for now",
+    "changeSection": "Change section",
+    "sections": {
+      "property": "Property management",
+      "office": "Engineering office",
+      "broker": "Real estate brokerage"
     }
   },
   "landing": {
@@ -123,7 +133,24 @@
     "footerNote": "Rasikh is a support tool. It does not provide legal advice or official valuations.",
     "arabicNav": "Main navigation",
     "heroCaption": "Every lit window is a documented home.",
-    "scrollHint": "Scroll to continue"
+    "scrollHint": "Scroll to continue",
+    "sectionsTitle": "Choose the section that fits you",
+    "sectionsSubtitle": "Each section has its own subscription and workspace, and all are free for now.",
+    "sectionsFree": "Free for now",
+    "sections": {
+      "property": {
+        "title": "Property management",
+        "body": "Properties, leases, payments, inspections, maintenance, buildings and owners associations in one record."
+      },
+      "office": {
+        "title": "Engineering office",
+        "body": "An AI design copilot for your office: Saudi-code plans, a bill of quantities, and drafts your engineers approve."
+      },
+      "broker": {
+        "title": "Real estate brokerage",
+        "body": "Leads, viewings, a timestamped activity log and an ad-compliance checker."
+      }
+    }
   },
   "lab": {
     "title": "Design lab",
