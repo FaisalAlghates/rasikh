@@ -1024,7 +1024,10 @@
       "auth": "Sign in or create an account with your email.",
       "workspace": "Your workspace for your role: owner, tenant, building manager, broker or service provider.",
       "engineering": "A design copilot for licensed engineering offices: plan options, checks and drawings, all drafts until a licensed engineer approves them.",
-      "design": "Send your home brief to a verified engineering office and follow your project."
+      "design": "Send your home brief to a verified engineering office and follow your project.",
+      "sectionProperty": "A separate section for properties, leases, payments, inspections, maintenance and buildings. Free for now.",
+      "sectionOffice": "A separate section for engineering offices: Saudi-code plans, a bill of quantities and drafts your engineers approve. Free for now.",
+      "sectionBroker": "A separate section for brokers: leads, viewings, a timestamped activity log and an ad checker. Free for now."
     },
     "section": {
       "overview": "Overview",
@@ -1079,7 +1082,10 @@
     "orgNew": "Create a new workspace",
     "engineering": "Engineering office",
     "designProjects": "Design projects",
-    "design": "Design projects"
+    "design": "Design projects",
+    "sectionProperty": "Property management",
+    "sectionOffice": "AI engineering office",
+    "sectionBroker": "Real estate brokerage"
   },
   "pages": {
     "about": {
@@ -1380,6 +1386,143 @@
       "home": "Back to home",
       "search": "Search Rasikh",
       "popular": "Pages that may help"
+    },
+    "sections": {
+      "page": {
+        "free": "Free for now",
+        "separate": "This section is separate: its own subscription, workspace and data. Nothing from the other sections appears in it.",
+        "videoTitle": "See how it works",
+        "videoLabel": "A walkthrough recorded inside the product, with written captions on screen",
+        "stepsTitle": "How to use it",
+        "includesTitle": "What it offers",
+        "neverTitle": "What it never does",
+        "start": "Start free",
+        "others": "The other sections"
+      },
+      "property": {
+        "lead": "One record for your properties from move-in day to move-out day: leases, payments, inspections, maintenance and buildings.",
+        "steps": [
+          {
+            "h": "Create your workspace",
+            "p": "Pick your role (owner or building manager), then enter your name and portfolio name."
+          },
+          {
+            "h": "Add the property and its units",
+            "p": "Register the property, then its units; everything shows on the map and the digital twin."
+          },
+          {
+            "h": "Record the lease",
+            "p": "Enter the Ejar contract number, term and rent: the payment schedule and its reminders are created."
+          },
+          {
+            "h": "Document the condition",
+            "p": "Inspect the unit room by room at move-in and move-out with photos stamped by time and place; both sides sign."
+          },
+          {
+            "h": "Follow maintenance and buildings",
+            "p": "Maintenance requests with photos, and building expenses with receipts and owner balances."
+          },
+          {
+            "h": "Ask the assistant",
+            "p": "It answers about your properties from your own records only; answers are marked and you review them."
+          }
+        ],
+        "includes": [
+          "Properties, units and the map",
+          "Leases, payment schedules and receipts",
+          "Inspections and a comparison PDF to attach in Ejar",
+          "Maintenance with suggested responsibility",
+          "Buildings, owners associations and votes",
+          "A property record that transfers with your consent"
+        ],
+        "never": [
+          "It does not replace Ejar or hold deposits",
+          "It does not collect or finance rent",
+          "It gives no legal opinion"
+        ]
+      },
+      "office": {
+        "lead": "A design copilot working day and night for your office: from a client brief to different, code-checked designs and a bill of quantities.",
+        "steps": [
+          {
+            "h": "Register your office and engineers",
+            "p": "Enter the commercial register and engineering-authority classification, and add engineers with their membership numbers."
+          },
+          {
+            "h": "The Rasikh team verifies it",
+            "p": "Nothing is approved before the office and engineers are verified."
+          },
+          {
+            "h": "A client brief arrives",
+            "p": "The client writes in their own words; Rasikh reads it and extracts the programme for confirmation."
+          },
+          {
+            "h": "Apply the Amanah requirements",
+            "p": "The ministry requirements are built in; you confirm the height from the plot’s approved plan."
+          },
+          {
+            "h": "Design the options",
+            "p": "Eight different designs that pass the automatic checks, with a bill of quantities and design notes."
+          },
+          {
+            "h": "Share and approve",
+            "p": "The client picks; you develop and review by discipline; a licensed engineer approves and the office releases."
+          }
+        ],
+        "includes": [
+          "Varied designs that hold everything in the brief",
+          "Code and requirement checks from calculated rules",
+          "PDF, DXF and IFC drawings and a 3D model",
+          "An indicative bill of quantities with editable rates",
+          "A consent-based, credited design library",
+          "Hand-off of the approved set to the property record"
+        ],
+        "never": [
+          "It never stamps or approves in an engineer’s name",
+          "It never files the permit with Balady",
+          "All output is a draft until a licensed engineer approves it"
+        ]
+      },
+      "broker": {
+        "lead": "Manage your leads and viewings with a verifiable record, and publish ads that carry the mandatory data.",
+        "steps": [
+          {
+            "h": "Create your workspace",
+            "p": "Enter your name and your office name."
+          },
+          {
+            "h": "Enter your FAL licence",
+            "p": "Rasikh stores the number and reminds you before it ends."
+          },
+          {
+            "h": "Add leads",
+            "p": "With a Saudi mobile number, then move them forward through the funnel only."
+          },
+          {
+            "h": "Schedule viewings",
+            "p": "A time, a place and an outcome for each viewing."
+          },
+          {
+            "h": "Record contracts and notes",
+            "p": "The activity log is timestamped and can be neither edited nor deleted."
+          },
+          {
+            "h": "Check your ad",
+            "p": "The ad checker lists the mandatory data still missing before you publish."
+          }
+        ],
+        "includes": [
+          "FAL licence and expiry reminder",
+          "Leads, funnel stages and viewings",
+          "Brokerage contracts",
+          "An activity log that cannot be edited",
+          "A checker for the mandatory ad data"
+        ],
+        "never": [
+          "It does not publish public listings or sell properties",
+          "It gives no legal opinion or official valuation"
+        ]
+      }
     }
   },
   "cities": {

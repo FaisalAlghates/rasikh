@@ -11,7 +11,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "videos": "playwright test -c playwright.videos.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.2.0",

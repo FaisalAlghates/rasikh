@@ -7,6 +7,9 @@ export const ROUTES = {
   home: '/',
   map: '/map',
   engineering: '/engineering',
+  sectionProperty: '/sections/property',
+  sectionOffice: '/sections/office',
+  sectionBroker: '/sections/broker',
   design: '/design',
   about: '/about',
   help: '/help',
@@ -28,7 +31,18 @@ export const HEADER_NAV: PageKey[] = ['home', 'map', 'engineering', 'about', 'he
 
 /** Footer groups (DGA footer: group labels, links, accessibility tools, legal text). */
 export const FOOTER_GROUPS: Array<{ label: string; items: PageKey[] }> = [
-  { label: 'groupPlatform', items: ['home', 'map', 'engineering', 'about', 'workspace'] },
+  {
+    label: 'groupPlatform',
+    items: [
+      'home',
+      'sectionProperty',
+      'sectionOffice',
+      'sectionBroker',
+      'map',
+      'about',
+      'workspace',
+    ],
+  },
   { label: 'groupSupport', items: ['help', 'contact', 'search', 'sitemap'] },
   { label: 'groupLegal', items: ['privacy', 'terms', 'disclaimers', 'accessibility'] },
 ];
@@ -37,7 +51,18 @@ export const FOOTER_GROUPS: Array<{ label: string; items: PageKey[] }> = [
 export const SITEMAP_GROUPS: Array<{ label: string; items: PageKey[] }> = [
   {
     label: 'groupPlatform',
-    items: ['home', 'map', 'engineering', 'design', 'about', 'auth', 'workspace'],
+    items: [
+      'home',
+      'sectionProperty',
+      'sectionOffice',
+      'sectionBroker',
+      'map',
+      'engineering',
+      'design',
+      'about',
+      'auth',
+      'workspace',
+    ],
   },
   { label: 'groupSupport', items: ['help', 'contact', 'search', 'sitemap'] },
   { label: 'groupLegal', items: ['privacy', 'terms', 'disclaimers', 'accessibility'] },
@@ -47,6 +72,9 @@ export const SITEMAP_GROUPS: Array<{ label: string; items: PageKey[] }> = [
 export const SEARCHABLE: PageKey[] = [
   'home',
   'map',
+  'sectionProperty',
+  'sectionOffice',
+  'sectionBroker',
   'engineering',
   'about',
   'help',

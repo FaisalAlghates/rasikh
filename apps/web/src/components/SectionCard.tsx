@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { PREF, writePref } from '@/lib/prefs';
 
-/** A product section on the landing page: remembers the choice, then goes on to sign-in or onboarding. */
+/** A product section on the landing page: remembers the choice, then opens that section's own page. */
 export function SectionCard({
   section,
   title,
@@ -18,7 +18,7 @@ export function SectionCard({
 }) {
   return (
     <Link
-      href="/auth"
+      href={`/sections/${section}`}
       onClick={() => writePref(PREF.section, section)}
       className="group flex h-full flex-col gap-3 p-7"
       data-section={section}
