@@ -156,6 +156,6 @@ function gather(
     case 'buildingSummary':
       return gatherBuildingSummary(ctx, input as { buildingId: string });
     case 'assistant':
-      return gatherAssistant(ctx);
+      return gatherAssistant(ctx, String(input.question ?? ''));
   }
 }

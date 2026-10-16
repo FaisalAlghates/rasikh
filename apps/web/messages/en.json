@@ -2250,7 +2250,9 @@
         "pavilion": "Guest pavilion"
       },
       "fromLibrary": "The assistant learnt from {matches, plural, one {# similar design} other {# similar designs}} in the library and your office’s projects; {inspired, plural, =0 {no option draws on them yet} one {# option draws on them} other {# options draw on them}}.",
-      "libraryEmpty": "No similar designs in the library or your office’s released projects yet; every design added makes the assistant richer."
+      "libraryEmpty": "No similar designs in the library or your office’s released projects yet; every design added makes the assistant richer.",
+      "tipsTitle": "Design notes for your brief",
+      "tipsNote": "General design practice from the Rasikh team, not from the Saudi code; compliance is decided only by the rule checks."
     },
     "site": {
       "parking": "Parking",
