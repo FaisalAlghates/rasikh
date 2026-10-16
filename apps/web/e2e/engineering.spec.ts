@@ -87,6 +87,20 @@ test('engineering office: brief → options → client picks → development →
     await team.page.waitForTimeout(400);
   }
   await expect(row.getByRole('button', { name: 'ألغِ التوثيق' })).toHaveCount(3);
+  // the team keeps the municipal requirements: the Ministry's national ones are built in; it adds an Amanah's own
+  await team.page.getByRole('tab', { name: 'اشتراطات الأمانات' }).click();
+  const regsAdmin = team.page.getByTestId('regulations-admin');
+  await expect(regsAdmin).toContainText('الفلل السكنية المنفصلة');
+  await expect(regsAdmin).toContainText('4500943139');
+  await regsAdmin.getByLabel('العنوان', { exact: true }).fill(`اشتراطات مخطط ${stamp}`);
+  await regsAdmin.getByLabel('المدن (مفصولة بفاصلة)').fill('الرياض');
+  await regsAdmin.getByLabel('الجهة المصدرة').fill('أمانة منطقة الرياض');
+  await regsAdmin.getByLabel('الوثيقة', { exact: true }).fill('دليل اشتراطات المخطط');
+  await regsAdmin.getByRole('button', { name: 'احفظ ووثّق' }).click();
+  await expect(regsAdmin.getByText('حُفظت الاشتراطات.')).toBeVisible({ timeout: 20_000 });
+  await expect(
+    regsAdmin.getByTestId('regulation-entry').filter({ hasText: `اشتراطات مخطط ${stamp}` }),
+  ).toContainText('وثّقها فريق راسخ');
 
   // 4) a client sends a brief in their own words; the programme is read back for confirmation
   const client = await person(browser, `client-${stamp}@rasikh.test`);
@@ -97,7 +111,7 @@ test('engineering office: brief → options → client picks → development →
   await form
     .getByLabel('صف ما تريد')
     .fill(
-      'فيلا دورين على أرض ٢٢×٣٢، ٤ غرف نوم و٤ دورات مياه، مجلس رجال ومجلس نساء، غرفة خادمة، مصلى، مسبح ومدخل ضيوف مستقل، طراز نجدي، الميزانية ١٫٥ مليون',
+      'فيلا دورين على أرض ٢٢×٣٢، ٤ غرف نوم و٤ دورات مياه، مجلس رجال ومجلس نساء، غرفة خادمة، مصلى، مسبح ومدخل ضيوف مستقل وملحق علوي، طراز نجدي، الميزانية ١٫٥ مليون',
     );
   await form.getByRole('button', { name: 'اقرأ الوصف' }).click();
   await expect(form.getByTestId('program')).toBeVisible();
@@ -121,11 +135,18 @@ test('engineering office: brief → options → client picks → development →
   await lead.page.getByTestId('office-project').filter({ hasText: 'فيلا النرجس' }).click();
   await expect(lead.page.getByTestId('project-view')).toBeVisible({ timeout: 45_000 });
   const z = lead.page.getByTestId('zoning-form');
-  await z.getByLabel('الارتداد الأمام (م)').fill('4');
-  for (const s of ['الخلف', 'اليسار', 'اليمين']) await z.getByLabel(`الارتداد ${s} (م)`).fill('2');
-  await z.getByLabel('معامل البناء الأقصى').fill('1.8');
-  await z.getByLabel('أقصى عدد أدوار').fill('3');
-  await z.getByLabel('أقصى ارتفاع (م)').fill('12');
+  // the Ministry's requirements, applied to the plot: setbacks from the 15 m street, 75 % coverage, two floors, a
+  // 70 % roof annex, two parking spaces (over 400 m²); the height comes from the plot's local plan: the office confirms
+  const regs = z.getByTestId('regulations');
+  await expect(regs).toContainText('الفلل السكنية المنفصلة');
+  await regs.getByRole('button', { name: 'طبّق على القطعة' }).click();
+  await expect(z.getByLabel('الارتداد الأمام (م)')).toHaveValue('3');
+  await expect(z.getByLabel('الارتداد اليسار (م)')).toHaveValue('1.5');
+  await expect(z.getByLabel(/نسبة الملحق العلوي/)).toHaveValue('70');
+  await expect(z.getByTestId('regulation-source')).toContainText('4500943139');
+  await expect(z.getByText('أكّده من المخطط المعتمد للقطعة')).toBeVisible();
+  await z.getByLabel(/أقصى ارتفاع/).fill('14');
+  await shot(lead.page, 'regulations');
   await z.getByLabel('ميكانيكي').uncheck();
   await z.getByLabel('كهربائي').uncheck();
   await z.getByRole('button', { name: 'اقبل الطلب' }).click();
@@ -145,11 +166,19 @@ test('engineering office: brief → options → client picks → development →
   await expect(optionA.getByTestId('fit-notes')).toContainText('موقفان');
   await expect(optionA.locator('[data-site="pool"]')).toHaveCount(1);
   await expect(optionA.locator('[data-site="parking"]')).toHaveCount(2);
+  // the roof annex within its 70 %, and the source of the municipal values
+  await expect(optionA.getByTestId('fit-notes')).toContainText('ملحق علوي');
   await expect(optionA.getByTestId('option-checks')).toContainText(
-    'الاشتراطات البلدية: 6 من 6 مطابقة',
+    'القيم البلدية من: اشتراطات إنشاء المباني السكنية',
+  );
+  // a range of design types, not one plan redrawn
+  await expect(lead.page.getByTestId('compare')).toContainText('فناء داخلي');
+  await expect(lead.page.getByTestId('compare')).toContainText('مجلس مستقل');
+  await expect(optionA.getByTestId('option-checks')).toContainText(
+    'الاشتراطات البلدية: 7 من 7 مطابقة',
   );
   await expect(optionA.getByTestId('option-checks')).toContainText(
-    'فحوص الكود الآلية: 9 من 9 تجتاز',
+    'فحوص الكود الآلية: 12 من 12 تجتاز',
   );
   await shot(lead.page, 'concepts');
   await optionA.locator('summary').click();
@@ -172,7 +201,7 @@ test('engineering office: brief → options → client picks → development →
   // the client compares the options, with the same checks and costs the office saw
   await expect(client.page.getByTestId('compare')).toContainText('الميزانية');
   await expect(client.page.getByTestId('concept-A').getByTestId('option-checks')).toContainText(
-    'الاشتراطات البلدية: 6 من 6 مطابقة',
+    'الاشتراطات البلدية: 7 من 7 مطابقة',
   );
   await expect(client.page.getByTestId('concept-A').getByTestId('option-cost')).toContainText(
     'ليست عرض سعر',
@@ -209,6 +238,7 @@ test('engineering office: brief → options → client picks → development →
   const editor = lead.page.getByTestId('plan-editor');
   await expect(editor.getByTestId('checks-report')).toBeVisible();
   await expect(editor.getByTestId('rule-Z-SETBACK')).toHaveAttribute('data-status', 'passed');
+  await expect(editor.getByTestId('zoning-source')).toContainText('اشتراطات إنشاء المباني السكنية');
   await expect(editor.getByTestId('rule-C-ROOM-AREA')).toHaveAttribute(
     'data-status',
     'not_checked',

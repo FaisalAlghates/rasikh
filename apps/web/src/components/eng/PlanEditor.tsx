@@ -18,6 +18,7 @@ import { firebaseDb } from '@/lib/firebase';
 import { planSha, type ProjectDoc, type VersionDoc } from '@/lib/eng/data';
 import { ChecksReport } from './ChecksReport';
 import { PlanView } from './PlanView';
+import { floorLabel } from '@/lib/eng/labels';
 
 /**
  * The office's plan editor: pick a room, change its size, position or use; every edit re-runs every check at once.
@@ -161,7 +162,7 @@ export function PlanEditor({
                   floor === f ? 'bg-brand text-on-brand' : 'hover:bg-surface',
                 )}
               >
-                {f === 0 ? t('ground') : t('floorN', { n: f })}
+                {floorLabel(t, version.plan, f)}
               </button>
             ))}
           </div>
@@ -188,7 +189,7 @@ export function PlanEditor({
           onSelect={canEdit ? setSel : undefined}
           highlight={[...focus, ...failedRooms]}
           watermark={version.status === 'released' ? null : t('watermark')}
-          title={floor === 0 ? t('ground') : t('floorN', { n: floor })}
+          title={floorLabel(t, version.plan, floor)}
           northDeg={project.plot.northDeg}
         />
         {diff && reno && (
@@ -281,7 +282,7 @@ export function PlanEditor({
           </section>
         )}
         {project.zoning ? (
-          <ChecksReport results={results} onFocus={setFocus} />
+          <ChecksReport results={results} onFocus={setFocus} source={project.zoning.source} />
         ) : (
           <p className="text-small text-warning">{t('zoningRequired')}</p>
         )}

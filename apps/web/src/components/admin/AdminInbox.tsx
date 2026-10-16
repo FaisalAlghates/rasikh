@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { Breadcrumbs } from '@/components/shell/Breadcrumbs';
 import { OfficeVerification } from './OfficeVerification';
+import { RegulationsAdmin } from './RegulationsAdmin';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { ShurfaLoader } from '@/components/ui/Shurfa';
@@ -121,6 +122,7 @@ export function AdminInbox() {
             content: <Feedback rows={feedback.rows} loading={feedback.loading} />,
           },
           { value: 'offices', label: eng('admin.tab'), content: <OfficeVerification /> },
+          { value: 'regulations', label: eng('regs.admin.tab'), content: <RegulationsAdmin /> },
         ]}
       />
     </>

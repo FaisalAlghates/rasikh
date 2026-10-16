@@ -4,6 +4,7 @@ import {
   DISCIPLINES,
   ZoningSchema,
   requiredDisciplines,
+  zoningFromRegulation,
   type Discipline,
   type Zoning,
 } from '@rasikh/shared';
@@ -13,6 +14,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { firebaseDb } from '@/lib/firebase';
 import type { ProjectDoc } from '@/lib/eng/data';
+import type { LibraryEntry } from '@/lib/eng/regulations';
+import { RegulationPicker } from './RegulationPicker';
 
 const fmt = new Intl.NumberFormat('en-US');
 
@@ -43,7 +46,22 @@ export function BriefPanel({
     project.required ?? requiredDisciplines(project.kind),
   );
   const [msg, setMsg] = useState<{ ok: boolean; text: string }>();
+  // values the applied requirements leave to the plot's approved local plan: the office confirms them
+  const [local, setLocal] = useState<string[]>([]);
   const p = project.program;
+  const apply = (entry: LibraryEntry) => {
+    const r = zoningFromRegulation(entry, project.plot, project.program, z);
+    setZ({
+      ...r.zoning,
+      source: {
+        id: entry.id,
+        title: entry.title,
+        document: entry.source.document,
+        reference: entry.source.reference,
+      },
+    });
+    setLocal(r.fromLocalPlan);
+  };
   const num = (v: string) => (v === '' ? 0 : Number(v));
 
   const save = async (status?: 'accepted' | 'declined') => {
@@ -53,7 +71,8 @@ export function BriefPanel({
       return setMsg({ ok: false, text: t('zoningRequired') });
     try {
       await updateDoc(doc(firebaseDb(), 'designProjects', pid), {
-        ...(parsed.success ? { zoning: parsed.data } : {}),
+        // Firestore stores no undefined values
+        ...(parsed.success ? { zoning: JSON.parse(JSON.stringify(parsed.data)) as Zoning } : {}),
         ...(status ? { status } : {}),
         required: req.length ? req : requiredDisciplines(project.kind),
         updatedAt: serverTimestamp(),
@@ -64,9 +83,17 @@ export function BriefPanel({
     }
   };
 
-  const field = (id: string, label: string, value: number, on: (n: number) => void, step = 0.1) => (
+  const field = (
+    id: string,
+    label: string,
+    value: number,
+    on: (n: number) => void,
+    step = 0.1,
+    confirm = false,
+  ) => (
     <label key={id} htmlFor={id} className="flex flex-col gap-1 text-small">
       {label}
+      {confirm && <span className="text-caption text-warning">{t('regs.confirmLocal')}</span>}
       <input
         id={id}
         type="number"
@@ -76,7 +103,11 @@ export function BriefPanel({
         value={value}
         onChange={(e) => on(num(e.target.value))}
         disabled={!officeMember}
-        className="hairline min-h-11 rounded-md bg-surface px-3 tabular"
+        className={
+          confirm
+            ? 'hairline min-h-11 rounded-md border-warning bg-surface px-3 tabular'
+            : 'hairline min-h-11 rounded-md bg-surface px-3 tabular'
+        }
       />
     </label>
   );
@@ -160,6 +191,7 @@ export function BriefPanel({
           {t('zoningTitle')}
         </h3>
         <p className="text-caption text-text-muted">{t('zoningNote')}</p>
+        <RegulationPicker project={project} zoning={z} canApply={officeMember} onApply={apply} />
         <div className="grid grid-cols-2 gap-3">
           {(['front', 'back', 'left', 'right'] as const).map((s) =>
             field(`zs-${s}`, t('setback', { side: t(`side.${s}`) }), z.setbacks[s], (n) =>
@@ -180,14 +212,29 @@ export function BriefPanel({
             z.maxFloors,
             (n) => setZ({ ...z, maxFloors: Math.round(n) }),
             1,
+            local.includes('maxFloors'),
           )}
-          {field('z-height', t('maxHeightM'), z.maxHeightM, (n) => setZ({ ...z, maxHeightM: n }))}
+          {field(
+            'z-height',
+            t('maxHeightM'),
+            z.maxHeightM,
+            (n) => setZ({ ...z, maxHeightM: n }),
+            0.1,
+            local.includes('maxHeightM'),
+          )}
           {field(
             'z-park',
             t('parkingPerUnit'),
             z.parkingPerUnit,
             (n) => setZ({ ...z, parkingPerUnit: n }),
             0.5,
+          )}
+          {field(
+            'z-annex',
+            t('roofAnnexShare'),
+            Math.round((z.roofAnnexShare ?? 0) * 100),
+            (n) => setZ({ ...z, roofAnnexShare: n > 0 ? n / 100 : undefined }),
+            1,
           )}
         </div>
         <fieldset className="flex flex-wrap gap-x-4 gap-y-1">

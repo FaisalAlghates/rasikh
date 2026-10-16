@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type * as THREE from 'three';
 import { cn } from '@/components/ui/cn';
 import { download } from '@/lib/eng/data';
+import { floorLabel } from '@/lib/eng/labels';
 
 function webglOk() {
   try {
@@ -312,7 +313,7 @@ export function Model3D({ plan, plot, name }: { plan: DesignPlan; plot: Plot; na
       <ul className="sr-only" aria-label={t('model3dList')}>
         {Array.from({ length: plan.floors }, (_, f) => (
           <li key={f}>
-            {t('floorN', { n: f })}: {plan.rooms.filter((r) => r.floor === f).length}
+            {floorLabel(t, plan, f)}: {plan.rooms.filter((r) => r.floor === f).length}
           </li>
         ))}
       </ul>

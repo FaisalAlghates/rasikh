@@ -1,6 +1,6 @@
 'use client';
 
-import { summarize, type RuleResult } from '@rasikh/shared';
+import { summarize, type RuleResult, type Zoning } from '@rasikh/shared';
 import { CheckCircle2, CircleHelp, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/components/ui/cn';
@@ -12,9 +12,12 @@ import { cn } from '@/components/ui/cn';
 export function ChecksReport({
   results,
   onFocus,
+  source,
 }: {
   results: RuleResult[];
   onFocus?: (roomIds: string[]) => void;
+  /** The municipal requirements the zoning values were taken from. */
+  source?: Zoning['source'];
 }) {
   const t = useTranslations('eng');
   const s = summarize(results);
@@ -23,6 +26,14 @@ export function ChecksReport({
       <h3 id={`chk-${pack}`} className="text-small font-semibold text-text-muted">
         {title}
       </h3>
+      {pack === 'zoning' && source && (
+        <p className="text-caption text-text-muted" data-testid="zoning-source">
+          {t('regs.zoningFrom', {
+            document: source.document,
+            reference: source.reference ? ` (${source.reference})` : '',
+          })}
+        </p>
+      )}
       <ul className="flex flex-col gap-1.5">
         {results
           .filter((r) => r.pack === pack)
