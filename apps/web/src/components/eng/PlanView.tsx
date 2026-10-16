@@ -34,6 +34,8 @@ const family = (t: PlanRoom['type']) =>
           t === 'entrance' ||
           t === 'shop' ||
           t === 'guest_room' ||
+          t === 'hall' ||
+          t === 'reception' ||
           t === 'prayer_room'
         ? 'public'
         : t === 'kitchen' ||
@@ -42,9 +44,14 @@ const family = (t: PlanRoom['type']) =>
             t === 'laundry' ||
             t === 'storage' ||
             t === 'closet' ||
-            t === 'prep_kitchen'
+            t === 'prep_kitchen' ||
+            t === 'loading'
           ? 'service'
-          : t === 'bathroom' || t === 'guest_wc'
+          : t === 'bathroom' ||
+              t === 'guest_wc' ||
+              t === 'wc_men' ||
+              t === 'wc_women' ||
+              t === 'ablution'
             ? 'wet'
             : t === 'stair' || t === 'elevator'
               ? 'core'

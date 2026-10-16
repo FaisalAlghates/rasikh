@@ -48,15 +48,18 @@ export function candidateVariants(program: Program): Variant[] {
   const house = program.type !== 'apartments' && program.type !== 'commercial';
   const sites = ['front', 'back'] as const;
   const mirrors = [false, true];
-  const entries = house ? (['side', 'middle'] as const) : (['side'] as const);
+  const entries =
+    house || program.type === 'hall' ? (['side', 'middle'] as const) : (['side'] as const);
   const dinings = house && program.dining ? (['back', 'front'] as const) : (['back'] as const);
   const masters =
     house && program.floors > 1 && program.bedrooms > 0
       ? (['front', 'back'] as const)
       : (['front'] as const);
   const out: Variant[] = [];
+  // a hall building keeps its support rooms in a shallow front band, the hall gets the rest
+  const fronts = program.type === 'hall' ? [0.25, 0.35] : FRONTS;
   for (const core of CORES)
-    for (const front of FRONTS)
+    for (const front of fronts)
       for (const place of PLACEMENTS)
         for (const slack of SLACKS)
           for (const site of sites)
@@ -134,6 +137,7 @@ export function missingRooms(
 }
 
 const SERVICE: readonly RoomType[] = [
+  'loading',
   'closet',
   'maid_room',
   'driver_room',
@@ -167,7 +171,9 @@ export function allowedThrough(room: RoomType, via: RoomType): boolean {
   // the annex room opens off the stair landing on the roof
   if (room === 'annex_room') return via === 'stair' || via === 'living';
   if (SERVICE.includes(room))
-    return ['kitchen', 'prep_kitchen', 'laundry', 'storage', 'living', 'dining'].includes(via);
+    return ['kitchen', 'prep_kitchen', 'laundry', 'storage', 'living', 'dining', 'hall'].includes(
+      via,
+    );
   if (GUEST.includes(room)) return ['majlis_men', 'majlis_women', 'living', 'dining'].includes(via);
   if (room === 'kitchen') return via === 'dining' || via === 'living';
   // bedrooms, office, gym, the family hall, apartments, shops: from the family hall at most
@@ -216,7 +222,9 @@ export function checkOption(
   if (access.length) failing.push('ACCESS');
   if (detectClashes(plan, structuralScheme(plan)).length) failing.push('CLASH');
   const site = siteShortfall(plan, ctx.program);
-  if (site.parking > 0 || site.pool || site.guestEntry) failing.push('SITE');
+  // a house parks in its yards; a larger building puts what the yards cannot hold in a basement or a parking structure
+  const house = ['villa', 'duplex', 'townhouse'].includes(ctx.program.type);
+  if ((house && site.parking > 0) || site.pool || site.guestEntry) failing.push('SITE');
   // the annex the brief asks for, where the plot's requirements allow one
   if (ctx.program.roofAnnex && (ctx.zoning.roofAnnexShare ?? 0) > 0 && !plan.annex)
     failing.push('ANNEX');

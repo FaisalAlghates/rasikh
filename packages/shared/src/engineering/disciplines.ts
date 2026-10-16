@@ -95,6 +95,9 @@ export const COOLING_W_PER_M2: Partial<Record<RoomType, number>> = {
   maid_room: 170,
   driver_room: 170,
   guest_room: 170,
+  hall: 250,
+  reception: 200,
+  hotel_room: 170,
   annex_room: 170,
   office: 180,
   prayer_room: 200,
@@ -142,6 +145,9 @@ export function plumbingFixtures(plan: DesignPlan) {
     guest_wc: { wc: 1, basin: 1 },
     kitchen: { sink: 1 },
     prep_kitchen: { sink: 1 },
+    wc_men: { wc: 3, basin: 2 },
+    wc_women: { wc: 3, basin: 2 },
+    ablution: { tap: 8 },
     laundry: { washer: 1, floorDrain: 1 },
   };
   const totals: Record<string, number> = {};

@@ -1,3 +1,10 @@
+import {
+  HALL_PROFILES,
+  UNIT_PROFILES,
+  engineTypeOf,
+  kindFromBrief,
+  tagsFromBrief,
+} from './catalog.js';
 import { ProgramSchema, type Program, type RoomType } from './schemas.js';
 
 /**
@@ -65,12 +72,30 @@ const BATH_NOUNS =
 export function parseBrief(raw: string): Partial<Program> {
   const t = normalizeBrief(raw);
   const out: Partial<Program> = {};
-  if (has(t, 'دوبلكس', 'duplex')) out.type = 'duplex';
+  // the building type the brief names (palace, hotel, mosque, warehouse ...) sets the engine family
+  const kind = kindFromBrief(t);
+  const tags = tagsFromBrief(t);
+  if (tags.length) out.tags = tags;
+  if (kind) {
+    out.buildingType = kind;
+    out.type = engineTypeOf(kind) ?? 'commercial';
+  } else if (has(t, 'دوبلكس', 'duplex')) out.type = 'duplex';
   else if (has(t, 'تاون', 'townhouse')) out.type = 'townhouse';
   else if (has(t, 'عماره', 'عمارة', 'شقق', 'apartment')) out.type = 'apartments';
   else if (has(t, 'محل', 'تجاري', 'commercial', 'shop')) out.type = 'commercial';
   else if (has(t, 'فيلا', 'فله', 'villa')) out.type = 'villa';
 
+  if (!out.buildingType && out.type)
+    out.buildingType = (
+      {
+        villa: 'villa',
+        duplex: 'duplex',
+        townhouse: 'townhouse',
+        apartments: 'residential_building',
+        commercial: 'commercial_building',
+        hall: 'event_hall',
+      } as const
+    )[out.type];
   const floors = count(t, FLOOR_NOUNS);
   if (floors) out.floors = floors;
   else if (has(t, 'دورين', 'طابقين')) out.floors = 2;
@@ -227,16 +252,34 @@ export const autoBathrooms = (bedrooms: number) =>
 export function programRooms(p: Program): RoomSpec[] {
   const a = (t: RoomType) => TARGET_AREA[t] ?? 10;
   const rooms: RoomSpec[] = [];
+  if (p.type === 'hall') {
+    // one large hall at the back, its support rooms by the entrance; offices on any upper floor
+    const prof = HALL_PROFILES[p.buildingType ?? ''] ?? HALL_PROFILES.event_hall!;
+    const support = prof.rooms.reduce((t, [, m2]) => t + m2, 0);
+    const hall = p.targetAreaM2
+      ? Math.max(prof.hall / 2, p.targetAreaM2 / p.floors - support)
+      : prof.hall;
+    rooms.push({ type: 'hall', area: hall, zone: 'service', floor: 0 });
+    for (const [type, m2, at] of prof.rooms)
+      rooms.push({ type, area: m2, zone: at === 'front' ? 'public' : 'service', floor: 0 });
+    for (let f = 1; f < p.floors; f++)
+      rooms.push(
+        { type: 'office', area: 40, zone: 'private', floor: f },
+        { type: 'office', area: 40, zone: 'private', floor: f },
+        { type: 'wc_men', area: 8, zone: 'private', floor: f },
+      );
+    return rooms;
+  }
   if (p.type === 'apartments' || p.type === 'commercial') {
+    const prof = UNIT_PROFILES[p.buildingType ?? ''] ?? {
+      ground: [p.type === 'commercial' ? 'shop' : 'apartment', 120] as [RoomType, number],
+      upper: ['apartment', 120] as [RoomType, number],
+    };
+    if (prof.lobby) rooms.push({ type: 'reception', area: prof.lobby, zone: 'public', floor: 0 });
     for (let f = 0; f < p.floors; f++) {
-      for (let u = 0; u < p.unitsPerFloor; u++) {
-        rooms.push({
-          type: f === 0 && p.type === 'commercial' ? 'shop' : 'apartment',
-          area: 120,
-          zone: 'private',
-          floor: f,
-        });
-      }
+      const [type, m2] = f === 0 ? prof.ground : prof.upper;
+      for (let u = 0; u < p.unitsPerFloor; u++)
+        rooms.push({ type, area: m2, zone: 'private', floor: f });
     }
     return rooms;
   }

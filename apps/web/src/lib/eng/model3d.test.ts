@@ -18,6 +18,7 @@ const plot: Plot = {
   northDeg: 0,
   city: 'الرياض',
   district: '',
+  landUse: 'residential',
 };
 const plan = (typology: string, over: Partial<Program> = {}): DesignPlan => {
   const program = confirmProgram({

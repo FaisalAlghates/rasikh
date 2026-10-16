@@ -1,7 +1,15 @@
 'use client';
 
 import {
-  BUILDING_TYPES,
+  CATALOG,
+  LAND_USES,
+  PROPERTY_TAGS,
+  allowedOn,
+  catalogEntry,
+  familyDefaults,
+  landUseFromBrief,
+  normalizeBrief,
+  type LandUse,
   STYLES,
   confirmProgram,
   missingItems,
@@ -87,6 +95,7 @@ export function DesignHome() {
     right: 0,
     cityId: 'riyadh',
     district: '',
+    landUse: 'residential' as LandUse,
   });
   const [brief, setBrief] = useState('');
   const [program, setProgram] = useState<Partial<Program> | null>(null);
@@ -101,6 +110,8 @@ export function DesignHome() {
     // the plot size, when the brief states it ("أرض 20 × 30")
     const size = parsePlotSize(brief);
     if (size) setPlot((p) => ({ ...p, ...size }));
+    const use = landUseFromBrief(normalizeBrief(brief));
+    if (use) setPlot((p) => ({ ...p, landUse: use }));
   };
   const send = async () => {
     setError(undefined);
@@ -132,6 +143,7 @@ export function DesignHome() {
           northDeg: 0,
           city: city(plot.cityId),
           district: plot.district,
+          landUse: plot.landUse,
           // the city centre until the office sets the exact plot (used by the sun study)
           ...(cityAt ? { location: { lat: cityAt.coords[1], lng: cityAt.coords[0] } } : {}),
         },
@@ -302,6 +314,21 @@ export function DesignHome() {
                   />
                 </label>
               </div>
+              <label className="flex flex-col gap-1 text-small">
+                {t('uses.landUse')}
+                <select
+                  value={plot.landUse}
+                  onChange={(e) => setPlot({ ...plot, landUse: e.target.value as LandUse })}
+                  className="hairline min-h-11 rounded-md bg-surface px-2"
+                >
+                  {LAND_USES.map((u) => (
+                    <option key={u} value={u}>
+                      {t(`uses.land.${u}`)}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-caption text-text-muted">{t('uses.landNote')}</span>
+              </label>
               <p className="text-caption text-text-muted">{t('streetsTitle')}</p>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {(['front', 'back', 'left', 'right'] as const).map((s) =>
@@ -356,12 +383,12 @@ export function DesignHome() {
                   </p>
                 )}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <label className="flex flex-col gap-1 text-small">
-                    {t('typeLabel')}
+                  <label className="col-span-2 flex flex-col gap-1 text-small">
+                    {t('uses.kind')}
                     <select
-                      value={program.type ?? ''}
+                      value={program.buildingType ?? ''}
                       onChange={(e) =>
-                        setProgram({ ...program, type: e.target.value as Program['type'] })
+                        setProgram({ ...program, ...familyDefaults(e.target.value) })
                       }
                       className={cn(
                         'hairline min-h-11 rounded-md bg-bg px-2',
@@ -369,12 +396,20 @@ export function DesignHome() {
                       )}
                     >
                       <option value="">—</option>
-                      {BUILDING_TYPES.map((b) => (
-                        <option key={b} value={b}>
-                          {t(`type.${b}`)}
-                        </option>
-                      ))}
+                      {CATALOG.map((c) => {
+                        const ok = allowedOn(c.id, plot.landUse);
+                        return (
+                          <option key={c.id} value={c.id} disabled={!ok}>
+                            {t(`kind.${c.id}`)}
+                            {ok ? '' : ` — ${t('uses.notAllowed')}`}
+                          </option>
+                        );
+                      })}
                     </select>
+                    {program.buildingType &&
+                      catalogEntry(program.buildingType)?.family === 'specialist' && (
+                        <span className="text-caption text-warning">{t('uses.specialist')}</span>
+                      )}
                   </label>
                   {(['floors', 'bedrooms', 'bathrooms', 'parking', 'targetAreaM2'] as const).map(
                     (k) => (
@@ -465,6 +500,27 @@ export function DesignHome() {
                     </label>
                   ))}
                 </div>
+                <fieldset className="flex flex-wrap gap-x-4 gap-y-1">
+                  <legend className="mb-1 text-small font-semibold">{t('uses.tags')}</legend>
+                  {PROPERTY_TAGS.map((tag) => (
+                    <label key={tag} className="flex min-h-11 items-center gap-2 text-small">
+                      <input
+                        type="checkbox"
+                        checked={(program.tags ?? []).includes(tag)}
+                        onChange={(e) =>
+                          setProgram({
+                            ...program,
+                            tags: e.target.checked
+                              ? [...(program.tags ?? []), tag]
+                              : (program.tags ?? []).filter((x) => x !== tag),
+                          })
+                        }
+                        className="size-5 accent-[var(--rk-brand)]"
+                      />
+                      {t(`tag.${tag}`)}
+                    </label>
+                  ))}
+                </fieldset>
                 <Button
                   onClick={() => void send()}
                   loading={busy}

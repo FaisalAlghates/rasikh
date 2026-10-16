@@ -42,6 +42,7 @@ export function RegulationPicker({
     entries,
     project.program.type,
     project.plot.city,
+    project.plot.landUse,
   ) as LibraryEntry[];
   const [id, setId] = useState<string>();
   const chosen = options.find((o) => o.id === (id ?? zoning.source?.id)) ?? options[0];
