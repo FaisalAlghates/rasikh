@@ -37,6 +37,17 @@ test('the office page also explains the drawings and how they print', async ({ p
   await expect(page.getByTestId('print-steps')).toContainText('A3');
 });
 
+test('each section page lists its separate feature videos', async ({ page }) => {
+  await page.goto('/ar/sections/property');
+  await expect(page.getByTestId('more-videos').locator('video')).toHaveCount(6);
+  await page.goto('/ar/sections/office');
+  await expect(page.getByTestId('more-videos').locator('video[data-video="styles"]')).toHaveCount(
+    1,
+  );
+  await page.goto('/ar/sections/broker');
+  await expect(page.getByTestId('more-videos')).toHaveCount(0);
+});
+
 test('the landing cards open the section pages', async ({ page }) => {
   await page.goto('/ar');
   await page.locator('[data-section="office"]').click();
@@ -44,7 +55,17 @@ test('the landing cards open the section pages', async ({ page }) => {
 });
 
 test('the videos are served', async ({ request }) => {
-  for (const key of [...SECTIONS.map((s) => s.key), 'drawings']) {
+  for (const key of [
+    ...SECTIONS.map((s) => s.key),
+    'drawings',
+    'leases',
+    'inspections',
+    'maintenance',
+    'buildings',
+    'assistant',
+    'map',
+    'styles',
+  ]) {
     const res = await request.get(`/videos/${key}.webm`, { headers: { Range: 'bytes=0-99' } });
     expect([200, 206]).toContain(res.status());
   }
