@@ -1397,7 +1397,8 @@
         "includesTitle": "What it offers",
         "neverTitle": "What it never does",
         "start": "Start free",
-        "others": "The other sections"
+        "others": "The other sections",
+        "printTitle": "How the drawings print"
       },
       "property": {
         "lead": "One record for your properties from move-in day to move-out day: leases, payments, inspections, maintenance and buildings.",
@@ -1481,6 +1482,14 @@
           "It never stamps or approves in an engineer’s name",
           "It never files the permit with Balady",
           "All output is a draft until a licensed engineer approves it"
+        ],
+        "drawingsVideoTitle": "Design, drawings and how they print",
+        "print": [
+          "Open the project’s “Drawings and export” tab: the set’s sheets are there (site, plans, elevations, sections, schedules, areas).",
+          "Press “Print or save PDF”: your browser’s print dialog opens and only the sheets print, A3 landscape, one sheet per page, without the site around them.",
+          "Choose “Save as PDF” for a file, or pick your printer for paper. For smaller paper, change the size in the printer options.",
+          "For drawing software download the DXF; for modelling (BIM) software download the IFC.",
+          "Sheets carry a “draft” mark and review line until the engineers approve each discipline and the office releases the set; then the mark goes and the approval record shows."
         ]
       },
       "broker": {

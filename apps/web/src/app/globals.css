@@ -769,20 +769,31 @@ html[dir='rtl'] .drawer[data-state='open'] {
     size: A3 landscape;
     margin: 10mm;
   }
-  body * {
-    visibility: hidden;
+  /* Everything but the sheets (and the elements that contain them) is removed from the layout, so no blank
+     pages are left where the app chrome was. The report rules above hide with visibility !important, hence the
+     !important here. */
+  body:has(.eng-print) *:not(.eng-print, .eng-print *, :has(.eng-print)) {
+    display: none !important;
   }
   .eng-print,
   .eng-print * {
-    visibility: visible;
-  }
-  .eng-print {
-    position: absolute;
-    inset: 0;
+    visibility: visible !important;
   }
   .eng-sheet {
     break-after: page;
+    break-inside: avoid;
     border: 0;
+  }
+  /* one sheet per A3 page: the drawing is scaled to fit the page height under the title block */
+  .eng-sheet {
+    max-height: 272mm;
+    overflow: hidden;
+  }
+  .eng-sheet svg {
+    max-height: 232mm;
+  }
+  .eng-sheet:last-child {
+    break-after: auto;
   }
   .no-print {
     display: none !important;
