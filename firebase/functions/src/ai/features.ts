@@ -1,6 +1,7 @@
 import {
   TICKET_CATEGORIES,
   URGENCIES,
+  answerFromKnowledge,
   balances,
   checkAd,
   computeReminders,
@@ -336,7 +337,7 @@ export async function gatherBuildingSummary(
 
 // ---- assistant -----------------------------------------------------------------------------------------
 
-export async function gatherAssistant(ctx: FeatureCtx): Promise<Gathered> {
+export async function gatherAssistant(ctx: FeatureCtx, question = ''): Promise<Gathered> {
   const staff = isStaff(ctx.roles);
   const leasesQ = staff
     ? ctx.db.collection(`orgs/${ctx.orgId}/leases`)
@@ -364,7 +365,12 @@ export async function gatherAssistant(ctx: FeatureCtx): Promise<Gathered> {
   const expiring = reminders.filter(
     (r) => r.kind === 'lease_expiring' || r.kind === 'renewal_notice',
   ).length;
+  // product knowledge that answers the question (the team's own text; no model involved)
+  const known = answerFromKnowledge(question).map((e) => e.ar);
   const facts = [
+    ...(known.length
+      ? known
+      : ['لا أملك معلومة جاهزة عن هذا السؤال؛ اسأل عن العقود أو الدفعات أو الفحص أو الصيانة.']),
     `عدد العقود المتاحة لك: ${leases.size}`,
     `دفعات متأخرة: ${late}، ودفعات قريبة خلال ٧ أيام: ${soon}`,
     `عقود تحتاج انتباهاً (قرب الانتهاء أو إشعار التجديد): ${expiring}`,

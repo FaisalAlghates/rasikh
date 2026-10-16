@@ -159,6 +159,7 @@ test('engineering office: brief → options → client picks → development →
   await expect(lead.page.getByTestId('draft-watermark').first()).toBeVisible();
   await expect(lead.page.getByTestId('compare').locator('tbody tr')).toHaveCount(8);
   const optionA = lead.page.getByTestId('concept-A');
+  await expect(lead.page.getByTestId('design-tips')).toContainText('ملاحظات تصميمية');
   await expect(optionA.getByTestId('fit-notes')).toContainText('يحتوي كل ما في الوصف');
   await expect(optionA.getByTestId('fit-notes')).toContainText('مصلى');
   // the site: the pool, two parking bays and the guest entrance are drawn and explained

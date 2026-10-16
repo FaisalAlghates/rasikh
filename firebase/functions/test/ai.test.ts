@@ -122,6 +122,18 @@ describe('aiAssist: who may ask what', () => {
     expect(mine.ok && mine.text).toContain('دفعات متأخرة: 1'); // 2026-10-01 is before 2026-10-12
   });
 
+  it('answers product questions from the knowledge base, without a model', async () => {
+    const s = await seed();
+    const ask = (question: string) =>
+      aiAssist(s.deps, s.tenant, { orgId: s.org, feature: 'assistant', input: { question } });
+    const deposit = await ask('هل راسخ يستلم التأمين على العقار؟');
+    expect(deposit.ok && deposit.text).toContain('لا يستلم أموالاً');
+    const who = await ask('من المسؤول عن صيانة تسرب في الشقة؟');
+    expect(who.ok && who.text).toContain('المستهلكات على المستأجر');
+    const none = await ask('كم عقداً عندي في العقار؟');
+    expect(none.ok && none.text).toContain('لا أملك معلومة جاهزة');
+  });
+
   it('ad help is for brokers and staff only', async () => {
     const s = await seed();
     const req = {

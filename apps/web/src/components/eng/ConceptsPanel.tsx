@@ -8,6 +8,7 @@ import {
   coveredArea,
   builtUpArea,
   deferredItems,
+  designTips,
   explainOption,
   optionLabel,
   programCounts,
@@ -33,7 +34,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { Check } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/components/ui/cn';
@@ -106,6 +107,7 @@ export function ConceptsPanel({
   roomLabel: (r: PlanRoom) => string;
 }) {
   const t = useTranslations('eng');
+  const locale = useLocale();
   const [busy, setBusy] = useState<string>();
   const [error, setError] = useState<string>();
   const [count, setCount] = useState(8);
@@ -263,6 +265,7 @@ export function ConceptsPanel({
     [concepts, rates, overrides, project, officeMember],
   );
 
+  const tips = designTips({ style: project.program.style, type: project.program.type });
   const budgetFit = (b: Boq) =>
     !budget ? null : b.max <= budget.max ? 'within' : b.min > budget.max ? 'over' : 'near';
   const roomsText = programCounts(project.program)
@@ -460,6 +463,26 @@ export function ConceptsPanel({
               </tbody>
             </table>
           </div>
+        </section>
+      )}
+
+      {tips.length > 0 && (
+        <section
+          className="hairline flex flex-col gap-2 rounded-xl bg-surface p-4"
+          aria-labelledby="design-tips"
+          data-testid="design-tips"
+        >
+          <h3 id="design-tips" className="text-body font-semibold">
+            {t('designs.tipsTitle')}
+          </h3>
+          <ul className="flex flex-col gap-1 text-small">
+            {tips.map((e) => (
+              <li key={e.id} className="border-s-2 border-brand ps-3">
+                {locale === 'ar' ? e.ar : e.en}
+              </li>
+            ))}
+          </ul>
+          <p className="text-caption text-text-muted">{t('designs.tipsNote')}</p>
         </section>
       )}
 
