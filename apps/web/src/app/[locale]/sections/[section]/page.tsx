@@ -78,6 +78,32 @@ export default function SectionPage({
         </video>
       </section>
 
+      {section === 'office' && (
+        <section aria-labelledby="sec-drawings" className="mt-12 flex flex-col gap-4">
+          <h2 id="sec-drawings" className="text-h2 font-semibold">
+            {t('office.drawingsVideoTitle')}
+          </h2>
+          <video
+            controls
+            preload="metadata"
+            playsInline
+            aria-label={t('page.videoLabel')}
+            className="hairline aspect-video w-full max-w-4xl rounded-xl bg-night"
+            data-testid="drawings-video"
+          >
+            <source src="/videos/drawings.webm" type="video/webm" />
+          </video>
+          <h3 className="mt-2 text-h3 font-semibold">{t('page.printTitle')}</h3>
+          <ol className="flex max-w-3xl flex-col gap-2 ps-5 text-body" data-testid="print-steps">
+            {(t.raw('office.print') as string[]).map((x) => (
+              <li key={x} className="list-decimal">
+                {x}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
       <section aria-labelledby="sec-steps" className="mt-12 flex flex-col gap-4">
         <h2 id="sec-steps" className="text-h2 font-semibold">
           {t('page.stepsTitle')}

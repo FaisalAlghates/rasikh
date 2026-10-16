@@ -27,6 +27,16 @@ for (const { key, title } of SECTIONS) {
   });
 }
 
+test('the office page also explains the drawings and how they print', async ({ page }) => {
+  await page.goto('/ar/sections/office');
+  await expect(page.getByTestId('drawings-video').locator('source')).toHaveAttribute(
+    'src',
+    '/videos/drawings.webm',
+  );
+  await expect(page.getByTestId('print-steps').locator('li')).toHaveCount(5);
+  await expect(page.getByTestId('print-steps')).toContainText('A3');
+});
+
 test('the landing cards open the section pages', async ({ page }) => {
   await page.goto('/ar');
   await page.locator('[data-section="office"]').click();
@@ -34,7 +44,7 @@ test('the landing cards open the section pages', async ({ page }) => {
 });
 
 test('the videos are served', async ({ request }) => {
-  for (const { key } of SECTIONS) {
+  for (const key of [...SECTIONS.map((s) => s.key), 'drawings']) {
     const res = await request.get(`/videos/${key}.webm`, { headers: { Range: 'bytes=0-99' } });
     expect([200, 206]).toContain(res.status());
   }

@@ -264,6 +264,20 @@ test('engineering office: brief → options → client picks → development →
   await lead.page.getByRole('tab', { name: 'الرسومات والتصدير' }).click();
   await expect(lead.page.getByTestId('sheet-elevations')).toBeVisible();
   await shot(lead.page, 'drawings');
+  // printing: in print media only the sheets show (a rule once left them hidden, so the pages came out blank)
+  await lead.page.emulateMedia({ media: 'print' });
+  expect(
+    await lead.page
+      .getByTestId('sheet-elevations')
+      .evaluate((el) => getComputedStyle(el).visibility),
+  ).toBe('visible');
+  expect(
+    await lead.page
+      .locator('header')
+      .first()
+      .evaluate((el) => getComputedStyle(el).visibility),
+  ).toBe('hidden');
+  await lead.page.emulateMedia({ media: 'screen' });
   const dxf = lead.page.waitForEvent('download');
   await lead.page.getByRole('button', { name: 'نزّل DXF' }).click();
   expect((await dxf).suggestedFilename()).toMatch(/\.dxf$/);
