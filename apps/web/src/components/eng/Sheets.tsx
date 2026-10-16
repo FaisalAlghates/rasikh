@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  isOpen,
   openingsOf,
   openingWidth,
   toDxf,
@@ -16,10 +17,41 @@ import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { download } from '@/lib/eng/data';
 import { PlanView } from './PlanView';
+import { floorLabel } from '@/lib/eng/labels';
 
 type Side = 'front' | 'back' | 'left' | 'right';
+type Span = [number, number];
 
-/** A façade: the building outline, floor lines, parapet (with Najdi crenellation for Najdi styles) and its openings. */
+/** Merges overlapping stretches. */
+function merge(spans: Span[]): Span[] {
+  const out: Span[] = [];
+  for (const [a, b] of [...spans].sort((p, q) => p[0] - q[0])) {
+    const last = out[out.length - 1];
+    if (last && a <= last[1] + 0.05) last[1] = Math.max(last[1], b);
+    else out.push([a, b]);
+  }
+  return out;
+}
+
+/** What is left of `spans` once `cover` is taken away. */
+function minus(spans: Span[], cover: Span[]): Span[] {
+  let out = spans;
+  for (const [c0, c1] of cover)
+    out = out.flatMap(([a, b]): Span[] => {
+      if (c1 <= a || c0 >= b) return [[a, b]];
+      const keep: Span[] = [];
+      if (c0 > a + 0.05) keep.push([a, c0]);
+      if (c1 < b - 0.05) keep.push([c1, b]);
+      return keep;
+    });
+  return out;
+}
+
+/**
+ * A façade as seen from one side: each floor's own silhouette (a floor set back, a roof annex, a guest pavilion), its
+ * parapets (with the Najdi crenellation for Najdi styles) where nothing is built above, floor lines, and the openings
+ * on the walls facing that way that nothing in front hides.
+ */
 function Elevation({
   plan,
   side,
@@ -32,27 +64,52 @@ function Elevation({
   title: string;
 }) {
   const fp = plan.footprint;
-  const width = side === 'front' || side === 'back' ? fp.w : fp.h;
-  const height = plan.floors * plan.floorHeight + 1;
-  const ops = openingsOf(plan).filter((o) => {
-    const eps = 0.05;
-    if (side === 'front') return Math.abs(o.y1 - fp.y) < eps && Math.abs(o.y2 - fp.y) < eps;
-    if (side === 'back')
-      return Math.abs(o.y1 - (fp.y + fp.h)) < eps && Math.abs(o.y2 - (fp.y + fp.h)) < eps;
-    if (side === 'left') return Math.abs(o.x1 - fp.x) < eps && Math.abs(o.x2 - fp.x) < eps;
-    return Math.abs(o.x1 - (fp.x + fp.w)) < eps && Math.abs(o.x2 - (fp.x + fp.w)) < eps;
-  });
-  // position along the façade as seen from outside
-  const along = (o: (typeof ops)[number]) => {
-    const a =
-      side === 'front' || side === 'back'
-        ? Math.min(o.x1, o.x2) - fp.x
-        : Math.min(o.y1, o.y2) - fp.y;
-    const w = openingWidth(o);
-    return side === 'back' || side === 'left' ? width - a - w : a;
+  const across = side === 'front' || side === 'back';
+  const width = across ? fp.w : fp.h;
+  const fh = plan.floorHeight;
+  const height = plan.floors * fh + 1;
+  // position along the façade as seen from outside (the viewer's left first)
+  const pos = (u: number) => {
+    const a = across ? u - fp.x : u - fp.y;
+    return side === 'back' || side === 'left' ? width - a : a;
   };
+  const span = (u0: number, u1: number): Span => {
+    const a = pos(u0);
+    const b = pos(u1);
+    return [Math.min(a, b), Math.max(a, b)];
+  };
+  const built = (f: number) => plan.rooms.filter((r) => r.floor === f && !isOpen(r.type));
+  const extent = (f: number) =>
+    merge(built(f).map((r) => (across ? span(r.x, r.x + r.w) : span(r.y, r.y + r.h))));
+  // how close to the viewer a room's facing side is (bigger is nearer)
+  const near = (r: PlanRoom) =>
+    side === 'front' ? -r.y : side === 'back' ? r.y + r.h : side === 'left' ? -r.x : r.x + r.w;
+  const ops = openingsOf(plan).filter((o) => {
+    const r = plan.rooms.find((x) => x.id === o.roomId);
+    if (!r) return false;
+    const eps = 0.05;
+    const onSide =
+      side === 'front'
+        ? Math.abs(o.y1 - r.y) < eps && Math.abs(o.y2 - r.y) < eps
+        : side === 'back'
+          ? Math.abs(o.y1 - (r.y + r.h)) < eps && Math.abs(o.y2 - (r.y + r.h)) < eps
+          : side === 'left'
+            ? Math.abs(o.x1 - r.x) < eps && Math.abs(o.x2 - r.x) < eps
+            : Math.abs(o.x1 - (r.x + r.w)) < eps && Math.abs(o.x2 - (r.x + r.w)) < eps;
+    if (!onSide) return false;
+    // hidden when a built room on the same floor stands in front of it
+    const [a, b] = across
+      ? span(Math.min(o.x1, o.x2), Math.max(o.x1, o.x2))
+      : span(Math.min(o.y1, o.y2), Math.max(o.y1, o.y2));
+    return !built(o.floor).some((x) => {
+      if (x.id === r.id || near(x) <= near(r) + 0.05) return false;
+      const [xa, xb] = across ? span(x.x, x.x + x.w) : span(x.y, x.y + x.h);
+      return xa < b - 0.05 && xb > a + 0.05;
+    });
+  });
   const M = 1.5;
   const najdi = style === 'modern_najdi' || style === 'salmani';
+  const Y = (z: number) => height - z;
   return (
     <svg
       viewBox={`${-M} ${-M} ${width + 2 * M} ${height + 2 * M}`}
@@ -63,45 +120,57 @@ function Elevation({
     >
       <rect x={-M} y={-M} width={width + 2 * M} height={height + 2 * M} fill="#fffdf9" />
       <line x1={-M} x2={width + M} y1={height} y2={height} stroke="#1A1815" strokeWidth={0.08} />
-      <rect
-        x={0}
-        y={0}
-        width={width}
-        height={height}
-        fill="#efe1cc"
-        stroke="#1A1815"
-        strokeWidth={0.07}
-      />
-      {Array.from({ length: plan.floors - 1 }, (_, i) => (
-        <line
-          key={i}
-          x1={0}
-          x2={width}
-          y1={height - (i + 1) * plan.floorHeight}
-          y2={height - (i + 1) * plan.floorHeight}
-          stroke="#8C8478"
-          strokeWidth={0.03}
-          strokeDasharray="0.3 0.2"
-        />
-      ))}
-      {najdi &&
-        Array.from({ length: Math.floor(width / 0.8) }, (_, i) => (
-          <path
-            key={i}
-            d={`M ${i * 0.8 + 0.1} 0 L ${i * 0.8 + 0.4} -0.5 L ${i * 0.8 + 0.7} 0 Z`}
-            fill="#c9a27e"
-          />
-        ))}
+      {Array.from({ length: plan.floors }, (_, f) => {
+        const mine = extent(f);
+        const roof = minus(mine, f + 1 < plan.floors ? extent(f + 1) : []);
+        return (
+          <g key={f}>
+            {mine.map(([a, b]) => (
+              <rect
+                key={`w${a}`}
+                x={a}
+                y={Y((f + 1) * fh)}
+                width={b - a}
+                height={fh}
+                fill="#efe1cc"
+                stroke="#1A1815"
+                strokeWidth={0.06}
+              />
+            ))}
+            {roof.map(([a, b]) => (
+              <g key={`p${a}`}>
+                <rect
+                  x={a}
+                  y={Y((f + 1) * fh + 1)}
+                  width={b - a}
+                  height={1}
+                  fill="#e6d3b8"
+                  stroke="#1A1815"
+                  strokeWidth={0.05}
+                />
+                {najdi &&
+                  Array.from({ length: Math.floor((b - a) / 0.8) }, (_, i) => (
+                    <path
+                      key={i}
+                      d={`M ${a + i * 0.8 + 0.1} ${Y((f + 1) * fh + 1)} L ${a + i * 0.8 + 0.4} ${Y((f + 1) * fh + 1.5)} L ${a + i * 0.8 + 0.7} ${Y((f + 1) * fh + 1)} Z`}
+                      fill="#c9a27e"
+                    />
+                  ))}
+              </g>
+            ))}
+          </g>
+        );
+      })}
       {ops.map((o) => {
-        const x = along(o);
-        const w = openingWidth(o);
-        const y = height - o.floor * plan.floorHeight - 0.25 - o.head;
+        const [a, b] = across
+          ? span(Math.min(o.x1, o.x2), Math.max(o.x1, o.x2))
+          : span(Math.min(o.y1, o.y2), Math.max(o.y1, o.y2));
         return (
           <rect
             key={o.id}
-            x={x}
-            y={y}
-            width={w}
+            x={a}
+            y={Y(o.floor * fh + 0.25 + o.head)}
+            width={b - a}
             height={o.head - o.sill}
             fill={o.kind === 'window' ? '#cfe0ec' : '#8C6A4E'}
             stroke="#1A1815"
@@ -110,18 +179,38 @@ function Elevation({
         );
       })}
       <text x={width / 2} y={height + 1.1} fontSize={0.5} textAnchor="middle" fill="#1A1815">
-        ±0.00 · +{(plan.floors * plan.floorHeight).toFixed(2)}
+        ±0.00 · +{(plan.floors * fh).toFixed(2)}
       </text>
     </svg>
   );
 }
 
-/** A section through the building: slabs, floor heights and levels. */
+/**
+ * A section through the middle of the building: for each floor the rooms the cut passes through (a courtyard shows
+ * as a gap open to the sky), their slabs, roofs where nothing is above, end walls, levels and the clear height.
+ */
 function Section({ plan, along, title }: { plan: DesignPlan; along: 'x' | 'y'; title: string }) {
   const fp = plan.footprint;
   const width = along === 'x' ? fp.w : fp.h;
-  const height = plan.floors * plan.floorHeight + 1;
+  const fh = plan.floorHeight;
+  const height = plan.floors * fh + 1;
   const M = 2;
+  const Y = (z: number) => height - z;
+  // the cut runs through the middle of the footprint
+  const at = along === 'x' ? fp.y + fp.h / 2 : fp.x + fp.w / 2;
+  const cut = (f: number) =>
+    merge(
+      plan.rooms
+        .filter(
+          (r) =>
+            r.floor === f &&
+            !isOpen(r.type) &&
+            (along === 'x' ? r.y <= at && r.y + r.h >= at : r.x <= at && r.x + r.w >= at),
+        )
+        .map((r): Span =>
+          along === 'x' ? [r.x - fp.x, r.x + r.w - fp.x] : [r.y - fp.y, r.y + r.h - fp.y],
+        ),
+    );
   return (
     <svg
       viewBox={`${-M} ${-M} ${width + 2 * M} ${height + 2 * M}`}
@@ -132,39 +221,50 @@ function Section({ plan, along, title }: { plan: DesignPlan; along: 'x' | 'y'; t
     >
       <rect x={-M} y={-M} width={width + 2 * M} height={height + 2 * M} fill="#fffdf9" />
       <rect x={-M} y={height} width={width + 2 * M} height={0.6} fill="#d8cfc2" />
-      {Array.from({ length: plan.floors + 1 }, (_, f) => {
-        const y = height - f * plan.floorHeight;
+      {Array.from({ length: plan.floors }, (_, f) => {
+        const mine = cut(f);
+        const roof = minus(mine, f + 1 < plan.floors ? cut(f + 1) : []);
         return (
           <g key={f}>
-            <rect x={0} y={y - 0.25} width={width} height={0.25} fill="#1A1815" />
-            <text x={-0.3} y={y - 0.1} fontSize={0.4} textAnchor="end" fill="#1A1815">
-              +{(f * plan.floorHeight).toFixed(2)}
+            <text x={-0.3} y={Y(f * fh) - 0.1} fontSize={0.4} textAnchor="end" fill="#1A1815">
+              +{(f * fh).toFixed(2)}
             </text>
-            {f < plan.floors && (
-              <line
-                x1={0}
-                x2={width}
-                y1={y - 0.25 - plan.clearHeight}
-                y2={y - 0.25 - plan.clearHeight}
-                stroke="#8C8478"
-                strokeWidth={0.03}
-                strokeDasharray="0.2 0.15"
-              />
-            )}
+            {mine.map(([a, b]) => (
+              <g key={a}>
+                <rect x={a} y={Y(f * fh + 0.25)} width={b - a} height={0.25} fill="#1A1815" />
+                <rect x={a} y={Y((f + 1) * fh)} width={0.25} height={fh} fill="#1A1815" />
+                <rect x={b - 0.25} y={Y((f + 1) * fh)} width={0.25} height={fh} fill="#1A1815" />
+                <line
+                  x1={a}
+                  x2={b}
+                  y1={Y(f * fh + 0.25 + plan.clearHeight)}
+                  y2={Y(f * fh + 0.25 + plan.clearHeight)}
+                  stroke="#8C8478"
+                  strokeWidth={0.03}
+                  strokeDasharray="0.2 0.15"
+                />
+              </g>
+            ))}
+            {roof.map(([a, b]) => (
+              <g key={`r${a}`}>
+                <rect x={a} y={Y((f + 1) * fh + 0.25)} width={b - a} height={0.25} fill="#1A1815" />
+                <rect
+                  x={a - 0.1}
+                  y={Y((f + 1) * fh + 1.25)}
+                  width={b - a + 0.2}
+                  height={1}
+                  fill="none"
+                  stroke="#1A1815"
+                  strokeWidth={0.06}
+                />
+              </g>
+            ))}
           </g>
         );
       })}
-      <rect x={0} y={0} width={0.25} height={height} fill="#1A1815" />
-      <rect x={width - 0.25} y={0} width={0.25} height={height} fill="#1A1815" />
-      <rect
-        x={-0.1}
-        y={-1}
-        width={width + 0.2}
-        height={1}
-        fill="none"
-        stroke="#1A1815"
-        strokeWidth={0.06}
-      />
+      <text x={-0.3} y={Y(plan.floors * fh) - 0.1} fontSize={0.4} textAnchor="end" fill="#1A1815">
+        +{(plan.floors * fh).toFixed(2)}
+      </text>
     </svg>
   );
 }
@@ -259,13 +359,13 @@ export function Sheets(p: SheetsProps) {
     sheets.push(
       sheet(
         `plan-${f}`,
-        `${t('sheets.plans')} — ${f === 0 ? t('ground') : t('floorN', { n: f })}`,
+        `${t('sheets.plans')} — ${floorLabel(t, p.plan, f)}`,
         <PlanView
           plan={p.plan}
           floor={f}
           label={p.roomLabel}
           watermark={wm}
-          title={t('floorN', { n: f })}
+          title={floorLabel(t, p.plan, f)}
           northDeg={p.plot.northDeg}
         />,
         ++n,
@@ -329,7 +429,7 @@ export function Sheets(p: SheetsProps) {
                   </td>
                   <td className="p-1.5">{t(`schedule.${o.kind}`)}</td>
                   <td className="p-1.5">
-                    {p.roomLabel(r)} · {r.floor === 0 ? t('ground') : t('floorN', { n: r.floor })}
+                    {p.roomLabel(r)} · {floorLabel(t, p.plan, r.floor)}
                   </td>
                   <td className="tabular p-1.5">{openingWidth(o).toFixed(2)}</td>
                   <td className="tabular p-1.5">{(o.head - o.sill).toFixed(2)}</td>
@@ -367,7 +467,7 @@ export function Sheets(p: SheetsProps) {
         <tbody>
           {perFloor.map((x) => (
             <tr key={x.f} className="border-b border-night/10">
-              <td className="p-1.5">{x.f === 0 ? t('ground') : t('floorN', { n: x.f })}</td>
+              <td className="p-1.5">{floorLabel(t, p.plan, x.f)}</td>
               <td className="tabular p-1.5">{x.rooms}</td>
               <td className="tabular p-1.5">{x.area.toFixed(1)}</td>
             </tr>

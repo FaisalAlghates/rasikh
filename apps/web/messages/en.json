@@ -1481,7 +1481,10 @@
       "prayer_room": "Prayer room",
       "gym": "Gym",
       "prep_kitchen": "Prep kitchen",
-      "closet": "Closet"
+      "closet": "Closet",
+      "courtyard": "Courtyard",
+      "terrace": "Terrace",
+      "annex_room": "Annex room"
     },
     "type": {
       "villa": "Villa",
@@ -1689,7 +1692,11 @@
       "C-ENERGY": "Envelope energy efficiency",
       "C-STRUCTURE": "Loads and structural design",
       "C-ELECTRICAL": "Electrical loads",
-      "C-PLUMBING": "Plumbing"
+      "C-PLUMBING": "Plumbing",
+      "C-COURT": "Inner court width",
+      "C-GLAZING": "Window area for daylight",
+      "C-STAIR-RUN": "Room for the stair’s steps and landings",
+      "Z-ANNEX": "Roof annex: share and setback"
     },
     "empty": "Empty",
     "furnished": "Furnished",
@@ -2065,7 +2072,8 @@
         "PROGRAM": "the plot cannot hold every requested room",
         "ACCESS": "not every room could be reached from the corridor",
         "CLASH": "ducts clash with beams",
-        "SITE": "the yards cannot hold the parking or pool asked for"
+        "SITE": "the yards cannot hold the parking or pool asked for",
+        "ANNEX": "the roof annex does not fit within the allowed share and setback"
       },
       "compare": "Compare designs",
       "colOption": "Design",
@@ -2092,7 +2100,9 @@
         "plumbing": "{stacked} of {wet} upper bathrooms stacked (shorter pipe runs)",
         "guestEntry": "Separate guest entrance into the men’s majlis from the facade",
         "parking": "{n, plural, one {# parking bay} other {# parking bays}} {layout, select, perpendicular {perpendicular to the street} other {parallel to the street}} in the {where, select, front {front yard} front_side {front yard and side passage} other {side passage}}, with a walkway to the entrance",
-        "pool": "{size} m pool in the {where, select, back {back yard} front {front yard} other {side passage}}, 1.2 m clear around it"
+        "pool": "{size} m pool in the {where, select, back {back yard} front {front yard} other {side passage}}, 1.2 m clear around it",
+        "typology": "{kind, select, court {A courtyard house: a {w}×{h} m court ringed by shaded galleries, the dining room and family hall look onto it} sidecourt {A U-shaped house around a {w}×{h} m side court open to the garden} terrace {The upper floor steps back behind a {w}×{h} m terrace over the majlis} other {The men’s majlis in its own pavilion by the gate, a {w}×{h} m garden between it and the house}}",
+        "annex": "A {m2} m² roof annex ({pct}% of the floor below) with a roof terrace before it"
       },
       "deferred": "Added in design development: {items}",
       "deferredItem": {
@@ -2104,7 +2114,15 @@
       "codeVerified": "with values the office engineer verified",
       "codeStarting": "with starting values; they read “passed” once the office engineer verifies them from the licensed code",
       "checksManual": "{n} items always reviewed by the engineer: fire, energy, structure, electrical, plumbing",
-      "floors": "Design floors"
+      "floors": "Design floors",
+      "colType": "Type",
+      "type": {
+        "bands": "Central corridor",
+        "court": "Inner courtyard",
+        "sidecourt": "Side courtyard",
+        "terrace": "Upper terrace",
+        "pavilion": "Guest pavilion"
+      }
     },
     "site": {
       "parking": "Parking",
@@ -2124,6 +2142,79 @@
       "noProperty": "No properties in this workspace yet.",
       "addProperty": "Add a property",
       "failed": "Could not add it. Please try again."
+    },
+    "annexFloor": "Roof annex",
+    "roofAnnexShare": "Roof annex share of the floor below (%)",
+    "regs": {
+      "title": "Municipal requirements",
+      "lead": "Pick the requirements that apply to the plot: setbacks follow the street widths, and the coverage, floors, roof annex and parking are filled in, each with its source and clause. What the plot’s approved local plan sets, the office confirms from its documents.",
+      "choose": "Requirements",
+      "apply": "Apply to the plot",
+      "none": "No requirements recorded for this building type in this city yet; enter the values from the plot’s documents.",
+      "from": "Source: {document} — {issuer}{reference}",
+      "openSource": "Open the official document",
+      "confirmLocal": "Confirm from the plot’s approved local plan",
+      "zoningFrom": "Municipal values from: {document}{reference}",
+      "status": {
+        "national": "National requirements, binding on every Amanah (Ministry of Municipalities and Housing)",
+        "verified": "Amanah requirements, verified by the Rasikh team",
+        "draft": "Draft, not yet verified by the Rasikh team: check the values"
+      },
+      "clause": {
+        "front": "Front setback",
+        "streetSide": "Side and back street setbacks",
+        "neighbour": "Setback from neighbours",
+        "coverageGround": "Ground floor coverage",
+        "coverageUpper": "Upper floor coverage",
+        "roofAnnex": "Roof annex",
+        "maxFloors": "Floors",
+        "parking": "Parking",
+        "height": "Height"
+      },
+      "admin": {
+        "tab": "Amanah requirements",
+        "lead": "Each Amanah’s building requirements with their official source. The national requirements are built into Rasikh from the Ministry of Municipalities and Housing decision; add here what each Amanah sets for its cities, then verify it against the official document.",
+        "addTitle": "Add an Amanah’s requirements",
+        "editTitle": "Edit the requirements",
+        "title": "Title",
+        "cities": "Cities (comma separated)",
+        "issuer": "Issued by",
+        "document": "Document",
+        "reference": "Decision number or reference",
+        "issued": "Issued on",
+        "url": "Link to the official document",
+        "types": "Building types",
+        "type": {
+          "villa": "Villa",
+          "duplex": "Duplex",
+          "townhouse": "Townhouse",
+          "apartments": "Apartment building",
+          "commercial": "Residential-commercial"
+        },
+        "frontPct": "Front setback (% of street width)",
+        "frontMin": "Its minimum (m)",
+        "sidePct": "Side street setback (%)",
+        "sideMin": "Its minimum (m)",
+        "neighbour": "Setback from neighbours (m)",
+        "groundPct": "Ground coverage (%)",
+        "upperPct": "Upper floors coverage (%)",
+        "annexPct": "Roof annex (%)",
+        "maxFloors": "Maximum floors",
+        "maxHeightM": "Maximum height (m)",
+        "parkingPerUnit": "Parking per dwelling",
+        "notes": "Notes and clauses",
+        "zeroMeans": "Zero means the document does not set it: the office confirms it from the plot’s approved local plan.",
+        "saveDraft": "Save as draft",
+        "saveVerified": "Save and verify",
+        "verify": "Verify",
+        "unverify": "Withdraw verification",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "saved": "Requirements saved.",
+        "failed": "Could not save.",
+        "invalid": "Fill in the title, cities, issuer and document."
+      }
     }
   }
 }

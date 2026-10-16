@@ -3,8 +3,8 @@
 import {
   MAX_OPTIONS,
   MIN_OPTIONS,
-  area,
   boq,
+  coveredArea,
   builtUpArea,
   deferredItems,
   explainOption,
@@ -21,6 +21,7 @@ import {
   type Rates,
   type RuleOverrides,
   type RuleResult,
+  type Zoning,
 } from '@rasikh/shared';
 import {
   addDoc,
@@ -37,6 +38,7 @@ import { Button } from '@/components/ui/Button';
 import { cn } from '@/components/ui/cn';
 import { firebaseDb } from '@/lib/firebase';
 import { planSha, type CheckSummary, type ProjectDoc, type VersionDoc } from '@/lib/eng/data';
+import { floorLabel } from '@/lib/eng/labels';
 import type { Row } from '@/lib/ops/hooks';
 import { BoqTable } from './BoqTable';
 import { PlanView } from './PlanView';
@@ -248,7 +250,14 @@ export function ConceptsPanel({
   const roomsText = programCounts(project.program)
     .map(({ type, n }) => (n > 1 ? `${t(`room.${type}`)} ×${n}` : t(`room.${type}`)))
     .join('، ');
-  const deferred = deferredItems(project.program);
+  const deferredText = (plan: DesignPlan) => {
+    const items = deferredItems(project.program, plan);
+    return items.length
+      ? t('designs.deferred', {
+          items: items.map((d) => t(`designs.deferredItem.${d}`)).join('، '),
+        })
+      : undefined;
+  };
   const blockText = (id: string) =>
     id === 'PROGRAM' || id === 'ACCESS' || id === 'CLASH'
       ? t(`designs.block.${id}`)
@@ -355,16 +364,23 @@ export function ConceptsPanel({
             {t('designs.compare')}
           </h3>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[34rem] text-small" data-testid="compare">
+            <table className="w-full min-w-[40rem] text-small" data-testid="compare">
               <thead>
                 <tr className="border-b border-border/20 text-text-muted">
-                  {(['colOption', 'colArea', 'colCoverage', 'colCost', 'colWeeks'] as const).map(
-                    (k) => (
-                      <th key={k} scope="col" className="p-2 text-start font-medium">
-                        {t(`designs.${k}`)}
-                      </th>
-                    ),
-                  )}
+                  {(
+                    [
+                      'colOption',
+                      'colType',
+                      'colArea',
+                      'colCoverage',
+                      'colCost',
+                      'colWeeks',
+                    ] as const
+                  ).map((k) => (
+                    <th key={k} scope="col" className="p-2 text-start font-medium">
+                      {t(`designs.${k}`)}
+                    </th>
+                  ))}
                   {budget && (
                     <th scope="col" className="p-2 text-start font-medium">
                       {t('designs.colBudget')}
@@ -385,9 +401,12 @@ export function ConceptsPanel({
                           {t('option', { id: v.data.label })}
                         </a>
                       </th>
+                      <td className="p-2">
+                        {t(`designs.type.${String(plan.variant.typology ?? 'bands')}`)}
+                      </td>
                       <td className="tabular p-2">{fmt.format(Math.round(builtUpArea(plan)))}</td>
                       <td className="tabular p-2">
-                        {pct.format(area(plan.footprint) / (plan.plot.width * plan.plot.depth))}
+                        {pct.format(coveredArea(plan) / (plan.plot.width * plan.plot.depth))}
                       </td>
                       <td className="tabular whitespace-nowrap p-2">
                         {fmt.format(bill.min)} – {fmt.format(bill.max)}
@@ -429,18 +448,13 @@ export function ConceptsPanel({
                 ? t('designs.fit.program', { rooms: roomsText })
                 : t(`designs.fit.${n.key}`, n.values),
             )}
-            deferred={
-              deferred.length
-                ? t('designs.deferred', {
-                    items: deferred.map((d) => t(`designs.deferredItem.${d}`)).join('، '),
-                  })
-                : undefined
-            }
+            deferred={deferredText(plan)}
             chosen={project.pickedVersionId === v.id}
             canPick={isClient && project.status === 'concepts'}
             picking={busy === v.id}
             onPick={() => void pick(v.id)}
             roomLabel={roomLabel}
+            source={project.zoning?.source}
           />
         ))}
       </ul>
@@ -467,7 +481,9 @@ function OptionCard({
   picking,
   onPick,
   roomLabel,
+  source,
 }: {
+  source?: Zoning['source'];
   id: string;
   label: string;
   status: VersionDoc['status'];
@@ -485,7 +501,7 @@ function OptionCard({
   const t = useTranslations('eng');
   const [floor, setFloor] = useState(0);
   const title = t('option', { id: label });
-  const floorName = (f: number) => (f === 0 ? t('ground') : t('floorN', { n: f }));
+  const floorName = (f: number) => floorLabel(t, plan, f);
   return (
     <li
       id={`opt-${id}`}
@@ -540,6 +556,14 @@ function OptionCard({
       {checks && (
         <ul className="flex flex-col gap-0.5 text-caption" data-testid="option-checks">
           <li>{t('designs.checksZoning', checks.zoning)}</li>
+          {source && (
+            <li className="text-text-muted">
+              {t('regs.zoningFrom', {
+                document: source.document,
+                reference: source.reference ? ` (${source.reference})` : '',
+              })}
+            </li>
+          )}
           <li>
             {t('designs.checksCode', { passed: checks.code.passed, total: checks.code.total })} —{' '}
             {checks.code.verified ? t('designs.codeVerified') : t('designs.codeStarting')}

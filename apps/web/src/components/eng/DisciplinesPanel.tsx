@@ -16,6 +16,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { BoqTable } from './BoqTable';
 import { PlanView } from './PlanView';
+import { floorLabel } from '@/lib/eng/labels';
 
 const fmt = new Intl.NumberFormat('en-US');
 
@@ -100,8 +101,7 @@ export function DisciplinesPanel({
                 {cooling.rows.map((r) => (
                   <tr key={r.roomId} className="border-b border-border/10">
                     <td className="p-1">
-                      {t(`room.${r.type}`)} ·{' '}
-                      {r.floor === 0 ? t('ground') : t('floorN', { n: r.floor })}
+                      {t(`room.${r.type}`)} · {floorLabel(t, plan, r.floor)}
                     </td>
                     <td className="tabular p-1">{r.tr}</td>
                     <td className="p-1">{t(`mechanical.${r.system}`)}</td>

@@ -424,6 +424,25 @@ service cloud.firestore {
       return signedIn() && request.auth.token.platformAdmin == true;
     }
 
+    // Municipal requirements of an Amanah, each with its official source: kept by the Rasikh team, read by everyone
+    // signed in (offices apply them to plots). The Ministry's national requirements live in the code.
+    match /regulations/{id} {
+      allow read: if signedIn();
+      allow create, update: if isPlatformAdmin()
+        && request.resource.data.scope == 'amanah'
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 3 && request.resource.data.title.size() <= 200
+        && request.resource.data.cities is list
+        && request.resource.data.cities.size() >= 1 && request.resource.data.cities.size() <= 40
+        && request.resource.data.source is map
+        && request.resource.data.source.document is string && request.resource.data.source.document.size() >= 3
+        && request.resource.data.source.issuer is string && request.resource.data.source.issuer.size() >= 2
+        && request.resource.data.status in ['draft', 'verified']
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if isPlatformAdmin();
+    }
+
     // Public site: anonymous "was this page helpful?" answers (no personal data). Anyone may add one;
     // only the Rasikh team reads them, and nobody edits them.
     match /siteFeedback/{id} {

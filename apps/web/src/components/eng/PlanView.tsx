@@ -18,33 +18,39 @@ const FILL: Record<string, string> = {
   service: '#e7ddcf',
   private: '#f4ece0',
   wet: '#dfe7e5',
+  court: '#dbe8cf',
+  terrace: '#f3ead2',
   core: '#d8cfc2',
   circulation: '#faf6ef',
 };
 const family = (t: PlanRoom['type']) =>
-  t === 'majlis_men' ||
-  t === 'majlis_women' ||
-  t === 'dining' ||
-  t === 'entrance' ||
-  t === 'shop' ||
-  t === 'guest_room' ||
-  t === 'prayer_room'
-    ? 'public'
-    : t === 'kitchen' ||
-        t === 'maid_room' ||
-        t === 'driver_room' ||
-        t === 'laundry' ||
-        t === 'storage' ||
-        t === 'closet' ||
-        t === 'prep_kitchen'
-      ? 'service'
-      : t === 'bathroom' || t === 'guest_wc'
-        ? 'wet'
-        : t === 'stair' || t === 'elevator'
-          ? 'core'
-          : t === 'corridor'
-            ? 'circulation'
-            : 'private';
+  t === 'courtyard'
+    ? 'court'
+    : t === 'terrace'
+      ? 'terrace'
+      : t === 'majlis_men' ||
+          t === 'majlis_women' ||
+          t === 'dining' ||
+          t === 'entrance' ||
+          t === 'shop' ||
+          t === 'guest_room' ||
+          t === 'prayer_room'
+        ? 'public'
+        : t === 'kitchen' ||
+            t === 'maid_room' ||
+            t === 'driver_room' ||
+            t === 'laundry' ||
+            t === 'storage' ||
+            t === 'closet' ||
+            t === 'prep_kitchen'
+          ? 'service'
+          : t === 'bathroom' || t === 'guest_wc'
+            ? 'wet'
+            : t === 'stair' || t === 'elevator'
+              ? 'core'
+              : t === 'corridor'
+                ? 'circulation'
+                : 'private';
 
 const STATE_STROKE = { existing: '#4a433b', demolish: '#A63D32', new: '#4F7A5A' } as const;
 

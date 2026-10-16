@@ -167,6 +167,10 @@ RTL first: logical CSS properties only, mirrored directional icons, Hijri + Greg
 - Use only data the requesting user may see (fetch with their permissions).
 - Log metadata, not raw personal data; per-user rate limits; monthly cost cap; a human confirms before any AI suggestion
   changes a record; AI output is visually marked.
+- Municipal values: the Ministry of Municipalities and Housing's unified residential requirements are built in with their
+  clauses (`packages/shared/src/engineering/regulations.ts`); each Amanah's own are kept by the Rasikh team with their
+  source (`regulations/{id}`). No live Balady/Amanah interface exists; values a plot's local plan sets (height) are
+  confirmed by the office. Never guess a requirement.
 - Engineering AI: only the versioned SBC rule engine decides compliance; the model explains results and never marks an
   unchecked rule as passed. Drawings stay watermarked drafts until a verified engineer of the right discipline approves
   them.
