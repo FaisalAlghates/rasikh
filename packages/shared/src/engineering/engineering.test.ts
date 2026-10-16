@@ -13,6 +13,8 @@ import {
   ductRuns,
   envelopeOf,
   exteriorEdges,
+  onFloor,
+  outsideSides,
   findPrecedents,
   furnish,
   generateOptions,
@@ -206,10 +208,24 @@ describe('rule engine', () => {
     'Z-FLOORS': [(c) => c, (c) => ({ ...c, zoning: { ...c.zoning, maxFloors: 1 } })],
     'Z-HEIGHT': [(c) => c, (c) => ({ ...c, zoning: { ...c.zoning, maxHeightM: 5 } })],
     'Z-PARKING': [(c) => c, (c) => ({ ...c, program: { ...c.program, parking: 0 } })],
+    // pass: no annex (or one within its share); fail: the same annex where only 10 % is allowed
+    'Z-ANNEX': [
+      (c) => c,
+      (c) => {
+        const z = { ...c.zoning, roofAnnexShare: 0.7 };
+        const plan = generatePlan(
+          c.plot as Plot,
+          z,
+          { ...c.program, roofAnnex: true },
+          VARIANTS[0]!,
+        );
+        return { ...c, plan, zoning: { ...z, roofAnnexShare: 0.1 } };
+      },
+    ],
     'C-ROOM-AREA': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'bedroom', 2.5, 2.5) })],
     'C-ROOM-DIM': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'bedroom', 1.8, 6) })],
     'C-CEILING': [(c) => c, (c) => ({ ...c, plan: { ...c.plan, clearHeight: 2.3 } })],
-    'C-DAYLIGHT': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'majlis_men', 3, 3, 1) })],
+    'C-DAYLIGHT': [(c) => c, (c) => ({ ...c, plan: enclose(c.plan, 'majlis_men') })],
     'C-WET-VENT': [
       // pass: every bathroom has an outside wall; fail: a WC moved inside the building
       (c) => ({
@@ -220,12 +236,21 @@ describe('rule engine', () => {
             (r) =>
               !(
                 (r.type === 'bathroom' || r.type === 'guest_wc') &&
-                exteriorEdges(r, c.plan.footprint).length === 0
+                outsideSides(r, onFloor(c.plan, r.floor)).length === 0
               ),
           ),
         },
       }),
-      (c) => ({ ...c, plan: shrink(c.plan, 'guest_wc', 1.5, 1.5, 1) }),
+      (c) => ({ ...c, plan: enclose(c.plan, 'guest_wc') }),
+    ],
+    // pass: no inner court at all; fail: a 2 m court cut into the men's majlis, walled in on every side
+    'C-COURT': [(c) => c, (c) => ({ ...c, plan: narrowCourt(c.plan) })],
+    // pass: the windows the engine draws; fail: a 40 m² majlis with no outside wall but one small window
+    'C-GLAZING': [(c) => c, (c) => ({ ...c, plan: enclose(c.plan, 'majlis_men') })],
+    // a 3.3 m floor needs about 4.5 m of stair: pass with a 5 m stair, fail with 3.5 m
+    'C-STAIR-RUN': [
+      (c) => ({ ...c, plan: shrink(c.plan, 'stair', 3, 5) }),
+      (c) => ({ ...c, plan: shrink(c.plan, 'stair', 3, 3.5) }),
     ],
     'C-CORRIDOR': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'corridor', 20, 0.8) })],
     'C-STAIR': [(c) => c, (c) => ({ ...c, plan: shrink(c.plan, 'stair', 1.6, 5) })],
@@ -252,6 +277,52 @@ describe('rule engine', () => {
       }),
     ],
   };
+
+  /** Replaces the men's majlis with closets around a 2 m wide inner court. */
+  function narrowCourt(plan: DesignPlan): DesignPlan {
+    const r = plan.rooms.find((x) => x.type === 'majlis_men')!;
+    const cx = r.x + (r.w - 2) / 2;
+    const part = (
+      id: string,
+      type: 'closet' | 'courtyard',
+      x: number,
+      y: number,
+      w: number,
+      h: number,
+    ) => ({ id, type, floor: r.floor, x, y, w, h }) as const;
+    return {
+      ...plan,
+      rooms: plan.rooms
+        .filter((x) => x !== r)
+        .concat([
+          part('court', 'courtyard', cx, r.y + 0.6, 2, r.h - 1.2),
+          part('c-front', 'closet', r.x, r.y, r.w, 0.6),
+          part('c-back', 'closet', r.x, r.y + r.h - 0.6, r.w, 0.6),
+          part('c-left', 'closet', r.x, r.y + 0.6, cx - r.x, r.h - 1.2),
+          part('c-right', 'closet', cx + 2, r.y + 0.6, r.x + r.w - cx - 2, r.h - 1.2),
+        ]),
+    };
+  }
+
+  /** Wraps the first room of a type in a 0.5 m ring of closets inside its own outline: no outside wall left. */
+  function enclose(plan: DesignPlan, type: string): DesignPlan {
+    const r = plan.rooms.find((x) => x.type === type)!;
+    const t = 0.5;
+    const ring = (id: string, x: number, y: number, w: number, h: number) =>
+      ({ id: `ring-${id}`, type: 'closet', floor: r.floor, x, y, w, h }) as const;
+    return {
+      ...plan,
+      rooms: plan.rooms
+        .filter((x) => x !== r)
+        .concat([
+          { ...r, x: r.x + t, y: r.y + t, w: r.w - 2 * t, h: r.h - 2 * t },
+          ring('front', r.x, r.y, r.w, t),
+          ring('back', r.x, r.y + r.h - t, r.w, t),
+          ring('left', r.x, r.y + t, t, r.h - 2 * t),
+          ring('right', r.x + r.w - t, r.y + t, t, r.h - 2 * t),
+        ]),
+    };
+  }
 
   function shrink(plan: DesignPlan, type: string, w: number, h: number, inset = 0): DesignPlan {
     let done = false;

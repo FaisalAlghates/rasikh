@@ -1,5 +1,5 @@
-import { area } from './layout.js';
-import { openingsOf, openingWidth } from './openings.js';
+import { area, floorArea as levelArea, isOpen } from './geometry.js';
+import { openingsOf, openingWidth, outsideWallLength } from './openings.js';
 import { walkways } from './site.js';
 import { WET, type DesignPlan, type PlanRoom, type RoomType } from './schemas.js';
 
@@ -58,7 +58,15 @@ export function structuralScheme(
   const ratio = slab === 'solid' ? 28 : slab === 'ribbed_hollow_block' ? 22 : 30;
   const slabThickness = Math.max(0.15, (Math.ceil(((span / ratio) * 100) / 5) * 5) / 100);
   const columnSize = plan.floors <= 2 ? '30×50' : plan.floors <= 4 ? '30×60' : '40×80';
-  const columns = gridX.flatMap((x) => gridY.map((y) => ({ x, y })));
+  // columns only where the building stands (never in a courtyard or a garden between blocks)
+  const ground = plan.rooms.filter((r) => r.floor === 0 && !isOpen(r.type));
+  const inside = (x: number, y: number) =>
+    ground.some(
+      (r) => x >= r.x - 0.05 && x <= r.x + r.w + 0.05 && y >= r.y - 0.05 && y <= r.y + r.h + 0.05,
+    );
+  const columns = gridX
+    .flatMap((x) => gridY.map((y) => ({ x, y })))
+    .filter((c) => inside(c.x, c.y));
   return {
     gridX,
     gridY,
@@ -87,6 +95,7 @@ export const COOLING_W_PER_M2: Partial<Record<RoomType, number>> = {
   maid_room: 170,
   driver_room: 170,
   guest_room: 170,
+  annex_room: 170,
   office: 180,
   prayer_room: 200,
   gym: 220,
@@ -351,27 +360,37 @@ export function boq(
 ) {
   const r: Rates = { ...DEFAULT_RATES, ...rates };
   const fp = plan.footprint;
-  const floorArea = plan.rooms.reduce((s, x) => s + area(x), 0);
-  const roof = area(fp);
+  const floorArea = plan.rooms.filter((x) => !isOpen(x.type)).reduce((s, x) => s + area(x), 0);
+  // built area of each floor, and the roofs: the top floor, plus wherever a floor is larger than the one above
+  // (a terrace over the majlis, the pavilion)
+  const levels = Array.from({ length: plan.floors }, (_, f) => levelArea(plan, f));
+  const roof = levels.reduce(
+    (s, a, f) => s + (f === plan.floors - 1 ? a : Math.max(0, a - levels[f + 1]!)),
+    0,
+  );
+  // the share of the footprint box the building stands on (courtyards and gardens excluded)
+  const solid = area(fp) > 0 ? levels[0]! / area(fp) : 1;
   // structure
   const footings = scheme.columns.length * 2.0 * 2.0 * 0.6;
-  const tieBeams = (scheme.gridX.length * fp.h + scheme.gridY.length * fp.w) * 0.3 * 0.6;
+  const tieBeams = (scheme.gridX.length * fp.h + scheme.gridY.length * fp.w) * solid * 0.3 * 0.6;
   const foundations = footings + tieBeams;
   const columns = scheme.columns.length * plan.floors * plan.floorHeight * 0.3 * 0.6;
   const beams =
     (scheme.gridX.length * fp.h + scheme.gridY.length * fp.w) *
+    solid *
     plan.floors *
     0.3 *
     Math.max(0, scheme.beamDepth - scheme.slabThickness);
-  // the ground slab on grade plus one suspended slab per floor (the last one is the roof)
-  const slabs = roof * scheme.slabThickness * (plan.floors + 1);
+  // the ground slab on grade, a suspended slab under every upper floor, and the roofs
+  const slabs = (levels.reduce((s, a) => s + a, 0) + roof) * scheme.slabThickness;
   const rebarT =
     (foundations * REBAR_KG_PER_M3.foundations +
       columns * REBAR_KG_PER_M3.columns +
       beams * REBAR_KG_PER_M3.beams +
       slabs * REBAR_KG_PER_M3.slabs) /
     1000;
-  const excavation = (fp.w + 2) * (fp.h + 2) * 1.5;
+  // the ground floor plus a metre of working space around it
+  const excavation = (levels[0]! + outsideWallLength(plan, 0) + 4) * 1.5;
   // openings
   const ops = openingsOf(plan);
   const winArea = ops
@@ -379,10 +398,12 @@ export function boq(
     .reduce((s, o) => s + openingWidth(o) * (o.head - o.sill), 0);
   const doors = ops.filter((o) => o.kind !== 'window').length;
   // walls: the outside skin, and inner walls (every room's perimeter, shared walls counted once)
-  const outsideLen = 2 * (fp.w + fp.h) * plan.floors;
+  let outsideLen = 0;
+  for (let f = 0; f < plan.floors; f++) outsideLen += outsideWallLength(plan, f);
   const innerLen = Math.max(
     0,
-    plan.rooms.reduce((s, x) => s + 2 * (x.w + x.h), 0) / 2 - outsideLen / 2,
+    plan.rooms.filter((x) => !isOpen(x.type)).reduce((s, x) => s + 2 * (x.w + x.h), 0) / 2 -
+      outsideLen / 2,
   );
   const outsideWall = Math.max(0, outsideLen * plan.floorHeight - winArea);
   const innerWall = innerLen * plan.floorHeight;
@@ -402,8 +423,9 @@ export function boq(
     rate,
     qty: Math.round(qty * 10) / 10,
     unit,
-    min: Math.round(qty * r[rate][0]),
-    max: Math.round(qty * r[rate][1]),
+    // priced on the quantity the bill shows, so quantity × rate always adds up
+    min: Math.round((Math.round(qty * 10) / 10) * r[rate][0]),
+    max: Math.round((Math.round(qty * 10) / 10) * r[rate][1]),
   });
   const lines: BoqLine[] = [
     q('1.1', 'earthworks', 'excavation', 'excavationPerM3', excavation, 'm3'),

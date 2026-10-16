@@ -1,18 +1,19 @@
 import { programRooms } from './brief.js';
 import { detectClashes, structuralScheme, unstackedWetRooms } from './disciplines.js';
-import {
-  area,
-  builtUpArea,
-  envelopeOf,
-  generatePlan,
-  scorePlan,
-  variantCode,
-  type Variant,
-} from './layout.js';
-import { doorTarget } from './openings.js';
+import { envelopeOf, generatePlan, scorePlan, variantCode, type Variant } from './layout.js';
+import { area, builtUpArea, floorArea, isOpen } from './geometry.js';
+import { doorTarget, hasOwnEntry } from './openings.js';
 import { runRules, type RuleOverrides, type RuleResult } from './rules.js';
 import { siteShortfall, yards } from './site.js';
-import type { DesignPlan, PlanRoom, Plot, Program, RoomType, Zoning } from './schemas.js';
+import {
+  WET,
+  type DesignPlan,
+  type PlanRoom,
+  type Plot,
+  type Program,
+  type RoomType,
+  type Zoning,
+} from './schemas.js';
 
 /**
  * The option search behind "give me more than five different designs that match the brief and the code".
@@ -75,6 +76,41 @@ export function candidateVariants(program: Program): Variant[] {
                     } as Variant;
                     out.push({ ...v, id: variantCode(v) });
                   }
+  if (!house) return out;
+
+  // the other design types, with the knobs that change them
+  const more = (
+    typology: Variant['typology'],
+    knobs: Partial<Record<keyof Variant, readonly unknown[]>>,
+  ) => {
+    const keys = Object.keys(knobs) as Array<keyof Variant>;
+    const walk = (i: number, acc: Partial<Variant>) => {
+      if (i === keys.length) {
+        const v = {
+          typology,
+          core: 'right',
+          front: 0.55,
+          widthShare: 1,
+          slack: 0.15,
+          ...acc,
+        } as Variant;
+        out.push({ ...v, id: variantCode(v) });
+        return;
+      }
+      for (const val of knobs[keys[i]!]!) walk(i + 1, { ...acc, [keys[i]!]: val });
+    };
+    walk(0, {});
+  };
+  const common = { core: CORES, slack: SLACKS, site: sites, dining: dinings, master: masters };
+  // a courtyard house, and a U-shaped one with the court open to the side (both hands)
+  more('court', { ...common, front: [0.45, 0.6], widthShare: [1, 0.9] });
+  more('sidecourt', { ...common, front: [0.45, 0.6], mirror: mirrors });
+  // upper floors stepped back behind a roof terrace
+  if (program.floors > 1)
+    more('terrace', { ...common, front: [0.55, 0.62], mirror: mirrors, widthShare: [1, 0.86] });
+  // the men's majlis in its own pavilion by the gate (either hand)
+  if (program.majlisMen)
+    more('pavilion', { ...common, front: [0.5, 0.6], mirror: mirrors, site: ['front'] });
   return out;
 }
 
@@ -115,6 +151,8 @@ const GUEST: readonly RoomType[] = [
 /** May `room` be entered through `via`? (Through the corridor or the entrance hall: always.) */
 export function allowedThrough(room: RoomType, via: RoomType): boolean {
   if (via === 'corridor' || via === 'entrance') return true;
+  // a closet or store opens off any dry room or the stair hall (a dressing room, a store behind the lift)
+  if (room === 'closet') return !WET.includes(via) && via !== 'elevator';
   if (room === 'bathroom' || room === 'guest_wc')
     return ![
       'kitchen',
@@ -125,6 +163,8 @@ export function allowedThrough(room: RoomType, via: RoomType): boolean {
       'laundry',
       'storage',
     ].includes(via);
+  // the annex room opens off the stair landing on the roof
+  if (room === 'annex_room') return via === 'stair' || via === 'living';
   if (SERVICE.includes(room))
     return ['kitchen', 'prep_kitchen', 'laundry', 'storage', 'living', 'dining'].includes(via);
   if (GUEST.includes(room)) return ['majlis_men', 'majlis_women', 'living', 'dining'].includes(via);
@@ -137,12 +177,15 @@ export function allowedThrough(room: RoomType, via: RoomType): boolean {
 export function accessIssues(plan: DesignPlan): string[] {
   const out: string[] = [];
   for (const r of plan.rooms) {
-    if (r.type === 'corridor' || r.type === 'elevator' || r.type === 'stair') continue;
+    if (r.type === 'corridor' || r.type === 'elevator' || r.type === 'stair' || isOpen(r.type))
+      continue;
     const same = plan.rooms.filter((o) => o.floor === r.floor);
     const via = doorTarget(r, same);
     if (r.type === 'entrance') {
       if (via?.type !== 'corridor') out.push(r.id);
-    } else if (!via || !allowedThrough(r.type, via.type)) out.push(r.id);
+    } else if (hasOwnEntry(plan, r))
+      continue; // its own door from outside (a guest majlis)
+    else if (!via || !allowedThrough(r.type, via.type)) out.push(r.id);
   }
   return out;
 }
@@ -173,6 +216,9 @@ export function checkOption(
   if (detectClashes(plan, structuralScheme(plan)).length) failing.push('CLASH');
   const site = siteShortfall(plan, ctx.program);
   if (site.parking > 0 || site.pool || site.guestEntry) failing.push('SITE');
+  // the annex the brief asks for, where the plot's requirements allow one
+  if (ctx.program.roofAnnex && (ctx.zoning.roofAnnexShare ?? 0) > 0 && !plan.annex)
+    failing.push('ANNEX');
   return { ok: failing.length === 0, failing, missing, access, results };
 }
 
@@ -212,9 +258,12 @@ export function optionTraits(plan: DesignPlan) {
           : 'right';
   const frontYard = fp.y;
   const backYard = plan.plot.depth - (fp.y + fp.h);
+  const typology = String(plan.variant.typology ?? 'bands');
   const coreSide = stair ? third(centreX(stair), fp) : 'none';
   const entrySide = entrance ? third(centreX(entrance), fp) : 'none';
   return {
+    /** The design type: the biggest difference there is. */
+    typology,
     /** Absolute sides, seen from the street (for the explanation). */
     coreSide,
     entrySide,
@@ -246,7 +295,7 @@ export function optionTraits(plan: DesignPlan) {
 export function optionDistance(a: DesignPlan, b: DesignPlan): number {
   const ta = optionTraits(a);
   const tb = optionTraits(b);
-  let d = 0;
+  let d = ta.typology !== tb.typology ? 2 : 0;
   for (const k of ['entry', 'core', 'yard', 'passage', 'dining', 'master'] as const)
     if (ta[k] !== tb[k]) d += 1;
   if (ta.hand !== tb.hand) d += 0.5;
@@ -320,6 +369,19 @@ export function searchOptions(
   // traits); among equally different ones, the better ranked
   const chosen: Array<{ plan: DesignPlan; rank: number }> = [];
   const left = [...pool];
+  // the range first: the best design of each type the brief allows (a courtyard house, a terrace, a guest
+  // pavilion ...), then the most different of the rest
+  const kind = (p: DesignPlan) => String(p.variant.typology ?? 'bands');
+  const shown = new Set(existing.map(kind));
+  for (const c of pool) {
+    if (chosen.length >= count) break;
+    if (shown.has(kind(c.plan))) continue;
+    const others = [...existing, ...chosen.map((x) => x.plan)];
+    if (others.some((o) => optionDistance(c.plan, o) < MIN_DIFFERENCE)) continue;
+    chosen.push(c);
+    left.splice(left.indexOf(c), 1);
+    shown.add(kind(c.plan));
+  }
   while (chosen.length < count && left.length) {
     let best = -1;
     let bestScore = -Infinity;
@@ -363,6 +425,7 @@ export function optionLabel(i: number): string {
 export interface FitNote {
   key:
     | 'program'
+    | 'typology'
     | 'core'
     | 'entry'
     | 'guestEntry'
@@ -371,6 +434,7 @@ export interface FitNote {
     | 'dining'
     | 'master'
     | 'parking'
+    | 'annex'
     | 'pool'
     | 'area'
     | 'plumbing';
@@ -386,8 +450,29 @@ export function programCounts(program: Program, floors = program.floors) {
 }
 
 /** What the brief asks for that concept plans do not draw yet (added during design development). */
-export function deferredItems(program: Program) {
-  return (['basement', 'roofAnnex'] as const).filter((k) => program[k]);
+export function deferredItems(program: Program, plan?: Pick<DesignPlan, 'annex'>) {
+  return (['basement', 'roofAnnex'] as const).filter(
+    (k) => program[k] && !(k === 'roofAnnex' && plan?.annex),
+  );
+}
+
+/** What makes the design type special, measured on the plan. */
+function typologyNote(plan: DesignPlan): FitNote[] {
+  const t = String(plan.variant.typology ?? 'bands');
+  if (t === 'bands') return [];
+  const m = (n: number) => Math.round(n * 10) / 10;
+  if (t === 'court' || t === 'sidecourt') {
+    const court = plan.rooms.find((r) => r.floor === 0 && r.type === 'courtyard');
+    return court ? [{ key: 'typology', values: { kind: t, w: m(court.w), h: m(court.h) } }] : [];
+  }
+  if (t === 'terrace') {
+    const terrace = plan.rooms.find((r) => r.type === 'terrace');
+    return terrace
+      ? [{ key: 'typology', values: { kind: t, w: m(terrace.w), h: m(terrace.h) } }]
+      : [];
+  }
+  const garden = plan.rooms.find((r) => r.id === '0-courtyard-2');
+  return garden ? [{ key: 'typology', values: { kind: t, w: m(garden.w), h: m(garden.h) } }] : [];
 }
 
 /** Why an option fits the brief, as translatable notes. Deterministic; a model may only reword them. */
@@ -397,6 +482,7 @@ export function explainOption(plan: DesignPlan, program: Program, plot: Plot, zo
   const env = envelopeOf(plot, zoning);
   const notes: FitNote[] = [
     { key: 'program', values: { n: programCounts(program, plan.floors).length } },
+    ...typologyNote(plan),
     { key: 'core', values: { side: t.coreSide } },
   ];
   if (t.entrySide !== 'none') notes.push({ key: 'entry', values: { side: t.entrySide } });
@@ -420,6 +506,17 @@ export function explainOption(plan: DesignPlan, program: Program, plot: Plot, zo
     },
   });
   if (plan.guestEntry) notes.push({ key: 'guestEntry', values: {} });
+  if (plan.annex) {
+    const L = plan.floors - 1;
+    const a = floorArea(plan, L);
+    notes.push({
+      key: 'annex',
+      values: {
+        m2: Math.round(a),
+        pct: Math.round((a / Math.max(1, floorArea(plan, L - 1))) * 100),
+      },
+    });
+  }
   const site = plan.site ?? [];
   const bays = site.filter((s) => s.type === 'parking');
   if (bays.length) {

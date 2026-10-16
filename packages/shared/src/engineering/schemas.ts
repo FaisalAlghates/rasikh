@@ -91,6 +91,17 @@ export const ZoningSchema = z.object({
   maxHeightM: z.number().min(3).max(120),
   /** Parking spaces required per dwelling. */
   parkingPerUnit: z.number().min(0).max(5),
+  /** A roof annex: at most this share of the floor below (absent: the plot's requirements were not entered). */
+  roofAnnexShare: z.number().min(0).max(1).optional(),
+  /** The municipal requirements the values were taken from (regulations.ts), when one was applied. */
+  source: z
+    .object({
+      id: z.string().max(80),
+      title: z.string().max(200),
+      document: z.string().max(240),
+      reference: z.string().max(120),
+    })
+    .optional(),
 });
 export type Zoning = z.infer<typeof ZoningSchema>;
 
@@ -156,6 +167,9 @@ export const ROOM_TYPES = [
   'gym',
   'prep_kitchen',
   'closet',
+  'annex_room',
+  'courtyard',
+  'terrace',
   'stair',
   'elevator',
   'corridor',
@@ -179,6 +193,7 @@ export const HABITABLE: readonly RoomType[] = [
   'office',
   'prayer_room',
   'gym',
+  'annex_room',
 ];
 export const WET: readonly RoomType[] = [
   'bathroom',
@@ -229,6 +244,10 @@ export const DesignPlanSchema = z.object({
   site: z.array(SiteItemSchema).max(60).optional(),
   /** A separate guest entrance from outside straight into the men's majlis. */
   guestEntry: z.boolean().optional(),
+  /** The top level is a roof annex (a partial floor over the roof), not a full floor. */
+  annex: z.boolean().optional(),
+  /** The client's style: window proportions and façade details follow it. */
+  style: z.enum(STYLES).optional(),
   /** The variant knobs that produced this option (for explanation and regeneration). */
   variant: z.record(z.string(), z.union([z.string(), z.number()])).default({}),
 });

@@ -216,6 +216,7 @@ export const TARGET_AREA: Partial<Record<RoomType, number>> = {
   prayer_room: 10,
   gym: 18,
   prep_kitchen: 9,
+  annex_room: 24,
 };
 
 /** Private bathrooms when the brief gives no count: one for the master and one for every two other bedrooms. */

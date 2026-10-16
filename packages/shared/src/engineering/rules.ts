@@ -1,4 +1,15 @@
-import { area, builtUpArea, envelopeOf, exteriorEdges } from './layout.js';
+import {
+  area,
+  builtUpArea,
+  coveredArea,
+  floorArea,
+  floorBox,
+  innerCourts,
+  onFloor,
+  outsideSides,
+} from './geometry.js';
+import { envelopeOf } from './layout.js';
+import { openingsOf, openingWidth } from './openings.js';
 import {
   HABITABLE,
   type DesignPlan,
@@ -24,7 +35,7 @@ export type RulePack = 'zoning' | 'code';
 
 export interface RuleContext {
   plan: DesignPlan;
-  plot: Pick<Plot, 'width' | 'depth'>;
+  plot: Pick<Plot, 'width' | 'depth'> & Partial<Pick<Plot, 'streets'>>;
   zoning: Zoning;
   program: Program;
 }
@@ -104,7 +115,7 @@ export const RULES: RuleDef[] = [
     ref: 'zoning',
     params: {},
     check: ({ plan, plot, zoning }) => {
-      const v = area(plan.footprint) / (plot.width * plot.depth);
+      const v = coveredArea(plan) / (plot.width * plot.depth);
       return { ok: v <= zoning.coverageMax + 1e-6, value: Math.round(v * 1000) / 1000 };
     },
   },
@@ -125,7 +136,40 @@ export const RULES: RuleDef[] = [
     discipline: 'architectural',
     ref: 'zoning',
     params: {},
-    check: ({ plan, zoning }) => ({ ok: plan.floors <= zoning.maxFloors, value: plan.floors }),
+    // a roof annex is not counted as a floor (its own rule follows)
+    check: ({ plan, zoning }) => {
+      const v = plan.floors - (plan.annex ? 1 : 0);
+      return { ok: v <= zoning.maxFloors, value: v };
+    },
+  },
+  {
+    // the roof annex: no more than the allowed share of the floor below, and 1.5 m off every facade on a street
+    id: 'Z-ANNEX',
+    pack: 'zoning',
+    discipline: 'architectural',
+    ref: 'zoning',
+    params: { streetSetback: 1.5 },
+    check: ({ plan, plot, zoning }, p) => {
+      if (!plan.annex) return { ok: true };
+      const L = plan.floors - 1;
+      const share = floorArea(plan, L) / Math.max(1, floorArea(plan, L - 1));
+      const box = floorBox(plan, L);
+      const below = floorBox(plan, L - 1);
+      const s = plot.streets;
+      const keep = p.streetSetback ?? 0;
+      const off = (gap: number, street: number | undefined) => !street || gap >= keep - 0.01;
+      const clear =
+        !!box &&
+        !!below &&
+        box.y - below.y >= keep - 0.01 &&
+        off(below.y + below.h - (box.y + box.h), s?.back) &&
+        off(box.x - below.x, s?.left) &&
+        off(below.x + below.w - (box.x + box.w), s?.right);
+      return {
+        ok: share <= (zoning.roofAnnexShare ?? 0) + 1e-6 && clear,
+        value: Math.round(share * 100) / 100,
+      };
+    },
   },
   {
     id: 'Z-HEIGHT',
@@ -190,7 +234,9 @@ export const RULES: RuleDef[] = [
     ref: 'SBC 201',
     params: {},
     check: (ctx) => {
-      const bad = habitable(ctx).filter((r) => exteriorEdges(r, ctx.plan.footprint).length === 0);
+      const bad = habitable(ctx).filter(
+        (r) => outsideSides(r, onFloor(ctx.plan, r.floor)).length === 0,
+      );
       return { ok: bad.length === 0, rooms: bad.map((r) => r.id) };
     },
   },
@@ -204,7 +250,7 @@ export const RULES: RuleDef[] = [
       const bad = plan.rooms.filter(
         (r) =>
           (r.type === 'bathroom' || r.type === 'guest_wc') &&
-          exteriorEdges(r, plan.footprint).length === 0,
+          outsideSides(r, onFloor(plan, r.floor)).length === 0,
       );
       // an inner bathroom is allowed with mechanical extract; until that is designed it is flagged
       return { ok: bad.length === 0, rooms: bad.map((r) => r.id) };
@@ -266,6 +312,58 @@ export const RULES: RuleDef[] = [
             r.type === 'shop'),
       ),
     }),
+  },
+  {
+    // an inner court that rooms take their daylight from: wide enough to light them
+    id: 'C-COURT',
+    pack: 'code',
+    discipline: 'architectural',
+    ref: 'SBC 201',
+    params: { minWidth: 3 },
+    check: ({ plan }, p) => {
+      const bad = innerCourts(plan).filter((r) => Math.min(r.w, r.h) < (p.minWidth ?? 0) - 1e-6);
+      return { ok: bad.length === 0, rooms: bad.map((r) => r.id) };
+    },
+  },
+  {
+    // natural light: the glazed area of every habitable room against its floor area
+    id: 'C-GLAZING',
+    pack: 'code',
+    discipline: 'architectural',
+    ref: 'SBC 201',
+    params: { minRatio: 0.08 },
+    check: ({ plan }, p) => {
+      const glass = new Map<string, number>();
+      for (const o of openingsOf(plan))
+        if (o.kind === 'window')
+          glass.set(o.roomId, (glass.get(o.roomId) ?? 0) + openingWidth(o) * (o.head - o.sill));
+      const bad = plan.rooms.filter(
+        (r) =>
+          HABITABLE.includes(r.type) && (glass.get(r.id) ?? 0) < area(r) * (p.minRatio ?? 0) - 1e-6,
+      );
+      return { ok: bad.length === 0, rooms: bad.map((r) => r.id) };
+    },
+  },
+  {
+    // the stair fits its steps: two flights of risers no higher than maxRiser and treads no shorter than minTread,
+    // with a landing at each end
+    id: 'C-STAIR-RUN',
+    pack: 'code',
+    discipline: 'architectural',
+    ref: 'SBC 201',
+    params: { maxRiser: 0.18, minTread: 0.28, minLanding: 1 },
+    check: ({ plan }, p) => {
+      const risers = Math.ceil(plan.floorHeight / (p.maxRiser ?? 1));
+      const run = (Math.ceil(risers / 2) - 1) * (p.minTread ?? 0) + 2 * (p.minLanding ?? 0);
+      const bad = plan.rooms.filter(
+        (r) => r.type === 'stair' && r.floor < plan.floors - 1 && Math.max(r.w, r.h) < run - 1e-6,
+      );
+      return {
+        ok: bad.length === 0,
+        rooms: bad.map((r) => r.id),
+        value: Math.round(run * 100) / 100,
+      };
+    },
   },
   // areas Rasikh does not check automatically: always "needs engineer"
   { id: 'C-FIRE', pack: 'code', discipline: 'mechanical', ref: 'SBC 801', params: {}, check: null },

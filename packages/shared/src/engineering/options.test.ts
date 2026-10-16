@@ -3,11 +3,13 @@ import {
   BOQ_SECTIONS,
   DEFAULT_RATES,
   MIN_DIFFERENCE,
+  NATIONAL_REGULATIONS,
   accessIssues,
   allowedThrough,
   area,
   boq,
   boqCsv,
+  isOpen,
   checkOption,
   confirmProgram,
   deferredItems,
@@ -19,6 +21,7 @@ import {
   optionLabel,
   POOL_CLEAR,
   siteShortfall,
+  zoningFromRegulation,
   parseBrief,
   parsePlotSize,
   programCounts,
@@ -360,7 +363,7 @@ describe('bill of quantities for every option', () => {
     expect(b.perM2[0]).toBeGreaterThan(0);
     // the tiled floor is the plan's floor area
     expect(b.lines.find((l) => l.item === 'tiling')!.qty).toBeCloseTo(
-      plan.rooms.reduce((s, r) => s + area(r), 0),
+      plan.rooms.filter((r) => !isOpen(r.type)).reduce((s, r) => s + area(r), 0),
       0,
     );
   });
@@ -384,5 +387,27 @@ describe('bill of quantities for every option', () => {
     });
     expect(csv.startsWith('﻿')).toBe(true);
     expect(csv.trim().split('\r\n')).toHaveLength(b.lines.length + 2);
+  });
+});
+
+describe('designs on the Ministry of Municipalities and Housing requirements', () => {
+  it('a villa with a roof annex, on a corner plot: every option within the requirements, the range of design types', () => {
+    const pl = { ...plot(22, 32), streets: { front: 20, back: 0, left: 15, right: 0 } };
+    const reg = NATIONAL_REGULATIONS.find((r) => r.id === 'momah-2024-villa')!;
+    const pr = program({ roofAnnex: true, majlisWomen: true, pool: true });
+    const { zoning: z } = zoningFromRegulation(reg, pl, pr, { maxHeightM: 14 });
+    expect(z.setbacks).toEqual({ front: 4, back: 1.5, left: 3, right: 1.5 });
+    const r = searchOptions(pl, z, pr, { count: 8 });
+    expect(r.options.length).toBeGreaterThanOrEqual(6);
+    const kinds = new Set(r.options.map((o) => o.variant.typology));
+    expect(kinds.size).toBeGreaterThanOrEqual(4);
+    for (const plan of r.options) {
+      const c = checkOption(plan, { plot: pl, zoning: z, program: pr });
+      expect(c.failing).toEqual([]);
+      expect(plan.annex).toBe(true);
+      expect(c.results.find((x) => x.id === 'Z-ANNEX')!.status).toBe('passed');
+      expect(c.results.find((x) => x.id === 'Z-FLOORS')!.value).toBe(2);
+      expect(deferredItems(pr, plan)).toEqual([]);
+    }
   });
 });
