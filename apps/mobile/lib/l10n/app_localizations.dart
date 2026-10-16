@@ -2366,6 +2366,12 @@ abstract class AppLocalizations {
   /// **'فحص تسليم موثّق'**
   String get inspEvMoveOut;
 
+  /// No description provided for @inspEvDesign.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصميم معتمد من مكتب هندسي'**
+  String get inspEvDesign;
+
   /// No description provided for @inspEvExpense.
   ///
   /// In ar, this message translates to:

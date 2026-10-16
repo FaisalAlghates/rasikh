@@ -72,6 +72,36 @@ service cloud.firestore {
         allow delete: if hasAnyRole(orgId, ['owner', 'admin']);
       }
 
+      // A design set released by a licensed engineering office, linked by the client who commissioned it to one of
+      // the organization's properties; it then shows in that property's health record. Id = the design project.
+      match /designs/{projectId} {
+        function designProject() {
+          return get(/databases/$(database)/documents/designProjects/$(projectId)).data;
+        }
+        function releasedVersion(vid) {
+          return get(/databases/$(database)/documents/designProjects/$(projectId)/versions/$(vid)).data;
+        }
+        allow read: if isStaff(orgId);
+        allow create: if isStaff(orgId)
+          && request.resource.data.keys().hasOnly(['projectId', 'versionId', 'propertyId', 'title', 'officeName', 'versionLabel', 'sha256', 'releasedOn', 'linkedBy', 'linkedAt'])
+          && request.resource.data.projectId == projectId
+          && request.resource.data.linkedBy == request.auth.uid
+          && request.resource.data.linkedAt == request.time
+          && request.resource.data.propertyId is string
+          && exists(/databases/$(database)/documents/orgs/$(orgId)/properties/$(request.resource.data.propertyId))
+          && designProject().clientUid == request.auth.uid
+          && designProject().status == 'released'
+          && request.resource.data.versionId is string
+          && releasedVersion(request.resource.data.versionId).status == 'released'
+          && releasedVersion(request.resource.data.versionId).sha256 == request.resource.data.sha256
+          && request.resource.data.title is string && request.resource.data.title.size() <= 100
+          && request.resource.data.officeName is string && request.resource.data.officeName.size() <= 100
+          && request.resource.data.versionLabel is string && request.resource.data.versionLabel.size() <= 60
+          && request.resource.data.releasedOn is string && request.resource.data.releasedOn.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+        allow update: if false;
+        allow delete: if isStaff(orgId);
+      }
+
       // ---- Phase 4: owner operations -------------------------------------------------------
       match /units/{unitId} {
         allow read: if hasAnyRole(orgId, ['owner', 'manager', 'admin', 'broker']);

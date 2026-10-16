@@ -529,7 +529,8 @@
     "evLeaseEnded": "Lease ended",
     "evMoveIn": "Signed move-in inspection",
     "evMoveOut": "Signed move-out inspection",
-    "evExpense": "Expense"
+    "evExpense": "Expense",
+    "evDesign": "Design approved by an engineering office"
   },
   "maint": {
     "tab": "Maintenance",
@@ -2108,6 +2109,21 @@
     "site": {
       "parking": "Parking",
       "pool": "Pool"
+    },
+    "releasedBadge": "Set approved by the office’s engineers",
+    "handoff": {
+      "title": "Add the approved design to the property record",
+      "lead": "Link the approved set to your property: it shows in the record with its fingerprint, and the original stays here.",
+      "workspace": "Workspace",
+      "property": "Property",
+      "add": "Add to the property record",
+      "done": "Added to the property record: {property}.",
+      "openRecord": "Open the record",
+      "noWorkspace": "The property record lives in an owner workspace.",
+      "createWorkspace": "Create a workspace and add your property",
+      "noProperty": "No properties in this workspace yet.",
+      "addProperty": "Add a property",
+      "failed": "Could not add it. Please try again."
     }
   }
 }

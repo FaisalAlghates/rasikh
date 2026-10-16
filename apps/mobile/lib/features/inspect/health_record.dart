@@ -12,8 +12,8 @@ import '../../widgets/rk_field.dart';
 import '../../widgets/rk_surfaces.dart';
 import '../ops/labels.dart' show categoryLabel, money;
 
-/// Property Health Record: one timeline per property, computed from the leases, signed inspections and
-/// expenses the other modules already keep, so it can never contradict them.
+/// Property Health Record: one timeline per property, computed from the leases, signed inspections,
+/// expenses and linked design sets the other modules already keep, so it can never contradict them.
 class HealthRecord extends ConsumerStatefulWidget {
   const HealthRecord({super.key});
 
@@ -87,6 +87,16 @@ class _HealthRecordState extends ConsumerState<HealthRecord> {
             e.data.amount,
           ),
       ],
+      designs: [
+        for (final d in ops.designs)
+          TimelineDesign(
+            d.id,
+            d.data.propertyId,
+            d.data.releasedOn,
+            d.data.title,
+            d.data.officeName,
+          ),
+      ],
     );
 
     String title(HealthEvent e) {
@@ -98,6 +108,7 @@ class _HealthRecordState extends ConsumerState<HealthRecord> {
           '${e.detail == 'move_out' ? l10n.inspEvMoveOut : l10n.inspEvMoveIn}$where',
         HealthKind.expense =>
           '${l10n.inspEvExpense} · ${categoryLabel(l10n, e.detail ?? 'other')}',
+        HealthKind.designReleased => l10n.inspEvDesign,
       };
     }
 
@@ -128,7 +139,7 @@ class _HealthRecordState extends ConsumerState<HealthRecord> {
                   title: title(e),
                   date: e.date,
                   detail: e.amount == null
-                      ? null
+                      ? e.label
                       : '${money(e.amount!)} ${l10n.inspSar}',
                 ),
             ],

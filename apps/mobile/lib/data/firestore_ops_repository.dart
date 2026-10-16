@@ -53,6 +53,10 @@ class FirestoreOpsRepository implements OpsRepository {
       _watch(_col(orgId, 'expenses'), Expense.fromMap);
 
   @override
+  Stream<List<Doc<DesignLink>>> designs(String orgId) =>
+      _watch(_col(orgId, 'designs'), DesignLink.fromMap);
+
+  @override
   Future<void> addProperty(String orgId, Property property) => _col(
     orgId,
     'properties',

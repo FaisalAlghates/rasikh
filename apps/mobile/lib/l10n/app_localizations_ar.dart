@@ -1187,6 +1187,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get inspEvMoveOut => 'فحص تسليم موثّق';
 
   @override
+  String get inspEvDesign => 'تصميم معتمد من مكتب هندسي';
+
+  @override
   String get inspEvExpense => 'مصروف';
 
   @override

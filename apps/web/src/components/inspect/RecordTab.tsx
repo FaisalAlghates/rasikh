@@ -9,6 +9,7 @@ import { Timeline } from '@/components/ui/Timeline';
 import { riyadhDay, type InspectionDoc } from '@/lib/inspect/types';
 import { today, type Row } from '@/lib/ops/hooks';
 import { money, type ExpenseDoc, type LeaseDoc, type PropertyDoc } from '@/lib/ops/types';
+import type { DesignLinkDoc } from '@/components/eng/HandOffPanel';
 
 /**
  * Property Health Record: one timeline per property, computed from the leases, signed inspections and
@@ -19,11 +20,14 @@ export function RecordTab({
   leases,
   inspections,
   expenses,
+  designs = [],
 }: {
   properties: Row<PropertyDoc>[];
   leases: Row<LeaseDoc>[];
   inspections: Row<InspectionDoc>[];
   expenses: Row<ExpenseDoc>[];
+  /** Design sets released by an engineering office and linked to a property by its owner. */
+  designs?: Row<DesignLinkDoc>[];
 }) {
   const t = useTranslations('inspect');
   const o = useTranslations('ops');
@@ -57,8 +61,15 @@ export function RecordTab({
         category: e.data.category,
         amount: e.data.amount,
       })),
+      designs: designs.map((d) => ({
+        id: d.id,
+        propertyId: d.data.propertyId,
+        releasedOn: d.data.releasedOn,
+        title: d.data.title,
+        officeName: d.data.officeName,
+      })),
     });
-  }, [chosen, leases, inspections, expenses]);
+  }, [chosen, leases, inspections, expenses, designs]);
 
   if (properties.length === 0) return <EmptyState title={o('noProperties')} />;
 
@@ -71,6 +82,8 @@ export function RecordTab({
         return `${t('evLeaseEnded')}${where}`;
       case 'inspection_sealed':
         return `${t(e.detail === 'move_out' ? 'evMoveOut' : 'evMoveIn')}${where}`;
+      case 'design_released':
+        return t('evDesign');
       case 'expense':
         return `${t('evExpense')} · ${o(`cat${(e.detail ?? 'other')[0]!.toUpperCase()}${(e.detail ?? 'other').slice(1)}`)}`;
     }
@@ -99,7 +112,8 @@ export function RecordTab({
               id: e.key,
               date: e.date,
               title: title(e),
-              detail: e.amount !== undefined ? `${money(e.amount)} ${o('sar')}` : undefined,
+              detail:
+                e.amount !== undefined ? `${money(e.amount)} ${o('sar')}` : (e.label ?? undefined),
             }))}
           />
         </div>

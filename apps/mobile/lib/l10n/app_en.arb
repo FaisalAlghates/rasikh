@@ -437,6 +437,7 @@
   "inspEvLeaseEnded": "Lease ended",
   "inspEvMoveIn": "Signed move-in inspection",
   "inspEvMoveOut": "Signed move-out inspection",
+  "inspEvDesign": "Design approved by an engineering office",
   "inspEvExpense": "Expense",
   "inspPendingUploads": "{count} photos waiting to upload",
   "@inspPendingUploads": {

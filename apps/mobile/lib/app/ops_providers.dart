@@ -83,6 +83,10 @@ final _expenses = _collection<Expense>(
   (r, s) => r.expenses(s.orgId),
   staffOnly: true,
 );
+final _designs = _collection<DesignLink>(
+  (r, s) => r.designs(s.orgId),
+  staffOnly: true,
+);
 final _leases = _collection<Lease>(
   (r, s) => r.leases(s.orgId, tenantUid: s.staff ? null : s.uid),
 );
@@ -97,6 +101,8 @@ final opsDataProvider = Provider.autoDispose<AsyncValue<OpsData>>((ref) {
   final l = ref.watch(_leases);
   final pay = ref.watch(_payments);
   final e = ref.watch(_expenses);
+  // the design links are extra: a slow or denied read never blocks the rest
+  final d = ref.watch(_designs);
   for (final a in [p, u, l, pay, e]) {
     if (a.hasError && !a.hasValue) {
       return AsyncError(a.error!, a.stackTrace ?? StackTrace.current);
@@ -112,6 +118,7 @@ final opsDataProvider = Provider.autoDispose<AsyncValue<OpsData>>((ref) {
       leases: l.value!,
       payments: pay.value!,
       expenses: e.value!,
+      designs: d.value ?? const [],
     ),
   );
 });

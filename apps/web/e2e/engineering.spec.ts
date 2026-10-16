@@ -266,6 +266,37 @@ test('engineering office: brief → options → client picks → development →
   await expect(client.page.getByTestId('sheet-plan-0')).toContainText('م. سارة');
   await shot(client.page, 'client-released');
 
+  // 10) the client adds the approved set to their property's health record (an owner workspace with a property)
+  const handoff = client.page.getByTestId('handoff');
+  await handoff.getByRole('link', { name: 'أنشئ مساحة عمل وأضف عقارك' }).click();
+  await expect(client.page).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
+  await client.page.getByText('مالك', { exact: true }).click();
+  await client.page.locator('#displayName').fill('عميل التصميم');
+  await client.page.locator('#orgName').fill('أملاكي');
+  await client.page.locator('input[type=checkbox]').last().check();
+  await client.page.locator('main button').last().click();
+  await expect(client.page).toHaveURL(/\/ar\/workspace/, { timeout: 45_000 });
+  await client.page.getByRole('tab', { name: 'العقارات والوحدات' }).click();
+  await client.page.getByLabel('الاسم', { exact: true }).fill('بيت النرجس');
+  await client.page.getByRole('button', { name: 'أضف عقاراً' }).click();
+  await expect(client.page.getByTestId('property-بيت النرجس')).toBeVisible({ timeout: 20_000 });
+  await client.page.goto(projectUrl);
+  await handoff.getByRole('button', { name: 'أضف إلى سجل العقار' }).click();
+  await expect(handoff.getByTestId('handoff-done')).toContainText('بيت النرجس', {
+    timeout: 20_000,
+  });
+  await handoff.getByRole('link', { name: 'افتح السجل' }).click();
+  await expect(client.page.getByTestId('health-record')).toContainText(
+    'تصميم معتمد من مكتب هندسي',
+    {
+      timeout: 45_000,
+    },
+  );
+  await expect(client.page.getByTestId('health-record')).toContainText('فيلا النرجس');
+  await shot(client.page, 'client-health-record');
+  await client.page.goto(projectUrl);
+  await expect(client.page.getByTestId('handoff-done')).toBeVisible({ timeout: 30_000 });
+
   // accessibility of the office and client screens
   const axe = async (p: Page) =>
     (
