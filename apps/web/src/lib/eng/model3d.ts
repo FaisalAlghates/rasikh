@@ -240,7 +240,7 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
   }
   // roofs: over every built room with nothing built above it, with a parapet along its outside edges; the top shown
   // floor of a dollhouse cut stays open
-  const style = plan.style ?? 'modern_najdi';
+  const style = plan.style ?? 'contemporary';
   const shurfa = new THREE.ConeGeometry(0.24, 0.38, 4);
   const shurfaMat = mat(COLORS.ext);
   for (let f = 0; f < shown; f++) {

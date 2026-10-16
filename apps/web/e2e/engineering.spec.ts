@@ -263,6 +263,15 @@ test('engineering office: brief → options → client picks → development →
   await shot(lead.page, 'model-3d');
   await lead.page.getByRole('tab', { name: 'الرسومات والتصدير' }).click();
   await expect(lead.page.getByTestId('sheet-elevations')).toBeVisible();
+  // a consultant-style set: coded sheets, the thermal sheet's U-values, the structural sheets the project needs and
+  // none for the disciplines it does not
+  await expect(lead.page.getByTestId('sheet-site')).toHaveAttribute('data-code', 'AR-01');
+  await expect(lead.page.getByTestId('sheet-thermal')).toContainText('0.369');
+  await expect(lead.page.getByTestId('sheet-thermal')).toContainText('0.229');
+  await expect(lead.page.getByTestId('sheet-st-calc')).toBeVisible();
+  await expect(lead.page.getByTestId('sheet-st-grid')).toHaveAttribute('data-code', 'ST-02');
+  await expect(lead.page.getByTestId('sheet-el-0')).toHaveCount(0);
+  await expect(lead.page.getByTestId('stamp-area').first()).toBeVisible();
   await shot(lead.page, 'drawings');
   // printing: in print media only the sheets show (a rule once left them hidden, so the pages came out blank)
   await lead.page.emulateMedia({ media: 'print' });

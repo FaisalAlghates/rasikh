@@ -285,6 +285,36 @@ export const KNOWLEDGE: readonly KnowledgeEntry[] = [
     en: 'Rasikh prepares the building-permit checklist against the stored ministry requirements, but there is no live Amanah interface; your office confirms plot-specific values.',
     basis: 'product',
   },
+  {
+    id: 'modern-facade',
+    kind: 'design',
+    topic: 'style',
+    words: ['واجهه عصريه', 'واجهه حديثه', 'كسوه', 'طوب', 'زجاج', 'facade'],
+    ar: 'الواجهة العصرية: كتلة علوية مكسوّة بالطوب أو الحجر، وزجاج بإطار داكن تظلله بروزات، وسطح مسطح بإفريز بسيط، وفتحات تتبع محاور الإنشاء.',
+    en: 'A modern facade: an upper volume clad in brick or stone, glazing in dark frames shaded by projections, a flat roof with a plain coping, and openings that follow the structural axes.',
+    basis: 'practice',
+    styles: ['contemporary'],
+  },
+  {
+    id: 'drawing-set',
+    kind: 'guide',
+    topic: 'engineering',
+    words: [
+      'مجموعه الرسومات',
+      'لوحات',
+      'ترقيم',
+      'مخططات انشائيه',
+      'مخططات كهربائيه',
+      'مخططات ميكانيكيه',
+      'السلامه',
+      'عزل حراري',
+      'حسابات انشائيه',
+      'drawing set',
+    ],
+    ar: 'مجموعة الرسومات بترتيب المكاتب الاستشارية: معماري (AR) من مخطط الموقع إلى المساقط والواجهات والقطاعات والعزل الحراري، ثم إنشائي (ST) بالمحاور والأعمدة والبلاطات وملخص الحسابات، ثم كهرباء (EL) وميكانيك (ME) وسلامة (FS) لكل دور. كلها مسودات مبدئية حتى يعتمدها مهندس كل تخصص.',
+    en: 'The drawing set follows a consultant office order: architectural (AR) from the site layout to plans, elevations, sections and thermal insulation, then structural (ST) with axes, columns, slabs and a calculation summary, then electrical (EL), mechanical (ME) and fire and safety (FS) per floor. All are preliminary drafts until the engineer of each discipline approves.',
+    basis: 'product',
+  },
 ];
 
 const norm = (s: string) =>

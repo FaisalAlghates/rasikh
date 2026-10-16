@@ -2554,6 +2554,100 @@
       "allowed": "allowed on this land use",
       "specialist": "This type needs specialist design by the office; Rasikh checks its land use and requirements only.",
       "specialistOffice": "This building type needs specialist engineering design the assistant does not generate; Rasikh checks the land use and requirements, and the office designs the plans."
+    },
+    "set": {
+      "titleNotes": [
+        "Dimensions and levels in metres unless noted.",
+        "Preliminary draft: a licensed engineer approves it before any use.",
+        "Check dimensions on site before construction."
+      ],
+      "legend": "Symbol legend",
+      "count": "Qty",
+      "symbol": {
+        "light": "Lighting point",
+        "socket": "Power socket",
+        "db": "Distribution board",
+        "ac": "AC unit (capacity in TR)",
+        "riser": "Supply and drain stack",
+        "wc": "Water closet",
+        "basin": "Wash basin",
+        "shower": "Shower",
+        "sink": "Kitchen sink",
+        "tap": "Ablution tap",
+        "smoke": "Smoke detector",
+        "callpoint": "Manual call point",
+        "extinguisher": "Fire extinguisher",
+        "exitsign": "Exit sign"
+      },
+      "note": {
+        "el": "Preliminary points by room area; the electrical engineer sets final loads, routes and boards.",
+        "me": "AC units follow the preliminary cooling loads and stacks rise where wet rooms stand above each other; the mechanical engineer approves.",
+        "fs": "Preliminary alarm and extinguishing devices; the safety engineer issues the final design to the fire code and Civil Defense requirements."
+      },
+      "site": {
+        "setback": "Setback",
+        "plot": "Plot line"
+      },
+      "thermal": {
+        "layer": "Layer",
+        "thickness": "Thickness (m)",
+        "k": "k (W/m·K)",
+        "r": "R (m²·K/W)",
+        "total": "Total",
+        "u": "U-value (W/m²·K)",
+        "out": "OUT",
+        "in": "IN",
+        "note": "The layers are typical build-ups the office edits. The maximum U-value comes from the Saudi energy conservation code and the office verifies it: nothing here counts as compliant before that."
+      },
+      "st": {
+        "mark": "Mark",
+        "size": "Size (cm)",
+        "count": "Qty",
+        "span": "Largest span (m)",
+        "load": "Approx. axial load (kN)",
+        "beams": "Beams",
+        "bay": "Slab {t} cm",
+        "scheme": {
+          "solid": "solid",
+          "ribbed_hollow_block": "ribbed with hollow blocks",
+          "flat_slab": "flat"
+        },
+        "notes": [
+          "Preliminary scheme for the structural engineer: not for construction before the final structural design and the soil report.",
+          "Foundations: isolated footings for now, set by the soil report.",
+          "Slabs: {slab} at a preliminary {thick} cm, largest span {span} m.",
+          "Beams: a preliminary {beam} cm below the slab.",
+          "Columns: {col} cm where the axes cross ({n} columns on the ground floor).",
+          "Concrete grade, reinforcement and loads follow the Saudi Building Code (SBC 301 and SBC 304) in the final calculations.",
+          "Every structural sheet is a draft until the licensed structural engineer approves it."
+        ],
+        "calc": {
+          "toc": "Contents",
+          "sections": [
+            "Introduction",
+            "Design criteria",
+            "Loads",
+            "Slabs",
+            "Beams",
+            "Columns",
+            "Foundations"
+          ],
+          "intro": "A preliminary summary of the structural system chosen from the architectural brief. It does not replace the full analysis and design in structural software, nor the engineer’s review.",
+          "criteria": "The values below are starting assumptions the structural engineer confirms from the soil report and the loads code.",
+          "dead": "Slab self-weight",
+          "finishes": "Finishes, partitions and suspended ceiling",
+          "live": "Live load (floors)",
+          "liveRoof": "Live load (roof)",
+          "service": "Service load per m²",
+          "factored": "Factored load (1.2 D + 1.6 L)",
+          "tributary": "Tributary area of the largest column (m²)",
+          "axial": "Approx. axial load on the largest column (kN)",
+          "bearing": "Assumed soil bearing (kPa)",
+          "footing": "Approx. footing area (m²)",
+          "bearingNote": "An example value: replace it with the soil report’s figure.",
+          "unit": "kN/m²"
+        }
+      }
     }
   }
 }

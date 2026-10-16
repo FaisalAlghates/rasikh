@@ -132,7 +132,7 @@ export function openingsOf(plan: DesignPlan): Opening[] {
       sill,
       head,
     });
-  const winW = WINDOW_W[plan.style ?? 'modern_najdi'];
+  const winW = WINDOW_W[plan.style ?? 'contemporary'];
 
   for (const r of plan.rooms) {
     if (r.type === 'corridor' || r.type === 'elevator' || isOpen(r.type)) continue;
