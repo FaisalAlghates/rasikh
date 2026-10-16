@@ -58,6 +58,8 @@ export interface ProjectDoc {
   required?: Discipline[];
   permit?: Partial<Record<PermitItem, PermitState>>;
   pickedVersionId?: string;
+  /** Released: the client agreed to share the design (without their data) in the design library. */
+  libraryConsent?: boolean;
   /** Renovation: the version holding the existing building. */
   existingVersionId?: string;
   createdAt?: Timestamp;

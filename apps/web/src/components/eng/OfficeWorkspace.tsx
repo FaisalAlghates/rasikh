@@ -42,6 +42,7 @@ import {
   type SettingsRatesDoc,
 } from '@/lib/eng/data';
 import { useCollectionAt } from '@/lib/ops/hooks';
+import { DesignLibraryList } from './DesignLibraryList';
 
 /** The engineering office's private workspace: projects, team, profile, code parameters, unit rates, precedents. */
 export function OfficeWorkspace({
@@ -96,6 +97,11 @@ export function OfficeWorkspace({
             value: 'rates',
             label: t('office.tabs.rates'),
             content: <RatesPanel officeId={officeId} isLead={isLead} />,
+          },
+          {
+            value: 'library',
+            label: t('office.tabs.library'),
+            content: <DesignLibraryList />,
           },
           {
             value: 'precedents',

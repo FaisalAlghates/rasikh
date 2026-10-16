@@ -27,6 +27,7 @@ import { readClaims, useUser } from '@/lib/use-user';
 import { BriefPanel } from './BriefPanel';
 import { ConceptsPanel } from './ConceptsPanel';
 import { HandOffPanel } from './HandOffPanel';
+import { LibraryPanel } from './LibraryPanel';
 import { DisciplinesPanel } from './DisciplinesPanel';
 import { Model3D } from './Model3D';
 import { PlanEditor } from './PlanEditor';
@@ -138,6 +139,7 @@ export function ProjectView({ pid }: { pid: string }) {
           overrides={overrides}
           rates={rates?.rates}
           roomLabel={roomLabel}
+          officeName={office?.name ?? ''}
         />
       ),
     },
@@ -299,6 +301,17 @@ export function ProjectView({ pid }: { pid: string }) {
           officeName={office?.name ?? ''}
           version={released}
           user={user}
+        />
+      )}
+      {project.status === 'released' && released && (isClient || isLead) && (
+        <LibraryPanel
+          pid={pid}
+          project={project}
+          version={released}
+          officeName={office?.name ?? ''}
+          isClient={isClient}
+          isLead={isLead}
+          uid={user.uid}
         />
       )}
       <Tabs label={project.title} items={items} />
