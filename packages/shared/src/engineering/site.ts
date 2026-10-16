@@ -1,3 +1,5 @@
+import { isOpen, onFloor } from './geometry.js';
+import { hasOwnEntry } from './openings.js';
 import type { DesignPlan, Program, Rect, SiteItem } from './schemas.js';
 
 /**
@@ -40,12 +42,18 @@ export function yards(plan: Pick<DesignPlan, 'plot' | 'footprint'>) {
 /** Walkways from the street to the entrance hall and, when asked for, to the guest entrance of the men's majlis. */
 export function walkways(plan: DesignPlan): Rect[] {
   const fp = plan.footprint;
-  const doors = plan.rooms.filter(
-    (r) =>
-      r.floor === 0 &&
-      Math.abs(r.y - fp.y) < 0.05 &&
-      (r.type === 'entrance' || (plan.guestEntry && r.type === 'majlis_men')),
-  );
+  const ground = onFloor(plan, 0);
+  const atFront = (r: Rect) => Math.abs(r.y - fp.y) < 0.05;
+  const doors: Rect[] = [];
+  for (const r of ground.filter((x) => hasOwnEntry(plan, x))) {
+    if (atFront(r)) doors.push(r);
+    else {
+      // a door behind a front block (the house behind a guest pavilion): the way in crosses the open ground that
+      // reaches the street
+      const pass = ground.find((o) => isOpen(o.type) && atFront(o));
+      if (pass && !doors.includes(pass)) doors.push(pass);
+    }
+  }
   // an apartment building or shop front without an entrance hall: the walkway leads to the stair core
   const targets = doors.length
     ? doors

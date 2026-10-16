@@ -1,4 +1,4 @@
-import { area } from './layout.js';
+import { area } from './geometry.js';
 import type { DesignPlan, PlanRoom } from './schemas.js';
 
 /**
