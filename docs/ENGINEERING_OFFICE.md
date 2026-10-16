@@ -31,7 +31,7 @@ this file holds the detail. Follow CLAUDE.md §7 strictly.
   that municipality's building regulations (configurable per city); never guessed by AI.
 - Program: type (villa, duplex, townhouse, apartment building, small commercial), floors, bedrooms, men's/women's majlis,
   dining, open/closed kitchen, maid/driver rooms, bathrooms, roof annex, basement, pool, elevator, parking, privacy
-  (separate guest entry, screened openings), style (modern Najdi, Salmani, contemporary, classic), budget range.
+  (separate guest entry, screened openings), style (Najdi, modern, Swiss, palace; Salmani and classic kept for older projects), budget range.
 - Brief agent converts free text into a validated program (zod schema), asks only for missing items, and the user
   confirms before generation.
 

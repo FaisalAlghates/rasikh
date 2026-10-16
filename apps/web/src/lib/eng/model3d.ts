@@ -10,6 +10,7 @@ import {
   type PlanRoom,
 } from '@rasikh/shared';
 import * as THREE from 'three';
+import { surface, worldUv } from './textures';
 
 /**
  * The 3D model of a plan (three.js): walls with door and window openings, slabs under every room, roofs and parapets
@@ -33,6 +34,10 @@ const COLORS = {
   court: 0xb9cfa3,
   terrace: 0xe8dcc4,
   pergola: 0x8c6a4e,
+  tile: 0x6b4a36,
+  timber: 0xa87b4f,
+  stone: 0xe9dcc3,
+  dome: 0xb7c4c7,
 };
 
 type Seg = { a: number; b: number };
@@ -108,6 +113,8 @@ export interface BuildOptions {
   furniture?: Piece[];
   /** Highlight (clay) for one room. */
   selectedId?: string;
+  /** Textured surfaces, window frames, doors, shutters, trees and boundary walls (textures need a DOM). */
+  realistic?: boolean;
 }
 
 export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
@@ -118,13 +125,65 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
   const wallMat = mat(COLORS.wall);
   const extMat = mat(COLORS.ext);
   const slabMat = mat(COLORS.slab);
-  const glassMat = mat(COLORS.glass, { transparent: true, opacity: 0.45, roughness: 0.1 });
+  const style = plan.style ?? 'contemporary';
+  const real = opts.realistic === true;
+  const hex = (n: number) => '#' + n.toString(16).padStart(6, '0');
+  const tmat = (
+    kind: Parameters<typeof surface>[0],
+    color: number,
+    tile: number,
+    o: Partial<THREE.MeshStandardMaterialParameters> = {},
+  ) => {
+    const map = real ? surface(kind, hex(color), tile) : undefined;
+    return new THREE.MeshStandardMaterial({
+      color: map ? 0xffffff : color,
+      ...(map ? { map } : {}),
+      roughness: 0.92,
+      ...o,
+    });
+  };
+  const topFloor = Math.max(1, Math.min(opts.floorsShown, plan.floors)) - 1;
+  const stuccoSand = tmat('stucco', 0xd9bf9a, 2);
+  const stuccoWhite = tmat('stucco', 0xf1ece2, 2);
+  const timber = tmat('timber', 0xb98a58, 2);
+  const slat = tmat('slat', 0x555b61, 2);
+  const stoneCream = tmat('stone', 0xddcba8, 2);
+  const doorMat = tmat('timber', 0x5a3d28, 1.2, { roughness: 0.7 });
+  const shutterMat = mat(0x5d7a4a, { roughness: 0.7 });
+  const frameMat = mat(
+    style === 'contemporary'
+      ? 0x23303a
+      : style === 'swiss'
+        ? 0xf2efe8
+        : style === 'palace' || style === 'classic'
+          ? 0xf4efe2
+          : 0x6b4a36,
+    { roughness: 0.6 },
+  );
+  /** The outside walls of a floor, by style: Najdi render, a modern clad top volume, Swiss timber, palace stone. */
+  const extFor = (fl: number) => {
+    if (!real) return extMat;
+    if (style === 'swiss') return fl === 0 ? stuccoWhite : timber;
+    if (style === 'contemporary') return fl === topFloor && topFloor > 0 ? slat : stuccoWhite;
+    if (style === 'palace' || style === 'classic') return stoneCream;
+    return stuccoSand;
+  };
+  const glassMat = real
+    ? new THREE.MeshStandardMaterial({
+        color: 0x9fbfd2,
+        transparent: true,
+        opacity: 0.62,
+        roughness: 0.05,
+        metalness: 0.6,
+        envMapIntensity: 1.3,
+      })
+    : mat(COLORS.glass, { transparent: true, opacity: 0.45, roughness: 0.1 });
   const ops = openingsOf(plan);
 
   // ground (the plot)
   const ground = new THREE.Mesh(
     new THREE.PlaneGeometry(plan.plot.width, plan.plot.depth),
-    mat(COLORS.ground),
+    real ? tmat('paving', 0xd3c6ac, 2.4) : mat(COLORS.ground),
   );
   ground.rotation.x = -Math.PI / 2;
   ground.position.set(plan.plot.width / 2, -0.01, -plan.plot.depth / 2);
@@ -142,10 +201,9 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
     z: number,
     name = '',
   ) => {
-    const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(Math.max(0.01, w), Math.max(0.01, h), Math.max(0.01, d)),
-      m,
-    );
+    const geo = new THREE.BoxGeometry(Math.max(0.01, w), Math.max(0.01, h), Math.max(0.01, d));
+    if ((m as THREE.MeshStandardMaterial).map) worldUv(geo, w, h, d);
+    const mesh = new THREE.Mesh(geo, m);
     mesh.position.set(x, y, z);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -188,7 +246,7 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
       else box(r.w, 0.25, r.h, slabMat, cx, base + 0.125, cz, `slab-${f}`);
     }
     for (const w of floorWalls(plan, f, ops)) {
-      const m = w.ext ? extMat : wallMat;
+      const m = w.ext ? extFor(f) : wallMat;
       const t = w.ext ? WALL * 1.4 : WALL;
       const along = (a: number, b: number, y0: number, y1: number) => {
         const len = b - a;
@@ -209,6 +267,36 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
           const hh = o.head - o.sill;
           if (w.horiz) box(len, hh, 0.04, glassMat, mid, base + 0.25 + o.sill + hh / 2, -w.c);
           else box(0.04, hh, len, glassMat, w.c, base + 0.25 + o.sill + hh / 2, -mid);
+        }
+        if (real && w.ext) {
+          const len = o.b - o.a;
+          const mid = (o.a + o.b) / 2;
+          const y0 = base + 0.25 + o.sill;
+          const hh = Math.min(h, o.head) - o.sill;
+          // along the wall, across it (thickness), height, position along the wall, centre height
+          const put = (
+            along: number,
+            across: number,
+            hgt: number,
+            at: number,
+            y: number,
+            m2: THREE.Material,
+            name: string,
+          ) =>
+            w.horiz
+              ? box(along, hgt, across, m2, at, y, -w.c, name)
+              : box(across, hgt, along, m2, w.c, y, -at, name);
+          if (o.kind === 'window') {
+            put(len + 0.12, t + 0.06, 0.07, mid, y0 + hh, frameMat, 'frame');
+            put(len + 0.24, t + 0.16, 0.08, mid, y0, frameMat, 'sill');
+            put(0.07, t + 0.06, hh, o.a, y0 + hh / 2, frameMat, 'frame');
+            put(0.07, t + 0.06, hh, o.b, y0 + hh / 2, frameMat, 'frame');
+            if (len > 1.3) put(0.05, t + 0.02, hh, mid, y0 + hh / 2, frameMat, 'mullion');
+            if (style === 'swiss')
+              for (const x of [o.a - 0.22, o.b + 0.22])
+                put(0.4, t + 0.1, hh, x, y0 + hh / 2, shutterMat, 'shutter');
+          } else if (o.kind === 'entry')
+            put(len * 0.96, 0.08, hh, mid, y0 + hh / 2, doorMat, 'door');
         }
       }
     }
@@ -238,9 +326,30 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
         `furniture-${p.kind}`,
       );
   }
+  /** A pitched roof over a rectangle: the ridge runs along its longer side, wide eaves all round. */
+  const gable = (r: PlanRoom, y: number) => {
+    const ov = 0.55;
+    const alongX = r.w >= r.h;
+    const span = (alongX ? r.h : r.w) + 2 * ov;
+    const len = (alongX ? r.w : r.h) + 2 * ov;
+    const rise = Math.min(2.6, span * 0.3);
+    const shape = new THREE.Shape();
+    shape.moveTo(-span / 2, 0);
+    shape.lineTo(0, rise);
+    shape.lineTo(span / 2, 0);
+    shape.closePath();
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: len, bevelEnabled: false });
+    geo.translate(0, 0, -len / 2);
+    if (alongX) geo.rotateY(Math.PI / 2);
+    const mesh = new THREE.Mesh(geo, real ? tmat('tile', 0x8a4b32, 1.2) : mat(COLORS.tile));
+    mesh.position.set(r.x + r.w / 2, y, -(r.y + r.h / 2));
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.name = 'gable';
+    g.add(mesh);
+  };
   // roofs: over every built room with nothing built above it, with a parapet along its outside edges; the top shown
   // floor of a dollhouse cut stays open
-  const style = plan.style ?? 'contemporary';
   const shurfa = new THREE.ConeGeometry(0.24, 0.38, 4);
   const shurfaMat = mat(COLORS.ext);
   for (let f = 0; f < shown; f++) {
@@ -256,6 +365,10 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
       }, 0);
       if (covered > 0.5 * r.w * r.h) continue;
       box(r.w, 0.25, r.h, slabMat, r.x + r.w / 2, top + 0.125, -(r.y + r.h / 2), 'roof');
+      if (style === 'swiss') {
+        if (Math.min(r.w, r.h) >= 2) gable(r, top + 0.25);
+        continue;
+      }
       for (const run of freeRuns(r, same)) {
         const len = run.to - run.from;
         if (len < 0.2) continue;
@@ -283,7 +396,7 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
             m.name = 'shurfa';
             g.add(m);
           }
-        } else if (style === 'classic')
+        } else if (style === 'classic' || style === 'palace')
           // a cornice capping the parapet
           box(
             horiz ? len + 0.2 : 0.42,
@@ -298,6 +411,58 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
       }
     }
   }
+  if (style === 'palace') {
+    // a dome on the biggest roof of the top floor
+    const topRooms = onFloor(plan, Math.min(shown, plan.floors) - 1).filter((x) => !isOpen(x.type));
+    const big = [...topRooms].sort((a, b) => b.w * b.h - a.w * a.h)[0];
+    if (big) {
+      const top = Math.min(shown, plan.floors) * plan.floorHeight + 0.25;
+      const rad = Math.max(0.8, Math.min(2.4, Math.min(big.w, big.h) * 0.35));
+      box(
+        rad * 2.2,
+        0.9,
+        rad * 2.2,
+        extMat,
+        big.x + big.w / 2,
+        top + 0.45,
+        -(big.y + big.h / 2),
+        'drum',
+      );
+      const dome = new THREE.Mesh(
+        new THREE.SphereGeometry(rad, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2),
+        mat(COLORS.dome, { metalness: 0.3, roughness: 0.4 }),
+      );
+      dome.position.set(big.x + big.w / 2, top + 0.9, -(big.y + big.h / 2));
+      dome.castShadow = true;
+      dome.name = 'dome';
+      g.add(dome);
+    }
+    // a portico of four columns before every entrance door
+    for (const o of ops.filter((x) => x.kind === 'entry' && x.floor < shown)) {
+      const horiz = Math.abs(o.y1 - o.y2) < 0.01;
+      const mx = (o.x1 + o.x2) / 2;
+      const my = (o.y1 + o.y2) / 2;
+      const base = o.floor * plan.floorHeight;
+      const col = new THREE.CylinderGeometry(0.16, 0.18, 3.2, 14);
+      for (const d of [-1.6, -0.55, 0.55, 1.6]) {
+        const m = new THREE.Mesh(col, mat(COLORS.stone));
+        m.position.set(horiz ? mx + d : mx - 0.7, base + 1.85, horiz ? -(my - 0.7) : -(my + d));
+        m.castShadow = true;
+        m.name = 'column';
+        g.add(m);
+      }
+      box(
+        horiz ? 4 : 1,
+        0.3,
+        horiz ? 1 : 4,
+        mat(COLORS.stone),
+        horiz ? mx : mx - 0.7,
+        base + 3.6,
+        horiz ? -(my - 0.7) : -my,
+        'entablature',
+      );
+    }
+  }
   // a contemporary terrace gets a pergola of timber slats overhead
   if (style === 'contemporary')
     for (const t of plan.rooms.filter((r) => r.type === 'terrace' && r.floor < shown)) {
@@ -305,6 +470,94 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
       for (let u = t.x + 0.3; u < t.x + t.w - 0.2; u += 0.6)
         box(0.08, 0.16, t.h, mat(COLORS.pergola), u, y, -(t.y + t.h / 2), 'pergola');
     }
+  if (real) {
+    const W = plan.plot.width;
+    const D = plan.plot.depth;
+    // boundary walls as Saudi plots have them: full on the sides and back, low on the street with a gate
+    const wallM = tmat('stucco', style === 'palace' ? 0xe8dcc0 : 0xe4d7c3, 2);
+    const wh = 1.8;
+    box(0.25, wh, D, wallM, 0.12, wh / 2, -D / 2, 'boundary');
+    box(0.25, wh, D, wallM, W - 0.12, wh / 2, -D / 2, 'boundary');
+    box(W, wh, 0.25, wallM, W / 2, wh / 2, -(D - 0.12), 'boundary');
+    const entry = ops.find((o) => o.kind === 'entry' && o.floor === 0);
+    const gx = entry ? (entry.x1 + entry.x2) / 2 : W / 2;
+    const gate = 3.6;
+    const low = 1.1;
+    if (gx - gate / 2 > 0.3)
+      box(gx - gate / 2, low, 0.25, wallM, (gx - gate / 2) / 2, low / 2, -0.12, 'boundary');
+    if (W - (gx + gate / 2) > 0.3)
+      box(
+        W - (gx + gate / 2),
+        low,
+        0.25,
+        wallM,
+        (gx + gate / 2 + W) / 2,
+        low / 2,
+        -0.12,
+        'boundary',
+      );
+    // trees in the yards: palms by a Najdi house or a palace, broad trees by the others
+    const built0 = onFloor(plan, 0);
+    const clear = (x: number, y: number) =>
+      x > 1 &&
+      x < W - 1 &&
+      y > 1 &&
+      y < D - 1 &&
+      !built0.some(
+        (r) => x > r.x - 1.2 && x < r.x + r.w + 1.2 && y > r.y - 1.2 && y < r.y + r.h + 1.2,
+      ) &&
+      !(plan.site ?? []).some(
+        (q) => x > q.x - 1 && x < q.x + q.w + 1 && y > q.y - 1 && y < q.y + q.h + 1,
+      );
+    const spots: Array<[number, number]> = [
+      [1.6, D - 1.6],
+      [W - 1.6, D - 1.6],
+      [1.6, 1.8],
+      [W - 1.6, 1.8],
+      [W / 2, D - 1.6],
+      [1.6, D / 2],
+      [W - 1.6, D / 2],
+    ];
+    const palm = style === 'modern_najdi' || style === 'salmani' || style === 'palace';
+    const trunkM = mat(0x7a5a3c);
+    const leafM = mat(palm ? 0x5d7f3e : 0x4f7a3a, { roughness: 0.8 });
+    let n = 0;
+    for (const [x, y] of spots) {
+      if (n >= 5 || !clear(x, y)) continue;
+      n++;
+      const ht = palm ? 5.5 : 4;
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(palm ? 0.14 : 0.16, palm ? 0.2 : 0.22, ht, 8),
+        trunkM,
+      );
+      trunk.position.set(x, ht / 2, -y);
+      trunk.castShadow = true;
+      trunk.name = 'tree';
+      g.add(trunk);
+      if (palm)
+        for (let k = 0; k < 8; k++) {
+          const a = (k / 8) * Math.PI * 2;
+          const frond = new THREE.Mesh(new THREE.ConeGeometry(0.28, 2.4, 4), leafM);
+          frond.position.set(x + Math.cos(a) * 0.9, ht - 0.1, -y + Math.sin(a) * 0.9);
+          // tipped outward and down from the crown
+          frond.quaternion.setFromAxisAngle(new THREE.Vector3(-Math.sin(a), 0, Math.cos(a)), -1.2);
+          frond.castShadow = true;
+          frond.name = 'frond';
+          g.add(frond);
+        }
+      else
+        for (const [dy, r] of [
+          [0, 1.7],
+          [1.1, 1.2],
+        ] as const) {
+          const crown = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 10), leafM);
+          crown.position.set(x, ht + dy, -y);
+          crown.castShadow = true;
+          crown.name = 'canopy';
+          g.add(crown);
+        }
+    }
+  }
   return g;
 }
 

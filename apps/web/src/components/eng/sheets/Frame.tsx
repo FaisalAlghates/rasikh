@@ -27,7 +27,7 @@ function Row({
 }) {
   return (
     <div className="border-b border-night/60 px-2 py-1">
-      <p className="flex justify-between gap-2 text-[0.62rem] leading-tight text-stone">
+      <p className="flex justify-between gap-2 text-[0.62rem] leading-tight text-[#5f594f]">
         <span dir="rtl">{label.ar}</span>
         <span>{label.en}</span>
       </p>
@@ -67,7 +67,7 @@ export function SheetFrame({
           >
             <span dir="rtl">{spec.ar}</span>
             <span>{spec.en}</span>
-            <span className="text-caption font-normal text-stone">{spec.scale}</span>
+            <span className="text-caption font-normal text-[#5f594f]">{spec.scale}</span>
           </p>
         </div>
         <aside className="flex flex-col border-t-2 border-night md:border-t-0">
@@ -82,7 +82,7 @@ export function SheetFrame({
             </svg>
           </div>
           <div className="border-b border-night/60 px-2 py-1">
-            <p className="flex justify-between text-[0.62rem] text-stone">
+            <p className="flex justify-between text-[0.62rem] text-[#5f594f]">
               <span dir="rtl">{TITLE_BLOCK.notes.ar}</span>
               <span>{TITLE_BLOCK.notes.en}</span>
             </p>
@@ -93,7 +93,7 @@ export function SheetFrame({
             </ol>
           </div>
           <div
-            className="m-2 flex min-h-16 items-center justify-center border border-dashed border-night/50 p-1 text-center text-[0.6rem] text-stone"
+            className="m-2 flex min-h-16 items-center justify-center border border-dashed border-night/50 p-1 text-center text-[0.6rem] text-[#5f594f]"
             data-testid="stamp-area"
           >
             {TITLE_BLOCK.stamp.ar} · {TITLE_BLOCK.stamp.en}

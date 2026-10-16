@@ -152,6 +152,8 @@ export function parseBrief(raw: string): Partial<Program> {
   if (has(t, 'سلماني', 'salmani')) out.style = 'salmani';
   else if (has(t, 'نجدي', 'najdi')) out.style = 'modern_najdi';
   else if (has(t, 'كلاسيك', 'classic')) out.style = 'classic';
+  else if (has(t, 'سويسري', 'swiss', 'شاليه', 'alpine')) out.style = 'swiss';
+  else if (has(t, 'قصر', 'قصور', 'فخم', 'فاخر', 'palace', 'luxury')) out.style = 'palace';
   else if (has(t, 'حديث', 'معاصر', 'contemporary', 'modern')) out.style = 'contemporary';
 
   const area =

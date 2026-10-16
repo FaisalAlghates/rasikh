@@ -1,4 +1,5 @@
 import { freeRuns, isOpen, onFloor, type Run } from './geometry.js';
+import { STYLE_TRAITS } from './styles.js';
 import { HABITABLE, WET, type DesignPlan, type PlanRoom, type Side } from './schemas.js';
 
 /** A door or window on one edge of a room, in plot coordinates (a segment) with its height. */
@@ -83,14 +84,6 @@ export function hasOwnEntry(plan: DesignPlan, r: PlanRoom): boolean {
   );
 }
 
-/** Window width by style: narrow Najdi openings, wide contemporary glazing. */
-const WINDOW_W: Record<NonNullable<DesignPlan['style']>, number> = {
-  modern_najdi: 1.2,
-  salmani: 1.4,
-  classic: 1.4,
-  contemporary: 2.2,
-};
-
 /** Rooms that open onto a terrace or a ground-floor courtyard, best first. */
 const OPENS_ONTO: readonly PlanRoom['type'][] = [
   'corridor',
@@ -132,7 +125,7 @@ export function openingsOf(plan: DesignPlan): Opening[] {
       sill,
       head,
     });
-  const winW = WINDOW_W[plan.style ?? 'contemporary'];
+  const winW = STYLE_TRAITS[plan.style ?? 'contemporary'].windowW;
 
   for (const r of plan.rooms) {
     if (r.type === 'corridor' || r.type === 'elevator' || isOpen(r.type)) continue;

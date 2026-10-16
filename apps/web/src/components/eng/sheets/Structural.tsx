@@ -24,7 +24,7 @@ export function StNotesBody({ scheme, plan }: { scheme: StructuralScheme; plan: 
           <li key={i}>{fill(n, values)}</li>
         ))}
       </ol>
-      <p className="text-caption text-stone">
+      <p className="text-caption text-[#5f594f]">
         {plan.floors} · {scheme.gridX.length - 1}×{scheme.gridY.length - 1}
       </p>
     </div>
@@ -167,7 +167,7 @@ export function StCalcBody({ scheme, plan }: { scheme: StructuralScheme; plan: D
       </nav>
       <div className="flex flex-col gap-3">
         <p className="max-w-2xl text-small">{t('intro')}</p>
-        <p className="max-w-2xl text-small text-stone">{t('criteria')}</p>
+        <p className="max-w-2xl text-small text-[#5f594f]">{t('criteria')}</p>
         <table className="w-full max-w-2xl text-small">
           <tbody>
             {rows.map(([k, v]) => (
