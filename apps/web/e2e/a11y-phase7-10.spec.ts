@@ -37,7 +37,7 @@ test('a11y + screenshots: broker workspace, assistant and privacy panels', async
   // A broker account: lands straight on the brokerage workspace.
   await signUpEmail(p, `a11y-broker-${stamp}@rasikh.test`);
   await expect(p).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
-  await p.getByText('وسيط', { exact: true }).click();
+  await p.getByRole('button', { name: /الوساطة العقارية/ }).click();
   await p.locator('#displayName').fill('سلمان');
   await p.locator('#orgName').fill('مكتب الأفق');
   await p.locator('input[type=checkbox]').last().check();

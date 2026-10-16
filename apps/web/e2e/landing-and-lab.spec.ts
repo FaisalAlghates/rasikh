@@ -2,13 +2,12 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 test.describe('landing', () => {
-  test('has one headline, the four role cards and the Ejar disclaimer', async ({ page }) => {
+  test('has one headline, the three section cards and the Ejar disclaimer', async ({ page }) => {
     await page.goto('/ar');
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
-    await expect(page.getByRole('link', { name: /^مالك/ })).toBeVisible();
-    await expect(page.getByRole('link', { name: /^مستأجر/ })).toBeVisible();
-    await expect(page.getByRole('link', { name: /^مدير عمارة/ })).toBeVisible();
-    await expect(page.getByRole('link', { name: /^وسيط/ })).toBeVisible();
+    for (const name of ['إدارة الأملاك', 'المكتب الهندسي', 'الوساطة العقارية'])
+      await expect(page.locator('[data-section]').filter({ hasText: name })).toBeVisible();
+    await expect(page.getByText('مجاني الآن').first()).toBeVisible();
     await expect(page.getByText('يكمّل إيجار').first()).toBeVisible();
   });
 

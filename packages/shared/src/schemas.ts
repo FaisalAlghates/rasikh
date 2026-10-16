@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LOCALES, ROLES, SELF_SERVICE_ROLES } from './enums.js';
+import { LOCALES, PRODUCT_SECTIONS, ROLES, SELF_SERVICE_ROLES } from './enums.js';
 
 export const RoleSchema = z.enum(ROLES);
 export const SelfServiceRoleSchema = z.enum(SELF_SERVICE_ROLES);
@@ -31,6 +31,8 @@ export type Member = z.infer<typeof MemberSchema>;
 export const CreateOrganizationInputSchema = z.object({
   name: z.string().trim().min(2).max(80),
   roles: z.array(SelfServiceRoleSchema).min(1).max(5),
+  /** The product section this workspace subscribes to; absent for older clients. */
+  section: z.enum(PRODUCT_SECTIONS).optional(),
   displayName: z.string().trim().min(2).max(80),
   consentPdpl: z.literal(true),
   locale: LocaleSchema.default('ar'),

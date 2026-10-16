@@ -1,4 +1,3 @@
-import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { use, type CSSProperties } from 'react';
@@ -9,12 +8,13 @@ import { CursorGlow } from '@/components/immersive/CursorGlow';
 import { Magnetic } from '@/components/immersive/Magnetic';
 import { SplitWords } from '@/components/immersive/SplitWords';
 import { Tilt } from '@/components/immersive/Tilt';
+import { SectionCard } from '@/components/SectionCard';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Link } from '@/i18n/navigation';
 import { ROUTES } from '@/lib/nav';
 
-const ROLES = ['Owner', 'Tenant', 'Manager', 'Broker'] as const;
+const SECTIONS = ['property', 'office', 'broker'] as const;
 
 function Frieze() {
   return (
@@ -126,22 +126,17 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
         {/* 2. Role fork: four cards that tilt toward the pointer */}
         <section data-theme="dark" data-scene-stop className="clear px-6 py-28">
           <div className="mx-auto max-w-6xl">
-            <SectionTitle title={t('rolesTitle')} body={t('rolesSubtitle')} />
-            <ul className="grid gap-5 sm:grid-cols-2">
-              {ROLES.map((r, i) => (
-                <li key={r} data-reveal style={{ '--d': i } as CSSProperties}>
+            <SectionTitle title={t('sectionsTitle')} body={t('sectionsSubtitle')} />
+            <ul className="grid gap-5 md:grid-cols-3">
+              {SECTIONS.map((s, i) => (
+                <li key={s} data-reveal style={{ '--d': i } as CSSProperties}>
                   <Tilt className="panel h-full">
-                    <Link href="/auth" className="group flex h-full flex-col gap-3 p-7">
-                      <span className="flex items-center justify-between gap-4">
-                        <span className="depth-1 text-h2 font-semibold">{t(`role${r}`)}</span>
-                        <ArrowRight
-                          size={22}
-                          aria-hidden="true"
-                          className="depth-2 text-brand-text transition-transform duration-300 ease-rk rtl:rotate-180 rtl:group-hover:-translate-x-2 ltr:group-hover:translate-x-2"
-                        />
-                      </span>
-                      <span className="text-text/75">{t(`role${r}Body`)}</span>
-                    </Link>
+                    <SectionCard
+                      section={s}
+                      title={t(`sections.${s}.title`)}
+                      body={t(`sections.${s}.body`)}
+                      badge={t('sectionsFree')}
+                    />
                   </Tilt>
                 </li>
               ))}
