@@ -71,6 +71,8 @@ export interface Variant {
   /** The design type: front and back bands (default), a courtyard house, a side-court (U) house, upper floors
    *  stepped back behind a roof terrace, or a guest pavilion by the gate with the family house behind a garden. */
   typology?: Typology;
+  /** A library design whose pattern this variant re-lays (for the credit). */
+  inspiredBy?: string;
   core: 'left' | 'center' | 'right';
   /** Share of the band depth given to the front band. */
   front: number;

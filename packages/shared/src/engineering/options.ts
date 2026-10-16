@@ -2,6 +2,7 @@ import { programRooms } from './brief.js';
 import { detectClashes, structuralScheme, unstackedWetRooms } from './disciplines.js';
 import { envelopeOf, generatePlan, scorePlan, variantCode, type Variant } from './layout.js';
 import { area, builtUpArea, floorArea, isOpen } from './geometry.js';
+import { knobPrior, libraryVariants, type LibraryItem } from './library.js';
 import { doorTarget, hasOwnEntry } from './openings.js';
 import { runRules, type RuleOverrides, type RuleResult } from './rules.js';
 import { siteShortfall, yards } from './site.js';
@@ -330,6 +331,9 @@ export interface OptionSearch {
   blocking: Array<{ id: string; count: number }>;
   /** The zoning allows fewer floors than the brief asks for (the rooms were spread over the allowed floors). */
   floorsReduced: boolean;
+  /** Library designs like this brief whose patterns were tried, and how many chosen options they inspired. */
+  libraryMatches: number;
+  inspired: number;
 }
 
 export const MIN_OPTIONS = 6;
@@ -341,17 +345,42 @@ export function searchOptions(
   plot: Plot,
   zoning: Zoning,
   program: Program,
-  opts: { count?: number; overrides?: RuleOverrides; existing?: DesignPlan[] } = {},
+  opts: {
+    count?: number;
+    overrides?: RuleOverrides;
+    existing?: DesignPlan[];
+    /** Designs offices shared (and the office's own released ones): their patterns are tried and learnt from. */
+    library?: LibraryItem[];
+  } = {},
 ): OptionSearch {
   const count = Math.max(1, Math.min(MAX_OPTIONS, opts.count ?? 8));
   const existing = opts.existing ?? [];
   const seen = new Set(existing.map(geometryKey));
   const blocking = new Map<string, number>();
   const pool: Array<{ plan: DesignPlan; rank: number }> = [];
-  const variants = candidateVariants(program);
+  const library = opts.library ?? [];
+  const byId = new Map(library.map((e) => [e.id, e]));
+  // the library's patterns first, so a design they inspire keeps its credit when the engine reaches the same layout
+  const inspired = libraryVariants(library, program, plot);
+  const variants: Array<Variant & { inspiredBy?: string }> = [
+    ...inspired,
+    ...candidateVariants(program),
+  ];
+  const prior = knobPrior(library, program, plot);
   let distinct = 0;
   for (const v of variants) {
-    const plan = generatePlan(plot, zoning, program, v);
+    let plan = generatePlan(plot, zoning, program, v);
+    const source = v.inspiredBy ? byId.get(v.inspiredBy) : undefined;
+    if (source)
+      plan = {
+        ...plan,
+        variant: {
+          ...plan.variant,
+          inspiredBy: source.id,
+          inspiredOffice: source.officeName,
+          inspiredCity: source.city,
+        },
+      };
     const key = geometryKey(plan);
     if (seen.has(key)) continue;
     seen.add(key);
@@ -361,7 +390,9 @@ export function searchOptions(
       for (const f of c.failing) blocking.set(f, (blocking.get(f) ?? 0) + 1);
       continue;
     }
-    pool.push({ plan, rank: rankOption(plan, program) });
+    // what offices choose for briefs like this one nudges the ranking (±3 points)
+    const nudge = library.length ? (prior(plan) - 0.5) * 6 : 0;
+    pool.push({ plan, rank: Math.round((rankOption(plan, program) + nudge) * 10) / 10 });
   }
   pool.sort((a, b) => b.rank - a.rank);
 
@@ -373,14 +404,37 @@ export function searchOptions(
   // pavilion ...), then the most different of the rest
   const kind = (p: DesignPlan) => String(p.variant.typology ?? 'bands');
   const shown = new Set(existing.map(kind));
+  const apart = (c: (typeof pool)[number]) =>
+    ![...existing, ...chosen.map((x) => x.plan)].some(
+      (o) => optionDistance(c.plan, o) < MIN_DIFFERENCE,
+    );
   for (const c of pool) {
     if (chosen.length >= count) break;
-    if (shown.has(kind(c.plan))) continue;
-    const others = [...existing, ...chosen.map((x) => x.plan)];
-    if (others.some((o) => optionDistance(c.plan, o) < MIN_DIFFERENCE)) continue;
-    chosen.push(c);
-    left.splice(left.indexOf(c), 1);
-    shown.add(kind(c.plan));
+    if (shown.has(kind(c.plan)) || !apart(c)) continue;
+    // within a type, a design an office's project inspired wins when it ranks close to the best (3 points)
+    const credited = left.find(
+      (x) =>
+        x.plan.variant.inspiredBy &&
+        kind(x.plan) === kind(c.plan) &&
+        x.rank >= c.rank - 3 &&
+        apart(x),
+    );
+    const pick = credited ?? c;
+    chosen.push(pick);
+    left.splice(left.indexOf(pick), 1);
+    shown.add(kind(pick.plan));
+  }
+  // and the best design an office's project inspired, when the library has one that passes
+  const fromLibrary = left.find(
+    (c) =>
+      c.plan.variant.inspiredBy &&
+      ![...existing, ...chosen.map((x) => x.plan)].some(
+        (o) => optionDistance(c.plan, o) < MIN_DIFFERENCE,
+      ),
+  );
+  if (fromLibrary && chosen.length < count && !chosen.some((c) => c.plan.variant.inspiredBy)) {
+    chosen.push(fromLibrary);
+    left.splice(left.indexOf(fromLibrary), 1);
   }
   while (chosen.length < count && left.length) {
     let best = -1;
@@ -411,6 +465,8 @@ export function searchOptions(
       .map(([id, n]) => ({ id, count: n }))
       .sort((a, b) => b.count - a.count),
     floorsReduced: program.floors > zoning.maxFloors,
+    libraryMatches: inspired.length,
+    inspired: chosen.filter((c) => c.plan.variant.inspiredBy).length,
   };
 }
 
@@ -435,6 +491,7 @@ export interface FitNote {
     | 'master'
     | 'parking'
     | 'annex'
+    | 'inspired'
     | 'pool'
     | 'area'
     | 'plumbing';
@@ -505,6 +562,14 @@ export function explainOption(plan: DesignPlan, program: Program, plot: Plot, zo
       envelope: Math.round(area(env)),
     },
   });
+  if (plan.variant.inspiredOffice)
+    notes.push({
+      key: 'inspired',
+      values: {
+        office: String(plan.variant.inspiredOffice),
+        city: String(plan.variant.inspiredCity ?? ''),
+      },
+    });
   if (plan.guestEntry) notes.push({ key: 'guestEntry', values: {} });
   if (plan.annex) {
     const L = plan.floors - 1;
