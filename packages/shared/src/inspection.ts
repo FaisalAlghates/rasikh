@@ -328,7 +328,8 @@ export function damageTotal(rows: CompareRow[]): number {
 
 // ---------------------------------------------------------------- property health record
 
-export type TimelineKind = 'lease_started' | 'lease_ended' | 'inspection_sealed' | 'expense';
+export type TimelineKind =
+  'lease_started' | 'lease_ended' | 'inspection_sealed' | 'expense' | 'design_released';
 
 export interface TimelineEvent {
   key: string;
@@ -339,6 +340,8 @@ export interface TimelineEvent {
   /** Expense category, inspection kind, or other short machine value; the UI translates it. */
   detail?: string;
   amount?: number;
+  /** Text from the record itself, shown as is (a design's title and office). */
+  label?: string;
 }
 
 export interface TimelineSources {
@@ -366,6 +369,15 @@ export interface TimelineSources {
     date: string;
     category: string;
     amount: number;
+  }>;
+  /** Design sets released by a licensed engineering office and linked to the property by its owner. */
+  designs?: Array<{
+    id: string;
+    propertyId: string;
+    /** Day the set was released, `YYYY-MM-DD`. */
+    releasedOn: string;
+    title: string;
+    officeName: string;
   }>;
 }
 
@@ -415,6 +427,15 @@ export function buildTimeline(propertyId: string, src: TimelineSources): Timelin
       refId: e.id,
       detail: e.category,
       amount: e.amount,
+    });
+  }
+  for (const d of (src.designs ?? []).filter((x) => x.propertyId === propertyId)) {
+    out.push({
+      key: `design-${d.id}`,
+      date: d.releasedOn,
+      kind: 'design_released',
+      refId: d.id,
+      label: `${d.title} · ${d.officeName}`,
     });
   }
   return out.sort((a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key));

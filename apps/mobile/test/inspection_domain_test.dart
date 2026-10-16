@@ -258,6 +258,23 @@ void main() {
     });
   });
 
+  test('property health record adds design sets linked to the property', () {
+    final t = buildTimeline(
+      'p1',
+      today: '2026-10-16',
+      leases: const [],
+      inspections: const [],
+      expenses: const [TimelineExpense('e1', 'p1', '2026-03-01', 'fees', 10)],
+      designs: const [
+        TimelineDesign('d1', 'p1', '2026-10-16', 'فيلا النرجس', 'مكتب الأفق'),
+        TimelineDesign('d2', 'other', '2026-10-16', 'x', 'y'),
+      ],
+    );
+    expect(t.map((e) => e.key), ['design-d1', 'expense-e1']);
+    expect(t.first.kind, HealthKind.designReleased);
+    expect(t.first.label, 'فيلا النرجس · مكتب الأفق');
+  });
+
   test('property health record merges leases, signed inspections and expenses, newest first', () {
     final t = buildTimeline(
       'p1',

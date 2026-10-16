@@ -185,6 +185,25 @@ const expenseCategories = [
 const unitTypes = ['studio', 'apartment', 'villa'];
 
 /// Everything one session can see, already scoped by role (staff: whole org; tenant: own lease only).
+/// orgs/{orgId}/designs/{projectId}: a design set released by an engineering office, linked to a property by the
+/// client who commissioned it (on the web). Read-only in the app.
+class DesignLink {
+  const DesignLink({
+    required this.propertyId,
+    required this.title,
+    required this.officeName,
+    required this.releasedOn,
+  });
+  final String propertyId, title, officeName, releasedOn;
+
+  factory DesignLink.fromMap(Map<String, Object?> m) => DesignLink(
+    propertyId: _s(m, 'propertyId'),
+    title: _s(m, 'title'),
+    officeName: _s(m, 'officeName'),
+    releasedOn: _s(m, 'releasedOn'),
+  );
+}
+
 class OpsData {
   const OpsData({
     this.properties = const [],
@@ -192,12 +211,14 @@ class OpsData {
     this.leases = const [],
     this.payments = const [],
     this.expenses = const [],
+    this.designs = const [],
   });
   final List<Doc<Property>> properties;
   final List<Doc<RentalUnit>> units;
   final List<Doc<Lease>> leases;
   final List<Doc<Payment>> payments;
   final List<Doc<Expense>> expenses;
+  final List<Doc<DesignLink>> designs;
 
   List<Doc<Payment>> paymentsOf(String leaseId) =>
       payments.where((p) => p.data.leaseId == leaseId).toList()

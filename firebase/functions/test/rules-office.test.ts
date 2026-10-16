@@ -6,7 +6,15 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
-import { Timestamp, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  Timestamp,
+  deleteDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest';
 
 let env: RulesTestEnvironment;
@@ -254,5 +262,74 @@ describe('approval and release', () => {
     const ref = doc(db('arch', arch), 'designProjects/p1/versions/draft');
     await assertFails(updateDoc(ref, { plan: { rooms: [] } }));
     await assertSucceeds(updateDoc(ref, { plan: { rooms: [] }, sha256: OTHER }));
+  });
+});
+
+describe('hand-off to the property health record', () => {
+  const owner = { orgs: { org1: ['owner'] } };
+  const tenant = { orgs: { org1: ['tenant'] } };
+  const link = (over: Record<string, unknown> = {}) => ({
+    projectId: 'p3',
+    versionId: 'rel',
+    propertyId: 'prop1',
+    title: 'فيلا',
+    officeName: 'مكتب أ',
+    versionLabel: 'مخطط 1',
+    sha256: SHA,
+    releasedOn: '2026-10-16',
+    linkedBy: 'c1',
+    linkedAt: serverTimestamp(),
+    ...over,
+  });
+  beforeEach(async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      const d = ctx.firestore();
+      await setDoc(doc(d, 'designProjects/p3'), {
+        officeId: 'oA',
+        clientUid: 'c1',
+        title: 'فيلا',
+        kind: 'new',
+        status: 'released',
+      });
+      await setDoc(doc(d, 'designProjects/p3/versions/rel'), {
+        status: 'released',
+        sha256: SHA,
+        required: ['architectural'],
+        plan: {},
+      });
+      await setDoc(doc(d, 'orgs/org1'), { name: 'عقاراتي' });
+      await setDoc(doc(d, 'orgs/org1/properties/prop1'), { name: 'بيت الملقا' });
+    });
+  });
+
+  it('the client links a released set to a property of their organization', async () => {
+    await assertSucceeds(setDoc(doc(db('c1', owner), 'orgs/org1/designs/p3'), link()));
+    // staff read it (it shows in the record); a tenant does not; nobody edits it; staff may unlink it
+    await assertSucceeds(getDoc(doc(db('c1', owner), 'orgs/org1/designs/p3')));
+    await assertFails(getDoc(doc(db('t1', tenant), 'orgs/org1/designs/p3')));
+    await assertFails(updateDoc(doc(db('c1', owner), 'orgs/org1/designs/p3'), { title: 'x' }));
+    await assertSucceeds(deleteDoc(doc(db('c1', owner), 'orgs/org1/designs/p3')));
+  });
+
+  it('only for a released set the person commissioned, with its exact fingerprint, on an existing property', async () => {
+    // someone else who owns the organization did not commission it
+    await assertFails(
+      setDoc(doc(db('x1', owner), 'orgs/org1/designs/p3'), link({ linkedBy: 'x1' })),
+    );
+    // a project still under review
+    await assertFails(
+      setDoc(
+        doc(db('c1', owner), 'orgs/org1/designs/p1'),
+        link({ projectId: 'p1', versionId: 'review' }),
+      ),
+    );
+    await assertFails(
+      setDoc(doc(db('c1', owner), 'orgs/org1/designs/p3'), link({ sha256: OTHER })),
+    );
+    await assertFails(
+      setDoc(doc(db('c1', owner), 'orgs/org1/designs/p3'), link({ propertyId: 'nope' })),
+    );
+    await assertFails(setDoc(doc(db('c1', tenant), 'orgs/org1/designs/p3'), link()));
+    await assertFails(setDoc(doc(db('c1', owner), 'orgs/org1/designs/p3'), link({ extra: 1 })));
   });
 });

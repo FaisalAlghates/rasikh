@@ -12,6 +12,7 @@ import { OfficeWorkspace } from '@/components/eng/OfficeWorkspace';
 import { BuildingsTab } from '@/components/building/BuildingsTab';
 import { MyBuildings } from '@/components/building/MyBuildings';
 import { TicketsTab, type TicketDoc } from '@/components/maint/TicketsTab';
+import type { DesignLinkDoc } from '@/components/eng/HandOffPanel';
 import { RecordTab } from '@/components/inspect/RecordTab';
 import { Breadcrumbs } from '@/components/shell/Breadcrumbs';
 import { Card } from '@/components/ui/Card';
@@ -98,6 +99,7 @@ export function Dashboard() {
   const properties = useOrgCollection<PropertyDoc>(orgId, 'properties', none, staff);
   const units = useOrgCollection<UnitDoc>(orgId, 'units', none, staff);
   const expenses = useOrgCollection<ExpenseDoc>(orgId, 'expenses', none, staff);
+  const designs = useOrgCollection<DesignLinkDoc>(orgId, 'designs', none, staff);
   const scope = useMemo(() => (staff ? [] : tenantScope(uid)), [staff, uid]);
   const leases = useOrgCollection<LeaseDoc>(orgId, 'leases', scope, !!session);
   const payments = useOrgCollection<PaymentDoc>(orgId, 'payments', scope, !!session);
@@ -463,6 +465,7 @@ export function Dashboard() {
                 leases={leases.rows}
                 inspections={inspections.rows}
                 expenses={expenses.rows}
+                designs={designs.rows}
               />
             ),
           },

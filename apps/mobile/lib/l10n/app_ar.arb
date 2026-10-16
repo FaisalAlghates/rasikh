@@ -437,6 +437,7 @@
   "inspEvLeaseEnded": "نهاية عقد",
   "inspEvMoveIn": "فحص استلام موثّق",
   "inspEvMoveOut": "فحص تسليم موثّق",
+  "inspEvDesign": "تصميم معتمد من مكتب هندسي",
   "inspEvExpense": "مصروف",
   "inspPendingUploads": "{count} صور بانتظار الرفع",
   "@inspPendingUploads": {

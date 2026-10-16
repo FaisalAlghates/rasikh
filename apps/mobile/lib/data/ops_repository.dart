@@ -17,6 +17,9 @@ abstract class OpsRepository {
   Stream<List<Doc<Payment>>> payments(String orgId, {String? tenantUid});
   Stream<List<Doc<Expense>>> expenses(String orgId);
 
+  /// Design sets linked to the organization's properties (shown in the Property Health Record).
+  Stream<List<Doc<DesignLink>>> designs(String orgId);
+
   Future<void> addProperty(String orgId, Property property);
   Future<void> addUnit(String orgId, RentalUnit unit);
 

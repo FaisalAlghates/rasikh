@@ -293,4 +293,29 @@ describe('property health record', () => {
     ]);
     expect(t[0]).toMatchObject({ kind: 'expense', detail: 'maintenance', amount: 450 });
   });
+
+  it('adds design sets released by an engineering office and linked to the property', () => {
+    const t = buildTimeline('p1', {
+      today: '2026-10-16',
+      leases: [],
+      inspections: [],
+      expenses: [{ id: 'e1', propertyId: 'p1', date: '2026-03-01', category: 'fees', amount: 10 }],
+      designs: [
+        {
+          id: 'd1',
+          propertyId: 'p1',
+          releasedOn: '2026-10-16',
+          title: 'فيلا النرجس',
+          officeName: 'مكتب الأفق',
+        },
+        { id: 'd2', propertyId: 'other', releasedOn: '2026-10-16', title: 'x', officeName: 'y' },
+      ],
+    });
+    expect(t.map((e) => e.key)).toEqual(['design-d1', 'expense-e1']);
+    expect(t[0]).toMatchObject({
+      kind: 'design_released',
+      refId: 'd1',
+      label: 'فيلا النرجس · مكتب الأفق',
+    });
+  });
 });

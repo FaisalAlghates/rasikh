@@ -326,7 +326,13 @@ double damageTotal(List<CompareRow> rows) {
 
 // ---------------------------------------------------------------- property health record
 
-enum HealthKind { leaseStarted, leaseEnded, inspectionSealed, expense }
+enum HealthKind {
+  leaseStarted,
+  leaseEnded,
+  inspectionSealed,
+  expense,
+  designReleased,
+}
 
 class HealthEvent {
   const HealthEvent({
@@ -337,11 +343,15 @@ class HealthEvent {
     this.unitLabel,
     this.detail,
     this.amount,
+    this.label,
   });
   final String key, date, refId;
   final HealthKind kind;
   final String? unitLabel, detail;
   final double? amount;
+
+  /// Text from the record itself, shown as is (a design's title and office).
+  final String? label;
 }
 
 class TimelineLease {
@@ -382,6 +392,18 @@ class TimelineExpense {
   final double amount;
 }
 
+/// A design set released by a licensed engineering office and linked to the property by its owner.
+class TimelineDesign {
+  const TimelineDesign(
+    this.id,
+    this.propertyId,
+    this.releasedOn,
+    this.title,
+    this.officeName,
+  );
+  final String id, propertyId, releasedOn, title, officeName;
+}
+
 /// One chronological story of a property, computed from the records each module already keeps. Newest first.
 List<HealthEvent> buildTimeline(
   String propertyId, {
@@ -389,6 +411,7 @@ List<HealthEvent> buildTimeline(
   required List<TimelineLease> leases,
   required List<TimelineInspection> inspections,
   required List<TimelineExpense> expenses,
+  List<TimelineDesign> designs = const [],
 }) {
   final out = <HealthEvent>[];
   for (final l in leases.where((x) => x.propertyId == propertyId)) {
@@ -441,6 +464,17 @@ List<HealthEvent> buildTimeline(
         refId: e.id,
         detail: e.category,
         amount: e.amount,
+      ),
+    );
+  }
+  for (final d in designs.where((x) => x.propertyId == propertyId)) {
+    out.add(
+      HealthEvent(
+        key: 'design-${d.id}',
+        date: d.releasedOn,
+        kind: HealthKind.designReleased,
+        refId: d.id,
+        label: '${d.title} · ${d.officeName}',
       ),
     );
   }

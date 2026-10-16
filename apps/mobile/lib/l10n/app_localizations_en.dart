@@ -1207,6 +1207,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inspEvMoveOut => 'Signed move-out inspection';
 
   @override
+  String get inspEvDesign => 'Design approved by an engineering office';
+
+  @override
   String get inspEvExpense => 'Expense';
 
   @override

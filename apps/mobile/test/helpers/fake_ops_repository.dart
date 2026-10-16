@@ -115,6 +115,12 @@ class FakeOpsRepository implements OpsRepository {
   Stream<List<Doc<Expense>>> expenses(String orgId) =>
       _live(() => List.of(_expenses));
 
+  final designsNow = <Doc<DesignLink>>[];
+
+  @override
+  Stream<List<Doc<DesignLink>>> designs(String orgId) =>
+      _live(() => List.of(designsNow));
+
   @override
   Future<void> addProperty(String orgId, Property property) async {
     _guard();

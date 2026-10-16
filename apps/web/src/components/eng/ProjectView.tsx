@@ -26,6 +26,7 @@ import { useCollectionAt } from '@/lib/ops/hooks';
 import { readClaims, useUser } from '@/lib/use-user';
 import { BriefPanel } from './BriefPanel';
 import { ConceptsPanel } from './ConceptsPanel';
+import { HandOffPanel } from './HandOffPanel';
 import { DisciplinesPanel } from './DisciplinesPanel';
 import { Model3D } from './Model3D';
 import { PlanEditor } from './PlanEditor';
@@ -281,10 +282,25 @@ export function ProjectView({ pid }: { pid: string }) {
             <span data-testid="project-status">{t(`status.${project.status}`)}</span>
           </p>
         </div>
-        <p className="rounded-full bg-warning/15 px-3 py-1 text-caption font-semibold text-warning">
-          {t('watermark')}
-        </p>
+        {project.status === 'released' ? (
+          <p className="rounded-full bg-success/15 px-3 py-1 text-caption font-semibold text-success">
+            {t('releasedBadge')}
+          </p>
+        ) : (
+          <p className="rounded-full bg-warning/15 px-3 py-1 text-caption font-semibold text-warning">
+            {t('watermark')}
+          </p>
+        )}
       </header>
+      {isClient && project.status === 'released' && released && (
+        <HandOffPanel
+          pid={pid}
+          project={project}
+          officeName={office?.name ?? ''}
+          version={released}
+          user={user}
+        />
+      )}
       <Tabs label={project.title} items={items} />
     </div>
   );
