@@ -187,6 +187,7 @@ export function ProjectView({ pid }: { pid: string }) {
               (a) => `${t(`discipline.${a.data.discipline}`)}: ${a.data.name} (${a.data.sceNo})`,
             )}
             roomLabel={roomLabel}
+            disciplines={project.required ?? requiredDisciplines(project.kind)}
           />
         ),
       },

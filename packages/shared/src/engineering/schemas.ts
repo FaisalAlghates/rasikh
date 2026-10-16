@@ -151,7 +151,7 @@ export const ProgramSchema = z.object({
   bathrooms: z.number().int().min(1).max(20).optional(),
   /** Built-up area the client has in mind (m², all floors). */
   targetAreaM2: z.number().min(40).max(20000).optional(),
-  style: z.enum(STYLES).default('modern_najdi'),
+  style: z.enum(STYLES).default('contemporary'),
   /** The building type from the catalogue (palace, hotel, mosque, warehouse ...); the engine family follows it. */
   buildingType: z.string().max(40).optional(),
   /** Market and condition labels (for sale, off plan, heritage, furnished ...). */

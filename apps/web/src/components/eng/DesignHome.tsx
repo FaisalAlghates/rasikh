@@ -459,7 +459,7 @@ export function DesignHome() {
                   <label className="flex flex-col gap-1 text-small">
                     {t('styleLabel')}
                     <select
-                      value={program.style ?? 'modern_najdi'}
+                      value={program.style ?? 'contemporary'}
                       onChange={(e) =>
                         setProgram({ ...program, style: e.target.value as Program['style'] })
                       }

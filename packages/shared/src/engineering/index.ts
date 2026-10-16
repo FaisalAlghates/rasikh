@@ -17,3 +17,7 @@ export * from './renovation.js';
 export * from './sun.js';
 export * from './precedents.js';
 export * from './workflow.js';
+export * from './envelope.js';
+export * from './mep.js';
+export * from './sheetset.js';
+export * from './structcalc.js';

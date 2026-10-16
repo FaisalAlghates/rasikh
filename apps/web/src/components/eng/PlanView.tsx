@@ -10,7 +10,7 @@ import {
   type StructuralScheme,
 } from '@rasikh/shared';
 import { useTranslations } from 'next-intl';
-import { useMemo, type KeyboardEvent } from 'react';
+import { useMemo, type KeyboardEvent, type ReactNode } from 'react';
 
 /** Fill per room family (the Najd Dusk palette, quiet). */
 const FILL: Record<string, string> = {
@@ -79,6 +79,10 @@ export interface PlanViewProps {
   title: string;
   streetLabel?: string;
   compact?: boolean;
+  /** Extra drawing on top of the plan (symbols of another discipline), given the plot-to-sheet y mapping. */
+  overlay?: (Y: (y: number) => number) => ReactNode;
+  /** Draw the architecture lightly, so another discipline's symbols read first. */
+  mute?: boolean;
 }
 
 /**
@@ -200,8 +204,8 @@ export function PlanView(p: PlanViewProps) {
               y={Y(r.y + r.h)}
               width={r.w}
               height={r.h}
-              fill={r.state === 'demolish' ? '#f6e3e0' : FILL[family(r.type)]}
-              stroke={state ?? (sel ? '#B5532C' : bad ? '#A63D32' : '#1A1815')}
+              fill={r.state === 'demolish' ? '#f6e3e0' : p.mute ? '#faf7f0' : FILL[family(r.type)]}
+              stroke={state ?? (sel ? '#B5532C' : bad ? '#A63D32' : p.mute ? '#6A6358' : '#1A1815')}
               strokeWidth={sel || bad ? 0.14 : 0.1}
               strokeDasharray={r.state === 'demolish' ? '0.3 0.15' : undefined}
             />
@@ -316,14 +320,22 @@ export function PlanView(p: PlanViewProps) {
                 strokeWidth={0.03}
                 strokeDasharray="0.4 0.2"
               />
+              <circle
+                cx={x}
+                cy={Y(fp.y + fp.h) - 0.95}
+                r={0.42}
+                fill="#fffdf9"
+                stroke="#B5532C"
+                strokeWidth={0.04}
+              />
               <text
                 x={x}
                 y={Y(fp.y + fp.h) - 0.8}
-                fontSize={0.4}
+                fontSize={0.36}
                 textAnchor="middle"
                 fill="#B5532C"
               >
-                {i + 1}
+                {String(i + 1).padStart(2, '0')}
               </text>
             </g>
           ))}
@@ -338,10 +350,18 @@ export function PlanView(p: PlanViewProps) {
                 strokeWidth={0.03}
                 strokeDasharray="0.4 0.2"
               />
+              <circle
+                cx={fp.x - 0.95}
+                cy={Y(y)}
+                r={0.42}
+                fill="#fffdf9"
+                stroke="#B5532C"
+                strokeWidth={0.04}
+              />
               <text
-                x={fp.x - 0.9}
-                y={Y(y) + 0.15}
-                fontSize={0.4}
+                x={fp.x - 0.95}
+                y={Y(y) + 0.13}
+                fontSize={0.36}
                 textAnchor="middle"
                 fill="#B5532C"
               >
@@ -361,6 +381,7 @@ export function PlanView(p: PlanViewProps) {
           ))}
         </g>
       )}
+      {p.overlay?.(Y)}
       {p.clashes
         ?.filter((c) => c.floor === floor)
         .map((c, i) => (

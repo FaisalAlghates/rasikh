@@ -782,12 +782,11 @@ html[dir='rtl'] .drawer[data-state='open'] {
   .eng-sheet {
     break-after: page;
     break-inside: avoid;
-    border: 0;
   }
-  /* one sheet per A3 page: the drawing is scaled to fit the page height under the title block */
+  /* one sheet per A3 page: a framed page, the drawing scaled to fit beside the title block */
   .eng-sheet {
-    max-height: 272mm;
-    overflow: hidden;
+    border: 1.5pt solid #1a1815;
+    border-radius: 0;
   }
   .eng-sheet svg {
     max-height: 232mm;

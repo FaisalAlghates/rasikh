@@ -45,23 +45,55 @@ test('video: design, drawings and printing', async ({ browser, request }) => {
   await profile.getByLabel('المكتب مفعّل في بلدي').check();
   await profile.getByLabel('معماري').check();
   await profile.getByLabel('إنشائي').check();
+  await profile.getByLabel('ميكانيكي').check();
+  await profile.getByLabel('كهربائي').check();
   await profile.getByLabel('المدن التي يخدمها (افصل بفاصلة)').fill('الرياض، الخرج');
   await profile.getByLabel('يستقبل طلبات العملاء').check();
   await profile.getByRole('button', { name: 'احفظ' }).click();
   await expect(profile).toContainText('حُفظ');
   await engineerProfile(lead.page, 'م. فيصل', '445566', 'architectural');
 
-  const strEmail = `dv-str-${stamp}@rasikh.test`;
-  const str = await plain(browser);
-  await signUpEmail(str.page, strEmail);
-  await expect(str.page).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
-  await verifyEmail(request, strEmail);
-  await lead.page.getByLabel('بريد المهندس').fill(strEmail);
-  await lead.page.getByRole('button', { name: 'أضف', exact: true }).click();
-  await expect(lead.page.getByText('أُضيف المهندس.')).toBeVisible({ timeout: 20_000 });
-  await str.page.goto('/ar/workspace');
-  await expect(str.page.getByTestId('office-workspace')).toBeVisible({ timeout: 45_000 });
-  await engineerProfile(str.page, 'م. سارة', '778899', 'structural');
+  const engineers = [
+    {
+      key: 'str',
+      name: 'م. سارة',
+      sce: '778899',
+      discipline: 'structural',
+      approve: 'إنشائي',
+      id: 'structural',
+    },
+    {
+      key: 'mec',
+      name: 'م. خالد',
+      sce: '112233',
+      discipline: 'mechanical',
+      approve: 'ميكانيكي',
+      id: 'mechanical',
+    },
+    {
+      key: 'ele',
+      name: 'م. ريم',
+      sce: '334455',
+      discipline: 'electrical',
+      approve: 'كهربائي',
+      id: 'electrical',
+    },
+  ] as const;
+  const people = [];
+  for (const e of engineers) {
+    const email = `dv-${e.key}-${stamp}@rasikh.test`;
+    const person = await plain(browser);
+    await signUpEmail(person.page, email);
+    await expect(person.page).toHaveURL(/\/ar\/onboarding/, { timeout: 45_000 });
+    await verifyEmail(request, email);
+    await lead.page.getByLabel('بريد المهندس').fill(email);
+    await lead.page.getByRole('button', { name: 'أضف', exact: true }).click();
+    await expect(lead.page.getByText('أُضيف المهندس.')).toBeVisible({ timeout: 20_000 });
+    await person.page.goto('/ar/workspace');
+    await expect(person.page.getByTestId('office-workspace')).toBeVisible({ timeout: 45_000 });
+    await engineerProfile(person.page, e.name, e.sce, e.discipline);
+    people.push({ ...e, ...person });
+  }
 
   const team = await plain(browser);
   const teamEmail = `dv-team-${stamp}@rasikh.test`;
@@ -71,7 +103,7 @@ test('video: design, drawings and printing', async ({ browser, request }) => {
   await team.page.goto('/ar/admin');
   await team.page.getByRole('tab', { name: 'التحقق من المكاتب' }).click();
   const row = team.page.getByTestId('verify-office').filter({ hasText: officeName });
-  await expect(row.getByText('م. سارة')).toBeVisible({ timeout: 30_000 });
+  await expect(row.getByText('م. ريم')).toBeVisible({ timeout: 30_000 });
   while ((await row.getByRole('button', { name: 'وثّق' }).count()) > 0) {
     await row.getByRole('button', { name: 'وثّق' }).first().click();
     await team.page.waitForTimeout(500);
@@ -105,8 +137,6 @@ test('video: design, drawings and printing', async ({ browser, request }) => {
   const z = lead.page.getByTestId('zoning-form');
   await z.getByTestId('regulations').getByRole('button', { name: 'طبّق على القطعة' }).click();
   await z.getByLabel(/أقصى ارتفاع/).fill('14');
-  await z.getByLabel('ميكانيكي').uncheck();
-  await z.getByLabel('كهربائي').uncheck();
   await z.getByRole('button', { name: 'اقبل الطلب' }).click();
   await expect(lead.page.getByTestId('project-status')).toHaveText('مقبول', { timeout: 20_000 });
   await lead.page.getByRole('tab', { name: 'الخيارات' }).click();
@@ -175,6 +205,13 @@ test('video: design, drawings and printing', async ({ browser, request }) => {
     ['sections', 'القطاعات'],
     ['schedules', 'جداول الأبواب والنوافذ'],
     ['areas', 'وجدول المساحات'],
+    ['thermal', 'لوحة العزل الحراري: طبقات الجدار والسطح وقيمة U لكل منها'],
+    ['st-grid', 'المخططات الإنشائية: المحاور والأعمدة عند الأساسات'],
+    ['st-slab', 'ومخطط البلاطات والجسور'],
+    ['st-calc', 'وملخص الحسابات الإنشائية المبدئية'],
+    ['el-0', 'مخططات الكهرباء: نقاط الإنارة والمآخذ ولوحات التوزيع'],
+    ['me-0', 'مخططات الميكانيك: وحدات التكييف بالطن وأعمدة الصرف'],
+    ['fs-0', 'مخططات السلامة: كواشف الدخان والإنذار والطفايات ولوحات المخارج'],
   ] as const) {
     await p.getByTestId(`sheet-${id}`).scrollIntoViewIfNeeded();
     await say(p, text, 2800);
@@ -217,13 +254,19 @@ test('video: design, drawings and printing', async ({ browser, request }) => {
   await expect(p.getByTestId('approval-architectural')).toContainText('اعتمده م. فيصل', {
     timeout: 20_000,
   });
-  await str.page.goto(projectUrl);
-  await str.page.getByRole('tab', { name: 'الاعتماد والإصدار' }).click();
-  await str.page.getByRole('button', { name: 'اعتمد تخصص إنشائي' }).click();
-  await expect(str.page.getByTestId('approval-structural')).toContainText('اعتمده م. سارة', {
-    timeout: 20_000,
-  });
-  await say(p, 'ثم يعتمد المهندس الإنشائي تخصصه، ولا يصدر المكتب قبل اكتمال الاعتماد', 3000);
+  for (const e of people) {
+    await e.page.goto(projectUrl);
+    await e.page.getByRole('tab', { name: 'الاعتماد والإصدار' }).click();
+    await e.page.getByRole('button', { name: `اعتمد تخصص ${e.approve}` }).click();
+    await expect(e.page.getByTestId(`approval-${e.id}`)).toContainText(`اعتمده ${e.name}`, {
+      timeout: 20_000,
+    });
+  }
+  await say(
+    p,
+    'ثم يعتمد مهندسو الإنشاء والميكانيك والكهرباء تخصصاتهم، ولا يصدر المكتب قبل اكتمال الاعتماد',
+    3000,
+  );
   await p.getByRole('button', { name: 'أصدر المجموعة النهائية' }).click();
   await expect(p.getByTestId('released')).toBeVisible({ timeout: 20_000 });
   await say(p, 'صدرت المجموعة: تزول العلامة المائية ويظهر سجل الاعتماد على اللوحات', 3600);
@@ -233,5 +276,10 @@ test('video: design, drawings and printing', async ({ browser, request }) => {
   await say(p, 'وهذه النسخة هي التي تُطبع وتُسلَّم، وتنتقل إلى سجل العقار', 3600);
 
   await finish('drawings', ctx, p);
-  await Promise.all([lead.ctx.close(), str.ctx.close(), team.ctx.close(), client.ctx.close()]);
+  await Promise.all([
+    lead.ctx.close(),
+    ...people.map((e) => e.ctx.close()),
+    team.ctx.close(),
+    client.ctx.close(),
+  ]);
 });
