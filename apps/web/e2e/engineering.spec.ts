@@ -97,7 +97,7 @@ test('engineering office: brief → options → client picks → development →
   await form
     .getByLabel('صف ما تريد')
     .fill(
-      'فيلا دورين على أرض ٢٢×٣٢، ٤ غرف نوم و٤ دورات مياه، مجلس رجال ومجلس نساء، غرفة خادمة، مصلى، طراز نجدي، الميزانية ١٫٥ مليون',
+      'فيلا دورين على أرض ٢٢×٣٢، ٤ غرف نوم و٤ دورات مياه، مجلس رجال ومجلس نساء، غرفة خادمة، مصلى، مسبح ومدخل ضيوف مستقل، طراز نجدي، الميزانية ١٫٥ مليون',
     );
   await form.getByRole('button', { name: 'اقرأ الوصف' }).click();
   await expect(form.getByTestId('program')).toBeVisible();
@@ -140,6 +140,11 @@ test('engineering office: brief → options → client picks → development →
   const optionA = lead.page.getByTestId('concept-A');
   await expect(optionA.getByTestId('fit-notes')).toContainText('يحتوي كل ما في الوصف');
   await expect(optionA.getByTestId('fit-notes')).toContainText('مصلى');
+  // the site: the pool, two parking bays and the guest entrance are drawn and explained
+  await expect(optionA.getByTestId('fit-notes')).toContainText('مدخل ضيوف مستقل');
+  await expect(optionA.getByTestId('fit-notes')).toContainText('موقفان');
+  await expect(optionA.locator('[data-site="pool"]')).toHaveCount(1);
+  await expect(optionA.locator('[data-site="parking"]')).toHaveCount(2);
   await expect(optionA.getByTestId('option-checks')).toContainText(
     'الاشتراطات البلدية: 6 من 6 مطابقة',
   );
@@ -150,6 +155,7 @@ test('engineering office: brief → options → client picks → development →
   await optionA.locator('summary').click();
   await expect(optionA.getByTestId('boq-table')).toContainText('حديد التسليح');
   await expect(optionA.getByTestId('boq-table')).toContainText('العزل الحراري');
+  await expect(optionA.getByTestId('boq-table')).toContainText('المسبح');
   await optionA.scrollIntoViewIfNeeded();
   await shot(lead.page, 'concept-boq');
   await lead.page.getByRole('button', { name: 'شارك الخيارات مع العميل' }).click();

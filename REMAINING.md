@@ -20,7 +20,7 @@ Last updated: 2026-10-16. References: `PLAN.md` (phases and gaps), `CLAUDE.md` (
 
 ## 2. Phase 9 — AI engineering office (built on the free stack; paid parts pending)
 
-Built 2026-10-16: offices and engineers with verification, briefs, options, rule engine, plan editor, 3D, drawings and exports, disciplines, approvals and release, renovation, precedents (details in `docs/ENGINEERING_OFFICE.md`, "Implementation status"). The assistant designs 6–12 different options per brief, each holding every requested room and passing every zoning and automatic code check, each with its own bill of quantities. Code rules read "passed" only after an office engineer enters their values from the licensed code. Still needs your decisions:
+Built 2026-10-16: offices and engineers with verification, briefs, options, rule engine, plan editor, 3D, drawings and exports, disciplines, approvals and release, renovation, precedents (details in `docs/ENGINEERING_OFFICE.md`, "Implementation status"). The assistant designs 6–12 different options per brief, each holding every requested room (and the parking, pool and guest entrance on the site) and passing every zoning and automatic code check, each with its own bill of quantities. A basement and a roof annex are still added during design development. Code rules read "passed" only after an office engineer enters their values from the licensed code. Still needs your decisions:
 
 - Stack additions: Cloud Run, Cloud Tasks, Python services (ezdxf, IfcOpenShell), three.js, a glTF viewer in Flutter.
 - Licenses: Saudi Building Code text, a 3D furniture library, a precedent library.

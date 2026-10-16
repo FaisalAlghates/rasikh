@@ -1,5 +1,6 @@
 import { area } from './layout.js';
 import { openingsOf, openingWidth } from './openings.js';
+import { walkways } from './site.js';
 import { WET, type DesignPlan, type PlanRoom, type RoomType } from './schemas.js';
 
 /**
@@ -268,6 +269,8 @@ export interface Rates {
   doorEach: [number, number];
   windowPerM2: [number, number];
   mepPerM2: [number, number];
+  pavingPerM2: [number, number];
+  poolPerM2: [number, number];
 }
 export const DEFAULT_RATES: Rates = {
   excavationPerM3: [25, 45],
@@ -284,6 +287,8 @@ export const DEFAULT_RATES: Rates = {
   doorEach: [900, 2500],
   windowPerM2: [450, 1100],
   mepPerM2: [250, 450],
+  pavingPerM2: [60, 140],
+  poolPerM2: [2500, 5000],
 };
 
 /** Rebar per m³ of concrete by element (kg): rule-of-thumb starting values for the structural engineer. */
@@ -297,6 +302,7 @@ export const BOQ_SECTIONS = [
   'finishes',
   'openings',
   'mep',
+  'external',
 ] as const;
 export type BoqSection = (typeof BOQ_SECTIONS)[number];
 
@@ -317,7 +323,9 @@ export type BoqItem =
   | 'facade'
   | 'doors'
   | 'windows'
-  | 'mep';
+  | 'mep'
+  | 'paving'
+  | 'pool';
 
 export interface BoqLine {
   /** Item number in the bill (1.1, 2.3 ...). */
@@ -416,6 +424,14 @@ export function boq(
     q('6.2', 'openings', 'windows', 'windowPerM2', winArea, 'm2'),
     q('7.1', 'mep', 'mep', 'mepPerM2', floorArea, 'm2'),
   ];
+  // external works, when the site has them: paved parking bays and walkways, and the pool (per m² of water)
+  const site = plan.site ?? [];
+  const paving =
+    site.filter((s) => s.type === 'parking').reduce((t, s) => t + area(s), 0) +
+    walkways(plan).reduce((t, w) => t + area(w), 0);
+  const pool = site.filter((s) => s.type === 'pool').reduce((t, s) => t + area(s), 0);
+  if (paving > 0) lines.push(q('8.1', 'external', 'paving', 'pavingPerM2', paving, 'm2'));
+  if (pool > 0) lines.push(q('8.2', 'external', 'pool', 'poolPerM2', pool, 'm2'));
   const min = lines.reduce((s, l) => s + l.min, 0);
   const max = lines.reduce((s, l) => s + l.max, 0);
   return {

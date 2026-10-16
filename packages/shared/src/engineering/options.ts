@@ -11,6 +11,7 @@ import {
 } from './layout.js';
 import { doorTarget } from './openings.js';
 import { runRules, type RuleOverrides, type RuleResult } from './rules.js';
+import { siteShortfall, yards } from './site.js';
 import type { DesignPlan, PlanRoom, Plot, Program, RoomType, Zoning } from './schemas.js';
 
 /**
@@ -36,6 +37,8 @@ const PLACEMENTS: Array<Pick<Variant, 'widthShare' | 'align'>> = [
   { widthShare: 1, align: 'center' },
   { widthShare: 0.86, align: 'left' },
   { widthShare: 0.86, align: 'right' },
+  // passages on both sides (room for tandem parking down each)
+  { widthShare: 0.8, align: 'center' },
 ];
 
 /** Every variant worth trying for a programme (knobs that cannot change this programme are left out). */
@@ -146,7 +149,7 @@ export function accessIssues(plan: DesignPlan): string[] {
 
 export interface OptionCheck {
   ok: boolean;
-  /** Rule ids that failed (or would fail), plus PROGRAM / ACCESS / CLASH. */
+  /** Rule ids that failed (or would fail), plus PROGRAM / ACCESS / CLASH / SITE. */
   failing: string[];
   missing: ReturnType<typeof missingRooms>;
   access: string[];
@@ -168,6 +171,8 @@ export function checkOption(
   const access = accessIssues(plan);
   if (access.length) failing.push('ACCESS');
   if (detectClashes(plan, structuralScheme(plan)).length) failing.push('CLASH');
+  const site = siteShortfall(plan, ctx.program);
+  if (site.parking > 0 || site.pool || site.guestEntry) failing.push('SITE');
   return { ok: failing.length === 0, failing, missing, access, results };
 }
 
@@ -195,8 +200,16 @@ export function optionTraits(plan: DesignPlan) {
     const c = plan.rooms.find((o) => o.type === 'corridor' && o.floor === r?.floor) ?? corridor;
     return !r || !c ? 'none' : r.y + r.h / 2 < c.y ? 'front' : 'back';
   };
+  const leftGap = fp.x - env.x;
+  const rightGap = env.x + env.w - (fp.x + fp.w);
   const passage =
-    fp.w >= env.w - 0.05 ? 'none' : fp.x - env.x > env.x + env.w - (fp.x + fp.w) ? 'left' : 'right';
+    fp.w >= env.w - 0.05
+      ? 'none'
+      : Math.abs(leftGap - rightGap) < 0.1
+        ? 'both'
+        : leftGap > rightGap
+          ? 'left'
+          : 'right';
   const frontYard = fp.y;
   const backYard = plan.plot.depth - (fp.y + fp.h);
   const coreSide = stair ? third(centreX(stair), fp) : 'none';
@@ -264,7 +277,7 @@ export interface OptionSearch {
   tried: number;
   distinct: number;
   compliant: number;
-  /** Why candidates were dropped, most frequent first (rule ids, PROGRAM, ACCESS, CLASH). */
+  /** Why candidates were dropped, most frequent first (rule ids, PROGRAM, ACCESS, CLASH, SITE). */
   blocking: Array<{ id: string; count: number }>;
   /** The zoning allows fewer floors than the brief asks for (the rooms were spread over the allowed floors). */
   floorsReduced: boolean;
@@ -349,7 +362,18 @@ export function optionLabel(i: number): string {
 
 export interface FitNote {
   key:
-    'program' | 'core' | 'entry' | 'yard' | 'passage' | 'dining' | 'master' | 'area' | 'plumbing';
+    | 'program'
+    | 'core'
+    | 'entry'
+    | 'guestEntry'
+    | 'yard'
+    | 'passage'
+    | 'dining'
+    | 'master'
+    | 'parking'
+    | 'pool'
+    | 'area'
+    | 'plumbing';
   values: Record<string, string | number>;
 }
 
@@ -363,9 +387,7 @@ export function programCounts(program: Program, floors = program.floors) {
 
 /** What the brief asks for that concept plans do not draw yet (added during design development). */
 export function deferredItems(program: Program) {
-  return (['pool', 'basement', 'roofAnnex', 'separateGuestEntry'] as const).filter(
-    (k) => program[k],
-  );
+  return (['basement', 'roofAnnex'] as const).filter((k) => program[k]);
 }
 
 /** Why an option fits the brief, as translatable notes. Deterministic; a model may only reword them. */
@@ -397,6 +419,32 @@ export function explainOption(plan: DesignPlan, program: Program, plot: Plot, zo
       envelope: Math.round(area(env)),
     },
   });
+  if (plan.guestEntry) notes.push({ key: 'guestEntry', values: {} });
+  const site = plan.site ?? [];
+  const bays = site.filter((s) => s.type === 'parking');
+  if (bays.length) {
+    const ys = yards(plan);
+    const inFront = bays.filter((b) => b.y + b.h <= ys.front.h + 0.01);
+    notes.push({
+      key: 'parking',
+      values: {
+        n: bays.length,
+        where: inFront.length === bays.length ? 'front' : inFront.length ? 'front_side' : 'side',
+        // bays across the street line are perpendicular (2.5 m wide), along it parallel
+        layout: inFront.length && inFront[0]!.w < inFront[0]!.h ? 'perpendicular' : 'parallel',
+      },
+    });
+  }
+  const pool = site.find((s) => s.type === 'pool');
+  if (pool) {
+    const ys = yards(plan);
+    const where =
+      pool.y >= ys.back.y - 0.01 ? 'back' : pool.y + pool.h <= ys.front.h + 0.01 ? 'front' : 'side';
+    notes.push({
+      key: 'pool',
+      values: { where, size: `${Math.max(pool.w, pool.h)}×${Math.min(pool.w, pool.h)}` },
+    });
+  }
   if (plan.floors > 1) {
     const wet = plan.rooms.filter(
       (r) => r.floor > 0 && (r.type === 'bathroom' || r.type === 'guest_wc'),

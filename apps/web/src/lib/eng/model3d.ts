@@ -22,6 +22,8 @@ const COLORS = {
   glass: 0x8fb3cf,
   furniture: 0xb89b7d,
   ground: 0xe2d6c2,
+  water: 0x6fa8c2,
+  paving: 0xcfc6b8,
 };
 
 type Seg = { a: number; b: number };
@@ -138,6 +140,25 @@ export function buildModel(plan: DesignPlan, opts: BuildOptions): THREE.Group {
     g.add(mesh);
     return mesh;
   };
+
+  // the site: water in the pool with its coping, and paved parking bays
+  for (const s of plan.site ?? []) {
+    const cx = s.x + s.w / 2;
+    const cz = -(s.y + s.h / 2);
+    if (s.type === 'pool') {
+      box(s.w + 0.6, 0.06, s.h + 0.6, mat(0xe9e1d3), cx, 0.03, cz, 'pool-coping');
+      box(
+        s.w,
+        0.07,
+        s.h,
+        mat(COLORS.water, { roughness: 0.1, metalness: 0.1 }),
+        cx,
+        0.04,
+        cz,
+        'pool',
+      );
+    } else box(s.w - 0.1, 0.03, s.h - 0.1, mat(COLORS.paving), cx, 0.015, cz, 'parking');
+  }
 
   const shown = Math.max(1, Math.min(plan.floors, opts.floorsShown));
   for (let f = 0; f < shown; f++) {

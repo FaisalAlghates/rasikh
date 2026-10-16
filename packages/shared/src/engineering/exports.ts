@@ -37,7 +37,7 @@ const dxfText = (s: string) =>
 export function toDxf(plan: DesignPlan, label: (r: PlanRoom) => string = (r) => r.type): string {
   const out: string[] = [];
   const pair = (code: number, value: string | number) => out.push(String(code), String(value));
-  const layers = ['A-WALL', 'A-ROOM', 'A-DOOR', 'A-GLAZ', 'A-ANNO', 'A-PLOT'];
+  const layers = ['A-WALL', 'A-ROOM', 'A-DOOR', 'A-GLAZ', 'A-ANNO', 'A-PLOT', 'A-SITE'];
   pair(0, 'SECTION');
   pair(2, 'HEADER');
   pair(9, '$ACADVER');
@@ -101,6 +101,16 @@ export function toDxf(plan: DesignPlan, label: (r: PlanRoom) => string = (r) => 
       text('A-ROOM', X(f, r.x + 0.3), Y(r.y + r.h / 2), 0.3, label(r));
       text('A-ANNO', X(f, r.x + 0.3), Y(r.y + r.h / 2) - 0.45, 0.22, `${area(r).toFixed(1)} m2`);
     }
+    // parking bays and the pool, in the yards of the ground floor
+    if (f === 0)
+      for (const s of plan.site ?? []) {
+        const [x1, y1, x2, y2] = [X(0, s.x), Y(s.y), X(0, s.x + s.w), Y(s.y + s.h)];
+        line('A-SITE', x1, y1, x2, y1);
+        line('A-SITE', x2, y1, x2, y2);
+        line('A-SITE', x2, y2, x1, y2);
+        line('A-SITE', x1, y2, x1, y1);
+        text('A-SITE', X(0, s.x + 0.2), Y(s.y + s.h / 2), 0.3, s.type.toUpperCase());
+      }
     for (const o of ops.filter((o) => o.floor === f))
       line(o.kind === 'window' ? 'A-GLAZ' : 'A-DOOR', X(f, o.x1), Y(o.y1), X(f, o.x2), Y(o.y2));
   }

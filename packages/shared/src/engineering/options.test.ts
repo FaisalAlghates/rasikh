@@ -15,7 +15,10 @@ import {
   explainOption,
   missingRooms,
   optionDistance,
+  openingsOf,
   optionLabel,
+  POOL_CLEAR,
+  siteShortfall,
   parseBrief,
   parsePlotSize,
   programCounts,
@@ -48,6 +51,10 @@ const plot = (w: number, d: number): Plot => ({
 });
 const program = (over: Partial<Program>): Program =>
   confirmProgram({ type: 'villa', floors: 2, bedrooms: 4, ...over }).data!;
+
+const overlapArea = (a: { x: number; y: number; w: number; h: number }, b: typeof a) =>
+  Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) - 0.01) *
+  Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y) - 0.01);
 
 function overlaps(plan: DesignPlan) {
   for (const a of plan.rooms)
@@ -131,6 +138,9 @@ describe('option search: more than five different designs, each matching the bri
         storage: true,
         prepKitchen: true,
         elevator: true,
+        pool: true,
+        separateGuestEntry: true,
+        parking: 3,
       }),
     ],
     [
@@ -180,6 +190,22 @@ describe('option search: more than five different designs, each matching the bri
         }
         expect(accessIssues(plan)).toEqual([]);
         expect(overlaps(plan)).toBeNull();
+        // the parking bays (and the pool, when asked for) are on the site, in the yards
+        expect(siteShortfall(plan, pr)).toEqual({ parking: 0, pool: false, guestEntry: false });
+        for (const s of plan.site ?? []) {
+          expect(s.x).toBeGreaterThanOrEqual(-0.01);
+          expect(s.y).toBeGreaterThanOrEqual(-0.01);
+          expect(s.x + s.w).toBeLessThanOrEqual(pl.width + 0.01);
+          expect(s.y + s.h).toBeLessThanOrEqual(pl.depth + 0.01);
+          expect(overlapArea(s, plan.footprint)).toBe(0);
+          for (const o of plan.site ?? []) if (o !== s) expect(overlapArea(s, o)).toBe(0);
+        }
+        // a bay down a side passage keeps its driveway through the front yard clear
+        const bays = (plan.site ?? []).filter((s) => s.type === 'parking');
+        const fpY = plan.footprint.y;
+        for (const t of bays.filter((b) => b.y >= fpY - 0.01))
+          for (const b of bays.filter((x) => x.y < fpY - 0.01))
+            expect(overlapArea({ x: t.x, y: 0, w: t.w, h: fpY }, b)).toBe(0);
         const f = plan.footprint;
         expect(f.x).toBeGreaterThanOrEqual(env.x - 0.01);
         expect(f.y).toBeGreaterThanOrEqual(env.y - 0.01);
@@ -229,10 +255,31 @@ describe('option search: more than five different designs, each matching the bri
         expect(optionDistance(m, o)).toBeGreaterThanOrEqual(MIN_DIFFERENCE);
   });
 
+  it('draws the pool clear of the building and a guest entrance into the men majlis', () => {
+    const pr = program({ pool: true, separateGuestEntry: true });
+    const r = searchOptions(plot(22, 32), zoning(), pr);
+    expect(r.options.length).toBeGreaterThanOrEqual(6);
+    for (const plan of r.options) {
+      const pool = plan.site!.find((s) => s.type === 'pool')!;
+      const fp = plan.footprint;
+      const gapX = Math.max(fp.x - (pool.x + pool.w), pool.x - (fp.x + fp.w));
+      const gapY = Math.max(fp.y - (pool.y + pool.h), pool.y - (fp.y + fp.h));
+      expect(Math.max(gapX, gapY)).toBeGreaterThanOrEqual(POOL_CLEAR - 0.01);
+      const majlis = plan.rooms.find((x) => x.type === 'majlis_men' && x.floor === 0)!;
+      expect(openingsOf(plan).some((o) => o.kind === 'entry' && o.roomId === majlis.id)).toBe(true);
+      const notes = explainOption(plan, pr, plot(22, 32), zoning()).map((n) => n.key);
+      expect(notes).toEqual(expect.arrayContaining(['parking', 'pool', 'guestEntry']));
+    }
+  });
+
   it('says why nothing passes instead of offering a non-compliant design', () => {
     const r = searchOptions(plot(20, 30), zoning({ parkingPerUnit: 2 }), program({ parking: 1 }));
     expect(r.options).toEqual([]);
     expect(r.blocking[0]!.id).toBe('Z-PARKING');
+    // twelve cars do not fit in the yards of a 15 × 25 plot
+    const crowded = searchOptions(plot(15, 25), zoning(), program({ parking: 12 }));
+    expect(crowded.options).toEqual([]);
+    expect(crowded.blocking.map((b) => b.id)).toContain('SITE');
     expect(
       searchOptions(plot(20, 30), zoning({ maxFloors: 2 }), program({ floors: 3 })).floorsReduced,
     ).toBe(true);
@@ -246,7 +293,9 @@ describe('option search: more than five different designs, each matching the bri
       expect.arrayContaining(['program', 'core', 'entry', 'yard', 'area']),
     );
     expect(programCounts(pr).find((c) => c.type === 'majlis_women')?.n).toBe(1);
-    expect(deferredItems(pr)).toEqual(['pool']);
+    expect(deferredItems({ ...pr, basement: true })).toEqual(['basement']);
+    // the pool is drawn now, so it is not deferred
+    expect(deferredItems(pr)).toEqual([]);
     expect([0, 1, 25, 26, 27].map(optionLabel)).toEqual(['A', 'B', 'Z', 'AA', 'AB']);
   });
 });
@@ -294,8 +343,14 @@ describe('bill of quantities for every option', () => {
 
   it('itemises earthworks, concrete by element, rebar, masonry, insulation, finishes, openings and MEP', () => {
     const b = boq(plan);
-    expect(b.lines).toHaveLength(17);
+    // 17 building items, plus paving for the two parking bays (no pool asked for)
+    expect(b.lines).toHaveLength(18);
     expect(new Set(b.lines.map((l) => l.section))).toEqual(new Set(BOQ_SECTIONS));
+    expect(b.lines.find((l) => l.item === 'pool')).toBeUndefined();
+    const withPool = searchOptions(plot(22, 32), zoning(), program({ pool: true })).options[0]!;
+    const pool = boq(withPool).lines.find((l) => l.item === 'pool')!;
+    expect(pool.no).toBe('8.2');
+    expect(pool.qty).toBeGreaterThanOrEqual(18);
     for (const l of b.lines) {
       expect(l.qty).toBeGreaterThan(0);
       expect(l.max).toBeGreaterThanOrEqual(l.min);
