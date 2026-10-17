@@ -85,7 +85,10 @@ export function MapView(props: MapViewProps) {
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapboxMap | null>(null);
   const markers = useRef(new Map<string, { marker: Marker; el: HTMLButtonElement }>());
-  const houses = useRef<{ setProperties(list: MapProperty[]): void } | null>(null);
+  const houses = useRef<{
+    setProperties(list: MapProperty[]): void;
+    align(roadLayer: string): void;
+  } | null>(null);
   const propsRef = useRef(properties);
   propsRef.current = properties;
   const [mode, setMode] = useState<'loading' | 'map' | 'flat'>('loading');
@@ -241,6 +244,35 @@ export function MapView(props: MapViewProps) {
             'circle-stroke-width': 2,
           },
         });
+        // invisible street lines: the houses read them to face the nearest street
+        map.addSource('street-lines', { type: 'vector', url: 'mapbox://mapbox.mapbox-streets-v8' });
+        map.addLayer({
+          id: 'street-probe',
+          type: 'line',
+          source: 'street-lines',
+          'source-layer': 'road',
+          minzoom: 14,
+          filter: [
+            'in',
+            ['get', 'class'],
+            [
+              'literal',
+              [
+                'motorway',
+                'trunk',
+                'primary',
+                'secondary',
+                'tertiary',
+                'street',
+                'service',
+                'residential',
+              ],
+            ],
+          ],
+          paint: { 'line-opacity': 0.01, 'line-width': 2 },
+          slot: 'middle',
+        } as never);
+        map.on('idle', () => houses.current?.align('street-probe'));
         // the real buildings: each property's design (or a plausible building) stands on its pin
         void Promise.all([
           import('three'),
