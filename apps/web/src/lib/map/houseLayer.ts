@@ -25,6 +25,9 @@ type Pivot = {
   rot: number;
   ll: [number, number];
   aligned: boolean;
+  /** metres from the pin to the plot's front edge (half the plot depth) */
+  front: number;
+  off: { x: number; y: number };
 };
 
 export function createHouseLayer(
@@ -74,7 +77,13 @@ export function createHouseLayer(
         for (const other of groups.values()) other.group.visible = other.group === group;
         camera.projectionMatrix = base
           .clone()
-          .multiply(new THREE.Matrix4().makeTranslation(pivot.mc.x, pivot.mc.y, pivot.mc.z));
+          .multiply(
+            new THREE.Matrix4().makeTranslation(
+              pivot.mc.x + pivot.off.x,
+              pivot.mc.y + pivot.off.y,
+              pivot.mc.z,
+            ),
+          );
         camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
         group.matrix
           .makeRotationZ(pivot.rot)
@@ -140,6 +149,12 @@ export function createHouseLayer(
         if (!best) continue;
         // the plot's front is its south side: turn south onto the direction of the nearest point of the street
         pivot.rot = Math.atan2(-best.dx / best.d, best.dy / best.d);
+        // keep the plot off the carriageway: its front edge stays a street half-width (7 m) from the street line
+        const clearance = (pivot.front + 7) * pivot.s;
+        if (best.d < clearance) {
+          const push = clearance - best.d;
+          pivot.off = { x: (-best.dx / best.d) * push, y: (-best.dy / best.d) * push };
+        }
         pivot.aligned = true;
         changed = true;
       }
@@ -169,6 +184,8 @@ export function createHouseLayer(
           rot: 0,
           ll: p.coords,
           aligned: false,
+          front: h.plan.plot.depth / 2,
+          off: { x: 0, y: 0 },
         } satisfies Pivot;
         scene.add(outer);
         groups.set(p.id, { group: outer, key });
