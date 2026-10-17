@@ -30,6 +30,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter "@rasikh/web^..." build
       - run: pnpm --filter @rasikh/web build:demo
+      # the Flutter app as a web demo under /app (kept optional: the site deploys even if this step fails)
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Flutter web demo
+        continue-on-error: true
+        working-directory: apps/mobile
+        run: |
+          flutter pub get
+          flutter build web --release --base-href /rasikh/app/ --dart-define=DEMO=true
+          mkdir -p ../web/.next-demo/app
+          cp -r build/web/. ../web/.next-demo/app/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/.next-demo

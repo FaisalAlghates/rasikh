@@ -23,6 +23,20 @@ An Arabic-first platform for the Saudi property market, in three separate sectio
 
 ![The four design languages: a real photograph, the drawing and a 3D model on hover](docs/screenshots/engineering/desktop-styles.png)
 
+## Live demos
+
+Free static copies (no backend: sign-in and saving are off; everything else works). Rebuilt on every push to .
+
+| Project                       | Demo                                                                                                                                               |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Website (home)                | [Arabic](https://faisalalghates.github.io/rasikh/ar/) · [English](https://faisalalghates.github.io/rasikh/en/)                                     |
+| Property management section   | [Arabic](https://faisalalghates.github.io/rasikh/ar/sections/property/) · [English](https://faisalalghates.github.io/rasikh/en/sections/property/) |
+| AI engineering office section | [Arabic](https://faisalalghates.github.io/rasikh/ar/sections/office/) · [English](https://faisalalghates.github.io/rasikh/en/sections/office/)     |
+| Brokerage section             | [Arabic](https://faisalalghates.github.io/rasikh/ar/sections/broker/) · [English](https://faisalalghates.github.io/rasikh/en/sections/broker/)     |
+| Kingdom map                   | [Arabic](https://faisalalghates.github.io/rasikh/ar/map/)                                                                                          |
+| Engineering office overview   | [Arabic](https://faisalalghates.github.io/rasikh/ar/engineering/)                                                                                  |
+| Flutter app (web build)       | [Open](https://faisalalghates.github.io/rasikh/app/)                                                                                               |
+
 ## Contents
 
 1. [The three sections](#the-three-sections)

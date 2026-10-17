@@ -12,10 +12,23 @@ import 'app/app.dart';
 /// Run against the Firebase Emulator Suite unless built with `--dart-define=USE_EMULATORS=false`.
 const _useEmulators = bool.fromEnvironment('USE_EMULATORS', defaultValue: true);
 
+/// The public web demo (`--dart-define=DEMO=true`): a demo Firebase config and no backend, so sign-in and saving are off.
+const _demo = bool.fromEnvironment('DEMO');
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (_useEmulators) {
+  if (_demo) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyDemoKeyForEmulatorsOnly0000000000',
+        appId: '1:000000000000:web:0000000000000000000000',
+        messagingSenderId: '000000000000',
+        projectId: 'demo-rasikh',
+        storageBucket: 'demo-rasikh.appspot.com',
+      ),
+    );
+  } else if (_useEmulators) {
     // A demo project needs no console setup. Real projects use `flutterfire configure` (see docs).
     await Firebase.initializeApp(
       options: const FirebaseOptions(
