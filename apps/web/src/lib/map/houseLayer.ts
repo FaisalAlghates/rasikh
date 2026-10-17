@@ -19,6 +19,14 @@ type Mercator = (
  * pin at true scale and orientation, so zooming in shows the house, not a marker. Placement follows the Mapbox custom
  * layer recipe: model x east, y up, z toward the south; plot north is turned by the plot's `northDeg`.
  */
+type Pivot = {
+  mc: { x: number; y: number; z: number };
+  s: number;
+  rot: number;
+  ll: [number, number];
+  aligned: boolean;
+};
+
 export function createHouseLayer(
   THREE: Three,
   build: Build,
@@ -42,7 +50,10 @@ export function createHouseLayer(
   sun.position.set(-0.45, 0.55, 1);
   scene.add(sky, sun);
 
-  const layer: CustomLayerInterface & { setProperties(list: MapProperty[]): void } = {
+  const layer: CustomLayerInterface & {
+    setProperties(list: MapProperty[]): void;
+    align(roadLayer: string): void;
+  } = {
     id: 'houses',
     type: 'custom',
     renderingMode: '3d',
@@ -59,13 +70,16 @@ export function createHouseLayer(
       const base = new THREE.Matrix4().fromArray(matrix as unknown as number[]);
       renderer.resetState();
       for (const { group } of groups.values()) {
-        const pivot = group.userData as { mc: { x: number; y: number; z: number }; s: number };
+        const pivot = group.userData as Pivot;
         for (const other of groups.values()) other.group.visible = other.group === group;
         camera.projectionMatrix = base
           .clone()
           .multiply(new THREE.Matrix4().makeTranslation(pivot.mc.x, pivot.mc.y, pivot.mc.z));
         camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
-        group.matrix.makeScale(pivot.s, -pivot.s, pivot.s).multiply(rotX);
+        group.matrix
+          .makeRotationZ(pivot.rot)
+          .multiply(new THREE.Matrix4().makeScale(pivot.s, -pivot.s, pivot.s))
+          .multiply(rotX);
         group.matrixAutoUpdate = false;
         renderer.render(scene, camera);
       }
@@ -76,6 +90,60 @@ export function createHouseLayer(
       groups.clear();
       renderer?.dispose();
       renderer = null;
+    },
+    /**
+     * Turn each house so its front faces the nearest street and its sides run parallel to it. The street geometry
+     * comes from the rendered tiles near the pin (an invisible line layer), so a house is aligned once its tiles load.
+     */
+    align(roadLayer) {
+      if (!map) return;
+      let changed = false;
+      for (const { group } of groups.values()) {
+        const pivot = group.userData as Pivot;
+        if (pivot.aligned) continue;
+        const at = map.project(pivot.ll);
+        const found = map.queryRenderedFeatures(
+          [
+            [at.x - 160, at.y - 160],
+            [at.x + 160, at.y + 160],
+          ],
+          { layers: [roadLayer] },
+        );
+        let best: { d: number; dx: number; dy: number } | null = null;
+        for (const f of found) {
+          const g = (f as unknown as { geometry: { type: string; coordinates: unknown } }).geometry;
+          const lines: [number, number][][] =
+            g.type === 'LineString'
+              ? [g.coordinates as [number, number][]]
+              : g.type === 'MultiLineString'
+                ? (g.coordinates as [number, number][][])
+                : [];
+          for (const line of lines) {
+            for (let i = 0; i + 1 < line.length; i++) {
+              const a = mercator(line[i]!, 0);
+              const b = mercator(line[i + 1]!, 0);
+              const abx = b.x - a.x;
+              const aby = b.y - a.y;
+              const len2 = abx * abx + aby * aby;
+              if (len2 === 0) continue;
+              const t = Math.max(
+                0,
+                Math.min(1, ((pivot.mc.x - a.x) * abx + (pivot.mc.y - a.y) * aby) / len2),
+              );
+              const dx = a.x + t * abx - pivot.mc.x;
+              const dy = a.y + t * aby - pivot.mc.y;
+              const d = Math.hypot(dx, dy);
+              if (d > 0 && (!best || d < best.d)) best = { d, dx, dy };
+            }
+          }
+        }
+        if (!best) continue;
+        // the plot's front is its south side: turn south onto the direction of the nearest point of the street
+        pivot.rot = Math.atan2(-best.dx / best.d, best.dy / best.d);
+        pivot.aligned = true;
+        changed = true;
+      }
+      if (changed) map.triggerRepaint();
     },
     setProperties(list) {
       const seen = new Set<string>();
@@ -98,7 +166,10 @@ export function createHouseLayer(
         outer.userData = {
           mc: { x: mc.x, y: mc.y, z: mc.z },
           s: mc.meterInMercatorCoordinateUnits(),
-        };
+          rot: 0,
+          ll: p.coords,
+          aligned: false,
+        } satisfies Pivot;
         scene.add(outer);
         groups.set(p.id, { group: outer, key });
       }
