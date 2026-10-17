@@ -67,6 +67,9 @@ test('the videos are served', async ({ request }) => {
     'styles',
     'pitch',
     'marketing',
+    'marketing-property',
+    'marketing-office',
+    'marketing-broker',
   ]) {
     const res = await request.get(`/videos/${key}.webm`, { headers: { Range: 'bytes=0-99' } });
     expect([200, 206]).toContain(res.status());
