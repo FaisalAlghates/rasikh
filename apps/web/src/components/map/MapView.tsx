@@ -14,6 +14,7 @@ import {
   project,
   unproject,
 } from '@/lib/map/kingdom';
+import { houseFor } from '@/lib/map/houses';
 import { lightPresetFor, type LightPreset } from '@/lib/map/riyadh';
 import type { MapProperty } from '@/lib/map/sample-data';
 
@@ -84,6 +85,9 @@ export function MapView(props: MapViewProps) {
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapboxMap | null>(null);
   const markers = useRef(new Map<string, { marker: Marker; el: HTMLButtonElement }>());
+  const houses = useRef<{ setProperties(list: MapProperty[]): void } | null>(null);
+  const propsRef = useRef(properties);
+  propsRef.current = properties;
   const [mode, setMode] = useState<'loading' | 'map' | 'flat'>('loading');
   const [zoomedIn, setZoomedIn] = useState(false);
   const cb = useRef({ onSelect: props.onSelect, onCity: props.onCity, onPick: props.onPick });
@@ -151,6 +155,7 @@ export function MapView(props: MapViewProps) {
         return;
       }
       mapRef.current = map;
+      if (forced) (window as { __rkMap?: MapboxMap }).__rkMap = map;
       map.on('error', () => undefined);
       map.on('zoom', () => setZoomedIn(map.getZoom() >= CITY_ZOOM));
       map.on('moveend', () => declutterRef.current());
@@ -210,7 +215,7 @@ export function MapView(props: MapViewProps) {
             'circle-color': CLAY_LIGHT,
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 14, 15, 46],
             'circle-blur': 1,
-            'circle-opacity': 0.6,
+            'circle-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.6, 15, 0.5, 16.5, 0],
           },
         });
         map.addLayer({
@@ -231,10 +236,27 @@ export function MapView(props: MapViewProps) {
               STATUS_COLOR.warn,
               CLAY,
             ],
-            'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 6, 15, 15],
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 6, 15, 12, 17, 5],
             'circle-stroke-color': '#F4EEE4',
             'circle-stroke-width': 2,
           },
+        });
+        // the real buildings: each property's design (or a plausible building) stands on its pin
+        void Promise.all([
+          import('three'),
+          import('@/lib/eng/model3d'),
+          import('@/lib/map/houseLayer'),
+        ]).then(([THREE, { buildModel }, { createHouseLayer }]) => {
+          if (disposed || mapRef.current !== map) return;
+          const layer = createHouseLayer(
+            THREE,
+            buildModel,
+            (ll, alt) => mapboxgl.MercatorCoordinate.fromLngLat(ll, alt),
+            houseFor,
+          );
+          map.addLayer({ ...layer, slot: 'top' } as never);
+          houses.current = layer;
+          layer.setProperties(propsRef.current);
         });
         map.on('click', 'property-dot', (e) => {
           const id = (e.features?.[0] as Feat | undefined)?.properties?.id as string | undefined;
@@ -338,6 +360,7 @@ export function MapView(props: MapViewProps) {
     if (mode !== 'map') return;
     const src = mapRef.current?.getSource('properties') as GeoJSONSource | undefined;
     src?.setData(features(properties));
+    houses.current?.setProperties(properties);
   }, [properties, mode]);
 
   // keep the lighting on Riyadh's clock (checked every minute)
@@ -388,7 +411,7 @@ export function MapView(props: MapViewProps) {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     map.flyTo({
       center: p.coords,
-      zoom: 15.4,
+      zoom: 18,
       pitch: 60,
       bearing: map.getBearing() + 18,
       duration: reduce ? 0 : 2500,

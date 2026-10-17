@@ -378,6 +378,9 @@ export function MapClient() {
                     {current.approximate ? t('approx') : t('exact')}
                   </p>
                 )}
+                <p className="mt-1 text-caption text-text-muted" data-testid="model-note">
+                  {current.plan ? t('modelReal') : t('modelApprox')}
+                </p>
               </>
             )}
             {placing && (
