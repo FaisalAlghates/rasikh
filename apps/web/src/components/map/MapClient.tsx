@@ -18,6 +18,9 @@ import type { MyPortfolioData } from './MyPortfolio';
 
 // Firebase loads only for people who are signed in (anonymous visitors get a light page).
 const MyPortfolio = dynamic(() => import('./MyPortfolio'), { ssr: false });
+const GoogleEarthView = dynamic(() => import('./GoogleEarthView').then((m) => m.GoogleEarthView), {
+  ssr: false,
+});
 
 type Filter = 'all' | Status;
 type Source = 'mine' | 'samples';
@@ -32,6 +35,7 @@ export function MapClient() {
   const [cityId, setCityId] = useState<string>();
   const [signedIn, setSignedIn] = useState(false);
   const [mine, setMine] = useState<MyPortfolioData | null>(null);
+  const [googleOpen, setGoogleOpen] = useState(false);
   const [source, setSource] = useState<Source>('samples');
   const [preset, setPreset] = useState<'dawn' | 'day' | 'dusk' | 'night'>();
   const [placing, setPlacing] = useState(false);
@@ -328,6 +332,14 @@ export function MapClient() {
           )}
         </GlassPanel>
 
+        {current && process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY && (
+          <GoogleEarthView
+            name={current.name}
+            coords={current.coords}
+            open={googleOpen}
+            onOpenChange={setGoogleOpen}
+          />
+        )}
         {/* peek card (solid: only one glass layer per screen) */}
         {current && (
           <div
@@ -377,6 +389,16 @@ export function MapClient() {
                     <MapPin size={12} aria-hidden="true" />
                     {current.approximate ? t('approx') : t('exact')}
                   </p>
+                )}
+                {process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY && (
+                  <button
+                    type="button"
+                    onClick={() => setGoogleOpen(true)}
+                    className="hairline mt-3 inline-flex min-h-10 items-center gap-1.5 rounded-full px-4 text-small font-semibold text-brand-text hover:bg-night/5"
+                    data-testid="google-view"
+                  >
+                    {t('googleView')}
+                  </button>
                 )}
                 <p className="mt-1 text-caption text-text-muted" data-testid="model-note">
                   {current.plan ? t('modelReal') : t('modelApprox')}
