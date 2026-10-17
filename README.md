@@ -15,7 +15,7 @@ An Arabic-first platform for the Saudi property market, in three separate sectio
 ![A11y](https://img.shields.io/badge/WCAG-2.2%20AA-4F7A5A)
 ![Status](https://img.shields.io/badge/status-pre--launch-B5532C)
 
-[العربية](#نبذة-بالعربي) · [Sections](#the-three-sections) · [Engineering office](#the-ai-engineering-office) · [Map](#the-kingdom-map) · [Run it](#getting-started) · [Tests](#testing) · [Roadmap](#status-and-roadmap)
+**[Live demo · عرض مباشر](https://faisalalghates.github.io/rasikh/ar/)** (a free static copy: sign-in and saving are off) · [العربية](#نبذة-بالعربي) · [Sections](#the-three-sections) · [Engineering office](#the-ai-engineering-office) · [Map](#the-kingdom-map) · [Run it](#getting-started) · [Tests](#testing) · [Roadmap](#status-and-roadmap)
 
 </div>
 
