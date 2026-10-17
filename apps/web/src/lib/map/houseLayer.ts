@@ -53,17 +53,23 @@ export function createHouseLayer(
     },
     render(_gl, matrix) {
       if (!renderer || !map || map.getZoom() < 14) return;
-      camera.projectionMatrix = new THREE.Matrix4().fromArray(matrix as unknown as number[]);
+      // The translation to the pin is folded into the projection on the CPU (double precision) and each house is drawn
+      // on its own with only scale and rotation as its model matrix: a Mercator translation near 0.5 next to a scale
+      // near 1e-7 loses its precision in the GPU's single-precision matrices, which shows as a jittering, striped house.
+      const base = new THREE.Matrix4().fromArray(matrix as unknown as number[]);
+      renderer.resetState();
       for (const { group } of groups.values()) {
         const pivot = group.userData as { mc: { x: number; y: number; z: number }; s: number };
-        group.matrix
-          .makeTranslation(pivot.mc.x, pivot.mc.y, pivot.mc.z)
-          .scale(new THREE.Vector3(pivot.s, -pivot.s, pivot.s))
-          .multiply(rotX);
+        for (const other of groups.values()) other.group.visible = other.group === group;
+        camera.projectionMatrix = base
+          .clone()
+          .multiply(new THREE.Matrix4().makeTranslation(pivot.mc.x, pivot.mc.y, pivot.mc.z));
+        camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+        group.matrix.makeScale(pivot.s, -pivot.s, pivot.s).multiply(rotX);
         group.matrixAutoUpdate = false;
+        renderer.render(scene, camera);
       }
-      renderer.resetState();
-      renderer.render(scene, camera);
+      for (const other of groups.values()) other.group.visible = true;
     },
     onRemove() {
       for (const { group } of groups.values()) scene.remove(group);
