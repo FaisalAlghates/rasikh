@@ -4,6 +4,7 @@ A complete documentation set, written to ISO/IEC/IEEE 29148 and C4 conventions a
 
 | Document                                                                      | Question it answers                                              | Audience                           |
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------- |
+| [DIAGRAMS](DIAGRAMS.md) | What does each part look like (39 diagrams: use cases, C4, ERD, state machines, sequences, backend)? | Everyone |
 | [SRS](SRS.md)                                                                 | What must the system do, and how do we verify it?                | Product, QA, compliance, engineers |
 | [ARCHITECTURE](ARCHITECTURE.md)                                               | How is it built, and why (with decision records)?                | Engineers                          |
 | [DATA-MODEL](DATA-MODEL.md)                                                   | What is stored, where, and who may read or write it?             | Engineers, security                |
