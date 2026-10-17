@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset';
 /**
  * Real photographs of each design language, from Wikimedia Commons under free licences, shown with their credit.
  * They are references for the style, not a render of anyone's design. Replace a file in `public/styles` and its entry
@@ -19,7 +20,7 @@ export const STYLE_REFERENCES: Record<
   StyleReference
 > = {
   modern_najdi: {
-    file: '/styles/najdi.jpg',
+    file: asset('/styles/najdi.jpg'),
     title: 'Najd vernacular architecture (Ushaiqer)',
     artist: 'Dabailia-sherly',
     license: 'CC BY-SA 4.0',
@@ -27,7 +28,7 @@ export const STYLE_REFERENCES: Record<
     source: 'https://commons.wikimedia.org/wiki/File:Najd_vernacular_architecture.jpg',
   },
   contemporary: {
-    file: '/styles/modern.jpg',
+    file: asset('/styles/modern.jpg'),
     title: 'Case Study House No. 28, a modernist house',
     artist: 'Junkyardsparkle',
     license: 'CC0',
@@ -36,7 +37,7 @@ export const STYLE_REFERENCES: Record<
       'https://commons.wikimedia.org/wiki/File:Case_Study_House_No._28_street_view_2015-03-06.jpg',
   },
   swiss: {
-    file: '/styles/swiss.jpg',
+    file: asset('/styles/swiss.jpg'),
     title: 'A chalet in Weisstannen-Oberdorf, Switzerland',
     artist: 'Jag9889',
     license: 'CC BY-SA 4.0',
@@ -45,7 +46,7 @@ export const STYLE_REFERENCES: Record<
       'https://commons.wikimedia.org/wiki/File:Chalet,_Weisstannen-Oberdorf_SG_20220806-jag9889.jpg',
   },
   palace: {
-    file: '/styles/palace.jpg',
+    file: asset('/styles/palace.jpg'),
     title: 'Shubra Palace, Taif',
     artist: 'KELANTAN JOTTINGS',
     license: 'CC BY 2.0',

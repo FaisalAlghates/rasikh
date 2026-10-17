@@ -1,5 +1,6 @@
 {
   "common": {
+    "demoBanner": "Demo for viewing: sign-in and saving are switched off here; every page, the map, the designs and the videos work.",
     "appName": "Rasikh",
     "tagline": "Your property, on solid ground.",
     "loading": "Loading",

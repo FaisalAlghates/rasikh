@@ -1,9 +1,11 @@
+import { setRequestLocale } from 'next-intl/server';
 import { Dashboard } from '@/components/ops/Dashboard';
 import { AccountMenu } from '@/components/shell/AccountMenu';
 import { SiteFooter } from '@/components/shell/SiteFooter';
 import { SiteHeader } from '@/components/shell/SiteHeader';
 
-export default function WorkspacePage() {
+export default async function WorkspacePage({ params }: { params: Promise<{ locale: string }> }) {
+  setRequestLocale((await params).locale);
   return (
     <>
       <SiteHeader account={<AccountMenu />} />

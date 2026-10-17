@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { LOCALES, SITE_URL } from '@/lib/site';
 
+export const dynamic = 'force-static';
+
 export default function robots(): MetadataRoute.Robots {
   const private_ = LOCALES.flatMap((l) =>
     ['workspace', 'auth', 'onboarding', 'design-lab', 'portfolio', 'admin', 'design'].map(

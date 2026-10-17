@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { use, type CSSProperties } from 'react';
@@ -72,7 +73,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
           {/* A real image (generated from HeroScene) shown until the 3D scene is ready. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/hero-dusk.svg"
+            src={asset('/hero-dusk.svg')}
             alt=""
             width={1600}
             height={900}

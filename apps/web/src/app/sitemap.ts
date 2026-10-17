@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { LOCALES, PUBLIC_PATHS, localeUrl } from '@/lib/site';
 
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return LOCALES.flatMap((locale) =>
     PUBLIC_PATHS.map((path) => ({
