@@ -2,25 +2,25 @@
 
 A complete documentation set, written to ISO/IEC/IEEE 29148 and C4 conventions and kept in step with the code. Start with the SRS for _what_, the architecture for _how_, and the operations guide for _running it_.
 
-| Document                                                                      | Question it answers                                              | Audience                           |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------- |
-| [DIAGRAMS](DIAGRAMS.md) | What does each part look like (39 diagrams: use cases, C4, ERD, state machines, sequences, backend)? | Everyone |
-| [SRS](SRS.md)                                                                 | What must the system do, and how do we verify it?                | Product, QA, compliance, engineers |
-| [ARCHITECTURE](ARCHITECTURE.md)                                               | How is it built, and why (with decision records)?                | Engineers                          |
-| [DATA-MODEL](DATA-MODEL.md)                                                   | What is stored, where, and who may read or write it?             | Engineers, security                |
-| [API](API.md)                                                                 | Which privileged operations exist and what do they promise?      | Engineers                          |
-| [SECURITY](SECURITY.md)                                                       | What can go wrong and what stops it (STRIDE, PDPL)?              | Security, legal, engineers         |
-| [TEST-PLAN](TEST-PLAN.md)                                                     | How do we know it works?                                         | QA, engineers                      |
-| [OPERATIONS](OPERATIONS.md)                                                   | How do we run, deploy, monitor, back up and pay for it?          | Owner, operations                  |
-| [CONTRIBUTING](CONTRIBUTING.md)                                               | What are the working rules and the definition of done?           | Contributors                       |
-| [USER-GUIDE.ar](USER-GUIDE.ar.md)                                             | كيف يستخدمه كل دور؟ (بالعربية)                                   | Users, support                     |
-| [ENGINEERING_OFFICE](ENGINEERING_OFFICE.md)                                   | Spec and implementation status of the engineering office.        | Engineers, offices                 |
-| [FIREBASE-SETUP](FIREBASE-SETUP.md)                                           | Setting up a real Firebase project, step by step (Arabic).       | Owner                              |
-| [STORE-READINESS](STORE-READINESS.md)                                         | What the app stores need.                                        | Owner                              |
-| [CREDITS](CREDITS.md)                                                         | Photograph, map and data credits.                                | Everyone                           |
-| [../CLAUDE.md](../CLAUDE.md)                                                  | Product rules, stack, design system, AI rules (source of truth). | Everyone                           |
-| [../PLAN.md](../PLAN.md) · [../CHANGELOG.md](../CHANGELOG.md)                 | Phases and progress; what changed.                               | Product, engineers                 |
-| [../REMAINING.md](../REMAINING.md) · [../REMAINING.ar.md](../REMAINING.ar.md) | What still needs the owner.                                      | Owner                              |
+| Document                                                                      | Question it answers                                                                                  | Audience                           |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| [DIAGRAMS](DIAGRAMS.md)                                                       | What does each part look like (39 diagrams: use cases, C4, ERD, state machines, sequences, backend)? | Everyone                           |
+| [SRS](SRS.md)                                                                 | What must the system do, and how do we verify it?                                                    | Product, QA, compliance, engineers |
+| [ARCHITECTURE](ARCHITECTURE.md)                                               | How is it built, and why (with decision records)?                                                    | Engineers                          |
+| [DATA-MODEL](DATA-MODEL.md)                                                   | What is stored, where, and who may read or write it?                                                 | Engineers, security                |
+| [API](API.md)                                                                 | Which privileged operations exist and what do they promise?                                          | Engineers                          |
+| [SECURITY](SECURITY.md)                                                       | What can go wrong and what stops it (STRIDE, PDPL)?                                                  | Security, legal, engineers         |
+| [TEST-PLAN](TEST-PLAN.md)                                                     | How do we know it works?                                                                             | QA, engineers                      |
+| [OPERATIONS](OPERATIONS.md)                                                   | How do we run, deploy, monitor, back up and pay for it?                                              | Owner, operations                  |
+| [CONTRIBUTING](CONTRIBUTING.md)                                               | What are the working rules and the definition of done?                                               | Contributors                       |
+| [USER-GUIDE.ar](USER-GUIDE.ar.md)                                             | كيف يستخدمه كل دور؟ (بالعربية)                                                                       | Users, support                     |
+| [ENGINEERING_OFFICE](ENGINEERING_OFFICE.md)                                   | Spec and implementation status of the engineering office.                                            | Engineers, offices                 |
+| [FIREBASE-SETUP](FIREBASE-SETUP.md)                                           | Setting up a real Firebase project, step by step (Arabic).                                           | Owner                              |
+| [STORE-READINESS](STORE-READINESS.md)                                         | What the app stores need.                                                                            | Owner                              |
+| [CREDITS](CREDITS.md)                                                         | Photograph, map and data credits.                                                                    | Everyone                           |
+| [../CLAUDE.md](../CLAUDE.md)                                                  | Product rules, stack, design system, AI rules (source of truth).                                     | Everyone                           |
+| [../PLAN.md](../PLAN.md) · [../CHANGELOG.md](../CHANGELOG.md)                 | Phases and progress; what changed.                                                                   | Product, engineers                 |
+| [../REMAINING.md](../REMAINING.md) · [../REMAINING.ar.md](../REMAINING.ar.md) | What still needs the owner.                                                                          | Owner                              |
 
 ## How the documents stay true
 

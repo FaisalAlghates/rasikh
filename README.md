@@ -221,22 +221,23 @@ Authoritative detail lives in [PLAN.md](PLAN.md) (phases and known gaps), [CLAUD
 
 The full set is indexed in [docs/README.md](docs/README.md).
 
-| Document                                                                                                                                   | What it covers                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| [docs/SRS.md](docs/SRS.md)                                                                                                                 | Software Requirements Specification (ISO/IEC/IEEE 29148): numbered, testable. |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)                                                                                               | C4 views, runtime flows, cross-cutting concerns and 11 decision records.      |
-| [docs/DATA-MODEL.md](docs/DATA-MODEL.md)                                                                                                   | Collections, storage layout, visibility and tested invariants.                |
-| [docs/API.md](docs/API.md)                                                                                                                 | Cloud Functions callables, error codes and the model-provider interface.      |
-| [docs/SECURITY.md](docs/SECURITY.md)                                                                                                       | Controls, STRIDE threat model, PDPL and open risks.                           |
-| [docs/TEST-PLAN.md](docs/TEST-PLAN.md)                                                                                                     | Strategy, how to run, coverage by requirement, exit criteria.                 |
-| [docs/OPERATIONS.md](docs/OPERATIONS.md)                                                                                                   | Environments, deploying, monitoring, backup, cost and a runbook.              |
-| [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)                                                                                               | Working agreement, standards and the definition of done.                      |
-| [docs/USER-GUIDE.ar.md](docs/USER-GUIDE.ar.md)                                                                                             | دليل المستخدم لكل دور (بالعربية).                                             |
-| [docs/ENGINEERING_OFFICE.md](docs/ENGINEERING_OFFICE.md)                                                                                   | The engineering office: spec, roles, engine, limits.                          |
-| [CLAUDE.md](CLAUDE.md)                                                                                                                     | Product rules, stack, design system and AI rules (source of truth).           |
-| [PLAN.md](PLAN.md) · [CHANGELOG.md](CHANGELOG.md)                                                                                          | Phases and progress; what changed.                                            |
-| [REMAINING.md](REMAINING.md) · [REMAINING.ar.md](REMAINING.ar.md)                                                                          | What still needs the owner, in English and Arabic.                            |
-| [docs/FIREBASE-SETUP.md](docs/FIREBASE-SETUP.md) · [docs/STORE-READINESS.md](docs/STORE-READINESS.md) · [docs/CREDITS.md](docs/CREDITS.md) | Firebase setup (Arabic), store needs, credits.                                |
+| Document                                                                                                                                   | What it covers                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| [docs/DIAGRAMS.md](docs/DIAGRAMS.md)                                                                                                       | 39 diagrams (Mermaid, also SVG): use cases, C4, ERD, state machines, sequences, backend. |
+| [docs/SRS.md](docs/SRS.md)                                                                                                                 | Software Requirements Specification (ISO/IEC/IEEE 29148): numbered, testable.            |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)                                                                                               | C4 views, runtime flows, cross-cutting concerns and 11 decision records.                 |
+| [docs/DATA-MODEL.md](docs/DATA-MODEL.md)                                                                                                   | Collections, storage layout, visibility and tested invariants.                           |
+| [docs/API.md](docs/API.md)                                                                                                                 | Cloud Functions callables, error codes and the model-provider interface.                 |
+| [docs/SECURITY.md](docs/SECURITY.md)                                                                                                       | Controls, STRIDE threat model, PDPL and open risks.                                      |
+| [docs/TEST-PLAN.md](docs/TEST-PLAN.md)                                                                                                     | Strategy, how to run, coverage by requirement, exit criteria.                            |
+| [docs/OPERATIONS.md](docs/OPERATIONS.md)                                                                                                   | Environments, deploying, monitoring, backup, cost and a runbook.                         |
+| [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)                                                                                               | Working agreement, standards and the definition of done.                                 |
+| [docs/USER-GUIDE.ar.md](docs/USER-GUIDE.ar.md)                                                                                             | دليل المستخدم لكل دور (بالعربية).                                                        |
+| [docs/ENGINEERING_OFFICE.md](docs/ENGINEERING_OFFICE.md)                                                                                   | The engineering office: spec, roles, engine, limits.                                     |
+| [CLAUDE.md](CLAUDE.md)                                                                                                                     | Product rules, stack, design system and AI rules (source of truth).                      |
+| [PLAN.md](PLAN.md) · [CHANGELOG.md](CHANGELOG.md)                                                                                          | Phases and progress; what changed.                                                       |
+| [REMAINING.md](REMAINING.md) · [REMAINING.ar.md](REMAINING.ar.md)                                                                          | What still needs the owner, in English and Arabic.                                       |
+| [docs/FIREBASE-SETUP.md](docs/FIREBASE-SETUP.md) · [docs/STORE-READINESS.md](docs/STORE-READINESS.md) · [docs/CREDITS.md](docs/CREDITS.md) | Firebase setup (Arabic), store needs, credits.                                           |
 
 ## نبذة بالعربي
 
