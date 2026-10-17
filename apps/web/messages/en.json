@@ -2682,6 +2682,14 @@
       }
     },
     "view3d": "3D model",
-    "view3dHint": "Move the pointer onto a design to see it in 3D; move it to turn the model."
+    "view3dHint": "Move the pointer onto a design to see it in 3D; move it to turn the model.",
+    "realReference": "A real-world reference",
+    "photoSource": "Source",
+    "photoAlt": {
+      "modern_najdi": "An alley of Najdi mud architecture with timber doors and white crenellations",
+      "contemporary": "A modern house with a thin flat roof and brick walls",
+      "swiss": "A Swiss timber chalet with a pitched roof and balcony",
+      "palace": "Shubra Palace in Taif: a white facade, arched shuttered windows and a timber mashrabiya"
+    }
   }
 }
