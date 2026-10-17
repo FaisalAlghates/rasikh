@@ -269,7 +269,9 @@
     "placingCancel": "Cancel",
     "pinSaved": "Exact location saved.",
     "pinFailed": "Could not save the location. Please try again.",
-    "exact": "Exact location"
+    "exact": "Exact location",
+    "modelReal": "The building on the map is this property’s approved design.",
+    "modelApprox": "The building on the map is an approximate model from the unit count; the approved design shows once it is linked to the property."
   },
   "ops": {
     "tabOverview": "Overview",

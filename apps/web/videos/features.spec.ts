@@ -262,28 +262,31 @@ test('video: inspections', async ({ browser }) => {
 });
 
 test('video: the Kingdom map', async ({ browser }) => {
-  test.setTimeout(300_000);
+  test.setTimeout(420_000);
   await warm(browser);
   const { ctx, page } = await recordPublic(browser, 'map');
+  // the real Mapbox map (needs the network and the token), not the flat fallback used by automated tests
+  await page.addInitScript(() => {
+    (window as unknown as { __RK_FORCE_MAP: boolean }).__RK_FORCE_MAP = true;
+  });
   await page.goto('/ar/map');
-  await expect(page.getByTestId('flat-map')).toBeVisible({ timeout: 60_000 });
-  await say(page, 'خريطة المملكة: مدن المناطق الثلاث عشرة وعقاراتك عليها', 3600);
-  await page
-    .getByTestId('flat-map')
-    .getByRole('button', { name: /^اذهب إلى تبوك/ })
-    .click();
-  await say(page, 'اختر مدينة فتطير الكاميرا إليها وتُصفّى القائمة', 3400);
-  await page.getByTestId('city-jeddah').click();
-  await say(page, 'وكل مدينة في قائمة المدن حتى لو بلا دبوس', 3000);
-  await page.getByRole('button', { name: 'المملكة كاملة' }).first().click();
-  await page.getByTestId('row-p3').click();
+  await expect(page.locator('[data-city="riyadh"]')).toBeVisible({ timeout: 120_000 });
+  await say(page, 'خريطة المملكة ثلاثية الأبعاد: تصل من الفضاء إلى المملكة', 5200);
+  await say(page, 'دبوس لكل مدينة، وعقاراتك عليها', 3000);
+  await page.locator('[data-city="abha"]').click();
+  await say(page, 'اختر مدينة فتطير الكاميرا إليها', 5200);
+  await page.getByTestId('row-p9').click();
   await expect(page.getByTestId('peek-card')).toBeVisible();
-  await say(page, 'اضغط عقاراً لتظهر بطاقته: السعر والتفاصيل', 3600);
-  await say(
-    page,
-    'مالك العقار يرى عقاراته على موقعها الدقيق، ويحدده من الجوال وهو في العقار',
-    4000,
-  );
+  await say(page, 'اختر عقاراً فتقترب منه الكاميرا ويظهر البيت نفسه على أرضه', 6500);
+  await say(page, 'البيت هو التصميم المعتمد للعقار: جدرانه وسقفه ونوافذه وسوره وأشجاره', 5200);
+  await page.getByRole('button', { name: 'إغلاق البطاقة' }).click();
+  await page.getByRole('button', { name: 'المملكة كاملة' }).first().click();
+  await page.waitForTimeout(3500);
+  await page.locator('[data-city="jeddah"]').click();
+  await page.waitForTimeout(3000);
+  await page.getByTestId('row-p5').click();
+  await say(page, 'وفي العمائر: مبنى بعدد الأدوار والوحدات كما في سجلاتك', 6500);
+  await say(page, 'مالك العقار يضع الدبوس على موقعه الدقيق من الجوال وهو في العقار', 4200);
   await finish('map', ctx, page);
 });
 

@@ -1,3 +1,5 @@
+import type { DesignPlan } from '@rasikh/shared';
+
 /** SAMPLE DATA ONLY — shown in the UI with a "sample" label. Signed-in owners see their own portfolio instead. */
 export type MapStatus = 'ok' | 'warn' | 'late';
 
@@ -13,6 +15,8 @@ export interface MapProperty {
   status: MapStatus;
   /** Real properties are placed near their city centre until an exact pin is set. */
   approximate?: boolean;
+  /** The released design of this property (the map stands exactly this house on the pin). */
+  plan?: DesignPlan;
 }
 
 export interface SampleProperty {
