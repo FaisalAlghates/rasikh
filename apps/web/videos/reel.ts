@@ -1,0 +1,187 @@
+import type { Browser } from '@playwright/test';
+import { copyFileSync, mkdirSync } from 'node:fs';
+import { SIZE } from './support';
+
+/**
+ * A reel player: title cards and excerpts of the walkthrough videos (recorded from the real app by `pnpm videos`),
+ * with the site's own fonts, recorded to `public/videos/<name>.webm`. Nothing in a reel is invented: every clip is
+ * the product itself and the cards carry only claims the product can back.
+ */
+export type Card = {
+  kind: 'card';
+  title: string;
+  lines?: string[];
+  seconds: number;
+  tone?: 'sand' | 'night';
+};
+export type Clip = { kind: 'clip'; src: string; from: number; to: number; tag: string };
+export type Scene = Card | Clip;
+export type Look = 'pitch' | 'marketing';
+
+export async function playReel(browser: Browser, name: string, scenes: Scene[], look: Look) {
+  const ctx = await browser.newContext({
+    viewport: SIZE,
+    recordVideo: { dir: `test-results/videos/${name}`, size: SIZE },
+    storageState: {
+      cookies: [],
+      origins: [
+        { origin: 'http://localhost:3000', localStorage: [{ name: 'rk-cookie-ok', value: '1' }] },
+      ],
+    },
+  });
+  const page = await ctx.newPage();
+  // the site's fonts: read the font-face rules and family names from the landing page, then move to a blank page of
+  // the same origin that the reel owns (the app would re-render over anything added to it)
+  await page.goto('/ar');
+  const fonts = await page.evaluate(() => ({
+    body: getComputedStyle(document.body).fontFamily,
+    display: getComputedStyle(document.querySelector('h1') ?? document.body).fontFamily,
+    faces: Array.from(document.styleSheets).flatMap((sheet) => {
+      try {
+        return Array.from(sheet.cssRules)
+          .filter((r) => r instanceof CSSFontFaceRule)
+          .map((r) => r.cssText);
+      } catch {
+        return [];
+      }
+    }),
+  }));
+  await page.route('**/__reel', (route) =>
+    route.fulfill({
+      contentType: 'text/html; charset=utf-8',
+      body: '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"></head><body></body></html>',
+    }),
+  );
+  await page.goto('/__reel');
+  await page.evaluate(
+    ({ fonts, look }) => {
+      const big = look === 'marketing';
+      const style = document.createElement('style');
+      style.textContent = `
+        ${fonts.faces.join(' ')}
+        html,body{margin:0;height:100%;background:#0E0D0B;overflow:hidden}
+        #stage{position:fixed;inset:0;font-family:${fonts.body};direction:rtl}
+        video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#0E0D0B;opacity:0;transition:opacity .5s}
+        video.on{opacity:1}
+        .card{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:22px;
+          text-align:center;opacity:0;transition:opacity .6s;padding:0 120px}
+        .card.sand{background:#F4EEE4;color:#1A1815}
+        .card.night{background:#1A1815;color:#F4EEE4}
+        .card.on{opacity:1}
+        .card h1{font-family:${fonts.display};font-size:${big ? 104 : 84}px;margin:0;font-weight:600;color:#B5532C;line-height:1.3}
+        .card.night h1{color:#D9825A}
+        .card p{font-size:${big ? 42 : 34}px;line-height:1.6;margin:0;max-width:1000px}
+        .tag{position:absolute;${big ? 'bottom:44px' : 'top:22px'};inset-inline:0;margin:0 auto;width:fit-content;max-width:86%;
+          padding:${big ? '16px 40px' : '10px 26px'};border-radius:${big ? 22 : 14}px;
+          background:${big ? 'rgba(181,83,44,.94)' : 'rgba(14,13,11,.88)'};color:#F4EEE4;font-size:${big ? 44 : 26}px;font-weight:600;
+          opacity:0;transition:opacity .4s;text-align:center;line-height:1.5}
+        .tag.on{opacity:1}
+      `;
+      document.head.append(style);
+      const stage = document.createElement('div');
+      stage.id = 'stage';
+      document.body.append(stage);
+    },
+    { fonts, look },
+  );
+
+  // preload and pre-seek every clip off the critical path, while the first card is on screen
+  const prepare = async () =>
+    page.evaluate(async (scenes) => {
+      const stage = document.getElementById('stage')!;
+      const made: Record<number, HTMLVideoElement> = {};
+      await Promise.all(
+        scenes.map(async (s, i) => {
+          if (s.kind !== 'clip') return;
+          const v = document.createElement('video');
+          v.muted = true;
+          v.playsInline = true;
+          v.preload = 'auto';
+          v.src = `/videos/${s.src}.webm`;
+          stage.append(v);
+          made[i] = v;
+          await new Promise<void>((r) => {
+            v.onloadedmetadata = () => r();
+            v.onerror = () => r();
+          });
+          if (!Number.isFinite(v.duration)) {
+            v.currentTime = 1e9;
+            await new Promise<void>((r) => {
+              v.ondurationchange = () => Number.isFinite(v.duration) && r();
+              setTimeout(r, 6000);
+            });
+          }
+          v.currentTime = s.from;
+          await new Promise<void>((r) => {
+            v.onseeked = () => r();
+            setTimeout(r, 6000);
+          });
+        }),
+      );
+      (window as unknown as { clips: typeof made }).clips = made;
+    }, scenes);
+
+  const showCard = async (c: Card) => {
+    await page.evaluate((c) => {
+      const stage = document.getElementById('stage')!;
+      const el = document.createElement('div');
+      el.className = `card ${c.tone ?? 'sand'}`;
+      el.innerHTML = `<h1>${c.title}</h1>${(c.lines ?? []).map((l) => `<p>${l}</p>`).join('')}`;
+      stage.append(el);
+      requestAnimationFrame(() => el.classList.add('on'));
+    }, c);
+    await page.waitForTimeout(c.seconds * 1000);
+    await page.evaluate(() => {
+      const els = [...document.querySelectorAll('.card')];
+      els.forEach((e) => e.classList.remove('on'));
+      setTimeout(() => els.forEach((e) => e.remove()), 700);
+    });
+    await page.waitForTimeout(500);
+  };
+
+  const showClip = async (index: number, c: Clip) => {
+    await page.evaluate(
+      async ({ index, c }) => {
+        const v = (window as unknown as { clips: Record<number, HTMLVideoElement> }).clips[index]!;
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.textContent = c.tag;
+        document.getElementById('stage')!.append(tag);
+        v.currentTime = c.from;
+        await new Promise<void>((r) => {
+          v.onseeked = () => r();
+          setTimeout(r, 4000);
+        });
+        v.classList.add('on');
+        requestAnimationFrame(() => tag.classList.add('on'));
+        await v.play();
+        (window as unknown as { cur: unknown }).cur = { v, tag };
+      },
+      { index, c },
+    );
+    await page.waitForTimeout((c.to - c.from) * 1000);
+    await page.evaluate(() => {
+      const { v, tag } = (window as unknown as { cur: { v: HTMLVideoElement; tag: HTMLElement } })
+        .cur;
+      v.pause();
+      v.classList.remove('on');
+      tag.classList.remove('on');
+      setTimeout(() => tag.remove(), 600);
+    });
+    await page.waitForTimeout(500);
+  };
+
+  const first = scenes[0] as Card;
+  const prep = prepare();
+  await showCard(first);
+  await prep;
+  for (let i = 1; i < scenes.length; i++) {
+    const s = scenes[i]!;
+    if (s.kind === 'card') await showCard(s);
+    else await showClip(i, s);
+  }
+  const video = page.video();
+  await ctx.close();
+  mkdirSync('public/videos', { recursive: true });
+  copyFileSync(await video!.path(), `public/videos/${name}.webm`);
+}
