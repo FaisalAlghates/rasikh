@@ -1,14 +1,14 @@
 # Software Requirements Specification: Rasikh (راسخ)
 
-| Field    | Value                                                                                                                                                           |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Document | SRS-RASIKH-001                                                                                                                                                  |
-| Version  | 1.0 (baseline, 2026-10-17)                                                                                                                                      |
-| Standard | Structured after ISO/IEC/IEEE 29148:2018 (supersedes IEEE 830)                                                                                                  |
-| Status   | Baselined against the code at commit `5058fa1`; every requirement is traceable                                                                                  |
-| Owner    | Product owner (Faisal Alghates)                                                                                                                                 |
-| Audience | Product, engineering, QA, legal and compliance reviewers, licensed engineers                                                                                    |
-| Related  | [ARCHITECTURE](ARCHITECTURE.md) · [DATA-MODEL](DATA-MODEL.md) · [API](API.md) · [SECURITY](SECURITY.md) · [TEST-PLAN](TEST-PLAN.md) · [CLAUDE.md](../CLAUDE.md) |
+| Field    | Value                                                                                                                                                                                     |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Document | SRS-RASIKH-001                                                                                                                                                                            |
+| Version  | 1.0 (baseline, 2026-10-17)                                                                                                                                                                |
+| Standard | Structured after ISO/IEC/IEEE 29148:2018 (supersedes IEEE 830)                                                                                                                            |
+| Status   | Baselined against the code at commit `5058fa1`; every requirement is traceable                                                                                                            |
+| Owner    | Product owner (Faisal Alghates)                                                                                                                                                           |
+| Audience | Product, engineering, QA, legal and compliance reviewers, licensed engineers                                                                                                              |
+| Related  | [DIAGRAMS](DIAGRAMS.md) · [ARCHITECTURE](ARCHITECTURE.md) · [DATA-MODEL](DATA-MODEL.md) · [API](API.md) · [SECURITY](SECURITY.md) · [TEST-PLAN](TEST-PLAN.md) · [CLAUDE.md](../CLAUDE.md) |
 
 **ملخص تنفيذي (بالعربية).** راسخ منصة عربية أولاً لسوق العقار السعودي بثلاثة أقسام منفصلة (إدارة الأملاك، المكتب الهندسي الذكي، الوساطة العقارية). تحدد هذه الوثيقة ما يجب أن يفعله النظام وما لا يجوز له فعله، بمتطلبات مرقّمة قابلة للاختبار. أهم القيود: النظام **يكمّل** إيجار ومُلّاك ولا يحل محلهما؛ لا يعالج الإيجار ولا يموّله؛ لا يختم ولا يقدّم طلبات الرخص باسم مهندس؛ المطابقة للكود تقررها قواعد محسوبة لا الذكاء الاصطناعي؛ وكل مخرج هندسي مسودة حتى يعتمده مهندس مرخّص. البيانات في منطقة الدمام (`me-central2`).
 
