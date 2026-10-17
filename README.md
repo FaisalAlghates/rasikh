@@ -25,7 +25,7 @@ An Arabic-first platform for the Saudi property market, in three separate sectio
 
 ## Live demos
 
-Free static copies (no backend: sign-in and saving are off; everything else works). Rebuilt on every push to .
+Free static copies (no backend: sign-in and saving are off; everything else works). Rebuilt on every push to main.
 
 | Project                       | Demo                                                                                                                                               |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
