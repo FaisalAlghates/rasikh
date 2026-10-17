@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { use } from 'react';
 import { HoverModel } from '@/components/eng/HoverModel';
+import { StylePhoto } from '@/components/eng/StylePhoto';
 import { Elevation } from '@/components/eng/sheets/Elevation';
 import { SiteFooter } from '@/components/shell/SiteFooter';
 import { SiteHeader } from '@/components/shell/SiteHeader';
@@ -63,6 +64,7 @@ export default function StylesLab({ params }: { params: Promise<{ locale: string
               <h2 id={`st-${style}`} className="text-h3 font-semibold">
                 {t(`style.${style}`)}
               </h2>
+              <StylePhoto style={style} />
               <HoverModel plan={plan}>
                 <Elevation
                   plan={plan}

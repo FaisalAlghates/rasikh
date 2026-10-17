@@ -17,6 +17,7 @@ import {
   parsePlotSize,
   type Program,
 } from '@rasikh/shared';
+import { StylePhoto } from './StylePhoto';
 import { addDoc, collection, serverTimestamp, where } from 'firebase/firestore';
 import { BadgeCheck, Building2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -477,6 +478,7 @@ export function DesignHome() {
                       ))}
                     </select>
                   </label>
+                  <StylePhoto style={program.style ?? 'contemporary'} compact />
                   <label className="flex items-center gap-2 text-small">
                     <input
                       type="checkbox"

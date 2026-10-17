@@ -20,6 +20,11 @@ test('the four design languages: the same brief drawn as Najdi, modern, Swiss an
     gallery.locator('[data-style="palace"] [data-testid="portico"]').first(),
   ).toBeVisible();
   await expect(gallery.locator('[data-style="najdi"] [data-testid="dome"]')).toHaveCount(0);
+  // each language has a real photograph with its credit
+  await expect(gallery.getByTestId('style-photo')).toHaveCount(4);
+  await expect(gallery.locator('[data-style-photo="swiss"]')).toContainText('CC BY-SA 4.0');
+  await expect(gallery.locator('[data-style-photo="palace"]')).toContainText('CC BY 2.0');
+  await page.waitForLoadState('networkidle');
   await page.screenshot({ path: `${SHOTS}/desktop-styles.png`, fullPage: true });
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
