@@ -1,5 +1,7 @@
 # Data model
 
+Diagrams: the entity relationships and the visibility flows are in [DIAGRAMS](DIAGRAMS.md) (§2.4, §5.2 to §5.4).
+
 Firestore (native mode, `me-central2`) is the system of record; Cloud Storage holds files. The rules in `firebase/firestore.rules` and `firebase/storage.rules` are the first authorization layer and are tested per role (see [TEST-PLAN](TEST-PLAN.md)). Types live in `packages/shared` as zod schemas.
 
 ## 1. Conventions

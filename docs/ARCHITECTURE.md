@@ -4,7 +4,7 @@
 | ------- | ------------------------------------------------------------------------------------------------------------------- |
 | Version | 1.0 (2026-10-17)                                                                                                    |
 | Method  | C4 model (context, containers, components) plus architecture decisions                                              |
-| Related | [SRS](SRS.md) · [DATA-MODEL](DATA-MODEL.md) · [API](API.md) · [SECURITY](SECURITY.md) · [OPERATIONS](OPERATIONS.md) |
+| Related | [DIAGRAMS](DIAGRAMS.md) (every diagram, also as SVG) · [SRS](SRS.md) · [DATA-MODEL](DATA-MODEL.md) · [API](API.md) · [SECURITY](SECURITY.md) · [OPERATIONS](OPERATIONS.md) |
 
 ## 1. Architectural drivers
 
