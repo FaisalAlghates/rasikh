@@ -271,7 +271,11 @@
     "pinFailed": "Could not save the location. Please try again.",
     "exact": "Exact location",
     "modelReal": "The building on the map is this property’s approved design.",
-    "modelApprox": "The building on the map is an approximate model from the unit count; the approved design shows once it is linked to the property."
+    "modelApprox": "The building on the map is an approximate model from the unit count; the approved design shows once it is linked to the property.",
+    "googleView": "Real view from Google",
+    "googleNote": "Google’s photorealistic 3D imagery of the location (as in Google Maps and Earth).",
+    "googleLoading": "Loading Google imagery…",
+    "googleFail": "Google 3D imagery is not available for this location, or it failed to load."
   },
   "ops": {
     "tabOverview": "Overview",

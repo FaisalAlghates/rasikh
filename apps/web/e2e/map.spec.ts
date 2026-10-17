@@ -43,6 +43,14 @@ test.describe('Kingdom map', () => {
     await expect(page.locator('[data-testid^="row-"]')).toHaveCount(12);
   });
 
+  test('the Google real view is offered only when a Google key is configured', async ({ page }) => {
+    await page.getByTestId('row-p3').click();
+    await expect(page.getByTestId('peek-card')).toBeVisible();
+    await expect(page.getByTestId('google-view')).toHaveCount(
+      process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ? 1 : 0,
+    );
+  });
+
   test('selecting in the list opens its city and the peek card; the map selection syncs back', async ({
     page,
   }) => {

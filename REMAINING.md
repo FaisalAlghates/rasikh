@@ -33,6 +33,7 @@ Built 2026-10-16: offices and engineers with verification, briefs, options, rule
 - **Blaze plan** (billing) for the Firebase project, plus a budget alert. Then Storage (me-central2), Functions deploy, phone sign-in, App Check, scheduled backups.
 - **A real AI model:** Vertex AI (Gemini) or a Claude key in Secret Manager, then one class in `firebase/functions/src/ai/provider.ts`. Today the model is a free fake.
 - **Domain** and `NEXT_PUBLIC_SITE_URL`; restrict the Firebase web API key and the Mapbox token to the domain; rotate the old Mapbox token.
+- **Google real view (optional, paid by use):** create a Google Maps Platform key with the Maps JavaScript API enabled, restrict it to the domain, and put it in `NEXT_PUBLIC_GOOGLE_MAPS_KEY` (`.env.local`). The map card then offers "Real view from Google", the same photorealistic 3D imagery as Google Maps and Earth. Never put the key in chat or code. Check Google's pricing and terms first (imagery is shown only through Google's own element, with its attribution).
 - **Lawyer review** of the privacy policy, terms and disclaimers (all marked drafts), and a real privacy contact address.
 - **Apple and Google Play accounts**, signing keys, store screenshots and the Android feature graphic.
 - **Decisions:** reminders by email, SMS or push (paid provider); analytics (none, or consent-based); App Hosting region.
