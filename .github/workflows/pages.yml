@@ -28,7 +28,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @rasikh/shared build
+      - run: pnpm --filter "@rasikh/web^..." build
       - run: pnpm --filter @rasikh/web build:demo
       - uses: actions/upload-pages-artifact@v3
         with:
