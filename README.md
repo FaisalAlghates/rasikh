@@ -4,46 +4,60 @@
 
 **Your property, on solid ground.** · **عقارك على أرض ثابتة**
 
-An Arabic-first platform for the Saudi property market, in three separate sections: **property management**, an **AI engineering office** and **real estate brokerage**. One verifiable record from the first sketch to move-out day.
+An Arabic-first platform for the Saudi property market, in three separate sections:<br />
+**property management** · an **AI engineering office** · **real estate brokerage**.
 
 [![CI](https://github.com/FaisalAlghates/rasikh/actions/workflows/ci.yml/badge.svg)](https://github.com/FaisalAlghates/rasikh/actions/workflows/ci.yml)
 ![Web](https://img.shields.io/badge/web-Next.js%2016-black)
 ![App](https://img.shields.io/badge/app-Flutter%203.47-02569B)
 ![Backend](https://img.shields.io/badge/backend-Firebase%20·%20me--central2-FFCA28)
-![Language](https://img.shields.io/badge/ar%20%C2%B7%20en-RTL%20first-4F7A5A)
+![i18n](https://img.shields.io/badge/ar%20%C2%B7%20en-RTL%20first-4F7A5A)
+![A11y](https://img.shields.io/badge/WCAG-2.2%20AA-4F7A5A)
 ![Status](https://img.shields.io/badge/status-pre--launch-B5532C)
 
-[العربية](#نبذة-بالعربي) · [Sections](#the-three-sections) · [Engineering office](#the-ai-engineering-office) · [Run it](#getting-started) · [Tests](#testing) · [Roadmap](#status-and-roadmap)
+[العربية](#نبذة-بالعربي) · [Sections](#the-three-sections) · [Engineering office](#the-ai-engineering-office) · [Map](#the-kingdom-map) · [Run it](#getting-started) · [Tests](#testing) · [Roadmap](#status-and-roadmap)
 
 </div>
 
 > **Rasikh complements Ejar and Mullak. It does not replace them.** It never replaces an Ejar contract, the Ejar deposit or the official handover form; it does not process, lend or finance rent; it runs no public listings marketplace; and it never stamps drawings or files permits in an engineer's name. Rasikh is a private platform, not a government entity.
 
-![The four design languages](docs/screenshots/engineering/desktop-styles.png)
+![The four design languages: a real photograph, the drawing and a 3D model on hover](docs/screenshots/engineering/desktop-styles.png)
+
+## Contents
+
+1. [The three sections](#the-three-sections)
+2. [The AI engineering office](#the-ai-engineering-office)
+3. [The Kingdom map](#the-kingdom-map)
+4. [Architecture](#architecture)
+5. [Getting started](#getting-started)
+6. [Testing](#testing)
+7. [Security and privacy](#security-and-privacy)
+8. [Status and roadmap](#status-and-roadmap)
+9. [Documentation](#documentation)
 
 ## The three sections
 
-After the landing page a visitor picks **one** section. Each has its own page with a walkthrough video, its own subscription (**all free at launch**, see `LAUNCH_FREE` in `packages/shared`), and its own workspace and data: nothing from one section appears in another.
+After the landing page a visitor picks **one** section. Each has its own page with a walkthrough video, its own subscription (**all free at launch**, see `LAUNCH_FREE` in `packages/shared`) and its own workspace and data: nothing from one section appears in another.
 
 | Section                   | For                                | What it gives                                                                                                                                                                  |
 | ------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Property management**   | Owners, managers, tenants, vendors | Portfolio on a 3D Kingdom map, leases and payment ledger, guided inspections, Property Health Record, maintenance, buildings and owners associations, a real-estate assistant. |
-| **AI engineering office** | Licensed engineering offices       | A private design copilot: brief to code-checked designs, a full permit-style drawing set, bill of quantities, discipline workflow with engineer approval.                      |
+| **AI engineering office** | Licensed engineering offices       | A private design copilot: brief to code-checked designs, a full permit-style drawing set, a bill of quantities, a discipline workflow with engineer approval.                  |
 | **Real estate brokerage** | REGA-licensed brokers              | FAL licence reminders, leads with a forward-only funnel, viewings, brokerage contracts, an immutable server-timestamped log, and an ad compliance checker.                     |
 
-Short videos for every section and every feature are in `apps/web/public/videos` and on the section pages (`/ar/sections/property`, `/office`, `/broker`).
+Eleven short videos, one per section and per feature, are in `apps/web/public/videos` and on the section pages (`/ar/sections/property`, `/office`, `/broker`).
 
 ### Property management in detail
 
 | Module                     | What you get                                                                                                                                                         |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Portfolio and 3D map**   | The whole Kingdom on Mapbox 3D. A property stands on its pin as a real building: its approved design, or a plausible villa or apartment block from its unit count.   |
+| **Portfolio and 3D map**   | The whole Kingdom on Mapbox 3D, with each property standing on its pin as a building (see [the map](#the-kingdom-map)).                                              |
 | **Leases and payments**    | Lease records that reference the Ejar contract number, a payment schedule, the Riyadh rent-freeze helper, free in-app and calendar reminders, receipt uploads.       |
 | **Guided inspections**     | Room by room at move-in and move-out with in-app camera evidence (capture time, SHA-256, GPS), two-party sign-off with fresh re-authentication, a comparison report. |
 | **Property Health Record** | A timeline of every event on the property, including approved designs handed off from an engineering office.                                                         |
 | **Maintenance**            | Tickets with photos, urgency and an SLA timer, suggested responsibility (a suggestion, not a ruling), vendors with their own login.                                  |
 | **Buildings and owners**   | Shared expenses that each need a receipt, balances visible to every owner, quote comparison, one ballot per unit. Complements Mullak.                                |
-| **Assistant**              | Answers about your own records and the product's guidance, marked as AI output, restricted to real estate.                                                           |
+| **Assistant**              | Answers about your own records and the product's guidance, marked as AI output and restricted to real estate.                                                        |
 | **Privacy rights (PDPL)**  | Export my data and delete my account; Arabic and English privacy policy, terms and disclaimers (drafts pending legal review).                                        |
 
 ## The AI engineering office
@@ -60,15 +74,42 @@ client brief (plot, area, programme, style, in the client's own words)
   → released set handed off to the Property Health Record
 ```
 
-- **Four design languages**: Najdi, modern, Swiss and palace. Each ranks layouts that suit it, changes the façade, windows and 3D model, and always fits the plot. Hover any design to see it as a lit 3D model.
-- **A consultant-style permit set**: framed A3 sheets coded by discipline (`AR`, `ST`, `EL`, `ME`, `FS`) with an Arabic and English title block, a stamp area left for the office, axis bubbles and level marks. Architectural (site, plans, elevations, sections, levels, thermal insulation with U-values, accessibility, schedules, areas), structural (notes, axes and columns, slab and beam layout, column schedule, preliminary calculation summary), electrical, mechanical and plumbing, and fire and safety plans with symbol legends. Prints to A3 landscape, one sheet per page; exports DXF, IFC and glTF.
-- **Compliance you can audit**: Saudi Building Code checks come only from the rule engine. A rule that has not been verified by an office engineer stays "not checked"; the model only explains results.
-- **Honest limits**: no live Balady or Amanah interface exists; heights from a plot's local plan are confirmed by the office; the Ministry's national requirements are built in with their clauses and should be verified against the official PDF before real permits; every output is a **draft** until a licensed engineer of the right discipline approves it.
-- **Learning from other offices**: designs enter a shared library only with each office's and client's consent, and are credited. Design knowledge (climate, privacy, styles) is written in the product's knowledge base with its basis; nothing is scraped.
+### Four design languages
 
-Full spec and implementation status: [docs/ENGINEERING_OFFICE.md](docs/ENGINEERING_OFFICE.md). A printable sample draft set: [docs/samples/drawing-set-draft-sample.pdf](docs/samples/drawing-set-draft-sample.pdf).
+| Najdi                                         | Modern                                       | Swiss                                            | Palace                                      |
+| --------------------------------------------- | -------------------------------------------- | ------------------------------------------------ | ------------------------------------------- |
+| Courtyard house, crenellation, small openings | Clad upper volume, framed glazing, thin slab | Compact block, pitched roof, timber and shutters | Symmetry, columned portico, arches and dome |
+
+Each language ranks the layouts that suit it, changes the façade, windows and 3D model, and always fits the plot. Every style card shows a **real, credited photograph** as a reference (see [docs/CREDITS.md](docs/CREDITS.md)); hover a design to see it as a lit 3D model that turns with the pointer. The brief reader picks the style from the client's own words.
 
 ![A design as a 3D model](docs/screenshots/engineering/desktop-3d-swiss.png)
+
+### A consultant-style permit set
+
+Framed A3 sheets coded by discipline (`AR`, `ST`, `EL`, `ME`, `FS`) with an Arabic and English title block, a stamp area left for the office, axis bubbles and level marks:
+
+- **Architectural**: site, plans per floor, elevations, sections, levels, thermal insulation with U-values, accessibility, door and window schedules, areas.
+- **Structural**: general notes, axes and columns, slab and beam layout, column schedule, a preliminary calculation summary.
+- **Electrical, mechanical and plumbing, fire and safety**: a plan per floor with symbol legends and counts.
+
+Prints to A3 landscape, one sheet per page; exports DXF, IFC and glTF. A printable sample draft set: [docs/samples/drawing-set-draft-sample.pdf](docs/samples/drawing-set-draft-sample.pdf).
+
+### Honest limits
+
+- Saudi Building Code checks come **only** from the rule engine. A rule that no office engineer has verified stays "not checked"; the model only explains results.
+- No live Balady or Amanah interface exists. Heights from a plot's local plan are confirmed by the office. The Ministry's national requirements are built in with their clauses and should be verified against the official PDF before real permits.
+- Every output is a **draft** until a licensed engineer of the right discipline approves it. Rasikh never stamps and never files a permit.
+- Designs from other offices enter the shared library only with each office's and client's consent, and are credited. Design knowledge (climate, privacy, styles) is written in the product's knowledge base with its basis; nothing is scraped.
+
+Full spec and implementation status: [docs/ENGINEERING_OFFICE.md](docs/ENGINEERING_OFFICE.md).
+
+## The Kingdom map
+
+The whole Kingdom on Mapbox Standard (a globe that lands on Saudi Arabia, lighting on Riyadh's clock), a pin per city, and the real buildings of the cities from OpenStreetMap. A property stands on its pin as a textured three.js building at true scale: its **released design** when one is handed off to it, otherwise a plausible villa or apartment block from its unit count. The card says which. Owners place the exact pin from the phone while at the property.
+
+![A property standing on the map](docs/screenshots/shell/desktop-map-houses.png)
+
+An optional **real view from Google** (photorealistic 3D imagery of the location) turns on with a Google Maps key; it is billed by Google per use and off by default. Without a Mapbox token or WebGL the map falls back to a flat schematic with the same interactions.
 
 ## Architecture
 
@@ -90,7 +131,7 @@ docs                   Setup guides, design notes, the engineering-office spec, 
 - **Data stays in the Kingdom.** All user data in `me-central2` (Dammam). No model keys in clients; AI runs only in Functions.
 - **AI is bounded.** A scope classifier refuses anything outside real estate; no legal rulings, valuations or financial advice; output is marked and never changes a record without a tap.
 - **Arabic first.** RTL with logical CSS, mirrored icons, Hijri and Gregorian dates, SAR formatting, AA contrast checked in the tokens, reduced motion honoured.
-- **Quiet luxury design.** One brand colour (Najdi clay), editorial type, almost no shadows; WCAG 2.2 AA checked with axe in the end-to-end suite.
+- **Quiet luxury design.** One brand colour (Najdi clay), editorial type, almost no shadows, one glass layer per screen; WCAG 2.2 AA checked with axe in the end-to-end suite.
 
 ## Getting started
 
@@ -144,7 +185,7 @@ pnpm lint && pnpm typecheck                # ESLint and TypeScript
 | `apps/web` (Playwright) | End-to-end flows for each section in Arabic, accessibility with axe, legal pages and PDPL rights                            |
 | `apps/mobile` (Flutter) | Domain ports with shared fixtures, and widget flows with in-memory fakes                                                    |
 
-Two checks run only on request: the real Mapbox map (`RK_REAL_MAP=1 pnpm --filter @rasikh/web e2e map-real`, needs the network and a token) and the video recorder below. CI runs lint, typecheck, test and build on every pull request.
+Two checks run only on request: the real Mapbox map (`RK_REAL_MAP=1 pnpm --filter @rasikh/web e2e map-real`, needs the network and a token) and the video recorder. CI runs lint, typecheck, test and build on every pull request.
 
 **Walkthrough videos.** `pnpm --filter @rasikh/web videos` records every section and feature video from the real app (emulators and demo data) with Arabic captions burned in, into `apps/web/public/videos`. Re-record after a UI change.
 
@@ -174,14 +215,26 @@ Authoritative detail lives in [PLAN.md](PLAN.md) (phases and known gaps), [CLAUD
 | 9     | AI engineering office                                   | Built on the free stack; paid inputs pending        |
 | 10    | Sections, videos, polish, security, performance, launch | In progress                                         |
 
-**Needs the owner before launch:** Firebase Blaze (deploying Functions and Storage, phone OTP, hosting), a real model key if a model is wanted, the licensed Saudi Building Code text so an office engineer can verify the remaining rules, a domain, lawyer review of the legal pages (PDPL), and Apple and Google Play accounts. An engineer should also verify the transcribed Ministry values against the official PDF.
+**Needs the owner before launch:** Firebase Blaze (deploying Functions and Storage, phone OTP, hosting), a real model key if a model is wanted (and an image model for photoreal renders of a design), the licensed Saudi Building Code text so an office engineer can verify the remaining rules, a domain, lawyer review of the legal pages (PDPL), and Apple and Google Play accounts. An engineer should also verify the transcribed Ministry values against the official PDF.
+
+## Documentation
+
+| Document                                                          | What it covers                                                      |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [CLAUDE.md](CLAUDE.md)                                            | Product rules, stack, design system and AI rules (source of truth). |
+| [PLAN.md](PLAN.md) · [CHANGELOG.md](CHANGELOG.md)                 | Phases and progress; what changed.                                  |
+| [REMAINING.md](REMAINING.md) · [REMAINING.ar.md](REMAINING.ar.md) | What still needs the owner, in English and Arabic.                  |
+| [docs/ENGINEERING_OFFICE.md](docs/ENGINEERING_OFFICE.md)          | The engineering office: spec, roles, engine, limits.                |
+| [docs/FIREBASE-SETUP.md](docs/FIREBASE-SETUP.md)                  | Setting up a real Firebase project (Arabic).                        |
+| [docs/STORE-READINESS.md](docs/STORE-READINESS.md)                | What the app stores need.                                           |
+| [docs/CREDITS.md](docs/CREDITS.md)                                | Photograph, map and data credits.                                   |
 
 ## نبذة بالعربي
 
 راسخ منصة عربية أولاً لسوق العقار السعودي، في ثلاثة أقسام منفصلة: **إدارة الأملاك** و**المكتب الهندسي الذكي** و**الوساطة العقارية**. لكل قسم صفحته واشتراكه ومساحة عمله، وكلها مجانية الآن.
 
-- **إدارة الأملاك:** عقود ودفعات وفحص موثّق بالصور وصيانة وعمائر واتحادات ملاك، وسجل واحد للعقار، وخريطة ثلاثية الأبعاد للمملكة يقف فيها العقار بناءً حقيقياً على أرضه.
-- **المكتب الهندسي الذكي:** من وصف العميل إلى تصاميم مختلفة مطابقة للكود واشتراطات الأمانة، بأربعة طُرز (نجدي وحديث وسويسري وفخم)، مع مجموعة رسومات كاملة بترتيب المكاتب الاستشارية وجدول كميات. المطابقة تقررها قواعد محسوبة لا الذكاء الاصطناعي، وكل مخرج مسودة حتى يعتمده مهندس مرخّص.
+- **إدارة الأملاك:** عقود ودفعات وفحص موثّق بالصور وصيانة وعمائر واتحادات ملاك، وسجل واحد للعقار، وخريطة ثلاثية الأبعاد للمملكة يقف فيها العقار بناءً على أرضه.
+- **المكتب الهندسي الذكي:** من وصف العميل إلى تصاميم مختلفة مطابقة للكود واشتراطات الأمانة، بأربعة طُرز (نجدي وحديث وسويسري وفخم) بصور مرجعية حقيقية ومجسم ثلاثي الأبعاد عند المرور، مع مجموعة رسومات كاملة بترتيب المكاتب الاستشارية وجدول كميات. المطابقة تقررها قواعد محسوبة لا الذكاء الاصطناعي، وكل مخرج مسودة حتى يعتمده مهندس مرخّص.
 - **الوساطة العقارية:** عملاء ومعاينات وسجل أنشطة موثّق لا يُعدَّل وفاحص للبيانات الإلزامية للإعلان.
 
 راسخ **يكمّل** منصتي إيجار ومُلّاك ولا يغني عنهما، ولا يعالج دفعات الإيجار ولا يعرض إعلانات للعامة، ولا يختم ولا يقدّم طلبات الرخص باسم مهندس. بياناتك تُحفظ في الدمام، والذكاء الاصطناعي يعمل على الخادم فقط ومخرجاته اقتراحات تراجعها بنفسك.
