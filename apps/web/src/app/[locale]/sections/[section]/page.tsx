@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset';
 import { Check, X } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -81,7 +82,7 @@ export default function SectionPage({
           className="hairline aspect-video w-full max-w-4xl rounded-xl bg-night"
           data-testid="section-video"
         >
-          <source src={`/videos/${section}.webm`} type="video/webm" />
+          <source src={asset(`/videos/${section}.webm`)} type="video/webm" />
         </video>
       </section>
 
@@ -98,7 +99,7 @@ export default function SectionPage({
             className="hairline aspect-video w-full max-w-4xl rounded-xl bg-night"
             data-testid="drawings-video"
           >
-            <source src="/videos/drawings.webm" type="video/webm" />
+            <source src={asset('/videos/drawings.webm')} type="video/webm" />
           </video>
           <h3 className="mt-2 text-h3 font-semibold">{t('page.printTitle')}</h3>
           <ol className="flex max-w-3xl flex-col gap-2 ps-5 text-body" data-testid="print-steps">
@@ -128,7 +129,7 @@ export default function SectionPage({
                   className="hairline aspect-video w-full rounded-xl bg-night"
                   data-video={v}
                 >
-                  <source src={`/videos/${v}.webm`} type="video/webm" />
+                  <source src={asset(`/videos/${v}.webm`)} type="video/webm" />
                 </video>
               </li>
             ))}

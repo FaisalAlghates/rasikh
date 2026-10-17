@@ -78,6 +78,7 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const nav = await getTranslations({ locale, namespace: 'nav' });
+  const common = await getTranslations({ locale, namespace: 'common' });
 
   return (
     <html
@@ -93,6 +94,11 @@ export default async function LocaleLayout({
         <a href="#main" className="skip-link">
           {nav('skip')}
         </a>
+        {process.env.NEXT_PUBLIC_DEMO === '1' && (
+          <p className="bg-night px-4 py-2 text-center text-small text-sand" role="note">
+            {common('demoBanner')}
+          </p>
+        )}
         <ClientMessages namespaces={['common', 'nav']}>
           <SceneBackdrop />
           <ScrollEffects />

@@ -22,3 +22,6 @@ test-results
 playwright-report
 docs/video/
 *.local.mjs
+
+.next-demo
+out
